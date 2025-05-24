@@ -1,0 +1,7 @@
+site_name: Dissertation Repository
+theme:
+  name: material
+nav:
+  - Home: index.md
+  - Setup: setup.md
+  - Phases Overview: phases.md
