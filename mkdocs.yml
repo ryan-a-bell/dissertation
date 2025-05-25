@@ -1,7 +1,15 @@
-site_name: Dissertation Repository
+site_name: My Project Docs
 theme:
   name: material
+plugins:
+- search
+- mkdocs-jupyter
 nav:
-  - Home: index.md
-  - Setup: setup.md
-  - Phases Overview: phases.md
+- Readme: README.md
+- Rubrics:
+  - Rubric Basic: rubrics/rubric_basic.md
+  - Rubric Detailed: rubrics/rubric_detailed.md
+- Src:
+  - 1.1 Sysengbench Hf Download: src/phase1_prep/1.1_sysengbench_hf_download.ipynb
+  - 2.1 Converting Mcq To Osq: src/phase2_conversion/2.1_Converting_MCQ_to_OSQ.ipynb
+  - 3.1 Mcq Shift Golden: src/phase3_variants/3.1_MCQ_Shift_Golden.ipynb
