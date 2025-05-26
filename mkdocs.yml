@@ -1,15 +1,33 @@
-site_name: My Project Docs
+site_name: Dissertation Documentation
+site_description: Documentation for dissertation project phases and analysis
 theme:
   name: material
+  features:
+  - navigation.tabs
+  - navigation.sections
+  - navigation.expand
+  - navigation.top
+  - search.highlight
+  - search.share
+  palette:
+    scheme: default
+    primary: blue
+    accent: blue
 plugins:
 - search
 - mkdocs-jupyter
+markdown_extensions:
+- admonition
+- codehilite
+- toc
 nav:
-- Readme: README.md
+- Home: index.md
 - Rubrics:
   - Rubric Basic: rubrics/rubric_basic.md
   - Rubric Detailed: rubrics/rubric_detailed.md
-- Src:
+- Phase1 Prep:
   - 1.1 Sysengbench Hf Download: src/phase1_prep/1.1_sysengbench_hf_download.ipynb
+- Phase2 Conversion:
   - 2.1 Converting Mcq To Osq: src/phase2_conversion/2.1_Converting_MCQ_to_OSQ.ipynb
+- Phase3 Variants:
   - 3.1 Mcq Shift Golden: src/phase3_variants/3.1_MCQ_Shift_Golden.ipynb
