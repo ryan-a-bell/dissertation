@@ -11,7 +11,7 @@ The research systematically benchmarks Large Language Models (LLMs) using multip
 ## Repository Structure
 
 ```
-syseng-eval/
+dissertation/
 ├── configs/               # YAML configuration files for evaluation
 ├── docs/                  # Project documentation (built with MkDocs)
 ├── figs/                  # Diagrams and figures (PlantUML and exported images)
@@ -61,24 +61,12 @@ Copy the `.env.template` file to `.env` and populate it with your required API k
 cp .env.template .env
 ```
 
-## Running the Evaluation
-
-Each phase is executed separately. Use the provided Makefile commands for convenience:
-
-```bash
-make phase1
-make phase2
-# ... and so forth
-```
-
-Check individual `phase` directories under `src/` for detailed instructions.
-
 ## Documentation
 
 Detailed documentation can be found under the `docs/` directory. Built documentation is served using MkDocs:
 
 ```bash
-pip install mkdocs mkdocs-material
+pip install mkdocs mkdocs-material mkdocs-jupyter
 mkdocs serve
 ```
 
@@ -86,11 +74,11 @@ Then, open your browser to `http://127.0.0.1:8000` to view the documentation.
 
 ## Diagrams
 
-Diagrams (PlantUML source and exported PNGs) are maintained under the `figs/` directory. Feel free to update diagrams and regenerate images as needed.
+Diagrams (PlantUML source and exported PNGs) are maintained under the `figs/` directory. 
 
 ## Contributions
 
-Please open issues or pull requests for improvements or bug fixes. Contributions are welcomed!
+This work is in support of a Phd in Systems Engineering.
 
 ## License
 
