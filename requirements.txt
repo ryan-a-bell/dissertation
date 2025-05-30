@@ -3,3 +3,4 @@ mkdocs
 mkdocs-material
 mkdocs-jupyter
 mkdocs-same-dir
+pyyaml
