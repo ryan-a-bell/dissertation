@@ -72,13 +72,18 @@ mkdocs serve
 
 Then, open your browser to `http://127.0.0.1:8000` to view the documentation.
 
+## Github Pages Website
+A CI/CD pipeline is configured to host all of the documentation for this project.
+
+The hosted information is populated from the `docs/` folder. The `docs/` folder is updated with the generate_docs.py file during the CI/CD process. The script takes all of the jupyter notebooks in the Phase folders and hosts them in addition or supplemental to the natively found documentation in the docs folder. 
+
 ## Diagrams
 
 Diagrams (PlantUML source and exported PNGs) are maintained under the `figs/` directory. 
 
 ## Contributions
 
-This work is in support of a Phd in Systems Engineering.
+This work is in support of a PhD in Systems Engineering.
 
 ## License
 
