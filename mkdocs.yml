@@ -31,3 +31,4 @@ nav:
   - 2.1 Converting Mcq To Osq: src\phase2_conversion/2.1_Converting_MCQ_to_OSQ.ipynb
 - Src\Phase3_Variants:
   - 3.1 Mcq Shift Golden: src\phase3_variants/3.1_MCQ_Shift_Golden.ipynb
+- Sample PDF: docs/pdf_preview.md
