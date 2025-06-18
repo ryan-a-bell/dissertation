@@ -32,13 +32,12 @@ nav:
 - Phase4 Inference:
   - 4.1 Inference: src/phase4_inference/4.1 inference.ipynb
 - Phase5 Metrics:
-  - "Llm As A Judge Rubric Types For Open Ended Evaluation (2022\u20132025)": "src/phase5_metrics/LLM-as-a-Judge\
-      \ Rubric Types for Open-Ended Evaluation (2022\u20132025).pdf"
   - Llm As Judge Rubric 1: src/phase5_metrics/llm_as_judge_rubric_1.md
   - Llm As Judge Rubric 2: src/phase5_metrics/llm_as_judge_rubric_2.md
   - Llm As Judge Rubric 3: src/phase5_metrics/llm_as_judge_rubric_3.md
   - Mcq Binary Staistics Tests: src/phase5_metrics/mcq_binary_staistics_tests.md
   - Mcq Statistics Tests: src/phase5_metrics/mcq_statistics_tests.md
 - Assets:
+  - Llm As Judge Rubric Types: assets/llm-as-judge-rubric-types.pdf
   - Pdf Preview: assets/pdf_preview.md
   - Sample: assets/sample.pdf
