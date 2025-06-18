@@ -3,8 +3,14 @@ import shutil
 import yaml
 from pathlib import Path
 
+"""
+Automates the generation of project documentation by scanning and copying relevant files to the `docs` directory, and dynamically creating the 
+`mkdocs.yml` configuration file with a customized navigation structure and theme settings 
+tailored for the dissertation project.
+"""
+
 # Extensions we want to include
-INCLUDE_EXTENSIONS = {'.md', '.ipynb'}
+INCLUDE_EXTENSIONS = {'.md', '.ipynb', '.pdf', '.csv'}
 
 # Files to exclude from documentation
 EXCLUDE_FILES = {
