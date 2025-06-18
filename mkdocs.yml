@@ -22,7 +22,6 @@ markdown_extensions:
 - toc
 nav:
 - Home: index.md
-- Nextsteps: NEXTSTEPS.md
 - Phase1 Prep:
   - 1.1 Sysengbench Hf Download: src/phase1_prep/1.1_sysengbench_hf_download.ipynb
   - 1.2 Benchmark Summary: src/phase1_prep/1.2_benchmark-summary.ipynb
