@@ -38,6 +38,7 @@ nav:
   - Mcq Binary Staistics Tests: src/phase5_metrics/mcq_binary_staistics_tests.md
   - Mcq Statistics Tests: src/phase5_metrics/mcq_statistics_tests.md
 - Assets:
+  - Asset Index: assets/asset_index.md
   - Llm As Judge Rubric Types: assets/llm-as-judge-rubric-types.pdf
   - Pdf Preview: assets/pdf_preview.md
   - Sample: assets/sample.pdf
