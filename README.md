@@ -1,4 +1,4 @@
-# Dissertation Repository
+9# Dissertation Repository
 
 ## Overview
 
@@ -12,9 +12,9 @@ The research systematically benchmarks Large Language Models (LLMs) using multip
 
 ```
 dissertation/
+assets/ # Storage for Files
 ├── configs/               # YAML configuration files for evaluation
 ├── docs/                  # Project documentation (built with MkDocs)
-├── figs/                  # Diagrams and figures (PlantUML and exported images)
 ├── src/                   # Source code organized by evaluation phases
 │   ├── phase1_prep/       # Initial dataset tagging and preprocessing
 │   ├── phase2_conversion/ # Conversion of MCQs to OSQs
@@ -25,7 +25,6 @@ dissertation/
 |   └── phase7_analysis/   # Analysis of the previous phases
 ├── .github/               # GitHub CI workflows
 ├── .env.template          # Template for API keys
-├── environment.yml        # Conda environment specification
 ├── requirements.txt       # Python dependencies for venv
 ├── Makefile               # Automation commands
 ├── README.md              # Project overview (this file)
@@ -74,10 +73,6 @@ mkdocs serve
 A CI/CD pipeline is configured to host all of the documentation for this project on GitHub Pages. This pipeline is triggered on pushes to the `main` branch.
 
 The hosted information is populated from the `docs/` folder. During the CI/CD process, the pipeline runs `python scripts/generate_docs.py` to update the `docs/` folder with the latest content, including Jupyter notebooks from the Phase folders and other relevant documentation. Following this, it deploys the updated documentation to GitHub Pages using `mkdocs gh-deploy --force`.
-
-## Diagrams
-
-Diagrams (PlantUML source and exported PNGs) are maintained under the `figs/` directory. 
 
 ## Contributions
 
