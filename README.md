@@ -63,19 +63,26 @@ cp .env.template .env
 
 ## Documentation
 
-Detailed documentation can be found under the `docs/` directory. Built documentation is served using MkDocs:
+Detailed documentation can be found under the `docs/` directory. Built documentation is served using MkDocs. To ensure you are viewing the latest version of the documentation locally, use the following command which generates the documentation before serving it:
+
+```bash
+make docs-serve
+```
+
+This command first runs `python scripts/generate_docs.py` to update the `docs/` folder with the latest content and then serves it using `mkdocs serve`. After running, open your browser to `http://127.0.0.1:8000` to view the documentation.
+
+If you don't have `make` installed or prefer manual steps, you can run:
 
 ```bash
 pip install mkdocs mkdocs-material mkdocs-jupyter
+python scripts/generate_docs.py
 mkdocs serve
 ```
 
-Then, open your browser to `http://127.0.0.1:8000` to view the documentation.
-
 ## Github Pages Website
-A CI/CD pipeline is configured to host all of the documentation for this project.
+A CI/CD pipeline is configured to host all of the documentation for this project on GitHub Pages. This pipeline is triggered on pushes to the `main` branch.
 
-The hosted information is populated from the `docs/` folder. The `docs/` folder is updated with the generate_docs.py file during the CI/CD process. The script takes all of the jupyter notebooks in the Phase folders and hosts them in addition or supplemental to the natively found documentation in the docs folder. 
+The hosted information is populated from the `docs/` folder. During the CI/CD process, the pipeline runs `python scripts/generate_docs.py` to update the `docs/` folder with the latest content, including Jupyter notebooks from the Phase folders and other relevant documentation. Following this, it deploys the updated documentation to GitHub Pages using `mkdocs gh-deploy --force`.
 
 ## Diagrams
 

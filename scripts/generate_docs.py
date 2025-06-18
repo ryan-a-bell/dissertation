@@ -201,4 +201,4 @@ if __name__ == "__main__":
     write_mkdocs_yml(nav)
     
     print("Documentation generation complete!")
-    print("Run 'make docs-serve' to preview the documentation locally")
+    print("Run 'mkdocs serve' to preview the documentation locally")
