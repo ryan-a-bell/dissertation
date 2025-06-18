@@ -70,6 +70,17 @@ def find_files():
     
     return source_files
 
+def cleanup_docs_directory():
+    """Remove all contents of the docs directory before generating new documentation."""
+    docs_path = Path('docs')
+    if docs_path.exists():
+        for item in docs_path.iterdir():
+            if item.is_dir():
+                shutil.rmtree(item)
+            else:
+                item.unlink()
+        print("Cleaned up docs/ directory")
+
 def copy_files(file_map):
     """Copy files to docs directory."""
     for src, dest in file_map:
@@ -193,6 +204,7 @@ def write_mkdocs_yml(nav, output='mkdocs.yml'):
 
 if __name__ == "__main__":
     print("Generating MkDocs documentation...")
+    cleanup_docs_directory()
     file_map = find_files()
     print(f"Found {len(file_map)} files to include")
     
