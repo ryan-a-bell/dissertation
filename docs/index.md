@@ -11,7 +11,7 @@ The research systematically benchmarks Large Language Models (LLMs) using multip
 ## Repository Structure
 
 ```
-syseng-eval/
+dissertation/
 ├── configs/               # YAML configuration files for evaluation
 ├── docs/                  # Project documentation (built with MkDocs)
 ├── figs/                  # Diagrams and figures (PlantUML and exported images)
@@ -61,36 +61,36 @@ Copy the `.env.template` file to `.env` and populate it with your required API k
 cp .env.template .env
 ```
 
-## Running the Evaluation
-
-Each phase is executed separately. Use the provided Makefile commands for convenience:
-
-```bash
-make phase1
-make phase2
-# ... and so forth
-```
-
-Check individual `phase` directories under `src/` for detailed instructions.
-
 ## Documentation
 
-Detailed documentation can be found under the `docs/` directory. Built documentation is served using MkDocs:
+Detailed documentation can be found under the `docs/` directory. Built documentation is served using MkDocs. To ensure you are viewing the latest version of the documentation locally, use the following command which generates the documentation before serving it:
 
 ```bash
-pip install mkdocs mkdocs-material
+make docs-serve
+```
+
+This command first runs `python scripts/generate_docs.py` to update the `docs/` folder with the latest content and then serves it using `mkdocs serve`. After running, open your browser to `http://127.0.0.1:8000` to view the documentation.
+
+If you don't have `make` installed or prefer manual steps, you can run:
+
+```bash
+pip install mkdocs mkdocs-material mkdocs-jupyter
+python scripts/generate_docs.py
 mkdocs serve
 ```
 
-Then, open your browser to `http://127.0.0.1:8000` to view the documentation.
+## Github Pages Website
+A CI/CD pipeline is configured to host all of the documentation for this project on GitHub Pages. This pipeline is triggered on pushes to the `main` branch.
+
+The hosted information is populated from the `docs/` folder. During the CI/CD process, the pipeline runs `python scripts/generate_docs.py` to update the `docs/` folder with the latest content, including Jupyter notebooks from the Phase folders and other relevant documentation. Following this, it deploys the updated documentation to GitHub Pages using `mkdocs gh-deploy --force`.
 
 ## Diagrams
 
-Diagrams (PlantUML source and exported PNGs) are maintained under the `figs/` directory. Feel free to update diagrams and regenerate images as needed.
+Diagrams (PlantUML source and exported PNGs) are maintained under the `figs/` directory. 
 
 ## Contributions
 
-Please open issues or pull requests for improvements or bug fixes. Contributions are welcomed!
+This work is in support of a PhD in Systems Engineering.
 
 ## License
 

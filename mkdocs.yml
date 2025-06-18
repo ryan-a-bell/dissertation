@@ -1,34 +1,45 @@
-site_name: My Project Docs
+site_name: Dissertation Documentation
+site_description: Documentation for dissertation project phases and analysis
 theme:
   name: material
+  features:
+  - navigation.tabs
+  - navigation.sections
+  - navigation.expand
+  - navigation.top
+  - search.highlight
+  - search.share
+  palette:
+    scheme: default
+    primary: blue
+    accent: blue
 plugins:
 - search
 - mkdocs-jupyter
+markdown_extensions:
+- admonition
+- codehilite
+- toc
 nav:
-- Readme: ./README.md
-- Docs:
-  - Index: docs/index.md
-  - Phases: docs/phases.md
-  - Setup: docs/setup.md
-- Docs\Rubrics:
-  - Rubric Basic: docs\rubrics/rubric_basic.md
-  - Rubric Detailed: docs\rubrics/rubric_detailed.md
-- Docs\Src\Phase1_Prep:
-  - 1.1 Sysengbench Hf Download: docs\src\phase1_prep/1.1_sysengbench_hf_download.ipynb
-- Docs\Src\Phase2_Conversion:
-  - 2.1 Converting Mcq To Osq: docs\src\phase2_conversion/2.1_Converting_MCQ_to_OSQ.ipynb
-- Docs\Src\Phase3_Variants:
-  - 3.1 Mcq Shift Golden: docs\src\phase3_variants/3.1_MCQ_Shift_Golden.ipynb
-- Figs:
-  - Placeholder: figs/placeholder.md
-- Rubrics:
-  - Rubric Basic: rubrics/rubric_basic.md
-  - Rubric Detailed: rubrics/rubric_detailed.md
-- Src\Phase1_Prep:
-  - 1.1 Sysengbench Hf Download: src\phase1_prep/1.1_sysengbench_hf_download.ipynb
-  - 1.2 Benchmark-Summary: src\phase1_prep/1.2_benchmark-summary.ipynb
-- Src\Phase2_Conversion:
-  - 2.1 Converting Mcq To Osq: src\phase2_conversion/2.1_Converting_MCQ_to_OSQ.ipynb
-- Src\Phase3_Variants:
-  - 3.1 Mcq Shift Golden: src\phase3_variants/3.1_MCQ_Shift_Golden.ipynb
-- Sample PDF: docs/pdf_preview.md
+- Home: index.md
+- Nextsteps: NEXTSTEPS.md
+- Phase1 Prep:
+  - 1.1 Sysengbench Hf Download: src/phase1_prep/1.1_sysengbench_hf_download.ipynb
+  - 1.2 Benchmark Summary: src/phase1_prep/1.2_benchmark-summary.ipynb
+- Phase2 Conversion:
+  - 2.1 Converting Mcq To Osq: src/phase2_conversion/2.1_Converting_MCQ_to_OSQ.ipynb
+- Phase3 Variants:
+  - 3.1 Mcq Shift Golden: src/phase3_variants/3.1_MCQ_Shift_Golden.ipynb
+- Phase4 Inference:
+  - 4.1 Inference: src/phase4_inference/4.1 inference.ipynb
+- Phase5 Metrics:
+  - "Llm As A Judge Rubric Types For Open Ended Evaluation (2022\u20132025)": "src/phase5_metrics/LLM-as-a-Judge\
+      \ Rubric Types for Open-Ended Evaluation (2022\u20132025).pdf"
+  - Llm As Judge Rubric 1: src/phase5_metrics/llm_as_judge_rubric_1.md
+  - Llm As Judge Rubric 2: src/phase5_metrics/llm_as_judge_rubric_2.md
+  - Llm As Judge Rubric 3: src/phase5_metrics/llm_as_judge_rubric_3.md
+  - Mcq Binary Staistics Tests: src/phase5_metrics/mcq_binary_staistics_tests.md
+  - Mcq Statistics Tests: src/phase5_metrics/mcq_statistics_tests.md
+- Assets:
+  - Pdf Preview: assets/pdf_preview.md
+  - Sample: assets/sample.pdf
