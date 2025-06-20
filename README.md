@@ -8,6 +8,8 @@ This repository contains code, datasets, and documentation supporting the disser
 
 The research systematically benchmarks Large Language Models (LLMs) using multiple evaluation modalities (Multiple-Choice Questions \[MCQ] and Open-Style Questions \[OSQ]) across Systems Engineering (SE) tasks aligned to INCOSE Handbook categories.
 
+The benchmark dataset, **SysEngBench**, is publicly available on [HuggingFace](https://huggingface.co/datasets/rabell/SysEngBench).
+
 ## Repository Structure
 
 ```
