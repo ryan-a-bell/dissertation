@@ -14,8 +14,7 @@ The benchmark dataset, **SysEngBench**, is publicly available on [HuggingFace](h
 
 ```
 dissertation/
-assets/ # Storage for Files
-├── configs/               # YAML configuration files for evaluation
+├── assets/                # Storage for Files
 ├── docs/                  # Project documentation (built with MkDocs)
 ├── src/                   # Source code organized by evaluation phases
 │   ├── phase1_prep/       # Initial dataset tagging and preprocessing
