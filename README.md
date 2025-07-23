@@ -1,4 +1,4 @@
-9# Dissertation Repository
+# Dissertation Repository
 
 ## Overview
 
