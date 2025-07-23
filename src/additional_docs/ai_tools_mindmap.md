@@ -55,6 +55,7 @@ mindmap
       Prodigy
       Doccano
       Labelbox
+      https://labelstud.io/
 ```
 
 ## MCP Servers for Enhanced Capabilities
