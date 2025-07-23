@@ -204,12 +204,17 @@ def write_mkdocs_yml(nav, output='mkdocs.yml'):
 
 if __name__ == "__main__":
     print("Generating MkDocs documentation...")
+    print("Cleaning up the docs directory...")
     cleanup_docs_directory()
+    print("Finding files to include...")
     file_map = find_files()
-    print(f"Found {len(file_map)} files to include")
+    print(f"Found {len(file_map)} files to include...")
     
+    print("Copying files to docs directory...")
     copy_files(file_map)
+    print("Creating navigation structure...")
     nav = create_nav_entries(file_map)
+    print("Writing mkdocs.yml configuration...")
     write_mkdocs_yml(nav)
     
     print("Documentation generation complete!")

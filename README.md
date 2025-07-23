@@ -76,6 +76,63 @@ A CI/CD pipeline is configured to host all of the documentation for this project
 
 The hosted information is populated from the `docs/` folder. During the CI/CD process, the pipeline runs `python scripts/generate_docs.py` to update the `docs/` folder with the latest content, including Jupyter notebooks from the Phase folders and other relevant documentation. Following this, it deploys the updated documentation to GitHub Pages using `mkdocs gh-deploy --force`.
 
+## Documentation System Architecture
+
+The documentation system uses several components that work together:
+
+```mermaid
+flowchart TD
+    subgraph "Local Development"
+        dev[Developer]
+        make[Makefile]
+        script[scripts/generate_docs.py]
+        mkdocs[mkdocs.yml]
+        docs[docs/ directory]
+        site[Local Site]
+        
+        dev -->|"make docs-serve"| make
+        make -->|"Executes"| script
+        script -->|"Scans project files"| project[Project Files]
+        script -->|"Generates"| mkdocs
+        script -->|"Copies files to"| docs
+        mkdocs -->|"Configures"| site
+        docs -->|"Content for"| site
+    end
+    
+    subgraph "Automated Deployment"
+        push[Push to main/master]
+        ci[.github/workflows/ci.yml]
+        gh_script[scripts/generate_docs.py]
+        gh_mkdocs[mkdocs.yml]
+        gh_docs[docs/ directory]
+        gh_pages[GitHub Pages]
+        
+        push -->|"Triggers"| ci
+        ci -->|"Executes"| gh_script
+        gh_script -->|"Scans project files"| gh_project[Project Files]
+        gh_script -->|"Generates"| gh_mkdocs
+        gh_script -->|"Copies files to"| gh_docs
+        ci -->|"Runs mkdocs gh-deploy"| gh_pages
+        gh_mkdocs -->|"Configures"| gh_pages
+        gh_docs -->|"Content for"| gh_pages
+    end
+```
+
+### Key Relationships:
+
+1. **scripts/generate_docs.py** is the central component that:
+   - Scans the project for documentation files (.md, .ipynb, .pdf, .csv)
+   - Copies relevant files to the docs/ directory
+   - Dynamically generates the mkdocs.yml configuration
+
+2. **mkdocs.yml** is generated automatically and should not be manually edited
+
+3. **Makefile** provides convenient commands for local documentation tasks
+
+4. **.github/workflows/ci.yml** automates the documentation deployment process to GitHub Pages
+
+This architecture ensures documentation stays in sync with your project files and is automatically deployed when changes are pushed to the main branch.
+
 ## Contributions
 
 This work is in support of a PhD in Systems Engineering.
