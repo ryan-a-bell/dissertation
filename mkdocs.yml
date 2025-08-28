@@ -1,44 +1,42 @@
-site_name: Dissertation Documentation
-site_description: Documentation for dissertation project phases and analysis
+site_name: Dissertation Docs Example
+site_url: https://ryan-a-bell.github.io/dissertation/
+
 theme:
   name: material
   features:
-  - navigation.tabs
-  - navigation.sections
-  - navigation.expand
-  - navigation.top
-  - search.highlight
-  - search.share
-  palette:
-    scheme: default
-    primary: blue
-    accent: blue
+    - navigation.tabs
+    - navigation.path
+    - navigation.top
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+    - content.tabs.link
+    - toc.integrate
+
+extra_css:
+  - stylesheets/extra.css
+extra_javascript:
+  - assets/js/extra.js
+
+
 plugins:
-- search
-- mkdocs-jupyter
+  - search
+  - awesome-pages
+  - mkdocstrings:
+      handlers:
+        python:
+          paths: [src]
+  - table-reader
+  - mkdocs-jupyter
+
 markdown_extensions:
-- admonition
-- codehilite
-- toc
-nav:
-- Home: index.md
-- Phase1 Prep:
-  - 1.1 Sysengbench Hf Download: src/phase1_prep/1.1_sysengbench_hf_download.ipynb
-  - 1.2 Benchmark Summary: src/phase1_prep/1.2_benchmark-summary.ipynb
-- Phase2 Conversion:
-  - 2.1 Converting Mcq To Osq: src/phase2_conversion/2.1_Converting_MCQ_to_OSQ.ipynb
-- Phase3 Variants:
-  - 3.1 Mcq Shift Golden: src/phase3_variants/3.1_MCQ_Shift_Golden.ipynb
-- Phase4 Inference:
-  - 4.1 Inference: src/phase4_inference/4.1 inference.ipynb
-- Phase5 Metrics:
-  - Llm As Judge Rubric 1: src/phase5_metrics/llm_as_judge_rubric_1.md
-  - Llm As Judge Rubric 2: src/phase5_metrics/llm_as_judge_rubric_2.md
-  - Llm As Judge Rubric 3: src/phase5_metrics/llm_as_judge_rubric_3.md
-  - Mcq Binary Staistics Tests: src/phase5_metrics/mcq_binary_staistics_tests.md
-  - Mcq Statistics Tests: src/phase5_metrics/mcq_statistics_tests.md
-- Assets:
-  - Asset Index: assets/asset_index.md
-  - Llm As Judge Rubric Types: assets/llm-as-judge-rubric-types.pdf
-  - Pdf Preview: assets/pdf_preview.md
-  - Sample: assets/sample.pdf
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.highlight
+  - pymdownx.inlinehilite
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - attr_list
+  - footnotes
