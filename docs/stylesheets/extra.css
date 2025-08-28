@@ -1,0 +1,9 @@
+.embed-pdf {
+  width: 100%;
+  height: 600px;
+}
+@media (max-width: 600px) {
+  .embed-pdf {
+    height: 300px;
+  }
+}
