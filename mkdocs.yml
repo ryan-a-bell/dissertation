@@ -1,4 +1,4 @@
-site_name: Dissertation Docs Example
+site_name: Dissertation Docs
 site_url: https://ryan-a-bell.github.io/dissertation/
 
 theme:
@@ -12,12 +12,29 @@ theme:
     - content.code.copy
     - content.tabs.link
     - toc.integrate
+    - navigation.sections
+    - navigation.expand
+  palette:
+    # Palette toggle for light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    # Palette toggle for dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
 
 extra_css:
   - stylesheets/extra.css
+  - stylesheets/nps_custom_css.css
 extra_javascript:
   - assets/js/extra.js
-
+  # Theme switcher disabled - uncomment line below to re-enable
+  # - javascripts/mkdocs_theme_switcher.js
 
 plugins:
   - search

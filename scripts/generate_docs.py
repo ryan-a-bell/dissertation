@@ -6,7 +6,7 @@ from pathspec import PathSpec
 
 SRC_DIR = Path('src')
 DOCS_DIR = Path('docs')
-DEST = Path("docs", "source-code", "src")
+DEST = Path("docs", "source-code")
 
 
 def write_md(path, content):
