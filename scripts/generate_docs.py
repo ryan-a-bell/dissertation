@@ -4,9 +4,11 @@ from pathlib import Path
 import pandas as pd
 from pathspec import PathSpec
 
-SRC_DIR = Path('src')
-DOCS_DIR = Path('docs')
+SRC_DIR = Path("src")
+DOCS_DIR = Path("docs")
 DEST = Path("docs", "source-code")
+README = Path("README.md")
+INDEX_MD = DOCS_DIR / "index.md"
 
 
 def write_md(path, content):
@@ -71,12 +73,24 @@ def copy_source_tree():
         else:
             # Copy other files directly
             dest_path.parent.mkdir(parents=True, exist_ok=True)
-            shutil.copy2(src_path, dest_path)
+        shutil.copy2(src_path, dest_path)
+
+
+def copy_readme_to_index():
+    """Copy README.md to docs/index.md and adjust relative links."""
+    if not README.exists():
+        return
+
+    DOCS_DIR.mkdir(parents=True, exist_ok=True)
+    content = README.read_text(encoding="utf-8")
+    content = content.replace("](LICENSE)", "](../LICENSE)")
+    write_md(INDEX_MD, content)
 
 
 def main():
     copy_source_tree()
-    print(f'Mirrored source tree to {DEST}')
+    copy_readme_to_index()
+    print(f"Mirrored source tree to {DEST} and updated {INDEX_MD}")
 
 
 if __name__ == '__main__':
