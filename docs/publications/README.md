@@ -11,9 +11,9 @@ This section will contain academic publications and research papers.
 
 - [20240521 #528 - Submission 20240702 (PDF)](20240521%20INCOSE%20IS%202024/20240521%20%23528%20-%20Submission%2020240702.pdf)
 
-## Example BibTeX
+## Publications BibTeX
 
-You can download an example BibTeX file [here](publications.bib).
+You can copy a BibTeX file for all of my research and collaborations below.
 
 ```bibtex
 @misc{bellBaseliningAIsSystems2024,
