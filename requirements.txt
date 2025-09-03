@@ -9,3 +9,10 @@ mkdocs-table-reader-plugin
 nbconvert
 pandas
 mkdocs-awesome-pages-plugin
+
+# for phase1_prep
+openpyxl
+datasets
+jupyter
+ipywidgets
+python-dotenv
