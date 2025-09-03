@@ -3,6 +3,7 @@ site_url: https://ryan-a-bell.github.io/dissertation/
 
 theme:
   name: material
+  logo: assets/nps-logo.png
   features:
     - navigation.tabs
     - navigation.path

@@ -173,6 +173,24 @@
   background: var(--nps-gradient-accent);
 }
 
+/* Logo styling for AI ship */
+.md-header__button.md-logo img,
+.md-header__button.md-logo svg {
+  height: 40px;
+  width: auto;
+  object-fit: contain;
+}
+
+/* Ensure logo has proper contrast with NPS theme */
+.md-header__button.md-logo {
+  filter: brightness(1.1); /* Slight brightness increase for visibility */
+}
+
+/* Dark mode adjustments for logo */
+[data-md-color-scheme="slate"] .md-header__button.md-logo img {
+  filter: brightness(0.9); /* Reduce brightness in dark mode */
+}
+
 /* Footer */
 .md-footer {
   background: var(--nps-gradient-primary);
