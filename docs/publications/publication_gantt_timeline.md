@@ -1,6 +1,10 @@
-# Dissertation Timeline Gantt Chart
+# Publication Timeline Gantt Chart
 
-This Gantt chart visualizes the dissertation schedule, showing tasks, their durations, and dependencies. The vertical line represents today's date (July 22, 2025) to track progress against the planned timeline.
+This Gantt chart visualizes the publication schedule. The vertical line represents today's date  to track progress against the planned timeline.
+
+THIS SECTION NEEDS TO BE UPDATED WITH THE PUBLICATIONS MENTIONED HERE.
+
+
 
 ```mermaid
 gantt
