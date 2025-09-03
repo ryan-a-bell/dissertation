@@ -20,3 +20,7 @@ python-dotenv
 # for phase2_conversion
 openai
 pandas
+pydantic
+
+# for phase4_inference
+lm_eval 
