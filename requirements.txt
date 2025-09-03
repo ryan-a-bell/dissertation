@@ -16,3 +16,7 @@ datasets
 jupyter
 ipywidgets
 python-dotenv
+
+# for phase2_conversion
+openai
+pandas
