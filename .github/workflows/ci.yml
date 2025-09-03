@@ -10,14 +10,18 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
+      # Checkout code
       - uses: actions/checkout@v4
+      # Configure Git
       - name: Configure Git Credentials
         run: |
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+      # Setup Python
       - uses: actions/setup-python@v5
         with:
           python-version: 3.x
+      # Cache dependencies
       - run: echo "cache_id=$(date --utc '+%V')" >> $GITHUB_ENV 
       - uses: actions/cache@v4
         with:
@@ -25,9 +29,34 @@ jobs:
           path: .cache 
           restore-keys: |
             mkdocs-material-
+
+      # Install dependencies
       - name: Install dependencies
         run: pip install -r requirements.txt
+      # Generate documentation
       - name: Generate documentation
         run: python scripts/generate_docs.py
+
+      # Sanitize CSV for mkdocs-table-reader
+      - name: Sanitize CSV for mkdocs-table-reader
+        run: |
+          python - <<'PY'
+          import pathlib, re
+          # Adjust the path(s) to your CSV(s) used by sysengbench.md
+          paths = [
+            pathlib.Path("docs/source-code/phase1_prep/sysengbench.csv"),
+            # add more if needed
+          ]
+          for p in paths:
+            if p.exists():
+              s = p.read_text(encoding="utf-8")
+              # Double any backslash followed by a letter: \a … \z → \\a … \\z
+              s2 = re.sub(r'\\([A-Za-z])', r'\\\\\\1', s)
+              if s != s2:
+                p.write_text(s2, encoding="utf-8")
+                print(f"Escaped backslashes in {p}")
+          PY
+
+      # Deploy to GitHub Pages
       - name: Deploy to GitHub Pages
         run: mkdocs gh-deploy --force
