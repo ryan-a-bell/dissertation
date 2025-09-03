@@ -46,7 +46,12 @@ plugins:
         python:
           paths: [src]
   - table-reader
-  - mkdocs-jupyter
+  - mkdocs-jupyter:
+      execute: false
+      # If you ever need to skip certain heavy/problematic notebooks:
+      # execute_ignore:
+      #   - "docs/path/to/*.ipynb"
+
 
 markdown_extensions:
   - admonition
