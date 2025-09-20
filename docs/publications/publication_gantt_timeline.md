@@ -45,5 +45,5 @@ gantt
 | P.10 | The Cost of Expertise: Performance Trade-Offs in LLMs for Systems Engineering | INCOSE International Symposium 2025 | July 2025 | Wach, Bell, et al. |
 | P.11 | Balancing Accuracy and Efficiency: Trade-offs in Large Language Model Quantization | Wiley INCOSE | 2025 | Bell, Madachy, Longshore |
 | P.12 | Baselining Large Language Model Performance in Systems Engineering Using SysEngBench | Wiley INCOSE | 2025 | Bell, Longshore, Madachy, Hanrahan |
-| P.13 | Consensus Methods with AI - Submission | NPS Acquisition Research Symposium 2025 | April 2025 | Submission |
+| P.13 | Consensus Methods with AI  | NPS Acquisition Research Symposium 2025 | April 2025 | Bell, Madachy, Longshore |
 
