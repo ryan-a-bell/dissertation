@@ -1,0 +1,16 @@
+Model,sysengbench,sysengbench-a,sysengbench-b,sysengbench-c,sysengbench-d
+gemma3__12b,✅,✅,✅,✅,✅
+gemma3__1b,✅,✅,✅,✅,✅
+gemma3__270m,✅,✅,✅,✅,✅
+gemma3__27b,✅,✅,✅,✅,✅
+gemma3__4b,✅,✅,✅,✅,✅
+gemma3n__e2b,✅,✅,✅,✅,✅
+gemma3n__e4b,✅,✅,✅,✅,✅
+gpt-oss__20b,✅,❌,❌,❌,❌
+llama3.2__1b,✅,❌,❌,❌,❌
+llama3.2__3b,✅,❌,❌,❌,❌
+mistral-small3.2__24b,✅,❌,❌,❌,❌
+qwen3__0.6b,✅,✅,❌,❌,❌
+qwen3__1.7b,✅,✅,❌,❌,❌
+qwen3__4b,✅,✅,❌,❌,❌
+qwen3__8b,✅,✅,❌,❌,❌
