@@ -1,6 +1,6 @@
 
-task: sysengbench
-dataset_path: rabell/SysEngBench
+task: sysengbench-c
+dataset_path: rabell/SysEngBench-C
 dataset_name: null
 output_type: generate_until
 training_split: null

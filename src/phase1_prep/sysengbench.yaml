@@ -7,26 +7,23 @@ training_split: null
 validation_split: null
 test_split: test
 doc_to_text: "Given the following question and four candidate answers (A, B, C and D), choose the best answer.
+Question: {{question}}
+A. {{choiceA}}
+B. {{choiceB}}
+C. {{choiceC}}
+D. {{choiceD}}
 Your response must consist solely of the single letter corresponding to the best answer, chosen from one of A, B, C or D.
 Any response other than a single letter (A, B, C, or D) will be considered invalid.
-
-Question: {{question}}
-
-A. {{choiceA}}
-
-B. {{choiceB}}
-
-C. {{choiceC}}
-
-D. {{choiceD}}
-
 Answer:"
 doc_to_target: "{{answer}}"
 
 generation_kwargs:
-  until: []  # No early stopping for thinking models
-  max_gen_toks: 10000  # High limit for reasoning traces
-  temperature: 0.0  # Deterministic for evaluation
+  temperature: 0.0
+  max_tokens: 20
+  until:
+    - "</s>"
+    - "
+"
 
 filter_list:
   - name: "strict-match"
