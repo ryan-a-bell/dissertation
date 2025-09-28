@@ -1,4 +1,0 @@
-{
-  "suitability_score": 9,
-  "justification": "There is a clear canonical answer: the equipment must operate within specification with no malfunction or physical damage during and after the specified vibration regimen. Options are unnecessary, scope is tight (1–2 sentences), and removing options does not change the construct being measured. Minor variations in phrasing of acceptance details are tolerable without adding ambiguity."
-}

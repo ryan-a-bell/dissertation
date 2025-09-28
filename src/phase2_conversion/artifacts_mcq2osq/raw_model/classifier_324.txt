@@ -1,4 +1,0 @@
-{
-  "suitability_score": 10,
-  "justification": "There is a clear, canonical answer (“by an association/communication line between the actor and the use case”), so removing options does not add ambiguity and preserves the construct. The response is definitional and fits in a single sentence, satisfying tight scope. Thus it meets the EXCELLENT rubric anchors."
-}
