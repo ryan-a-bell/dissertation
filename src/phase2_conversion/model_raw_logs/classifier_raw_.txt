@@ -1,0 +1,4 @@
+{
+  "suitability_score": 10,
+  "justification": "A single canonical answer exists (an association/communication link—solid line—between the actor and the use case in a use case diagram), so options are unnecessary. The scope is tight and answerable in one sentence, and removing options does not introduce ambiguity or change the construct, preserving intent."
+}
