@@ -1,0 +1,11 @@
+{
+  "osq_prompt": "In a SysML use case diagram, what relationship represents the interaction between an actor and a use case? Answer in 1 short phrase (3–8 words).",
+  "expected_answer": "An association (communication) link/line.",
+  "rubric": {
+    "full_credit": "2 points: Explicitly identifies the relationship as an \"association\" (accept \"communication association/link/line\") indicating a connecting line between the actor and the use case. Acceptable variants: \"association line,\" \"communication association,\" \"association between actor and use case.\"",
+    "partial_credit": "1 point: Describes a connecting/communication line without correctly naming it as an association (e.g., \"a communication line\" or \"a connection between actor and use case\") or says \"connector\" ambiguously. Also award 1 point if the answer says \"association\" but mislabels minor details (e.g., adds an unnecessary arrow).",
+    "no_credit": "0 points: Names an incorrect relationship (e.g., include, extend, dependency, generalization, realization) or gives an unrelated/unclear answer (e.g., \"message,\" \"signal,\" \"sequence\")."
+  },
+  "blooms_level": "Remember",
+  "blooms_justification": "The task requires recalling the specific named relationship used in SysML use case diagrams without interpretation or application."
+}
