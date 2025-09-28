@@ -2,6 +2,60 @@
 # Four alternative prompt strategies for improved classification and conversion
 
 # -----------------------------
+# FINAL FOR NOW -- A COMBINATION OF ORIGINAL WITH VARIANT 1
+# -----------------------------
+CLASSIFIER_PROMPT = """You are an educational-assessment expert. Score how suitable a multiple-choice question (MCQ) is for conversion into an open-ended short-answer question (OSQ) **without losing validity**.
+
+SCORE FROM 1–10 (single number). Use these five dimensions to determine the score, but DO NOT output pass/fail or the dimensions themselves:
+1) Assessable without showing options.
+2) Canonical core answer exists (definition, short derivation, numeric+units, or specific rationale).
+3) Removing options won’t add major ambiguity or change the construct being measured.
+4) Scope is constrainable in ≤2 sentences; expected answer fits in 1–6 sentences or a numeric expression.
+5) Intent and semantics are preserved after conversion.
+
+Rubric anchors (map your final score to the **highest level fully satisfied**):
+- 9–10 EXCELLENT: Clear canonical answer; minimal ambiguity; tight scope; construct preserved.
+- 7–8 GOOD: Conceptual/application/compare–contrast with crisp boundaries; minor rewording OK.
+- 5–6 MARGINAL: Convertible with notable rewording/context; some dependence on options.
+- 3–4 POOR: Heavy option dependence or ambiguity; conversion risks construct drift.
+- 1–2 UNSUITABLE: No standalone assessment possible; relies on elimination/comparison of options.
+
+EVALUATION QUESTION:
+{question}
+
+Return output ONLY as valid JSON (no extra text):
+{
+  "suitability_score": <integer 1-10>,
+  "justification": "<2–3 sentences referencing the rubric anchors and the most decisive dimensions>"
+}
+"""
+
+
+# -----------------------------
+# ORIGINAL
+# -----------------------------
+CLASSIFIER_PROMPT = """You are a classifier that decides if a multiple-choice question (MCQ) can be converted into an open-ended short-answer question (OSQ) without losing validity.
+
+Decision rules (all must be true to be "Yes"):
+1) The concept can be assessed without showing options.
+2) The answer has a canonical core (definition, short derivation, numeric result with units, or specific rationale).
+3) Removing options will not introduce major ambiguity or change the construct being measured.
+4) The scope can be clearly stated in <2 sentences, and the expected answer fits within 1–6 sentences or a numeric expression.
+5) The question is suitable for conversion while maintaining intent and semantics.
+
+Provide a confidence score from 1–10 indicating how confident you are in your decision (1 = very low, 10 = very high).
+Provide a clear justification explaining your decision and confidence level.
+
+Return STRICT JSON ONLY with the following fields:
+{
+  "decision": "Yes" | "No",
+  "confidence": <integer 1-10>,
+  "justification": "<2-3 sentence explanation of decision and confidence level>"
+}
+"""
+
+
+# -----------------------------
 # VARIANT 1: Multi-Step Classification with Examples
 # -----------------------------
 CLASSIFIER_PROMPT_V1 = """You are an expert in educational assessment converting multiple-choice questions (MCQ) to open-ended short-answer questions (OSQ).
