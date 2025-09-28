@@ -1,0 +1,11 @@
+{
+  "osq_prompt": "In a SysML use case diagram, what specific modeling relationship represents the interaction between an actor and a use case? Answer in 1 sentence.",
+  "expected_answer": "An association between the actor and the use case (indicating the actor can invoke or participate in the use case).",
+  "rubric": {
+    "full_credit": "2 points: Explicitly identifies \"association\" as the relationship between the actor and the use case. Briefly noting its meaning (that the actor can invoke/participate) is acceptable but not required. Acceptable phrasings include: \"association,\" \"association relationship,\" \"association link,\" or \"association line between the actor and the use case.\"",
+    "partial_credit": "1 point: Conveys the correct idea but lacks the specific term or is imprecise, e.g., \"a line/link connecting the actor to the use case\" without naming it as an association; or names \"association\" but adds minor inaccuracies about notation while still clearly indicating association.",
+    "no_credit": "0 points: Names an incorrect relationship (e.g., dependency, generalization, include, extend), describes placing the actor inside the system boundary, provides only a vague term like \"connection\" without indicating association, or gives no answer."
+  },
+  "blooms_level": "Remember",
+  "blooms_justification": "The task requires recalling the specific SysML notation used to depict actor–use case interaction, a direct retrieval of factual knowledge."
+}

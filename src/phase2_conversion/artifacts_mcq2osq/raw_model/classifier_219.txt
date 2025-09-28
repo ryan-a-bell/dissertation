@@ -1,0 +1,4 @@
+{
+  "suitability_score": 9,
+  "justification": "There is a clear canonical answer (maximize customer value by eliminating waste across the lifecycle), assessable without options and expressible in 1–2 sentences. Removing options does not introduce major ambiguity and preserves the construct. Minor wording variations exist but do not affect validity, hence near-excellent suitability."
+}

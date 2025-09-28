@@ -1,0 +1,4 @@
+{
+  "suitability_score": 7,
+  "justification": "The prompt seeks a specific principle from MIL-STD-1472G that can be expressed succinctly (e.g., functionally group controls and arrange them in sequence of use/importance), so an open-ended answer is brief and scorable. Some ambiguity remains because the standard lists multiple related criteria, but the construct and intent are preserved with minor rewording."
+}
