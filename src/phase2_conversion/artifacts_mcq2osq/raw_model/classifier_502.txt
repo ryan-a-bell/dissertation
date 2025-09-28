@@ -1,4 +1,0 @@
-{
-  "suitability_score": 9,
-  "justification": "There is a clear canonical answer: the ICD articulates the validated capability gap and initial requirements that guide the AoA and support the Materiel Development Decision in the MSA phase. Removing options does not introduce significant ambiguity, and the expected response is concise (1–3 sentences), preserving the construct."
-}
