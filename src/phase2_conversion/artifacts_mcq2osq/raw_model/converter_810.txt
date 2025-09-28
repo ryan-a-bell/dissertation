@@ -1,0 +1,11 @@
+{
+  "osq_prompt": "According to MIL-STD-1472G, what is the recommended approach for arranging controls in a system? Answer in 1 sentence.",
+  "expected_answer": "Arrange controls by grouping them by function and by frequency of use (i.e., functional grouping with frequently used controls most accessible).",
+  "rubric": {
+    "full_credit": "2 points total:\n- 1 point: Explicitly states functional grouping (e.g., \"group by function,\" \"group related tasks/purposes\").\n- 1 point: Explicitly states arrangement by frequency of use (e.g., \"based on usage frequency,\" \"frequently used controls most accessible/clustered\"). Acceptable synonyms: function = purpose/task/category; frequency = use rate/commonness/access frequency; accessibility emphasis for frequently used items.",
+    "partial_credit": "1 point if only one of the two required elements is correctly stated (either functional grouping or frequency-of-use arrangement) without contradictions. 0.5 points if both ideas are implied but vague (e.g., \"group logically and make common controls easy to reach\") without clearly naming both function and frequency.",
+    "no_credit": "0 points if the answer promotes non-recommended schemes (e.g., alphabetical order, random placement, maximizing distance), omits both function and frequency elements, or is unrelated/incorrect."
+  },
+  "blooms_level": "Remember",
+  "blooms_justification": "The prompt asks for recall of a specific recommendation from MIL-STD-1472G without requiring interpretation, analysis, or application."
+}

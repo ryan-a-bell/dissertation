@@ -1,0 +1,11 @@
+{
+  "osq_prompt": "State the primary focus of Lean Engineering in system lifecycle models. Answer in 1 sentence.",
+  "expected_answer": "Reducing waste and focusing on value-added activities.",
+  "rubric": {
+    "full_credit": "2 points: The response clearly includes BOTH elements: (a) reducing/eliminating waste (e.g., \"reduce waste,\" \"eliminate non-value-added work\") AND (b) focusing/emphasizing value-added activities or customer value (e.g., \"focus on value-added activities,\" \"maximize customer value\"). Examples that earn full credit: \"Eliminating non–value-added work to maximize customer value,\" \"Reducing waste while emphasizing value-added activities along the lifecycle.\"",
+    "partial_credit": "1 point: The response includes ONLY ONE of the two required elements (either waste reduction OR value/value-added focus), or states a close paraphrase that implies only one side. Examples: \"Reducing waste and streamlining processes\" (no explicit value focus), \"Maximizing customer value\" (no explicit waste reduction). Mentioning quality/efficiency/streamlining without explicit waste or value earns 0–1 point only if one required element is clearly present.",
+    "no_credit": "0 points: Omits both waste reduction and value-added focus, or contradicts lean principles. Examples: emphasizing speed regardless of quality, prioritizing documentation over implementation, maximizing investment/costs, vague statements like \"improve quality\" or \"accelerate development\" without any mention of waste or value."
+  },
+  "blooms_level": "Remember",
+  "blooms_justification": "The task requires recalling the core definition/focus of Lean Engineering without analysis or application."
+}
