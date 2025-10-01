@@ -1,0 +1,28 @@
+graph TD
+    A[Scenario Presentation] --> B{Model Analyzes Options}
+    B --> C[Model Selects Option]
+    B --> D[Model Identifies Trade-offs]
+    B --> E[Model States Assumptions]
+    
+    C --> F[Choice Alignment Check]
+    D --> G[Trade-Space Completeness]
+    E --> H[Assumption Validity]
+    
+    F --> I[Score: 0-3 points]
+    G --> J[Score: 0-5 points]
+    H --> K[Score: 0-2 points]
+    
+    I --> L[Composite Score]
+    J --> L
+    K --> L
+    
+    L --> M{Performance Level}
+    M -->|Score ≥ 8| N[Expert Level]
+    M -->|Score 5-7| O[Competent Level]
+    M -->|Score < 5| P[Novice Level]
+    
+    style A fill:#e1f5fe
+    style L fill:#fff9c4
+    style N fill:#c8e6c9
+    style O fill:#ffecb3
+    style P fill:#ffcdd2
