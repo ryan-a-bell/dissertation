@@ -1,0 +1,478 @@
+% Appendices for Dissertation
+% These appendices support Chapter 3 (Materials and Methods)
+
+\appendix
+
+\chapter{Supplementary Materials}\label{app:supplementary}
+
+%============================================================================
+\section{Conversion and Judging Prompts}\label{app:conversion_prompts}
+
+This section provides the complete prompts used in Phase 2 (MCQ to OSQ conversion) and Phase 5 (LLM-as-a-judge scoring).
+
+\subsection{Phase 2 Stage 1: MCQ Suitability Classification Prompt}
+
+\begin{lstlisting}[basicstyle=\small\ttfamily,breaklines=true]
+You are an expert in educational assessment design. Your task is to evaluate whether a multiple-choice question (MCQ) is suitable for conversion to an open-ended short-answer question (OSQ).
+
+Evaluate the following MCQ across five dimensions, scoring each from 1 (very poor) to 10 (excellent):
+
+1. **Assessability**: Can the answer be objectively evaluated in open-ended format without relying on multiple-choice options?
+2. **Canonical Answer Clarity**: Is there a well-defined, unambiguous correct answer?
+3. **Ambiguity**: Would the question remain clear and unambiguous without the MCQ structure?
+4. **Scope Appropriateness**: Is the expected answer reasonable in length for short-answer format (not requiring multi-paragraph essays)?
+5. **Intent Preservation**: Can the original knowledge construct being tested be maintained without showing answer options?
+
+MCQ to evaluate:
+Question: {{question}}
+A. {{choiceA}}
+B. {{choiceB}}
+C. {{choiceC}}
+D. {{choiceD}}
+Correct Answer: {{answer}}
+
+Provide your evaluation in JSON format:
+{
+  "suitability_score": <1-10 overall score>,
+  "justification": "<brief reasoning for overall score>",
+  "dimension_scores": {
+    "assessability": <1-10>,
+    "canonical_answer": <1-10>,
+    "ambiguity": <1-10>,
+    "scope": <1-10>,
+    "intent_preservation": <1-10>
+  },
+  "concerns": "<any specific concerns about conversion>"
+}
+\end{lstlisting}
+
+\subsection{Phase 2 Stage 2: MCQ to OSQ Conversion Prompt}
+
+\begin{lstlisting}[basicstyle=\small\ttfamily,breaklines=true]
+You are an expert in educational assessment design. Your task is to convert a multiple-choice question (MCQ) to an open-ended short-answer question (OSQ) while preserving the original knowledge construct, difficulty level, and cognitive demand.
+
+Guidelines:
+1. Remove MCQ-specific artifacts (e.g., "which of the following", explicit A/B/C/D options)
+2. Maintain the original intent (e.g., if testing recall, don't change to application)
+3. Preserve any numerical calculations or technical specifications
+4. Do NOT "improve" or make the question more challenging
+5. Ensure the question can stand alone without needing the distractor options for context
+
+MCQ to convert:
+Question: {{question}}
+A. {{choiceA}}
+B. {{choiceB}}
+C. {{choiceC}}
+D. {{choiceD}}
+Correct Answer: {{answer}} - {{correct_choice_text}}
+Justification: {{justification}}
+
+Create:
+1. An open-ended question prompt (without showing answer choices)
+2. A canonical expected answer based on the original correct choice
+3. A detailed grading rubric with three levels:
+   - Full credit: Criteria for complete correct answer
+   - Partial credit: Criteria for partially correct answer
+   - No credit: Conditions warranting no credit
+4. Bloom's taxonomy classification for the cognitive level
+
+Provide your conversion in JSON format:
+{
+  "osq_prompt": "<open-ended question>",
+  "expected_answer": "<canonical correct answer>",
+  "rubric": {
+    "full_credit": "<specific criteria>",
+    "partial_credit": "<specific criteria>",
+    "no_credit": "<specific criteria>"
+  },
+  "blooms_level": "<Remember|Understand|Apply|Analyze|Evaluate|Create>",
+  "blooms_justification": "<reasoning for taxonomy level>"
+}
+\end{lstlisting}
+
+\subsection{Phase 5: Binary Judging Prompt}
+
+\begin{lstlisting}[basicstyle=\small\ttfamily,breaklines=true]
+You are grading a systems engineering question response.
+
+Question: {{osq_prompt}}
+Expected Answer: {{expected_answer}}
+
+Student Response: {{model_response}}
+
+Is the student response correct? Respond in JSON format:
+{
+  "correct": <true|false>,
+  "reasoning": "<brief justification>"
+}
+\end{lstlisting}
+
+\subsection{Phase 5: Rubric-Based Judging Prompt}
+
+\begin{lstlisting}[basicstyle=\small\ttfamily,breaklines=true]
+You are grading a systems engineering question response using a detailed rubric.
+
+Question: {{osq_prompt}}
+Expected Answer: {{expected_answer}}
+
+Grading Rubric:
+- Full credit (1.0): {{rubric_full_credit}}
+- Partial credit (0.5): {{rubric_partial_credit}}
+- No credit (0.0): {{rubric_no_credit}}
+
+Student Response: {{model_response}}
+
+Assign a score (0.0, 0.5, or 1.0) based on the rubric. Respond in JSON format:
+{
+  "score": <0.0|0.5|1.0>,
+  "reasoning": "<explanation of which rubric criteria were met>",
+  "rubric_level": "<full_credit|partial_credit|no_credit>"
+}
+\end{lstlisting}
+
+\subsection{Phase 5: Multi-Dimensional Judging Prompt}
+
+\begin{lstlisting}[basicstyle=\small\ttfamily,breaklines=true]
+You are grading a systems engineering question response across five dimensions.
+
+Question: {{osq_prompt}}
+Expected Answer: {{expected_answer}}
+
+Student Response: {{model_response}}
+
+Evaluate the response on the following dimensions (0-10 scale each):
+
+1. **Technical Accuracy** (0-10): Correctness of facts, principles, terminology, and technical details
+2. **Conceptual Understanding** (0-10): Depth of systems thinking and grasp of underlying concepts
+3. **Completeness** (0-10): Coverage of all required answer elements
+4. **Clarity** (0-10): Communication quality, organization, and coherence
+5. **Professional Relevance** (0-10): Real-world applicability and practical understanding
+
+Respond in JSON format:
+{
+  "technical_accuracy": <0-10>,
+  "conceptual_understanding": <0-10>,
+  "completeness": <0-10>,
+  "clarity": <0-10>,
+  "professional_relevance": <0-10>,
+  "aggregate_score": <0.0-1.0, computed as mean/10>,
+  "reasoning": "<overall assessment explaining scores>"
+}
+\end{lstlisting}
+
+\subsection{Phase 5: Chain-of-Thought Judging Prompt}
+
+\begin{lstlisting}[basicstyle=\small\ttfamily,breaklines=true]
+You are grading a systems engineering question response. Think step-by-step about the quality of the response.
+
+Question: {{osq_prompt}}
+Expected Answer: {{expected_answer}}
+
+Student Response: {{model_response}}
+
+Evaluate the response by reasoning through the following:
+1. What are the key elements required in a correct answer?
+2. Which of these elements are present in the student response?
+3. Are there any errors, misconceptions, or missing critical details?
+4. What are the specific strengths of the response?
+5. What are the specific weaknesses of the response?
+6. Overall, how well does this response answer the question?
+
+Respond in JSON format:
+{
+  "reasoning_steps": [
+    "<step 1 analysis>",
+    "<step 2 analysis>",
+    "<step 3 analysis>",
+    ...
+  ],
+  "strengths": ["<strength 1>", "<strength 2>", ...],
+  "weaknesses": ["<weakness 1>", "<weakness 2>", ...],
+  "score": <0.0-1.0>,
+  "justification": "<final summary explaining the score>"
+}
+\end{lstlisting}
+
+%============================================================================
+\section{Complete Model List}\label{app:model_list}
+
+Table~\ref{tab:complete_model_list} lists all models evaluated in this research.
+
+\begin{table}[htbp]
+    \centering
+    \caption{Complete list of evaluated models with key characteristics.}
+    \label{tab:complete_model_list}
+    \small
+    \begin{tabular}{llrrlr}
+        \toprule
+        \textbf{Model Family} & \textbf{Model} & \textbf{Params (B)} & \textbf{VRAM (GB)} & \textbf{Type} & \textbf{Year} \\
+        \midrule
+        Llama 3.2 & llama3.2:3b & 3 & 6 & Open & 2024 \\
+        Llama 3.2 & llama3.2:7b & 7 & 14 & Open & 2024 \\
+        Llama 3.1 & llama3.1:70b & 70 & 43 & Open & 2024 \\
+        Llama 3.1 & llama3.1:405b & 405 & 141 & Open & 2024 \\
+        \addlinespace
+        Qwen 2.5 & qwen2.5:7b & 7 & 14 & Open & 2024 \\
+        Qwen 2.5 & qwen2.5:14b & 14 & 24 & Open & 2024 \\
+        Qwen 2.5 & qwen2.5:32b & 32 & 38 & Open & 2024 \\
+        Qwen 2.5 & qwen2.5:72b & 72 & 90 & Open & 2024 \\
+        \addlinespace
+        Mistral & mistral:7b-instruct & 7 & 14 & Open & 2023 \\
+        Mistral & mixtral:8x7b & 47 & 48 & Open (MoE) & 2023 \\
+        Mistral & mixtral:8x22b & 141 & 141 & Open (MoE) & 2024 \\
+        \addlinespace
+        DeepSeek & deepseek-r1:7b & 7 & 24 & Open (Reasoning) & 2024 \\
+        DeepSeek & deepseek-r1:14b & 14 & 36 & Open (Reasoning) & 2024 \\
+        \addlinespace
+        QwQ & qwq:32b-preview & 32 & 48 & Open (Reasoning) & 2024 \\
+        \addlinespace
+        OpenAI & gpt-4o & N/A & Cloud & Proprietary & 2024 \\
+        OpenAI & gpt-4o-mini & N/A & Cloud & Proprietary & 2024 \\
+        OpenAI & gpt-3.5-turbo & N/A & Cloud & Proprietary & 2023 \\
+        \addlinespace
+        Anthropic & claude-3.5-sonnet & N/A & Cloud & Proprietary & 2024 \\
+        Anthropic & claude-3-opus & N/A & Cloud & Proprietary & 2024 \\
+        \addlinespace
+        Google & gemini-1.5-pro & N/A & Cloud & Proprietary & 2024 \\
+        Google & gemini-1.5-flash & N/A & Cloud & Proprietary & 2024 \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+\textbf{Notes}:
+\begin{itemize}
+    \item \textbf{Params}: Billion parameters (approximate for MoE models)
+    \item \textbf{VRAM}: Approximate GPU memory required for inference with 4-bit quantization
+    \item \textbf{Type}: Open-source, proprietary, or specialized (MoE = Mixture of Experts, Reasoning = extended reasoning capabilities)
+    \item \textbf{Year}: Release year
+\end{itemize}
+
+%============================================================================
+\section{Dataset Visualizations}\label{app:dataset_viz}
+
+This section presents additional visualizations of the SysEngBench dataset distribution across INCOSE knowledge areas.
+
+\subsection{Sub-Category Distribution}
+
+\begin{figure}[H]
+    \centering
+    % TODO: Include actual bar chart from Phase 1.2
+    \includegraphics[width=\textwidth]{figures/subcategory_distribution.pdf}
+    \caption{Horizontal bar chart showing distribution of questions across all 20 INCOSE sub-categories, sorted by question count.}
+    \label{fig:subcategory_distribution}
+\end{figure}
+
+\subsection{Category Distribution}
+
+\begin{figure}[H]
+    \centering
+    % TODO: Include actual pie chart from Phase 1.2
+    \includegraphics[width=0.7\textwidth]{figures/category_pie.pdf}
+    \caption{Pie chart showing percentage distribution across 6 major INCOSE categories.}
+    \label{fig:category_pie}
+\end{figure}
+
+\subsection{Stacked Category Visualization}
+
+\begin{figure}[H]
+    \centering
+    % TODO: Include actual stacked bar chart from Phase 1.2
+    \includegraphics[width=\textwidth]{figures/category_stacked.pdf}
+    \caption{Stacked bar chart showing hierarchical distribution of questions across categories and sub-categories.}
+    \label{fig:category_stacked}
+\end{figure}
+
+%============================================================================
+\section{Statistical Test Results Tables}\label{app:stat_tables}
+
+This section provides detailed statistical test results referenced in Chapter~\ref{ch:materials_methods}.
+
+\subsection{Position Bias Statistical Tests (Example)}
+
+Table~\ref{tab:position_bias_stats_example} shows example statistical test results for position bias analysis (actual results in Chapter~\ref{ch:results}).
+
+\begin{table}[H]
+    \centering
+    \caption{Example position bias statistical test results for selected models.}
+    \label{tab:position_bias_stats_example}
+    \small
+    \begin{tabular}{lrrrrrr}
+        \toprule
+        \textbf{Model} & \textbf{Acc$_A$} & \textbf{Acc$_B$} & \textbf{Acc$_C$} & \textbf{Acc$_D$} & \textbf{$\chi^2$} & \textbf{$p$-value} \\
+        \midrule
+        llama3.2:3b & 0.623 & 0.611 & 0.605 & 0.598 & 2.14 & 0.543 \\
+        qwen2.5:7b & 0.734 & 0.698 & 0.701 & 0.689 & 8.92 & 0.030* \\
+        deepseek-r1:7b & 0.801 & 0.778 & 0.773 & 0.791 & 3.45 & 0.327 \\
+        gpt-4o & 0.912 & 0.905 & 0.908 & 0.910 & 0.67 & 0.880 \\
+        \bottomrule
+    \end{tabular}
+    \begin{tablenotes}
+        \small
+        \item * $p < 0.05$, ** $p < 0.01$, *** $p < 0.001$
+        \item Chi-Square test for independence (df=3)
+    \end{tablenotes}
+\end{table}
+
+\subsection{Format Comparison Statistical Tests (Example)}
+
+Table~\ref{tab:format_comparison_stats_example} shows example statistical test results for MCQ vs. OSQ comparison (actual results in Chapter~\ref{ch:results}).
+
+\begin{table}[H]
+    \centering
+    \caption{Example MCQ vs. OSQ statistical comparison for selected models.}
+    \label{tab:format_comparison_stats_example}
+    \small
+    \begin{tabular}{lrrrrl}
+        \toprule
+        \textbf{Model} & \textbf{Acc$_{\text{MCQ}}$} & \textbf{Acc$_{\text{OSQ}}$} & \textbf{Diff} & \textbf{Cohen's $d$} & \textbf{Sig.} \\
+        \midrule
+        llama3.2:3b & 0.609 & 0.542 & +0.067 & 0.34 & * \\
+        qwen2.5:7b & 0.706 & 0.673 & +0.033 & 0.18 & n.s. \\
+        deepseek-r1:7b & 0.786 & 0.801 & -0.015 & -0.09 & n.s. \\
+        gpt-4o & 0.909 & 0.894 & +0.015 & 0.12 & n.s. \\
+        \bottomrule
+    \end{tabular}
+    \begin{tablenotes}
+        \small
+        \item Diff = Acc$_{\text{MCQ}}$ - Acc$_{\text{OSQ}}$
+        \item Cohen's $d$: Small (0.2-0.5), Medium (0.5-0.8), Large ($\geq 0.8$)
+        \item Sig.: * $p < 0.05$ (paired t-test), n.s. = not significant
+    \end{tablenotes}
+\end{table}
+
+%============================================================================
+\section{Example Conversions and Judging}\label{app:examples}
+
+This section provides additional examples of MCQ to OSQ conversions and LLM-as-a-judge scoring.
+
+\subsection{Example Conversion 1: Definitional Question}
+
+\begin{tcolorbox}[title=Original MCQ]
+\textbf{Question}: What is the primary purpose of a functional architecture in systems engineering?
+
+\begin{enumerate}[label=\Alph*.]
+    \item To document hardware components
+    \item To define system functions and their relationships
+    \item To specify manufacturing processes
+    \item To establish project timelines
+\end{enumerate}
+
+\textbf{Correct Answer}: B
+\end{tcolorbox}
+
+\begin{tcolorbox}[title=Converted OSQ]
+\textbf{OSQ Prompt}: What is the primary purpose of a functional architecture in systems engineering?
+
+\textbf{Expected Answer}: To define system functions and their relationships
+
+\textbf{Rubric}:
+\begin{itemize}
+    \item \textbf{Full credit}: Mentions defining/describing functions and their relationships/interactions/dependencies
+    \item \textbf{Partial credit}: Mentions functions but not relationships, or vice versa
+    \item \textbf{No credit}: Focuses on hardware, implementation, or unrelated concepts
+\end{itemize}
+
+\textbf{Bloom's Level}: Understand (comprehension of definition and purpose)
+\end{tcolorbox}
+
+\subsection{Example Judging: Rubric-Based Approach}
+
+\begin{tcolorbox}[title=Question and Response]
+\textbf{Question}: What is the primary purpose of a functional architecture in systems engineering?
+
+\textbf{Expected}: To define system functions and their relationships
+
+\textbf{Model Response}: "A functional architecture describes the functions that a system must perform and how those functions relate to each other and interact to achieve system objectives."
+\end{tcolorbox}
+
+\begin{tcolorbox}[title=LLM Judge Output (GPT-4o, Rubric-Based)]
+\{\\
+\quad "score": 1.0,\\
+\quad "reasoning": "The response clearly identifies both key components required by the full credit rubric: (1) defining/describing system functions, and (2) their relationships/interactions. The response goes beyond minimum requirements by also mentioning system objectives, demonstrating comprehensive understanding.",\\
+\quad "rubric\_level": "full\_credit"\\
+\}
+\end{tcolorbox}
+
+%============================================================================
+\section{Code and Data Availability}\label{app:code}
+
+All code, data, and evaluation outputs supporting this dissertation are publicly available:
+
+\subsection{GitHub Repository}
+
+\textbf{URL}: \url{https://github.com/ryan-a-bell/dissertation}
+
+\textbf{Contents}:
+\begin{itemize}
+    \item \texttt{src/phase1\_prep/}: Phase 1 data download and characterization notebooks
+    \item \texttt{src/phase2\_conversion/}: Phase 2 MCQ to OSQ conversion pipeline
+    \item \texttt{src/phase3\_variants/}: Phase 3 position variant generation
+    \item \texttt{src/phase4\_inference/}: Phase 4 inference scripts and task configurations
+    \item \texttt{src/phase5\_llm\_as\_a\_judge/}: Phase 5 judging scripts
+    \item \texttt{src/phase6\_analysis/}: Phase 6 comprehensive analysis scripts
+    \item \texttt{manuscript/}: LaTeX dissertation source files
+\end{itemize}
+
+\subsection{HuggingFace Datasets}
+
+\begin{itemize}
+    \item \textbf{SysEngBench (Base)}: \url{https://huggingface.co/datasets/rabell/SysEngBench}
+    \item \textbf{SysEngBench-OSQ}: \url{https://huggingface.co/datasets/rabell/SysEngBench-OSQ}
+    \item \textbf{Position Variants}: Included in base dataset repository
+\end{itemize}
+
+\subsection{Model Results Archive}
+
+Due to large file sizes, complete evaluation outputs (JSON results, JSONL samples) are archived separately:
+
+\textbf{Zenodo DOI}: [TO BE ASSIGNED UPON PUBLICATION]
+
+%============================================================================
+\section{Software Versions and Environment}\label{app:environment}
+
+\subsection{Python Environment}
+
+\begin{lstlisting}[language=bash,basicstyle=\small\ttfamily]
+# Core packages
+python==3.11.6
+pandas==2.1.4
+numpy==1.24.3
+scipy==1.11.4
+scikit-learn==1.3.2
+matplotlib==3.8.2
+seaborn==0.13.0
+
+# HuggingFace ecosystem
+datasets==2.14.6
+transformers==4.36.0
+
+# Evaluation
+lm-eval==0.4.0
+ollama==0.3.3
+openai==1.6.1
+
+# Utilities
+tqdm==4.66.1
+python-dotenv==1.0.0
+jupyter==1.0.0
+jupyterlab==4.0.9
+\end{lstlisting}
+
+\subsection{Hardware Specifications}
+
+\paragraph{RunPod GPU Instances}
+\begin{itemize}
+    \item GPU: NVIDIA A40 (48GB VRAM) or multi-GPU configurations
+    \item CPU: AMD EPYC 7532 (32 cores)
+    \item RAM: 128GB DDR4
+    \item Storage: 500GB NVMe SSD
+    \item Network: 10 Gbps
+\end{itemize}
+
+\paragraph{Development Workstation}
+\begin{itemize}
+    \item OS: Ubuntu 22.04 LTS
+    \item CPU: Intel Core i9-12900K
+    \item RAM: 64GB DDR5
+    \item GPU: NVIDIA RTX 3090 (24GB VRAM, for development/testing)
+\end{itemize}
