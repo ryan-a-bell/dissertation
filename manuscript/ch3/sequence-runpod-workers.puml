@@ -1,0 +1,59 @@
+@startuml
+actor "Jupyter Notebook" as JN
+participant "RunPod API" as API
+participant "Container" as Container
+participant "SSH Server" as SSH
+participant "Ollama + LM-Eval" as EVAL
+participant "GPU" as GPU
+
+== Pod Creation ==
+JN -> API: create_pod(config)
+API -> Container: provision instance
+Container -> GPU: allocate resources
+API --> JN: return pod_id, SSH endpoint
+
+== Pod Status Polling ==
+JN -> API: get_pod(pod_id)
+API -> Container: check status
+Container --> API: RUNNING + SSH ready
+API --> JN: pod details
+
+== SSH Connection & Provisioning ==
+JN -> SSH: SSH connect (with key)
+SSH --> JN: authenticated
+JN -> SSH: install Ollama
+JN -> SSH: start ollama serve
+JN -> SSH: install lm_eval
+JN -> SSH: ollama pull model
+SSH -> GPU: download model to VRAM
+
+== Upload Configuration ==
+JN -> SSH: upload task YAML files
+SSH --> JN: configs stored
+
+== Run Evaluation ==
+JN -> SSH: execute lm_eval command
+SSH -> EVAL: start evaluation
+EVAL -> EVAL: load task config
+loop For each test case
+    EVAL -> GPU: inference request
+    GPU --> EVAL: model response
+end
+EVAL -> Container: write results.json
+EVAL -> Container: write samples.jsonl
+EVAL --> SSH: evaluation complete
+SSH --> JN: command finished
+
+== Download Results ==
+JN -> SSH: SFTP download request
+SSH -> Container: read output files
+Container --> SSH: results + samples
+SSH --> JN: transfer files
+
+== Cleanup ==
+JN -> API: terminate_pod(pod_id)
+API -> Container: destroy instance
+Container -> GPU: release resources
+API --> JN: pod terminated
+
+@enduml
