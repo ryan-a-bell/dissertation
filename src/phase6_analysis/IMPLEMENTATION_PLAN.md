@@ -1,36 +1,5 @@
 # Phase 6 Analysis - Implementation Plan
 
-## Data Inventory Summary
-
-### Phase 4 MCQ Data
-**Location:** `src/phase4_inference/downloaded_output/`
-
-| Variant         | gemma3__4b | gemma3__27b | Notes |
-|-----------------|------------|-------------|-------|
-| sysengbench     | 2 files    | 2 files     | Base variant (appears to be same as variant A) |
-| sysengbench-a   | 2 files    | 2 files     | Position variant A |
-| sysengbench-b   | 2 files    | 2 files     | Position variant B |
-| sysengbench-c   | 2 files    | 2 files     | Position variant C |
-| sysengbench-d   | 1 file     | 1 file      | Position variant D |
-| sysengbench-osq | 1 file     | 1 file      | Open short questions (raw, not judged) |
-
-**Models:** gemma3__4b, gemma3__27b
-**Thinking models:** None in current dataset (DeepSeek-R1:7b, QwQ:32b mentioned but not present)
-
-### Phase 5 Judged OSQ Data
-**Location:** `src/phase5_llm_as_a_judge/sysengbench-osq-llm-judge/`
-
-- **Models:** gemma3__4b, gemma3__27b
-- **Judge:** openai_gpt-5 (single judge)
-- **Files:** `samples_sysengbench-osq_<timestamp>__openai_gpt-5.jsonl`
-
-### Data Missing Analysis
-- **sysengbench vs sysengbench-a:** Need to verify if these are duplicates or different
-- **Multiple timestamps:** Most variants have 2 files (different runs); need to select most recent or merge
-- **Thinking models:** No thinking model data currently available (DeepSeek-R1:7b, QwQ:32b not present)
-
----
-
 ## Data Structure Details
 
 ### Phase 4 MCQ Sample Structure
@@ -107,13 +76,6 @@
 
 ## Implementation Strategy
 
-### Design Decisions (Agreed Upon)
-
-1. **Thinking models:** Parse but flag with `is_thinking_model` column. Most will be incomplete (2000 token cutoff). Run analyses both with/without.
-2. **OSQ judging:** Single judge (openai_gpt-5) for now. Aggregate fields to total_score.
-3. **Missing data:** Identify which model-variant combinations are missing. Add user-controllable `missing_data_strategy` parameter (drop/impute).
-4. **Statistical tests:** α = 0.05, **no Bonferroni correction** (per user preference).
-
 ### Phase 1: Data Parsing Functions
 
 #### 1.1 MCQ Parser
@@ -178,28 +140,6 @@ def parse_osq_judged_samples(judged_file_path, model_name):
 - Define `is_correct` threshold (e.g., >= 70/100 or >= 60/100, TBD)
 - Link to Question ID via `phase4_row.doc["Question ID"]`
 
-#### 1.3 Thinking Model Handler
-**File:** Add to `results-processing.ipynb`
-
-```python
-def detect_thinking_model(model_name, response_text):
-    """
-    Identify thinking models and flag incomplete responses.
-
-    Returns: dict with:
-        - is_thinking_model: bool
-        - is_truncated: bool (response ends abruptly)
-        - thinking_block_present: bool (<think> tags detected)
-    """
-```
-
-**Logic:**
-- Check model name against known thinking models: `DeepSeek-R1:7b`, `QwQ:32b`
-- Scan for `<think>` or `</think>` tags
-- Detect truncation (ends mid-sentence, token count near 2000)
-- Flag for exclusion analysis
-
----
 
 ### Phase 2: Data Alignment
 
