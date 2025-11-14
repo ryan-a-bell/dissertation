@@ -17,7 +17,7 @@ doc_to_target: "{{expected_answer}}"
 
 generation_kwargs:
   until: []  # No early stopping for thinking models
-  max_gen_toks: 2000  # High limit for reasoning traces
+  max_gen_toks: 500  # ~4 Paragraph limit for OSQ answers. 3 sentences ~150 tokens.
   temperature: 0.0  # Deterministic for evaluation
 
 # Metric list will be computed with LLM as a judge separately

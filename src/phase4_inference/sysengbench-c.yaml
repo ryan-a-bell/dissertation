@@ -25,7 +25,7 @@ doc_to_target: "{{answer}}"
 
 generation_kwargs:
   until: []  # No early stopping for thinking models
-  max_gen_toks: 10000  # High limit for reasoning traces
+  max_gen_toks: 10 # Low limit for MCQ output
   temperature: 0.0  # Deterministic for evaluation
 
 filter_list:
