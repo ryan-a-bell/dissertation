@@ -1,3 +1,9 @@
+# The runpod logs for debugging
+src/phase4_inference/runpod_results/
+src/phase4_inference/runpod_logs/
+
+
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
