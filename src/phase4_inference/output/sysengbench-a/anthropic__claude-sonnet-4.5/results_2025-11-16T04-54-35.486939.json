@@ -1,0 +1,116 @@
+{
+  "results": {
+    "sysengbench-a": {
+      "alias": "sysengbench-a",
+      "exact_match,strict-match": 0.9396853146853147,
+      "exact_match_stderr,strict-match": 0.00704173435958548
+    }
+  },
+  "group_subtasks": {
+    "sysengbench-a": []
+  },
+  "configs": {
+    "sysengbench-a": {
+      "task": "sysengbench-a",
+      "dataset_path": "rabell/SysEngBench-A",
+      "dataset_kwargs": {
+        "trust_remote_code": true
+      },
+      "test_split": "test",
+      "doc_to_text": "Given the following question and four candidate answers (A, B, C and D), choose the best answer. Your response must consist solely of the single letter corresponding to the best answer, chosen from one of A, B, C or D. Any response other than a single letter (A, B, C, or D) will be considered invalid.\nQuestion: {{question}}\nA. {{choiceA}}\nB. {{choiceB}}\nC. {{choiceC}}\nD. {{choiceD}}\nAnswer:",
+      "doc_to_target": "{{answer}}",
+      "unsafe_code": false,
+      "description": "",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "num_fewshot": 0,
+      "metric_list": [
+        {
+          "metric": "exact_match",
+          "aggregation": "mean",
+          "higher_is_better": true,
+          "ignore_punctuation": true,
+          "ignore_case": true
+        }
+      ],
+      "output_type": "generate_until",
+      "generation_kwargs": {
+        "until": [],
+        "max_gen_toks": 10,
+        "temperature": 0.0
+      },
+      "repeats": 1,
+      "filter_list": [
+        {
+          "name": "strict-match",
+          "filter": [
+            {
+              "function": "regex",
+              "regex_pattern": "([ABCD])"
+            },
+            {
+              "function": "take_first"
+            }
+          ]
+        }
+      ],
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "model": "anthropic/claude-sonnet-4.5"
+      }
+    }
+  },
+  "versions": {
+    "sysengbench-a": 1.0
+  },
+  "n-shot": {
+    "sysengbench-a": 0
+  },
+  "higher_is_better": {
+    "sysengbench-a": {
+      "exact_match": true
+    }
+  },
+  "n-samples": {
+    "sysengbench-a": {
+      "original": 1144,
+      "effective": 1144
+    }
+  },
+  "config": {
+    "model": "openrouter-chat-completions",
+    "model_args": "model=anthropic/claude-sonnet-4.5",
+    "batch_size": "1",
+    "batch_sizes": [],
+    "device": null,
+    "use_cache": null,
+    "limit": null,
+    "bootstrap_iters": 100000,
+    "gen_kwargs": null,
+    "random_seed": 0,
+    "numpy_seed": 1234,
+    "torch_seed": 1234,
+    "fewshot_seed": 1234
+  },
+  "git_hash": "a2ce3d5",
+  "date": 1763285513.9684198,
+  "pretty_env_info": "PyTorch version: 2.8.0+cpu\nIs debug build: False\nCUDA used to build PyTorch: None\nROCM used to build PyTorch: N/A\n\nOS: Microsoft Windows 11 Home (10.0.26100 64-bit)\nGCC version: (MinGW-W64 x86_64-ucrt-posix-seh, built by Brecht Sanders, r8) 13.2.0\r\nClang version: Could not collect\nCMake version: version 3.29.2\nLibc version: N/A\n\nPython version: 3.12.4 (tags/v3.12.4:8e8a4ba, Jun  6 2024, 19:30:16) [MSC v.1940 64 bit (AMD64)] (64-bit runtime)\nPython platform: Windows-11-10.0.26100-SP0\nIs CUDA available: False\nCUDA runtime version: No CUDA\nCUDA_MODULE_LOADING set to: N/A\nGPU models and configuration: No CUDA\nNvidia driver version: No CUDA\ncuDNN version: No CUDA\nHIP runtime version: N/A\nMIOpen runtime version: N/A\nIs XNNPACK available: True\n\nCPU:\nName: Intel(R) Core(TM) i5-10210U CPU @ 1.60GHz\nManufacturer: GenuineIntel\nFamily: 205\nArchitecture: 9\nProcessorType: 3\nDeviceID: CPU0\nCurrentClockSpeed: 1609\nMaxClockSpeed: 2112\nL2CacheSize: 1024\nL2CacheSpeed: None\nRevision: None\n\nVersions of relevant libraries:\n[pip3] numpy==2.2.6\n[pip3] torch==2.8.0\n[conda] Could not collect",
+  "transformers_version": "4.56.1",
+  "lm_eval_version": "0.4.9.1",
+  "upper_git_hash": null,
+  "task_hashes": {
+    "sysengbench-a": "96ea0833d4b69e31d2e6fe88548638b5503fa83f536fe23dac1da173ffd3b5ae"
+  },
+  "model_source": "openrouter-chat-completions",
+  "model_name": "anthropic/claude-sonnet-4.5",
+  "model_name_sanitized": "anthropic__claude-sonnet-4.5",
+  "system_instruction": null,
+  "system_instruction_sha": null,
+  "fewshot_as_multiturn": false,
+  "chat_template": "",
+  "chat_template_sha": null,
+  "start_time": 25015.6660124,
+  "end_time": 26387.4404256,
+  "total_evaluation_time_seconds": "1371.7744132000007"
+}
