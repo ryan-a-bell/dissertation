@@ -194,11 +194,19 @@ def parse_osq_judged_samples(phase5_dir: Path, use_latest: bool = True) -> List[
 
         # Parse each judged file
         for judged_file in judged_files:
-            # Extract judge name from filename: samples_*__openai_gpt-5.jsonl
-            judge_match = re.search(r'__(.+)\.jsonl$', judged_file.name)
-            judge_name = judge_match.group(1) if judge_match else 'unknown'
+            # Extract judge name and prompt ID from filename
+            # Pattern: samples_*__openai_gpt-5-p1.jsonl -> judge=openai_gpt-5, prompt=p1
+            judge_match = re.search(r'__(.+)-(p\d+)\.jsonl$', judged_file.name)
+            if judge_match:
+                judge_name = judge_match.group(1)
+                prompt_id = judge_match.group(2)
+            else:
+                # Fallback for old format without prompt ID
+                judge_match_old = re.search(r'__(.+)\.jsonl$', judged_file.name)
+                judge_name = judge_match_old.group(1) if judge_match_old else 'unknown'
+                prompt_id = 'unknown'
 
-            print(f"📖 Parsing {model_name}/{judged_file.name} (judge: {judge_name})")
+            print(f"📖 Parsing {model_name}/{judged_file.name} (judge: {judge_name}, prompt: {prompt_id})")
 
             with open(judged_file, 'r', encoding='utf-8') as f:
                 for line_num, line in enumerate(f, 1):
@@ -249,6 +257,7 @@ def parse_osq_judged_samples(phase5_dir: Path, use_latest: bool = True) -> List[
                             'model_response': model_response,
                             'blooms_level': blooms_level,
                             'judge_model': judge_name,
+                            'prompt_id': prompt_id,
                             'technical_accuracy': technical_accuracy,
                             'conceptual_understanding': conceptual_understanding,
                             'completeness': completeness,
@@ -308,6 +317,50 @@ def detect_thinking_model(model_name: str, response_text: str) -> Dict[str, bool
         'is_thinking_model': is_thinking,
         'has_think_tags': has_think_tags,
         'appears_truncated': appears_truncated
+    }
+
+
+def filter_osq_data(osq_data: List[Dict],
+                   judge_model: Optional[str] = None,
+                   prompt_id: Optional[str] = None) -> List[Dict]:
+    """
+    Filter OSQ data by judge model and/or prompt ID.
+
+    Args:
+        osq_data: List of OSQ samples from parse_osq_judged_samples()
+        judge_model: Judge model to filter by (e.g., 'openai_gpt-5'). None = all judges
+        prompt_id: Prompt ID to filter by (e.g., 'p1'). None = all prompts
+
+    Returns:
+        Filtered list of OSQ records
+    """
+    filtered = osq_data
+
+    if judge_model is not None:
+        filtered = [r for r in filtered if r.get('judge_model') == judge_model]
+
+    if prompt_id is not None:
+        filtered = [r for r in filtered if r.get('prompt_id') == prompt_id]
+
+    return filtered
+
+
+def get_available_judges_and_prompts(osq_data: List[Dict]) -> Dict[str, List[str]]:
+    """
+    Get list of available judges and prompts from OSQ data.
+
+    Args:
+        osq_data: List of OSQ samples from parse_osq_judged_samples()
+
+    Returns:
+        Dictionary with 'judges' and 'prompts' keys containing unique values
+    """
+    judges = sorted(set(r.get('judge_model', 'unknown') for r in osq_data))
+    prompts = sorted(set(r.get('prompt_id', 'unknown') for r in osq_data))
+
+    return {
+        'judges': judges,
+        'prompts': prompts
     }
 
 
@@ -374,7 +427,8 @@ def align_mcq_osq_results(mcq_data: List[Dict], osq_data: List[Dict],
             'osq_clarity_organization': record['clarity_organization'],
             'osq_professional_relevance': record['professional_relevance'],
             'blooms_level': record['blooms_level'],
-            'judge_model': record['judge_model']
+            'judge_model': record['judge_model'],
+            'prompt_id': record['prompt_id']
         }
 
     # Merge MCQ and OSQ
@@ -414,7 +468,8 @@ def align_mcq_osq_results(mcq_data: List[Dict], osq_data: List[Dict],
                 'osq_clarity_organization': None,
                 'osq_professional_relevance': None,
                 'blooms_level': None,
-                'judge_model': None
+                'judge_model': None,
+                'prompt_id': None
             })
 
         # Calculate MCQ average (across fixed position variants a/b/c/d, excluding random)
