@@ -16,7 +16,6 @@
     "## Dataset\n",
     "- **Models**: Multiple models across sysengbench variants (a, b, c, d, random)\n",
     "- **MCQ Variants**: random, a, b, c, d (1144 questions \u00d7 5 variants \u00d7 N models)\n",
-    "- **MCQ Variants**: random, a, b, c, d (1144 questions \u00d7 5 variants \u00d7 N models)\n",
     "- **OSQ**: Judged by LLM-as-a-judge (limited samples, judging incomplete)\n",
     "- **Correctness Threshold**: OSQ >= 70/100 points"
    ]
@@ -119,8 +118,6 @@
      "text": [
       "\u2705 Imports complete\n",
       "\u2705 Output directory: c:\\Users\\rabel\\Desktop\\dissertation\\src\\phase6_analysis\\output\n"
-      "\u2705 Imports complete\n",
-      "\u2705 Output directory: c:\\Users\\rabel\\Desktop\\dissertation\\src\\phase6_analysis\\output\n"
      ]
     }
    ],
@@ -149,7 +146,7 @@
     "# Custom parsers\n",
     "import sys\n",
     "sys.path.append(str(Path.cwd()))\n",
-    "from parsers import (parse_mcq_samples, parse_osq_judged_samples, align_mcq_osq_results,\n                      filter_osq_data, get_available_judges_and_prompts)\n",
+    "from parsers import parse_mcq_samples, parse_osq_judged_samples, align_mcq_osq_results\n",
     "\n",
     "# Plotting style\n",
     "sns.set_style('whitegrid')\n",
@@ -160,8 +157,6 @@
     "output_dir = Path(\"output\")\n",
     "output_dir.mkdir(exist_ok=True)\n",
     "\n",
-    "print(\"\u2705 Imports complete\")\n",
-    "print(f\"\u2705 Output directory: {output_dir.absolute()}\")"
     "print(\"\u2705 Imports complete\")\n",
     "print(f\"\u2705 Output directory: {output_dir.absolute()}\")"
    ]
@@ -175,7 +170,6 @@
      "name": "stdout",
      "output_type": "stream",
      "text": [
-      "\u2705 LaTeX export utility loaded\n"
       "\u2705 LaTeX export utility loaded\n"
      ]
     }
@@ -233,10 +227,8 @@
     "        f.write(full_latex)\n",
     "    \n",
     "    print(f\"\u2705 Saved LaTeX table: {filepath}\")\n",
-    "    print(f\"\u2705 Saved LaTeX table: {filepath}\")\n",
     "    return filepath\n",
     "\n",
-    "print(\"\u2705 LaTeX export utility loaded\")"
     "print(\"\u2705 LaTeX export utility loaded\")"
    ]
   },
@@ -322,50 +314,7 @@
       "\ud83d\udcd6 Parsing sysengbench-d/openai__gpt-4.1/samples_sysengbench-d_2025-11-16T02-42-23.407436.jsonl\n",
       "\ud83d\udcd6 Parsing sysengbench-d/phi4__14b/samples_sysengbench-d_2025-11-14T23-03-30.271693.jsonl\n",
       "\u2705 Parsed 45760 MCQ samples\n",
-      "\ud83d\udcd6 Parsing MCQ samples from Phase 4...\n",
-      "\ud83d\udcd6 Parsing sysengbench/anthropic__claude-sonnet-4.5/samples_sysengbench_2025-11-16T04-31-27.456510.jsonl\n",
-      "\ud83d\udcd6 Parsing sysengbench/gemma3__27b/samples_sysengbench_2025-11-14T23-11-53.059743.jsonl\n",
-      "\ud83d\udcd6 Parsing sysengbench/google__gemini-2.5-flash/samples_sysengbench_2025-11-16T03-13-38.857265.jsonl\n",
-      "\ud83d\udcd6 Parsing sysengbench/llama3.3__70b/samples_sysengbench_2025-11-15T01-10-38.229116.jsonl\n",
-      "\ud83d\udcd6 Parsing sysengbench/llama4__16x17b/samples_sysengbench_2025-11-15T01-24-26.129282.jsonl\n",
-      "\ud83d\udcd6 Parsing sysengbench/mistral-large__123b/samples_sysengbench_2025-11-14T23-23-55.942057.jsonl\n",
-      "\ud83d\udcd6 Parsing sysengbench/openai__gpt-4.1/samples_sysengbench_2025-11-16T01-45-12.770395.jsonl\n",
-      "\ud83d\udcd6 Parsing sysengbench/phi4__14b/samples_sysengbench_2025-11-15T01-28-40.933189.jsonl\n",
-      "\ud83d\udcd6 Parsing sysengbench-a/anthropic__claude-sonnet-4.5/samples_sysengbench-a_2025-11-16T04-54-35.486939.jsonl\n",
-      "\ud83d\udcd6 Parsing sysengbench-a/gemma3__27b/samples_sysengbench-a_2025-11-14T23-11-43.148438.jsonl\n",
-      "\ud83d\udcd6 Parsing sysengbench-a/google__gemini-2.5-flash/samples_sysengbench-a_2025-11-16T03-25-44.047093.jsonl\n",
-      "\ud83d\udcd6 Parsing sysengbench-a/llama3.3__70b/samples_sysengbench-a_2025-11-15T01-12-13.438110.jsonl\n",
-      "\ud83d\udcd6 Parsing sysengbench-a/llama4__16x17b/samples_sysengbench-a_2025-11-14T23-09-25.943146.jsonl\n",
-      "\ud83d\udcd6 Parsing sysengbench-a/mistral-large__123b/samples_sysengbench-a_2025-11-14T23-24-22.120086.jsonl\n",
-      "\ud83d\udcd6 Parsing sysengbench-a/openai__gpt-4.1/samples_sysengbench-a_2025-11-16T01-58-41.097754.jsonl\n",
-      "\ud83d\udcd6 Parsing sysengbench-a/phi4__14b/samples_sysengbench-a_2025-11-14T23-04-43.082192.jsonl\n",
-      "\ud83d\udcd6 Parsing sysengbench-b/anthropic__claude-sonnet-4.5/samples_sysengbench-b_2025-11-16T10-22-35.353583.jsonl\n",
-      "\ud83d\udcd6 Parsing sysengbench-b/gemma3__27b/samples_sysengbench-b_2025-11-14T23-20-22.707023.jsonl\n",
-      "\ud83d\udcd6 Parsing sysengbench-b/google__gemini-2.5-flash/samples_sysengbench-b_2025-11-16T03-37-50.275988.jsonl\n",
-      "\ud83d\udcd6 Parsing sysengbench-b/llama3.3__70b/samples_sysengbench-b_2025-11-14T23-04-02.469884.jsonl\n",
-      "\ud83d\udcd6 Parsing sysengbench-b/llama4__16x17b/samples_sysengbench-b_2025-11-14T23-07-23.248283.jsonl\n",
-      "\ud83d\udcd6 Parsing sysengbench-b/mistral-large__123b/samples_sysengbench-b_2025-11-14T23-28-45.440609.jsonl\n",
-      "\ud83d\udcd6 Parsing sysengbench-b/openai__gpt-4.1/samples_sysengbench-b_2025-11-16T02-12-47.132272.jsonl\n",
-      "\ud83d\udcd6 Parsing sysengbench-b/phi4__14b/samples_sysengbench-b_2025-11-15T01-28-33.048250.jsonl\n",
-      "\ud83d\udcd6 Parsing sysengbench-c/anthropic__claude-sonnet-4.5/samples_sysengbench-c_2025-11-16T10-48-42.460293.jsonl\n",
-      "\ud83d\udcd6 Parsing sysengbench-c/gemma3__27b/samples_sysengbench-c_2025-11-14T23-15-14.860021.jsonl\n",
-      "\ud83d\udcd6 Parsing sysengbench-c/google__gemini-2.5-flash/samples_sysengbench-c_2025-11-16T03-49-53.632736.jsonl\n",
-      "\ud83d\udcd6 Parsing sysengbench-c/llama3.3__70b/samples_sysengbench-c_2025-11-15T02-05-45.163707.jsonl\n",
-      "\ud83d\udcd6 Parsing sysengbench-c/llama4__16x17b/samples_sysengbench-c_2025-11-15T01-25-29.826356.jsonl\n",
-      "\ud83d\udcd6 Parsing sysengbench-c/mistral-large__123b/samples_sysengbench-c_2025-11-14T23-29-07.819170.jsonl\n",
-      "\ud83d\udcd6 Parsing sysengbench-c/openai__gpt-4.1/samples_sysengbench-c_2025-11-16T02-29-10.103809.jsonl\n",
-      "\ud83d\udcd6 Parsing sysengbench-c/phi4__14b/samples_sysengbench-c_2025-11-15T01-29-38.438302.jsonl\n",
-      "\ud83d\udcd6 Parsing sysengbench-d/anthropic__claude-sonnet-4.5/samples_sysengbench-d_2025-11-16T05-37-58.484294.jsonl\n",
-      "\ud83d\udcd6 Parsing sysengbench-d/gemma3__27b/samples_sysengbench-d_2025-11-14T23-17-20.779709.jsonl\n",
-      "\ud83d\udcd6 Parsing sysengbench-d/google__gemini-2.5-flash/samples_sysengbench-d_2025-11-16T20-26-01.496015.jsonl\n",
-      "\ud83d\udcd6 Parsing sysengbench-d/llama3.3__70b/samples_sysengbench-d_2025-11-15T01-21-36.685747.jsonl\n",
-      "\ud83d\udcd6 Parsing sysengbench-d/llama4__16x17b/samples_sysengbench-d_2025-11-15T01-33-11.669771.jsonl\n",
-      "\ud83d\udcd6 Parsing sysengbench-d/mistral-large__123b/samples_sysengbench-d_2025-11-14T23-30-42.886897.jsonl\n",
-      "\ud83d\udcd6 Parsing sysengbench-d/openai__gpt-4.1/samples_sysengbench-d_2025-11-16T02-42-23.407436.jsonl\n",
-      "\ud83d\udcd6 Parsing sysengbench-d/phi4__14b/samples_sysengbench-d_2025-11-14T23-03-30.271693.jsonl\n",
-      "\u2705 Parsed 45760 MCQ samples\n",
       "\n",
-      "\u2705 MCQ DataFrame shape: (45760, 13)\n",
       "\u2705 MCQ DataFrame shape: (45760, 13)\n",
       "   Models: ['anthropic__claude-sonnet-4.5', 'gemma3__27b', 'google__gemini-2.5-flash', 'llama3.3__70b', 'llama4__16x17b', 'mistral-large__123b', 'openai__gpt-4.1', 'phi4__14b']\n",
       "   Variants: ['random', 'a', 'b', 'c', 'd']\n",
@@ -376,11 +325,9 @@
    "source": [
     "# Parse MCQ data\n",
     "print(\"\\n\ud83d\udcd6 Parsing MCQ samples from Phase 4...\")\n",
-    "print(\"\\n\ud83d\udcd6 Parsing MCQ samples from Phase 4...\")\n",
     "mcq_data = parse_mcq_samples(phase4_dir, use_latest=True)\n",
     "mcq_df = pd.DataFrame(mcq_data)\n",
     "\n",
-    "print(f\"\\n\u2705 MCQ DataFrame shape: {mcq_df.shape}\")\n",
     "print(f\"\\n\u2705 MCQ DataFrame shape: {mcq_df.shape}\")\n",
     "print(f\"   Models: {mcq_df['model'].unique().tolist()}\")\n",
     "print(f\"   Variants: {mcq_df['variant'].unique().tolist()}\")\n",
@@ -1165,7 +1112,6 @@
      "text": [
       "\n",
       "\ud83d\udcca Chi-Square Test for Position Bias\n",
-      "\ud83d\udcca Chi-Square Test for Position Bias\n",
       "================================================================================\n",
       "H0: Answer position does not affect correctness\n",
       "\n",
@@ -1173,12 +1119,10 @@
       "  Chi-square: 19.7457\n",
       "  p-value: 0.0002\n",
       "  Result: Significant at \u03b1=0.05\n",
-      "  Result: Significant at \u03b1=0.05\n",
       "\n",
       "Model: gemma3__27b\n",
       "  Chi-square: 8.7401\n",
       "  p-value: 0.0330\n",
-      "  Result: Significant at \u03b1=0.05\n",
       "  Result: Significant at \u03b1=0.05\n",
       "\n"
      ]
@@ -1191,36 +1135,30 @@
       "  Chi-square: 1.1080\n",
       "  p-value: 0.7751\n",
       "  Result: Not significant at \u03b1=0.05\n",
-      "  Result: Not significant at \u03b1=0.05\n",
       "\n",
       "Model: llama3.3__70b\n",
       "  Chi-square: 9.9223\n",
       "  p-value: 0.0192\n",
-      "  Result: Significant at \u03b1=0.05\n",
       "  Result: Significant at \u03b1=0.05\n",
       "\n",
       "Model: llama4__16x17b\n",
       "  Chi-square: 7.8009\n",
       "  p-value: 0.0503\n",
       "  Result: Not significant at \u03b1=0.05\n",
-      "  Result: Not significant at \u03b1=0.05\n",
       "\n",
       "Model: mistral-large__123b\n",
       "  Chi-square: 20.7795\n",
       "  p-value: 0.0001\n",
-      "  Result: Significant at \u03b1=0.05\n",
       "  Result: Significant at \u03b1=0.05\n",
       "\n",
       "Model: openai__gpt-4.1\n",
       "  Chi-square: 6.2489\n",
       "  p-value: 0.1001\n",
       "  Result: Not significant at \u03b1=0.05\n",
-      "  Result: Not significant at \u03b1=0.05\n",
       "\n",
       "Model: phi4__14b\n",
       "  Chi-square: 5.3723\n",
       "  p-value: 0.1465\n",
-      "  Result: Not significant at \u03b1=0.05\n",
       "  Result: Not significant at \u03b1=0.05\n",
       "\n"
      ]
@@ -1229,14 +1167,12 @@
    "source": [
     "# Chi-square test for position bias\n",
     "print(\"\\n\ud83d\udcca Chi-Square Test for Position Bias\")\n",
-    "print(\"\\n\ud83d\udcca Chi-Square Test for Position Bias\")\n",
     "print(\"=\" * 80)\n",
     "print(\"H0: Answer position does not affect correctness\\n\")\n",
     "\n",
     "for model in mcq_fixed['model'].unique():\n",
     "    model_data = mcq_fixed[mcq_fixed['model'] == model]\n",
     "    \n",
-    "    # Create contingency table: position \u00d7 correct/incorrect\n",
     "    # Create contingency table: position \u00d7 correct/incorrect\n",
     "    contingency = pd.crosstab(model_data['variant'], model_data['is_correct'])\n",
     "    \n",
@@ -1245,7 +1181,6 @@
     "    print(f\"Model: {model}\")\n",
     "    print(f\"  Chi-square: {chi2:.4f}\")\n",
     "    print(f\"  p-value: {p_value:.4f}\")\n",
-    "    print(f\"  Result: {'Significant' if p_value < 0.05 else 'Not significant'} at \u03b1=0.05\")\n",
     "    print(f\"  Result: {'Significant' if p_value < 0.05 else 'Not significant'} at \u03b1=0.05\")\n",
     "    print()"
    ]
@@ -1323,9 +1258,7 @@
       "gemma3__27b                       0.917657       5720       5249   0.003635\n",
       "mistral-large__123b               0.874476       5720       5002   0.004381\n",
       "\u2705 Saved LaTeX table: output\\table_model_performance_mcq.tex\n",
-      "\u2705 Saved LaTeX table: output\\table_model_performance_mcq.tex\n",
       "\n",
-      "\u2705 Table displayed and exported to LaTeX\n"
       "\u2705 Table displayed and exported to LaTeX\n"
      ]
     }
@@ -1788,9 +1721,7 @@
       "gemma3__27b                   0.902098  0.916958  0.935315  0.911713  0.916521  0.012089\n",
       "mistral-large__123b           0.893357  0.878497  0.883741  0.834790  0.872596  0.022468\n",
       "\u2705 Saved LaTeX table: output\\table_position_accuracy.tex\n",
-      "\u2705 Saved LaTeX table: output\\table_position_accuracy.tex\n",
       "\n",
-      "\u2705 Table displayed and exported to LaTeX\n"
       "\u2705 Table displayed and exported to LaTeX\n"
      ]
     }
@@ -1828,7 +1759,6 @@
     ")\n",
     "\n",
     "print(f\"\\n\u2705 Table displayed and exported to LaTeX\")"
-    "print(f\"\\n\u2705 Table displayed and exported to LaTeX\")"
    ]
   },
   {
@@ -1847,7 +1777,6 @@
       "\n",
       "Position Bias Statistical Tests:\n",
       "                                   Chi\u00b2  Chi\u00b2 p-value  F-statistic  ANOVA p-value Significant ($\\alpha=0.05$)\n",
-      "                                   Chi\u00b2  Chi\u00b2 p-value  F-statistic  ANOVA p-value Significant ($\\alpha=0.05$)\n",
       "Model                                                                                                        \n",
       "anthropic__claude-sonnet-4.5  19.745696      0.000192     6.604645       0.000189                         Yes\n",
       "gemma3__27b                    8.740085      0.032954     2.916385       0.032929                         Yes\n",
@@ -1858,9 +1787,7 @@
       "openai__gpt-4.1                6.248857      0.100111     2.083977       0.100133                          No\n",
       "phi4__14b                      5.372272      0.146481     1.791295       0.146541                          No\n",
       "\u2705 Saved LaTeX table: output\\table_position_bias_tests.tex\n",
-      "\u2705 Saved LaTeX table: output\\table_position_bias_tests.tex\n",
       "\n",
-      "\u2705 Table displayed and exported to LaTeX\n"
       "\u2705 Table displayed and exported to LaTeX\n"
      ]
     }
@@ -1891,8 +1818,6 @@
     "        'Model': model,\n",
     "        'Chi\u00b2': chi2,\n",
     "        'Chi\u00b2 p-value': chi2_p,\n",
-    "        'Chi\u00b2': chi2,\n",
-    "        'Chi\u00b2 p-value': chi2_p,\n",
     "        'F-statistic': f_stat,\n",
     "        'ANOVA p-value': anova_p,\n",
     "        'Significant ($\\\\alpha=0.05$)': 'Yes' if chi2_p < 0.05 else 'No'\n",
@@ -1915,7 +1840,6 @@
     ")\n",
     "\n",
     "print(f\"\\n\u2705 Table displayed and exported to LaTeX\")"
-    "print(f\"\\n\u2705 Table displayed and exported to LaTeX\")"
    ]
   },
   {
@@ -1936,7 +1860,6 @@
      "text": [
       "\n",
       "\ud83d\udcca One-Way ANOVA for Position Bias\n",
-      "\ud83d\udcca One-Way ANOVA for Position Bias\n",
       "================================================================================\n",
       "H0: Mean accuracy is equal across all positions\n",
       "\n",
@@ -1944,48 +1867,40 @@
       "  F-statistic: 6.6046\n",
       "  p-value: 0.0002\n",
       "  Result: Significant at \u03b1=0.05\n",
-      "  Result: Significant at \u03b1=0.05\n",
       "\n",
       "Model: gemma3__27b\n",
       "  F-statistic: 2.9164\n",
       "  p-value: 0.0329\n",
-      "  Result: Significant at \u03b1=0.05\n",
       "  Result: Significant at \u03b1=0.05\n",
       "\n",
       "Model: google__gemini-2.5-flash\n",
       "  F-statistic: 0.3691\n",
       "  p-value: 0.7753\n",
       "  Result: Not significant at \u03b1=0.05\n",
-      "  Result: Not significant at \u03b1=0.05\n",
       "\n",
       "Model: llama3.3__70b\n",
       "  F-statistic: 3.3117\n",
       "  p-value: 0.0192\n",
-      "  Result: Significant at \u03b1=0.05\n",
       "  Result: Significant at \u03b1=0.05\n",
       "\n",
       "Model: llama4__16x17b\n",
       "  F-statistic: 2.6025\n",
       "  p-value: 0.0503\n",
       "  Result: Not significant at \u03b1=0.05\n",
-      "  Result: Not significant at \u03b1=0.05\n",
       "\n",
       "Model: mistral-large__123b\n",
       "  F-statistic: 6.9520\n",
       "  p-value: 0.0001\n",
-      "  Result: Significant at \u03b1=0.05\n",
       "  Result: Significant at \u03b1=0.05\n",
       "\n",
       "Model: openai__gpt-4.1\n",
       "  F-statistic: 2.0840\n",
       "  p-value: 0.1001\n",
       "  Result: Not significant at \u03b1=0.05\n",
-      "  Result: Not significant at \u03b1=0.05\n",
       "\n",
       "Model: phi4__14b\n",
       "  F-statistic: 1.7913\n",
       "  p-value: 0.1465\n",
-      "  Result: Not significant at \u03b1=0.05\n",
       "  Result: Not significant at \u03b1=0.05\n",
       "\n"
      ]
@@ -1993,7 +1908,6 @@
    ],
    "source": [
     "# ANOVA test for position bias\n",
-    "print(\"\\n\ud83d\udcca One-Way ANOVA for Position Bias\")\n",
     "print(\"\\n\ud83d\udcca One-Way ANOVA for Position Bias\")\n",
     "print(\"=\" * 80)\n",
     "print(\"H0: Mean accuracy is equal across all positions\\n\")\n",
@@ -2011,7 +1925,6 @@
     "    print(f\"Model: {model}\")\n",
     "    print(f\"  F-statistic: {f_stat:.4f}\")\n",
     "    print(f\"  p-value: {p_value:.4f}\")\n",
-    "    print(f\"  Result: {'Significant' if p_value < 0.05 else 'Not significant'} at \u03b1=0.05\")\n",
     "    print(f\"  Result: {'Significant' if p_value < 0.05 else 'Not significant'} at \u03b1=0.05\")\n",
     "    print()"
    ]
@@ -2035,7 +1948,6 @@
      "name": "stdout",
      "output_type": "stream",
      "text": [
-      "\u2705 Saved: position_bias_heatmap.png\n"
       "\u2705 Saved: position_bias_heatmap.png\n"
      ]
     }
@@ -2069,7 +1981,6 @@
     "plt.show()\n",
     "\n",
     "print(\"\u2705 Saved: position_bias_heatmap.png\")"
-    "print(\"\u2705 Saved: position_bias_heatmap.png\")"
    ]
   },
   {
@@ -2091,7 +2002,6 @@
      "name": "stdout",
      "output_type": "stream",
      "text": [
-      "\u2705 Saved: position_bias_bar.png\n"
       "\u2705 Saved: position_bias_bar.png\n"
      ]
     }
@@ -2115,7 +2025,6 @@
     "plt.savefig('position_bias_bar.png', dpi=300, bbox_inches='tight')\n",
     "plt.show()\n",
     "\n",
-    "print(\"\u2705 Saved: position_bias_bar.png\")"
     "print(\"\u2705 Saved: position_bias_bar.png\")"
    ]
   },
@@ -2147,7 +2056,6 @@
      "name": "stdout",
      "output_type": "stream",
      "text": [
-      "\u2705 Saved: output/mcq_position_heatmap.png\n"
       "\u2705 Saved: output/mcq_position_heatmap.png\n"
      ]
     }
@@ -2184,7 +2092,6 @@
     "plt.show()\n",
     "\n",
     "print(f\"\u2705 Saved: {output_dir}/mcq_position_heatmap.png\")"
-    "print(f\"\u2705 Saved: {output_dir}/mcq_position_heatmap.png\")"
    ]
   },
   {
@@ -2216,7 +2123,6 @@
      "name": "stdout",
      "output_type": "stream",
      "text": [
-      "\u2705 Saved: output/mcq_deviation_from_uniform.png\n"
       "\u2705 Saved: output/mcq_deviation_from_uniform.png\n"
      ]
     }
@@ -2265,7 +2171,6 @@
     "plt.show()\n",
     "\n",
     "print(f\"\u2705 Saved: {output_dir}/mcq_deviation_from_uniform.png\")"
-    "print(f\"\u2705 Saved: {output_dir}/mcq_deviation_from_uniform.png\")"
    ]
   },
   {
@@ -2287,7 +2192,6 @@
      "name": "stdout",
      "output_type": "stream",
      "text": [
-      "\u2705 Saved: output/plot1_position_accuracy_heatmap_all_models.png\n"
       "\u2705 Saved: output/plot1_position_accuracy_heatmap_all_models.png\n"
      ]
     }
@@ -2319,7 +2223,6 @@
     "plt.show()\n",
     "\n",
     "print(\"\u2705 Saved: output/plot1_position_accuracy_heatmap_all_models.png\")"
-    "print(\"\u2705 Saved: output/plot1_position_accuracy_heatmap_all_models.png\")"
    ]
   },
   {
@@ -2343,7 +2246,6 @@
       "================================================================================\n",
       "\n",
       "\ud83d\udcca PLOTS GENERATED (5):\n",
-      "\ud83d\udcca PLOTS GENERATED (5):\n",
       "--------------------------------------------------------------------------------\n",
       "   1. mcq_deviation_from_uniform.png                     (   269.2 KB)\n",
       "   2. mcq_position_heatmap.png                           (   288.7 KB)\n",
@@ -2352,13 +2254,11 @@
       "   5. position_bias_bar.png                              (   151.6 KB)\n",
       "\n",
       "\ud83d\udccb LATEX TABLES GENERATED (3):\n",
-      "\ud83d\udccb LATEX TABLES GENERATED (3):\n",
       "--------------------------------------------------------------------------------\n",
       "   1. table_model_performance_mcq.tex                    (     0.7 KB)\n",
       "   2. table_position_accuracy.tex                        (     0.9 KB)\n",
       "   3. table_position_bias_tests.tex                      (     0.8 KB)\n",
       "\n",
-      "\ud83d\udcbe CSV DATA FILES (0):\n",
       "\ud83d\udcbe CSV DATA FILES (0):\n",
       "--------------------------------------------------------------------------------\n",
       "\n",
@@ -2367,7 +2267,6 @@
       "Total Files Generated: 8\n",
       "================================================================================\n",
       "\n",
-      "\u2705 ANALYSIS COMPLETE!\n",
       "\u2705 ANALYSIS COMPLETE!\n",
       "   All outputs saved to: c:\\Users\\rabel\\Desktop\\dissertation\\src\\phase6_analysis\\output\n"
      ]
@@ -2388,20 +2287,17 @@
     "csvs = [f for f in output_files if f.suffix == '.csv']\n",
     "\n",
     "print(f\"\\n\ud83d\udcca PLOTS GENERATED ({len(plots)}):\")\n",
-    "print(f\"\\n\ud83d\udcca PLOTS GENERATED ({len(plots)}):\")\n",
     "print(\"-\" * 80)\n",
     "for i, plot in enumerate(sorted(plots), 1):\n",
     "    size = os.path.getsize(plot) / 1024  # KB\n",
     "    print(f\"  {i:2d}. {plot.name:<50s} ({size:>8.1f} KB)\")\n",
     "\n",
     "print(f\"\\n\ud83d\udccb LATEX TABLES GENERATED ({len(tables)}):\")\n",
-    "print(f\"\\n\ud83d\udccb LATEX TABLES GENERATED ({len(tables)}):\")\n",
     "print(\"-\" * 80)\n",
     "for i, table in enumerate(sorted(tables), 1):\n",
     "    size = os.path.getsize(table) / 1024  # KB\n",
     "    print(f\"  {i:2d}. {table.name:<50s} ({size:>8.1f} KB)\")\n",
     "\n",
-    "print(f\"\\n\ud83d\udcbe CSV DATA FILES ({len(csvs)}):\")\n",
     "print(f\"\\n\ud83d\udcbe CSV DATA FILES ({len(csvs)}):\")\n",
     "print(\"-\" * 80)\n",
     "for i, csv in enumerate(sorted(csvs), 1):\n",
@@ -2414,7 +2310,6 @@
     "print(f\"Total Files Generated: {len(output_files)}\")\n",
     "print(\"=\" * 80)\n",
     "\n",
-    "print(\"\\n\u2705 ANALYSIS COMPLETE!\")\n",
     "print(\"\\n\u2705 ANALYSIS COMPLETE!\")\n",
     "print(f\"   All outputs saved to: {output_dir.absolute()}\")"
    ]
@@ -2456,18 +2351,15 @@
      "output_type": "stream",
      "text": [
       "\u2705 Saved: output/qq_plots.png\n",
-      "\u2705 Saved: output/qq_plots.png\n",
       "\n",
       "Shapiro-Wilk Test (MCQ):\n",
       "  Statistic: 0.8720\n",
       "  p-value: 0.1577\n",
       "  Result: Normally distributed at \u03b1=0.05\n",
-      "  Result: Normally distributed at \u03b1=0.05\n",
       "\n",
       "Shapiro-Wilk Test (OSQ):\n",
       "  Statistic: 0.9352\n",
       "  p-value: 0.5644\n",
-      "  Result: Normally distributed at \u03b1=0.05\n"
       "  Result: Normally distributed at \u03b1=0.05\n"
      ]
     }
@@ -2532,7 +2424,6 @@
     "plt.show()\n",
     "\n",
     "print(f\"\u2705 Saved: {output_dir}/qq_plots.png\")\n",
-    "print(f\"\u2705 Saved: {output_dir}/qq_plots.png\")\n",
     "\n",
     "# ------------------------------------------------\n",
     "# Shapiro-Wilk test for normality\n",
@@ -2544,7 +2435,6 @@
     "print(f\"  Statistic: {shapiro_stat_mcq:.4f}\")\n",
     "print(f\"  p-value: {shapiro_p_mcq:.4f}\")\n",
     "print(f\"  Result: {'Normally distributed' if shapiro_p_mcq > 0.05 else 'Not normally distributed'} at \u03b1=0.05\")\n",
-    "print(f\"  Result: {'Normally distributed' if shapiro_p_mcq > 0.05 else 'Not normally distributed'} at \u03b1=0.05\")\n",
     "\n",
     "if osq_available and len(osq_df) > 5:\n",
     "    osq_mean_scores = osq_df.groupby('model')['total_score'].mean().values\n",
@@ -2553,9 +2443,7 @@
     "    print(f\"  Statistic: {shapiro_stat_osq:.4f}\")\n",
     "    print(f\"  p-value: {shapiro_p_osq:.4f}\")\n",
     "    print(f\"  Result: {'Normally distributed' if shapiro_p_osq > 0.05 else 'Not normally distributed'} at \u03b1=0.05\")\n",
-    "    print(f\"  Result: {'Normally distributed' if shapiro_p_osq > 0.05 else 'Not normally distributed'} at \u03b1=0.05\")\n",
     "else:\n",
-    "    print(\"\\nShapiro-Wilk Test (OSQ): Not performed \u2014 insufficient OSQ data.\")\n"
     "    print(\"\\nShapiro-Wilk Test (OSQ): Not performed \u2014 insufficient OSQ data.\")\n"
    ]
   },
@@ -2589,7 +2477,6 @@
      "output_type": "stream",
      "text": [
       "\u2705 Saved: output/mcq_bootstrap_ci.png\n",
-      "\u2705 Saved: output/mcq_bootstrap_ci.png\n",
       "\n",
       "Bootstrap Confidence Intervals:\n",
       "                                  Mean  CI_Lower  CI_Upper  CI_Width\n",
@@ -2602,8 +2489,6 @@
       "llama3.3__70b                 0.924301  0.917483  0.931119  0.013636\n",
       "gemma3__27b                   0.917657  0.910490  0.924650  0.014161\n",
       "mistral-large__123b           0.874476  0.865730  0.883042  0.017312\n",
-      "\u2705 Saved LaTeX table: output\\table_bootstrap_ci.tex\n",
-      "\u2705 Table exported to LaTeX\n"
       "\u2705 Saved LaTeX table: output\\table_bootstrap_ci.tex\n",
       "\u2705 Table exported to LaTeX\n"
      ]
@@ -2667,7 +2552,6 @@
     "plt.show()\n",
     "\n",
     "print(f\"\u2705 Saved: {output_dir}/mcq_bootstrap_ci.png\")\n",
-    "print(f\"\u2705 Saved: {output_dir}/mcq_bootstrap_ci.png\")\n",
     "\n",
     "# Export bootstrap CI table\n",
     "bootstrap_table = bootstrap_df.set_index('Model')\n",
@@ -2682,7 +2566,6 @@
     "    column_format='lrrrr'\n",
     ")\n",
     "\n",
-    "print(\"\u2705 Table exported to LaTeX\")"
     "print(\"\u2705 Table exported to LaTeX\")"
    ]
   },
@@ -2718,25 +2601,10 @@
       "\ud83d\udcd6 Parsing phi4__14b/samples_sysengbench-osq_2025-11-14T23-10-44.863695__openai_gpt-5-p1.jsonl (judge: openai_gpt-5-p1)\n",
       "\u2705 Parsed 1599 OSQ judged samples\n",
       "\u2705 OSQ DataFrame shape: (1599, 19)\n",
-      "\ud83d\udcca Parsing OSQ judged samples...\n",
-      "\ud83d\udcd6 Parsing anthropic__claude-sonnet-4.5/samples_sysengbench-osq_2025-11-16T21-02-49.453852__openai_gpt-5-p1.jsonl (judge: openai_gpt-5-p1)\n",
-      "\ud83d\udcd6 Parsing gemma3__27b/samples_sysengbench-osq_2025-11-15T01-24-12.251073__openai_gpt-5-p1.jsonl (judge: openai_gpt-5-p1)\n",
-      "\ud83d\udcd6 Parsing google__gemini-2.5-flash/samples_sysengbench-osq_2025-11-16T04-10-37.215910__openai_gpt-5-p1.jsonl (judge: openai_gpt-5-p1)\n",
-      "   \u26a0\ufe0f  Error processing line 23: 'NoneType' object has no attribute 'get'\n",
-      "\ud83d\udcd6 Parsing llama3.3__70b/samples_sysengbench-osq_2025-11-14T23-24-28.915214__openai_gpt-5-p1.jsonl (judge: openai_gpt-5-p1)\n",
-      "\ud83d\udcd6 Parsing llama4__16x17b/samples_sysengbench-osq_2025-11-14T23-18-06.136162__openai_gpt-5-p1.jsonl (judge: openai_gpt-5-p1)\n",
-      "\ud83d\udcd6 Parsing mistral-large__123b/samples_sysengbench-osq_2025-11-15T00-00-12.395367__openai_gpt-5-p1.jsonl (judge: openai_gpt-5-p1)\n",
-      "\ud83d\udcd6 Parsing openai__gpt-4.1/samples_sysengbench-osq_2025-11-16T03-01-37.800397__openai_gpt-5-p1.jsonl (judge: openai_gpt-5-p1)\n",
-      "\ud83d\udcd6 Parsing phi4__14b/samples_sysengbench-osq_2025-11-14T23-10-44.863695__openai_gpt-5-p1.jsonl (judge: openai_gpt-5-p1)\n",
-      "\u2705 Parsed 1599 OSQ judged samples\n",
-      "\u2705 OSQ DataFrame shape: (1599, 19)\n",
       "   Models: ['anthropic__claude-sonnet-4.5', 'gemma3__27b', 'google__gemini-2.5-flash', 'llama3.3__70b', 'llama4__16x17b', 'mistral-large__123b', 'openai__gpt-4.1', 'phi4__14b']\n",
       "   Questions: 200\n",
       "   Mean score: 88.68\n",
       "\n",
-      "\ud83d\udcca Aligning MCQ and OSQ data...\n",
-      "\u2705 Aligned 9152 records (strategy: drop)\n",
-      "\u2705 Aligned DataFrame shape: (9152, 21)\n"
       "\ud83d\udcca Aligning MCQ and OSQ data...\n",
       "\u2705 Aligned 9152 records (strategy: drop)\n",
       "\u2705 Aligned DataFrame shape: (9152, 21)\n"
@@ -2751,11 +2619,9 @@
     "\n",
     "try:\n",
     "    print(\"\\n\ud83d\udcca Parsing OSQ judged samples...\")\n",
-    "    print(\"\\n\ud83d\udcca Parsing OSQ judged samples...\")\n",
     "    osq_data = parse_osq_judged_samples(phase5_dir)\n",
     "    osq_df = pd.DataFrame(osq_data)\n",
     "    \n",
-    "    print(f\"\u2705 OSQ DataFrame shape: {osq_df.shape}\")\n",
     "    print(f\"\u2705 OSQ DataFrame shape: {osq_df.shape}\")\n",
     "    \n",
     "    if len(osq_df) > 0:\n",
@@ -2763,251 +2629,23 @@
     "        print(f\"   Questions: {osq_df['question_id'].nunique()}\")\n",
     "        print(f\"   Mean score: {osq_df['total_score'].mean():.2f}\")\n",
     "        \n",
-    "        # Display available judges and prompts\n",
-    "        judges_and_prompts = get_available_judges_and_prompts(osq_data)\n",
-    "        print(f\"\\n\ud83d\udccb Available Judges: {judges_and_prompts['judges']}\")\n",
-    "        print(f\"\ud83d\udccb Available Prompts: {judges_and_prompts['prompts']}\")\n",
-    "        \n",
-    "        # Count samples by judge and prompt\n",
-    "        print(\"\\n\ud83d\udcca Sample counts by judge and prompt:\")\n",
-    "        judge_prompt_counts = osq_df.groupby(['judge_model', 'prompt_id']).size().reset_index(name='count')\n",
-    "        for _, row in judge_prompt_counts.iterrows():\n",
-    "            print(f\"   {row['judge_model']:30s} | {row['prompt_id']:5s} | {row['count']:4d} samples\")\n",
-    "        \n",
     "        # Align MCQ and OSQ data\n",
     "        print(\"\\n\ud83d\udcca Aligning MCQ and OSQ data...\")\n",
-    "        print(\"\\n\ud83d\udcca Aligning MCQ and OSQ data...\")\n",
     "        aligned_df = pd.DataFrame(align_mcq_osq_results(mcq_data, osq_data))\n",
-    "        print(f\"\u2705 Aligned DataFrame shape: {aligned_df.shape}\")\n",
     "        print(f\"\u2705 Aligned DataFrame shape: {aligned_df.shape}\")\n",
     "        \n",
     "        osq_available = True\n",
     "    else:\n",
-    "        print(\"\u26a0\ufe0f  No OSQ samples found. OSQ plots will be skipped.\")\n",
     "        print(\"\u26a0\ufe0f  No OSQ samples found. OSQ plots will be skipped.\")\n",
     "        osq_available = False\n",
     "        aligned_df = pd.DataFrame()\n",
     "        \n",
     "except Exception as e:\n",
     "    print(f\"\u26a0\ufe0f  Error loading OSQ data: {e}\")\n",
-    "    print(f\"\u26a0\ufe0f  Error loading OSQ data: {e}\")\n",
     "    print(\"   OSQ plots will be skipped.\")\n",
     "    osq_available = False\n",
     "    osq_df = pd.DataFrame()\n",
     "    aligned_df = pd.DataFrame()"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": null,
-   "metadata": {},
-   "outputs": [],
-   "source": [
-    "# Optional: Filter OSQ data by specific judge and/or prompt\n",
-    "# Uncomment and modify the lines below to filter:\n",
-    "\n",
-    "# FILTER_JUDGE = 'openai_gpt-5'  # Set to None for all judges\n",
-    "# FILTER_PROMPT = 'p1'           # Set to None for all prompts\n",
-    "FILTER_JUDGE = None\n",
-    "FILTER_PROMPT = None\n",
-    "\n",
-    "if osq_available and (FILTER_JUDGE is not None or FILTER_PROMPT is not None):\n",
-    "    print(\"\\n\" + \"=\" * 80)\n",
-    "    print(\"FILTERING OSQ DATA\")\n",
-    "    print(\"=\" * 80)\n",
-    "    \n",
-    "    original_count = len(osq_data)\n",
-    "    osq_data_filtered = filter_osq_data(osq_data, judge_model=FILTER_JUDGE, prompt_id=FILTER_PROMPT)\n",
-    "    osq_df = pd.DataFrame(osq_data_filtered)\n",
-    "    \n",
-    "    print(f\"\\nFiltering criteria:\")\n",
-    "    print(f\"   Judge: {FILTER_JUDGE if FILTER_JUDGE else 'All'}\")\n",
-    "    print(f\"   Prompt: {FILTER_PROMPT if FILTER_PROMPT else 'All'}\")\n",
-    "    print(f\"\\n\u2705 Filtered: {original_count} \u2192 {len(osq_data_filtered)} samples\")\n",
-    "    \n",
-    "    # Re-align MCQ and OSQ data with filtered data\n",
-    "    print(\"\\n\ud83d\udcca Re-aligning MCQ and OSQ data with filtered samples...\")\n",
-    "    aligned_df = pd.DataFrame(align_mcq_osq_results(mcq_data, osq_data_filtered))\n",
-    "    print(f\"\u2705 Aligned DataFrame shape: {aligned_df.shape}\")\n",
-    "else:\n",
-    "    print(\"\\n\ud83d\udccc No filtering applied. Using all OSQ data.\")"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": null,
-   "metadata": {},
-   "outputs": [],
-   "source": [
-    "# ================================================================\n",
-    "# OSQ Judge and Prompt Analysis\n",
-    "# ================================================================\n",
-    "\n",
-    "if osq_available and len(osq_df) > 0:\n",
-    "    print(\"=\" * 80)\n",
-    "    print(\"OSQ JUDGE AND PROMPT ANALYSIS\")\n",
-    "    print(\"=\" * 80)\n",
-    "    \n",
-    "    # Check if we have multiple judges or prompts\n",
-    "    n_judges = osq_df['judge_model'].nunique()\n",
-    "    n_prompts = osq_df['prompt_id'].nunique()\n",
-    "    \n",
-    "    print(f\"\\nNumber of unique judges: {n_judges}\")\n",
-    "    print(f\"Number of unique prompts: {n_prompts}\")\n",
-    "    \n",
-    "    # Calculate mean scores by judge and prompt\n",
-    "    if n_judges > 1 or n_prompts > 1:\n",
-    "        print(\"\\n\ud83d\udcca Mean scores by judge and prompt:\")\n",
-    "        judge_prompt_stats = osq_df.groupby(['judge_model', 'prompt_id']).agg({\n",
-    "            'total_score': ['mean', 'std', 'count'],\n",
-    "            'percentage': 'mean'\n",
-    "        }).round(2)\n",
-    "        print(judge_prompt_stats)\n",
-    "        \n",
-    "        # Calculate mean scores by model, judge, and prompt\n",
-    "        print(\"\\n\ud83d\udcca Mean scores by model, judge, and prompt:\")\n",
-    "        model_judge_prompt_stats = osq_df.groupby(['model', 'judge_model', 'prompt_id'])['total_score'].mean().round(2)\n",
-    "        print(model_judge_prompt_stats.head(20))\n",
-    "    \n",
-    "    else:\n",
-    "        print(\"\\n\ud83d\udccc Only one judge/prompt combination found. Skipping comparative analysis.\")\n",
-    "else:\n",
-    "    print(\"\u26a0\ufe0f OSQ data not available for judge/prompt analysis\")"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": null,
-   "metadata": {},
-   "outputs": [],
-   "source": [
-    "# ================================================================\n",
-    "# Plot: OSQ Score Distribution by Judge Model\n",
-    "# ================================================================\n",
-    "\n",
-    "if osq_available and len(osq_df) > 0:\n",
-    "    n_judges = osq_df['judge_model'].nunique()\n",
-    "    \n",
-    "    if n_judges > 1:\n",
-    "        print(\"\\n\ud83d\udcca PLOT: OSQ Score Distribution by Judge Model\")\n",
-    "        print(\"=\" * 80)\n",
-    "        \n",
-    "        fig, axes = plt.subplots(1, 2, figsize=(16, 6))\n",
-    "        \n",
-    "        # Box plot by judge\n",
-    "        osq_df.boxplot(column='total_score', by='judge_model', ax=axes[0])\n",
-    "        axes[0].set_title('OSQ Score Distribution by Judge Model', fontsize=14, fontweight='bold')\n",
-    "        axes[0].set_xlabel('Judge Model', fontsize=12)\n",
-    "        axes[0].set_ylabel('Total Score (out of 100)', fontsize=12)\n",
-    "        axes[0].get_figure().suptitle('')  # Remove auto-generated title\n",
-    "        plt.setp(axes[0].xaxis.get_majorticklabels(), rotation=45, ha='right')\n",
-    "        \n",
-    "        # Violin plot by judge\n",
-    "        sns.violinplot(data=osq_df, x='judge_model', y='total_score', ax=axes[1])\n",
-    "        axes[1].set_title('OSQ Score Distribution by Judge Model (Violin)', fontsize=14, fontweight='bold')\n",
-    "        axes[1].set_xlabel('Judge Model', fontsize=12)\n",
-    "        axes[1].set_ylabel('Total Score (out of 100)', fontsize=12)\n",
-    "        plt.setp(axes[1].xaxis.get_majorticklabels(), rotation=45, ha='right')\n",
-    "        \n",
-    "        plt.tight_layout()\n",
-    "        plt.savefig(output_dir / 'osq_scores_by_judge.png', dpi=300, bbox_inches='tight')\n",
-    "        plt.show()\n",
-    "        \n",
-    "        print(f\"\u2705 Saved: {output_dir / 'osq_scores_by_judge.png'}\")\n",
-    "    else:\n",
-    "        print(\"\\n\ud83d\udccc Only one judge found. Skipping judge comparison plot.\")"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": null,
-   "metadata": {},
-   "outputs": [],
-   "source": [
-    "# ================================================================\n",
-    "# Plot: OSQ Score Distribution by Prompt\n",
-    "# ================================================================\n",
-    "\n",
-    "if osq_available and len(osq_df) > 0:\n",
-    "    n_prompts = osq_df['prompt_id'].nunique()\n",
-    "    \n",
-    "    if n_prompts > 1:\n",
-    "        print(\"\\n\ud83d\udcca PLOT: OSQ Score Distribution by Prompt\")\n",
-    "        print(\"=\" * 80)\n",
-    "        \n",
-    "        fig, axes = plt.subplots(1, 2, figsize=(16, 6))\n",
-    "        \n",
-    "        # Box plot by prompt\n",
-    "        osq_df.boxplot(column='total_score', by='prompt_id', ax=axes[0])\n",
-    "        axes[0].set_title('OSQ Score Distribution by Prompt', fontsize=14, fontweight='bold')\n",
-    "        axes[0].set_xlabel('Prompt ID', fontsize=12)\n",
-    "        axes[0].set_ylabel('Total Score (out of 100)', fontsize=12)\n",
-    "        axes[0].get_figure().suptitle('')  # Remove auto-generated title\n",
-    "        \n",
-    "        # Violin plot by prompt\n",
-    "        sns.violinplot(data=osq_df, x='prompt_id', y='total_score', ax=axes[1])\n",
-    "        axes[1].set_title('OSQ Score Distribution by Prompt (Violin)', fontsize=14, fontweight='bold')\n",
-    "        axes[1].set_xlabel('Prompt ID', fontsize=12)\n",
-    "        axes[1].set_ylabel('Total Score (out of 100)', fontsize=12)\n",
-    "        \n",
-    "        plt.tight_layout()\n",
-    "        plt.savefig(output_dir / 'osq_scores_by_prompt.png', dpi=300, bbox_inches='tight')\n",
-    "        plt.show()\n",
-    "        \n",
-    "        print(f\"\u2705 Saved: {output_dir / 'osq_scores_by_prompt.png'}\")\n",
-    "    else:\n",
-    "        print(\"\\n\ud83d\udccc Only one prompt found. Skipping prompt comparison plot.\")"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": null,
-   "metadata": {},
-   "outputs": [],
-   "source": [
-    "# ================================================================\n",
-    "# Plot: Model Performance Across Different Judges\n",
-    "# ================================================================\n",
-    "\n",
-    "if osq_available and len(osq_df) > 0:\n",
-    "    n_judges = osq_df['judge_model'].nunique()\n",
-    "    n_models = osq_df['model'].nunique()\n",
-    "    \n",
-    "    if n_judges > 1 and n_models > 1:\n",
-    "        print(\"\\n\ud83d\udcca PLOT: Model Performance Across Different Judges\")\n",
-    "        print(\"=\" * 80)\n",
-    "        \n",
-    "        # Create pivot table for heatmap\n",
-    "        pivot_data = osq_df.pivot_table(\n",
-    "            values='total_score',\n",
-    "            index='model',\n",
-    "            columns='judge_model',\n",
-    "            aggfunc='mean'\n",
-    "        )\n",
-    "        \n",
-    "        # Create heatmap\n",
-    "        plt.figure(figsize=(12, max(8, n_models * 0.5)))\n",
-    "        sns.heatmap(pivot_data, annot=True, fmt='.1f', cmap='RdYlGn', \n",
-    "                   cbar_kws={'label': 'Mean Total Score'}, vmin=0, vmax=100)\n",
-    "        plt.title('Model Performance Across Different Judge Models\\n(Mean Total Score out of 100)', \n",
-    "                 fontsize=14, fontweight='bold', pad=20)\n",
-    "        plt.xlabel('Judge Model', fontsize=12)\n",
-    "        plt.ylabel('Evaluated Model', fontsize=12)\n",
-    "        plt.xticks(rotation=45, ha='right')\n",
-    "        plt.yticks(rotation=0)\n",
-    "        plt.tight_layout()\n",
-    "        plt.savefig(output_dir / 'osq_model_performance_by_judge_heatmap.png', dpi=300, bbox_inches='tight')\n",
-    "        plt.show()\n",
-    "        \n",
-    "        print(f\"\u2705 Saved: {output_dir / 'osq_model_performance_by_judge_heatmap.png'}\")\n",
-    "        \n",
-    "        # Calculate correlation between judges\n",
-    "        print(\"\\n\ud83d\udcca Inter-Judge Correlation:\")\n",
-    "        judge_corr = pivot_data.corr()\n",
-    "        print(judge_corr)\n",
-    "        \n",
-    "    else:\n",
-    "        print(\"\\n\ud83d\udccc Need multiple judges and models for comparison. Skipping.\")"
    ]
   },
   {
@@ -3040,7 +2678,6 @@
      "output_type": "stream",
      "text": [
       "\u2705 Saved: output/mcq_vs_osq_sidebyside.png\n",
-      "\u2705 Saved: output/mcq_vs_osq_sidebyside.png\n",
       "\n",
       "MCQ vs OSQ Performance Summary:\n",
       "                              mcq_accuracy   osq_mean    osq_std  n_samples\n",
@@ -3053,7 +2690,6 @@
       "llama3.3__70b                     0.923077  86.920000  16.628776       1144\n",
       "gemma3__27b                       0.916521  86.325000  18.084930       1144\n",
       "mistral-large__123b               0.872596  88.900000  14.602265       1144\n",
-      "\u2705 Saved LaTeX table: output\\table_mcq_vs_osq_performance.tex\n"
       "\u2705 Saved LaTeX table: output\\table_mcq_vs_osq_performance.tex\n"
      ]
     }
@@ -3080,20 +2716,13 @@
     "    print(\"\\n\" + \"=\" * 80)\n",
     "    print(\"PLOT 9: MCQ vs OSQ Side-by-Side Comparison\")\n",
     "    print(\"=\" * 80)\n",
-    "    \n",
-    "    # Display judge and prompt information\n",
-    "    if 'judge_model' in aligned_df.columns and 'prompt_id' in aligned_df.columns:\n",
-    "        judges_used = aligned_df['judge_model'].dropna().unique()\n",
-    "        prompts_used = aligned_df['prompt_id'].dropna().unique()\n",
-    "        print(f\"\\n\ud83d\udccb Judge model(s) in comparison: {list(judges_used)}\")\n",
-    "        print(f\"\ud83d\udccb Prompt(s) in comparison: {list(prompts_used)}\")\n",
     "\n",
+    "    # -------------------------------------------------------\n",
     "    # Validate required columns\n",
     "    # -------------------------------------------------------\n",
     "    required_cols = {'model', 'mcq_accuracy', 'osq_normalized'}\n",
     "    if not required_cols.issubset(comparison_df.columns):\n",
     "        missing = required_cols - set(comparison_df.columns)\n",
-    "        print(f\"\u26a0\ufe0f Missing required columns for Plot 9: {missing}\")\n",
     "        print(f\"\u26a0\ufe0f Missing required columns for Plot 9: {missing}\")\n",
     "        print(\"Skipping Plot 9.\")\n",
     "    else:\n",
@@ -3120,7 +2749,6 @@
     "\n",
     "        ax.set_xlabel('Model', fontsize=12)\n",
     "        ax.set_ylabel('Score (0\u20131)', fontsize=12)\n",
-    "        ax.set_ylabel('Score (0\u20131)', fontsize=12)\n",
     "        ax.set_title('MCQ vs OSQ Performance Comparison',\n",
     "                     fontsize=14, fontweight='bold')\n",
     "\n",
@@ -3143,7 +2771,6 @@
     "                    dpi=300, bbox_inches='tight')\n",
     "        plt.show()\n",
     "\n",
-    "        print(f\"\u2705 Saved: {output_dir}/mcq_vs_osq_sidebyside.png\")\n",
     "        print(f\"\u2705 Saved: {output_dir}/mcq_vs_osq_sidebyside.png\")\n",
     "\n",
     "        # -------------------------------------------------------\n",
@@ -3278,9 +2905,6 @@
       "\u2705 Saved: output/mcq_vs_osq_scatter.png\n",
       "   Correlation: R\u00b2 = 0.1967, p = 0.2710\n",
       "\u2705 Saved LaTeX table: output\\table_mcq_osq_correlation.tex\n"
-      "\u2705 Saved: output/mcq_vs_osq_scatter.png\n",
-      "   Correlation: R\u00b2 = 0.1967, p = 0.2710\n",
-      "\u2705 Saved LaTeX table: output\\table_mcq_osq_correlation.tex\n"
      ]
     }
    ],
@@ -3290,16 +2914,6 @@
     "    print(\"\\n\" + \"=\" * 80)\n",
     "    print(\"PLOT 8: MCQ Accuracy vs OSQ Mean Score\")\n",
     "    print(\"=\" * 80)\n",
-    "    \n",
-    "    # Display judge and prompt information\n",
-    "    if 'judge_model' in aligned_df.columns and 'prompt_id' in aligned_df.columns:\n",
-    "        judges_used = aligned_df['judge_model'].dropna().unique()\n",
-    "        prompts_used = aligned_df['prompt_id'].dropna().unique()\n",
-    "        print(f\"\\n\ud83d\udccb Judge model(s) in comparison: {list(judges_used)}\")\n",
-    "        print(f\"\ud83d\udccb Prompt(s) in comparison: {list(prompts_used)}\")\n",
-    "        if len(judges_used) > 1 or len(prompts_used) > 1:\n",
-    "            print(\"\u26a0\ufe0f  WARNING: Multiple judges/prompts detected. Results aggregate across all.\")\n",
-    "            print(\"   Consider filtering to a single judge/prompt for cleaner comparison.\")\n",
     "    \n",
     "    # Aggregate by model\n",
     "    comparison_df = aligned_df.groupby('model').agg(\n",
@@ -3330,7 +2944,6 @@
     "    y_line = slope * x_line + intercept\n",
     "    ax.plot(x_line, y_line, 'gray', linestyle='--', linewidth=2, \n",
     "            label=f'R\u00b2 = {r_value**2:.3f}, p = {p_value:.4f}')\n",
-    "            label=f'R\u00b2 = {r_value**2:.3f}, p = {p_value:.4f}')\n",
     "    \n",
     "    # Add diagonal (perfect agreement)\n",
     "    ax.plot([0, 1], [0, 1], 'red', linestyle=':', linewidth=1.5, alpha=0.5, label='Perfect Agreement')\n",
@@ -3349,12 +2962,9 @@
     "    \n",
     "    print(f\"\u2705 Saved: {output_dir}/mcq_vs_osq_scatter.png\")\n",
     "    print(f\"   Correlation: R\u00b2 = {r_value**2:.4f}, p = {p_value:.4f}\")\n",
-    "    print(f\"\u2705 Saved: {output_dir}/mcq_vs_osq_scatter.png\")\n",
-    "    print(f\"   Correlation: R\u00b2 = {r_value**2:.4f}, p = {p_value:.4f}\")\n",
     "    \n",
     "    # Export correlation table\n",
     "    corr_table = pd.DataFrame({\n",
-    "        'Metric': ['Pearson R', 'R\u00b2', 'p-value', 'Slope', 'Intercept'],\n",
     "        'Metric': ['Pearson R', 'R\u00b2', 'p-value', 'Slope', 'Intercept'],\n",
     "        'Value': [r_value, r_value**2, p_value, slope, intercept]\n",
     "    }).set_index('Metric')\n",
@@ -3368,73 +2978,7 @@
     "    )\n",
     "else:\n",
     "    print(\"\\n\u26a0\ufe0f  Skipping Plot 8 (MCQ vs OSQ Scatter): Insufficient aligned data\")\n",
-    "    print(\"\\n\u26a0\ufe0f  Skipping Plot 8 (MCQ vs OSQ Scatter): Insufficient aligned data\")\n",
     "    print(f\"   Current aligned samples: {len(aligned_df) if 'aligned_df' in locals() else 0}\")"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": null,
-   "metadata": {},
-   "outputs": [],
-   "source": [
-    "# ================================================================\n",
-    "# Analysis: MCQ-OSQ Correlation by Judge and Prompt\n",
-    "# ================================================================\n",
-    "\n",
-    "if osq_available and len(aligned_df) > 0:\n",
-    "    n_judges = aligned_df['judge_model'].nunique() if 'judge_model' in aligned_df.columns else 0\n",
-    "    n_prompts = aligned_df['prompt_id'].nunique() if 'prompt_id' in aligned_df.columns else 0\n",
-    "    \n",
-    "    if n_judges > 1 or n_prompts > 1:\n",
-    "        print(\"\\n\" + \"=\" * 80)\n",
-    "        print(\"MCQ-OSQ CORRELATION BY JUDGE AND PROMPT\")\n",
-    "        print(\"=\" * 80)\n",
-    "        \n",
-    "        from scipy.stats import pearsonr, spearmanr\n",
-    "        \n",
-    "        # Calculate correlation for each judge/prompt combination\n",
-    "        if 'judge_model' in aligned_df.columns and 'prompt_id' in aligned_df.columns:\n",
-    "            correlations = []\n",
-    "            \n",
-    "            for (judge, prompt), group in aligned_df.groupby(['judge_model', 'prompt_id']):\n",
-    "                # Filter out rows with missing data\n",
-    "                valid_data = group.dropna(subset=['mcq_avg_correct', 'osq_total_score'])\n",
-    "                \n",
-    "                if len(valid_data) >= 3:  # Need at least 3 points for correlation\n",
-    "                    pearson_r, pearson_p = pearsonr(\n",
-    "                        valid_data['mcq_avg_correct'], \n",
-    "                        valid_data['osq_total_score']\n",
-    "                    )\n",
-    "                    spearman_r, spearman_p = spearmanr(\n",
-    "                        valid_data['mcq_avg_correct'], \n",
-    "                        valid_data['osq_total_score']\n",
-    "                    )\n",
-    "                    \n",
-    "                    correlations.append({\n",
-    "                        'judge_model': judge,\n",
-    "                        'prompt_id': prompt,\n",
-    "                        'n_samples': len(valid_data),\n",
-    "                        'pearson_r': pearson_r,\n",
-    "                        'pearson_p': pearson_p,\n",
-    "                        'spearman_r': spearman_r,\n",
-    "                        'spearman_p': spearman_p\n",
-    "                    })\n",
-    "            \n",
-    "            if correlations:\n",
-    "                corr_df = pd.DataFrame(correlations)\n",
-    "                print(\"\\n\ud83d\udcca MCQ-OSQ Correlation by Judge and Prompt:\")\n",
-    "                print(corr_df.to_string(index=False))\n",
-    "                \n",
-    "                # Save to CSV\n",
-    "                corr_df.to_csv(output_dir / 'mcq_osq_correlation_by_judge_prompt.csv', index=False)\n",
-    "                print(f\"\\n\u2705 Saved: {output_dir / 'mcq_osq_correlation_by_judge_prompt.csv'}\")\n",
-    "            else:\n",
-    "                print(\"\\n\u26a0\ufe0f Insufficient data for correlation analysis\")\n",
-    "    else:\n",
-    "        print(\"\\n\ud83d\udccc Only one judge/prompt combination. Skipping correlation by judge/prompt analysis.\")\n",
-    "else:\n",
-    "    print(\"\\n\u26a0\ufe0f OSQ data not available for correlation analysis\")"
    ]
   },
   {
@@ -3474,7 +3018,6 @@
      "output_type": "stream",
      "text": [
       "\u2705 Saved: output/osq_blooms_comparison.png\n",
-      "\u2705 Saved: output/osq_blooms_comparison.png\n",
       "\n",
       "Bloom's Level Performance:\n",
       "                   mean        std  count   ci_lower   ci_upper\n",
@@ -3482,7 +3025,6 @@
       "Apply         93.437500  17.239369     16  83.500000  99.875000\n",
       "Remember      87.576895  16.655120   1359  86.696082  88.428366\n",
       "Understand    95.031250   6.197345    224  94.177790  95.853013\n",
-      "\u2705 Saved LaTeX table: output\\table_blooms_performance.tex\n"
       "\u2705 Saved LaTeX table: output\\table_blooms_performance.tex\n"
      ]
     }
@@ -3539,7 +3081,6 @@
     "        plt.show()\n",
     "        \n",
     "        print(f\"\u2705 Saved: {output_dir}/osq_blooms_comparison.png\")\n",
-    "        print(f\"\u2705 Saved: {output_dir}/osq_blooms_comparison.png\")\n",
     "        \n",
     "        # Also export as table\n",
     "        blooms_table = blooms_summary.set_index('blooms_level')\n",
@@ -3555,9 +3096,7 @@
     "        )\n",
     "    else:\n",
     "        print(\"\u26a0\ufe0f  Skipping Plot 7: No valid Bloom's level data\")\n",
-    "        print(\"\u26a0\ufe0f  Skipping Plot 7: No valid Bloom's level data\")\n",
     "else:\n",
-    "    print(\"\\n\u26a0\ufe0f  Skipping Plot 7 (Bloom's Level): Insufficient data or missing column\")\n",
     "    print(\"\\n\u26a0\ufe0f  Skipping Plot 7 (Bloom's Level): Insufficient data or missing column\")\n",
     "    print(f\"   Current OSQ samples: {len(osq_df) if 'osq_df' in locals() else 0}\")"
    ]
@@ -3832,7 +3371,6 @@
      "output_type": "stream",
      "text": [
       "\u2705 Saved: output/osq_score_histogram.png\n"
-      "\u2705 Saved: output/osq_score_histogram.png\n"
      ]
     }
    ],
@@ -3863,9 +3401,7 @@
     "    plt.show()\n",
     "    \n",
     "    print(f\"\u2705 Saved: {output_dir}/osq_score_histogram.png\")\n",
-    "    print(f\"\u2705 Saved: {output_dir}/osq_score_histogram.png\")\n",
     "else:\n",
-    "    print(\"\\n\u26a0\ufe0f  Skipping Plot 6 (OSQ Histogram): Insufficient data\")\n",
     "    print(\"\\n\u26a0\ufe0f  Skipping Plot 6 (OSQ Histogram): Insufficient data\")\n",
     "    print(f\"   Current OSQ samples: {len(osq_df) if 'osq_df' in locals() else 0}\")"
    ]
@@ -3900,7 +3436,6 @@
      "output_type": "stream",
      "text": [
       "\u2705 Saved: output/osq_violin_scores.png\n"
-      "\u2705 Saved: output/osq_violin_scores.png\n"
      ]
     }
    ],
@@ -3929,9 +3464,7 @@
     "    plt.show()\n",
     "    \n",
     "    print(f\"\u2705 Saved: {output_dir}/osq_violin_scores.png\")\n",
-    "    print(f\"\u2705 Saved: {output_dir}/osq_violin_scores.png\")\n",
     "else:\n",
-    "    print(\"\\n\u26a0\ufe0f  Skipping Plot 5 (OSQ Violin): Insufficient data\")\n",
     "    print(\"\\n\u26a0\ufe0f  Skipping Plot 5 (OSQ Violin): Insufficient data\")\n",
     "    print(f\"   Current OSQ samples: {len(osq_df) if 'osq_df' in locals() else 0}\")\n",
     "    print(\"   Need at least 10 samples for meaningful visualization\")"
@@ -3962,7 +3495,6 @@
      "name": "stdout",
      "output_type": "stream",
      "text": [
-      "\u26a0\ufe0f  OSQ data not available yet.\n",
       "\u26a0\ufe0f  OSQ data not available yet.\n",
       "   Plot 4 (violin plots) will be generated when OSQ judging is complete.\n",
       "   Expected data structure:\n",
@@ -4005,9 +3537,7 @@
     "        plt.show()\n",
     "        \n",
     "        print(f\"\u2705 Saved: outputs/plot4_osq_violin_by_dataset.png\")\n",
-    "        print(f\"\u2705 Saved: outputs/plot4_osq_violin_by_dataset.png\")\n",
     "    else:\n",
-    "        print(\"\u26a0\ufe0f  OSQ data not available yet.\")\n",
     "        print(\"\u26a0\ufe0f  OSQ data not available yet.\")\n",
     "        print(\"   Plot 4 (violin plots) will be generated when OSQ judging is complete.\")\n",
     "        print(\"   Expected data structure:\")\n",
@@ -4016,7 +3546,6 @@
     "        print(\"   - model: model identifier\")\n",
     "        \n",
     "except NameError:\n",
-    "    print(\"\u26a0\ufe0f  OSQ data not loaded.\")\n",
     "    print(\"\u26a0\ufe0f  OSQ data not loaded.\")\n",
     "    print(\"   Plot 4 will be generated when OSQ judging data is available.\")"
    ]
@@ -4060,7 +3589,6 @@
      "output_type": "stream",
      "text": [
       "\n",
-      "\u2705 Saved: output/mcq_confusion_matrix_all_models.png\n"
       "\u2705 Saved: output/mcq_confusion_matrix_all_models.png\n"
      ]
     }
@@ -4111,7 +3639,6 @@
     "        normalize='index'\n",
     "    )\n",
     "\n",
-    "    # Ensure consistent A\u2013D structure even if some keys missing\n",
     "    # Ensure consistent A\u2013D structure even if some keys missing\n",
     "    for pos in ['A', 'B', 'C', 'D']:\n",
     "        if pos not in conf_mat.index:\n",
@@ -4164,7 +3691,6 @@
     "plt.show()\n",
     "\n",
     "print(f\"\\n\u2705 Saved: {output_dir}/mcq_confusion_matrix_all_models.png\")\n"
-    "print(f\"\\n\u2705 Saved: {output_dir}/mcq_confusion_matrix_all_models.png\")\n"
    ]
   },
   {
@@ -4196,7 +3722,6 @@
      "name": "stdout",
      "output_type": "stream",
      "text": [
-      "\u2705 Saved: output/mcq_wrong_answer_distribution.png\n",
       "\u2705 Saved: output/mcq_wrong_answer_distribution.png\n",
       "\n",
       "Wrong answer summary:\n",
@@ -4270,7 +3795,6 @@
     "plt.show()\n",
     "\n",
     "print(f\"\u2705 Saved: {output_dir}/mcq_wrong_answer_distribution.png\")\n",
-    "print(f\"\u2705 Saved: {output_dir}/mcq_wrong_answer_distribution.png\")\n",
     "print(f\"\\nWrong answer summary:\")\n",
     "print(wrong_pivot)"
    ]
@@ -4296,18 +3820,6 @@
       "\ud83d\udcd6 Parsing phi4__14b/samples_sysengbench-osq_2025-11-14T23-10-44.863695__openai_gpt-5-p1.jsonl (judge: openai_gpt-5-p1)\n",
       "\u2705 Parsed 1599 OSQ judged samples\n",
       "\u26a0\ufe0f  Could not load OSQ data: string indices must be integers, not 'str'\n",
-      "\ud83d\udcca Loading OSQ judged samples...\n",
-      "\ud83d\udcd6 Parsing anthropic__claude-sonnet-4.5/samples_sysengbench-osq_2025-11-16T21-02-49.453852__openai_gpt-5-p1.jsonl (judge: openai_gpt-5-p1)\n",
-      "\ud83d\udcd6 Parsing gemma3__27b/samples_sysengbench-osq_2025-11-15T01-24-12.251073__openai_gpt-5-p1.jsonl (judge: openai_gpt-5-p1)\n",
-      "\ud83d\udcd6 Parsing google__gemini-2.5-flash/samples_sysengbench-osq_2025-11-16T04-10-37.215910__openai_gpt-5-p1.jsonl (judge: openai_gpt-5-p1)\n",
-      "   \u26a0\ufe0f  Error processing line 23: 'NoneType' object has no attribute 'get'\n",
-      "\ud83d\udcd6 Parsing llama3.3__70b/samples_sysengbench-osq_2025-11-14T23-24-28.915214__openai_gpt-5-p1.jsonl (judge: openai_gpt-5-p1)\n",
-      "\ud83d\udcd6 Parsing llama4__16x17b/samples_sysengbench-osq_2025-11-14T23-18-06.136162__openai_gpt-5-p1.jsonl (judge: openai_gpt-5-p1)\n",
-      "\ud83d\udcd6 Parsing mistral-large__123b/samples_sysengbench-osq_2025-11-15T00-00-12.395367__openai_gpt-5-p1.jsonl (judge: openai_gpt-5-p1)\n",
-      "\ud83d\udcd6 Parsing openai__gpt-4.1/samples_sysengbench-osq_2025-11-16T03-01-37.800397__openai_gpt-5-p1.jsonl (judge: openai_gpt-5-p1)\n",
-      "\ud83d\udcd6 Parsing phi4__14b/samples_sysengbench-osq_2025-11-14T23-10-44.863695__openai_gpt-5-p1.jsonl (judge: openai_gpt-5-p1)\n",
-      "\u2705 Parsed 1599 OSQ judged samples\n",
-      "\u26a0\ufe0f  Could not load OSQ data: string indices must be integers, not 'str'\n",
       "   Plot 3 will be generated when OSQ judging data is available.\n"
      ]
     }
@@ -4319,7 +3831,6 @@
     "\n",
     "# Try to load OSQ data if available\n",
     "try:\n",
-    "    print(\"\ud83d\udcca Loading OSQ judged samples...\")\n",
     "    print(\"\ud83d\udcca Loading OSQ judged samples...\")\n",
     "    osq_data = parse_osq_judged_samples(phase5_dir)\n",
     "    osq_df = pd.DataFrame(osq_data)\n",
@@ -4351,7 +3862,6 @@
     "        x_line = np.array([agg['mcq_accuracy'].min(), agg['mcq_accuracy'].max()])\n",
     "        y_line = slope * x_line + intercept\n",
     "        ax.plot(x_line, y_line, 'gray', linestyle='--', label=f'R\u00b2 = {r_value**2:.3f}')\n",
-    "        ax.plot(x_line, y_line, 'gray', linestyle='--', label=f'R\u00b2 = {r_value**2:.3f}')\n",
     "        \n",
     "        ax.set_xlabel(\"MCQ Accuracy\", fontsize=12)\n",
     "        ax.set_ylabel(\"OSQ Mean Score (0-100)\", fontsize=12)\n",
@@ -4364,17 +3874,13 @@
     "        plt.show()\n",
     "        \n",
     "        print(f\"\u2705 Saved: outputs/plot3_mcq_vs_osq_scatter.png\")\n",
-    "        print(f\"\u2705 Saved: outputs/plot3_mcq_vs_osq_scatter.png\")\n",
     "        print(f\"   Models plotted: {len(agg)}\")\n",
     "        print(f\"   Correlation: R\u00b2 = {r_value**2:.3f}, p = {p_value:.4f}\")\n",
-    "        print(f\"   Correlation: R\u00b2 = {r_value**2:.3f}, p = {p_value:.4f}\")\n",
     "    else:\n",
-    "        print(\"\u26a0\ufe0f  No aligned MCQ-OSQ data available yet.\")\n",
     "        print(\"\u26a0\ufe0f  No aligned MCQ-OSQ data available yet.\")\n",
     "        print(\"   Placeholder plot will be ready when OSQ judging is complete.\")\n",
     "        \n",
     "except Exception as e:\n",
-    "    print(f\"\u26a0\ufe0f  Could not load OSQ data: {e}\")\n",
     "    print(f\"\u26a0\ufe0f  Could not load OSQ data: {e}\")\n",
     "    print(\"   Plot 3 will be generated when OSQ judging data is available.\")"
    ]
@@ -4398,7 +3904,6 @@
      "name": "stdout",
      "output_type": "stream",
      "text": [
-      "\u2705 Saved: output/plot2_confusion_matrix_all_models.png\n",
       "\u2705 Saved: output/plot2_confusion_matrix_all_models.png\n",
       "   Generated confusion matrices for 8 models\n"
      ]
@@ -4458,7 +3963,6 @@
     "plt.savefig('output/plot2_confusion_matrix_all_models.png', dpi=300, bbox_inches='tight')\n",
     "plt.show()\n",
     "\n",
-    "print(f\"\u2705 Saved: output/plot2_confusion_matrix_all_models.png\")\n",
     "print(f\"\u2705 Saved: output/plot2_confusion_matrix_all_models.png\")\n",
     "print(f\"   Generated confusion matrices for {n_models} models\")"
    ]
