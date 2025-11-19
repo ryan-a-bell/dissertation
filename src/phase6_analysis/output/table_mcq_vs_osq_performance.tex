@@ -1,0 +1,21 @@
+\begin{table}[htbp]
+\centering
+\caption{MCQ vs OSQ Performance Comparison by Model}
+\label{tab:mcq_osq_performance}
+\begin{tabular}{lrrrr}
+\toprule
+ & mcq_accuracy & osq_mean & osq_std & n_samples \\
+model &  &  &  &  \\
+\midrule
+openai__gpt-4.1 & 0.9548 & 91.2900 & 14.7101 & 1144 \\
+anthropic__claude-sonnet-4.5 & 0.9495 & 92.8100 & 12.4769 & 1144 \\
+google__gemini-2.5-flash & 0.9484 & 91.0704 & 13.2125 & 1144 \\
+llama4__16x17b & 0.9303 & 85.0100 & 18.2702 & 1144 \\
+phi4__14b & 0.9253 & 87.1250 & 16.2227 & 1144 \\
+llama3.3__70b & 0.9231 & 86.9200 & 16.6288 & 1144 \\
+gemma3__27b & 0.9165 & 86.3250 & 18.0849 & 1144 \\
+mistral-large__123b & 0.8726 & 88.9000 & 14.6023 & 1144 \\
+\bottomrule
+\end{tabular}
+
+\end{table}
