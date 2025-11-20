@@ -1,5 +1,29 @@
-{
-  "shapiro_wilk": {
-    "statistic": 0.8195012161817024,
-    "p_value": 0.011731140822548706,
-    "reject_normality": 
+[
+  {
+    "test":"Shapiro-Wilk",
+    "statistic":0.8195012162,
+    "p_value":0.0117311408,
+    "reject_normality":true,
+    "normal?":"No",
+    "basis":"Overall shape (best for small N)",
+    "interpretation":"Distribution is not normal"
+  },
+  {
+    "test":"Jarque-Bera",
+    "statistic":7.9908349097,
+    "p_value":0.0183997637,
+    "reject_normality":true,
+    "normal?":"No",
+    "basis":"Skewness + kurtosis",
+    "interpretation":"Skew\/kurtosis deviate from normal"
+  },
+  {
+    "test":"D'Agostino K\u00b2",
+    "statistic":12.7909243045,
+    "p_value":0.0016691143,
+    "reject_normality":true,
+    "normal?":"No",
+    "basis":"Skewness + kurtosis (transformed)",
+    "interpretation":"Non-normal distribution shape"
+  }
+]

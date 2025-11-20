@@ -1,0 +1,4 @@
+test,statistic,p_value,reject_normality,normal?,basis,interpretation
+Shapiro-Wilk,0.8195012161817024,0.011731140822548706,True,No,Overall shape (best for small N),Distribution is not normal
+Jarque-Bera,7.990834909684575,0.018399763736775206,True,No,Skewness + kurtosis,Skew/kurtosis deviate from normal
+D'Agostino K²,12.790924304478885,0.0016691143004768632,True,No,Skewness + kurtosis (transformed),Non-normal distribution shape
