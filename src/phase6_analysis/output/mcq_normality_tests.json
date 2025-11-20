@@ -1,5 +1,5 @@
 {
   "shapiro_wilk": {
-    "statistic": 0.8720020610293102,
-    "p_value": 0.15766471804283372,
+    "statistic": 0.8195012161817024,
+    "p_value": 0.011731140822548706,
     "reject_normality": 
