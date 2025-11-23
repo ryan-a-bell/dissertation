@@ -307,3 +307,47 @@ For architectural overview, see `src/ARCHITECTURE_DIAGRAMS.md`.
 For statistical test details, see `mcq_notional_statistics_tests.md`.
 
 For analysis guidance, see `analysis.md`.
+
+
+
+```mermaid
+flowchart TD
+    Start([Start]) --> Inventory[Discover task results]
+
+    Inventory --> LoadMCQ[Load MCQ Results]
+    Inventory --> LoadOSQ[Load OSQ Judged Results]
+
+    LoadMCQ --> ParseMCQ[Parse MCQ Samples]
+    LoadOSQ --> ParseOSQ[Parse OSQ Samples]
+
+    ParseOSQ --> MergeOSQ[Merge with MCQ Data]
+    ParseMCQ --> MergeOSQ
+
+    MergeOSQ --> AnalysisBranch[Perform Analyses]
+
+    AnalysisBranch --> Analysis1[Position Bias Analysis]
+    AnalysisBranch --> Analysis2[MCQ vs OSQ Comparison]
+    AnalysisBranch --> Analysis3[Tokenomics & Cost Analysis]
+
+    Analysis1 --> PosBias[Position Bias Detection<br/>- Chi-Square Test<br/>- Kruskal-Wallis H<br/>- Friedman Test<br/>- Pairwise McNemar<br/>- Cramér's V Effect Size]
+
+    Analysis2 --> FormatComp[Format Comparison<br/>- Accuracy: MCQ vs OSQ<br/>- Correlation Analysis<br/>- Question-Level Consistency]
+
+    Analysis3 --> Tokenomics[Tokenomics Analysis<br/>- Token Usage per Sample<br/>- Cost per Sample<br/>- Accuracy per Dollar<br/>- ROI: Thinking vs Standard<br/>- Break-even Analysis]
+
+    PosBias --> Viz1[Visualizations: Position Bias<br/>- Bar charts by position<br/>- Heatmaps<br/>- Deviation from expected]
+    FormatComp --> Viz2[Visualizations: Format Comparison<br/>- MCQ vs OSQ accuracy<br/>- Scatter plots<br/>- Correlation matrices]
+    Tokenomics --> Viz3[Visualizations: Tokenomics<br/>- Cost vs Accuracy<br/>- Efficiency Frontiers<br/>- ROI Curves<br/>- Break-even Points]
+
+    Viz1 --> ExportCSV[Export Analysis CSV]
+    Viz2 --> ExportCSV
+    Viz3 --> ExportCSV
+
+    ExportCSV --> ExportViz[Export Visualizations]
+
+    ExportViz --> End([End])
+
+    style PosBias fill:#fff3e0
+    style FormatComp fill:#fff3e0
+    style Tokenomics fill:#e1f5ff
+```
