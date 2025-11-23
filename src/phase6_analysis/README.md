@@ -1,6 +1,5 @@
 # TODO: Update
 
-
 # Phase 6: Results Processing & Analysis
 
 This directory contains comprehensive statistical analysis tools for Phase 6 of the dissertation pipeline.
@@ -15,35 +14,11 @@ Phase 6 aggregates results from all previous phases and performs:
 4. **Statistical Testing** - Normality tests, effect sizes, confidence intervals
 5. **Visualizations** - Publication-ready plots and charts
 
-## Main Script
-
-### `comprehensive_analysis.py`
-
-Comprehensive statistical analysis covering all Phase 6 requirements.
-
-#### Quick Start
-
-```bash
-# Run complete analysis with defaults
-python src/phase6_analysis/comprehensive_analysis.py
-
-# Custom paths
-python src/phase6_analysis/comprehensive_analysis.py \
-    --results-dir src/phase4_inference/downloaded_output \
-    --osq-judged-dir src/phase5_llm_as_a_judge/judged_outputs \
-    --output-dir src/phase6_analysis/results
-```
-
-#### Arguments
-
-- `--results-dir`: Directory containing Phase 4 MCQ and OSQ results (default: `src/phase4_inference/downloaded_output`)
-- `--osq-judged-dir`: Directory containing Phase 5 judged OSQ outputs (default: `src/phase5_llm_as_a_judge/judged_outputs`)
-- `--output-dir`: Output directory for analysis results (default: `src/phase6_analysis/results`)
-- `--model-pricing`: Path to model pricing CSV (optional, for tokenomics analysis)
 
 ## Analysis Modules
 
 ### 1. Position Bias Analysis
+TODO: UPDATE THIS SECTION 1.
 
 Detects if models have a systematic preference for certain answer positions (A, B, C, D).
 
@@ -66,6 +41,8 @@ Detects if models have a systematic preference for certain answer positions (A, 
 - **Cramér's V < 0.1**: Weak effect
 
 ### 2. MCQ vs OSQ Comparison
+TODO: UPDATE THIS SECTION 2.
+
 
 Compares model performance across question formats.
 
@@ -86,139 +63,17 @@ Compares model performance across question formats.
 - Statistical significance (p-value)
 
 ### 3. Tokenomics & Cost Analysis
+TODO: UPDATE THIS SECTION 3.
 
-Analyzes the cost-effectiveness of different models (especially "thinking" models).
+Analyzes the cost-effectiveness of MCQ vs OSQ formats
 
 **Metrics:**
 - Average tokens per sample
-- Cost per sample (based on model pricing)
-- Accuracy per dollar (efficiency metric)
-- ROI for thinking vs. standard models
+- Accuracy per token
+- ROI
 - Break-even analysis
 
-**Example Output:**
 
-```
-TOKENOMICS SUMMARY
-===========================================================
-Model                Accuracy  Avg_Tokens  Cost/Sample  Acc/$
-deepseek-r1:7b       0.78      3,245       $0.00097     803
-qwq:32b              0.82      4,512       $0.00271     302
-llama3.2:3b          0.61      187         $0.00002     30,500
-mistral:7b           0.65      234         $0.00003     21,667
-
-BREAK-EVEN ANALYSIS
-===========================================================
-At 10,000 samples:
-- Extra cost: $24.50
-- Extra correct: 1,700
-- Cost per extra correct: $0.0144
-```
-
-**Outputs:**
-- `csv/tokenomics_analysis.csv` - Full cost/efficiency data
-- `figures/tokenomics_cost_vs_accuracy.png` - Cost-effectiveness scatter
-- `figures/tokenomics_efficiency_frontier.png` - Pareto frontier
-- `figures/tokenomics_roi_curves.png` - ROI by sample size
-
-### 4. Statistical Testing
-
-Rigorous statistical validation of results.
-
-**Normality Tests:**
-- **Shapiro-Wilk Test**: Standard normality test (best for n < 50)
-- **Jarque-Bera Test**: Tests skewness and kurtosis
-- **D'Agostino's K² Test**: Combines skew and kurtosis
-
-**Effect Sizes:**
-- **Cohen's d**: Standardized mean difference
-- **Glass's Δ**: Variant of Cohen's d using control group SD
-- **Hedges' g**: Corrected for small sample sizes
-
-**Confidence Intervals:**
-- **Bootstrap Method**: 10,000 resamples
-- **95% Confidence**: Default level (configurable)
-
-**Outputs:**
-- `reports/statistical_tests.json` - Test results in JSON format
-- `csv/bootstrap_confidence_intervals.csv` - Bootstrap CIs per model
-- `figures/qq_plot_*.png` - Q-Q plots for normality assessment
-- `figures/effect_sizes.png` - Effect size visualizations
-
-## Output Directory Structure
-
-```
-results/
-├── csv/                                    # Data tables
-│   ├── position_bias_analysis.csv
-│   ├── mcq_vs_osq_comparison.csv
-│   ├── tokenomics_analysis.csv
-│   ├── bootstrap_confidence_intervals.csv
-│   └── model_detailed_*.csv
-├── figures/                                # Visualizations
-│   ├── position_bias_heatmap.png
-│   ├── position_bias_deviation.png
-│   ├── mcq_vs_osq_scatter.png
-│   ├── mcq_vs_osq_bars.png
-│   ├── tokenomics_cost_vs_accuracy.png
-│   ├── tokenomics_efficiency_frontier.png
-│   ├── qq_plot_mcq_accuracies.png
-│   └── ...
-└── reports/                                # Summary reports
-    ├── comprehensive_analysis_summary.md   # Main summary
-    ├── statistical_tests.json              # Test results
-    └── ...
-```
-
-## Statistical Test Decision Table
-
-Based on `mcq_notional_statistics_tests.md`:
-
-| Data Type | 2 Models (Paired) | 3+ Models (Repeated Measures) |
-|-----------|-------------------|-------------------------------|
-| Binary Outcomes | McNemar's Test | Cochran's Q Test |
-| Log Probabilities | Paired t-Test / Wilcoxon | Repeated-Measures ANOVA / Friedman |
-| Confidence Scores | Paired t-Test / Wilcoxon | Repeated-Measures ANOVA / Friedman |
-| Ordinal Data | Wilcoxon Signed-Rank | Friedman Test |
-
-**Assumptions:**
-- **Normality**: Check with Shapiro-Wilk or Q-Q plots
-- **Sphericity** (for ANOVA): Check with Mauchly's test
-- **Effect Size**: Cohen's d for t-tests, Kendall's W for Friedman
-- **Multiple Comparisons**: Use Bonferroni or Holm correction
-
-## Visualization Guidelines
-
-All plots are:
-- **High-resolution**: 300 DPI for publication
-- **Accessible**: Color-blind friendly palettes where possible
-- **Annotated**: Clear labels, titles, and legends
-- **Consistent**: Uniform styling across all figures
-
-## Decision Framework
-
-Based on `analysis.md`, the results support:
-
-### For High-Volume Applications (>100K queries)
-- Thinking models often worth it due to accumulated accuracy gains
-
-### For Cost-Sensitive Applications
-- Use standard models with position rotation to minimize bias cost
-
-### For Critical Applications
-- Thinking models justified despite higher cost
-- OSQ format may provide better accuracy than MCQ
-
-### For Research/Development
-- Test on subset first to calculate specific ROI
-- Use break-even analysis to justify budget
-
-## Key Insights
-
-The analysis quantifies the "thinking model trade-off":
-- **When**: Extra accuracy justifies extra cost
-- **How much**: Cost per additional correct answer
-- **At what scale**: Break-even points
 
 ## References
 
@@ -235,80 +90,11 @@ The analysis quantifies the "thinking model trade-off":
 - Cohen's d interpretation (Cohen, 1988)
 - Hedges' g correction (Hedges, 1981)
 
-## Advanced Usage
-
-### Running Individual Analyses
-
-```python
-from comprehensive_analysis import ComprehensiveAnalyzer
-
-# Initialize
-analyzer = ComprehensiveAnalyzer(
-    results_dir="path/to/results",
-    output_dir="path/to/output"
-)
-
-# Load data
-analyzer.load_all_data()
-
-# Run specific analyses
-position_bias_df = analyzer.analyze_position_bias()
-comparison_df = analyzer.analyze_mcq_vs_osq()
-statistical_tests = analyzer.perform_statistical_tests()
-
-# Generate report
-analyzer.generate_summary_report()
-```
-
-### Custom Visualizations
-
-The `ComprehensiveAnalyzer` class provides methods for creating custom visualizations:
-
-```python
-# Create Q-Q plot
-analyzer.create_qq_plot(data, "Custom Title")
-
-# Bootstrap CIs with custom parameters
-analyzer.bootstrap_confidence_intervals(
-    n_iterations=20000,
-    confidence=0.99
-)
-```
-
-## Troubleshooting
-
-**Missing Data:**
-- Ensure Phase 4 results are in the expected directory structure
-- Check that Phase 5 judging has been completed for OSQ data
-- Verify file naming conventions match expected patterns
-
-**Statistical Warnings:**
-- Small sample sizes may cause normality test failures
-- Use non-parametric alternatives when assumptions are violated
-- Bootstrap CIs are robust to normality violations
-
-**Performance:**
-- Bootstrap with 10,000 iterations may take several minutes
-- Consider reducing iterations for initial exploration
-- Use `--model` flag to process specific models for testing
-
-## Next Steps
-
-After analysis:
-
-1. Review summary report in `reports/comprehensive_analysis_summary.md`
-2. Examine CSV files for detailed numerical results
-3. Use figures for dissertation writing
-4. Interpret statistical tests in context of research questions
-5. Document findings in dissertation methods and results sections
-
-For architectural overview, see `src/ARCHITECTURE_DIAGRAMS.md`.
-
-For statistical test details, see `mcq_notional_statistics_tests.md`.
-
-For analysis guidance, see `analysis.md`.
 
 
+
+
+## Analysis Workflow
 
 ```mermaid
 flowchart TD
@@ -350,4 +136,45 @@ flowchart TD
     style PosBias fill:#fff3e0
     style FormatComp fill:#fff3e0
     style Tokenomics fill:#e1f5ff
+```
+
+
+# Analysis Notebook Structure
+
+```
+analysis.ipynb
+├── § 1. Setup and Imports
+│   └── 1.1 Data Structure Reference
+│
+├── § 2. Data Loading
+│   └── (parsers.py integration)
+│
+├── § 3. Data Exploration
+│
+├── § 4. Position Bias Analysis (MCQ)
+│   ├── Statistical Test Justification
+│   ├── Chi-Square Test
+│   ├── ANOVA Test
+│   ├── 4.3 Cramér's V Effect Size
+│   ├── 4.4 Pairwise McNemar Tests
+│   ├── 4.5 Normality Tests 
+│   ├── 4.6 Q-Q Plot 
+│   ├── 4.7 Bootstrap CIs
+│   └── Visualizations
+│
+├── § 5. OSQ Analysis
+│   ├── Score distributions
+│   ├── Bloom's level analysis
+│   └── 5.5 Normality Tests
+│
+├── § 6. MCQ vs OSQ Comparative Analysis
+│   ├── 6.1 Statistical Rationale
+│   ├── Correlation analysis
+│   ├── Paired t-test
+│   ├── 6.2 Wilcoxon Signed-Rank Test
+│   ├── 6.3 Effect Size Calculations
+│   └── Visualizations
+│
+└── § 7. Diagnostic and Statistical Plots
+    └── Output summary and manifest
 ```
