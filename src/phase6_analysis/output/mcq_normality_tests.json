@@ -1,8 +1,8 @@
 [
   {
     "test":"Shapiro-Wilk",
-    "statistic":0.8195012162,
-    "p_value":0.0117311408,
+    "statistic":0.7825364884,
+    "p_value":0.0006442924,
     "reject_normality":true,
     "normal?":"No",
     "basis":"Overall shape (best for small N)",
@@ -10,8 +10,8 @@
   },
   {
     "test":"Jarque-Bera",
-    "statistic":7.9908349097,
-    "p_value":0.0183997637,
+    "statistic":8.9489118392,
+    "p_value":0.011396421,
     "reject_normality":true,
     "normal?":"No",
     "basis":"Skewness + kurtosis",
@@ -19,8 +19,8 @@
   },
   {
     "test":"D'Agostino K\u00b2",
-    "statistic":12.7909243045,
-    "p_value":0.0016691143,
+    "statistic":11.5861897175,
+    "p_value":0.0030485328,
     "reject_normality":true,
     "normal?":"No",
     "basis":"Skewness + kurtosis (transformed)",
