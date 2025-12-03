@@ -21,9 +21,6 @@ Generate position-controlled benchmark variants to:
 - **`sysengbench_c.csv`** - Variant where all correct answers are in position C (1,144 questions)
 - **`sysengbench_d.csv`** - Variant where all correct answers are in position D (1,144 questions)
 
-### Other Files
-- **`.gitkeep`** - Ensures directory is tracked in git even when empty
-
 ## Configuration & Settings
 
 ### Dependencies
