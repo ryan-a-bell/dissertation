@@ -166,6 +166,7 @@ def parse_osq_judged_samples(phase5_dir: Path, use_latest: bool = True) -> List[
         List of dictionaries with parsed OSQ data
     """
     osq_data = []
+    skipped_lines = 0
 
     # Look for judged results
     judge_dir = phase5_dir / "sysengbench-osq-llm-judge"
@@ -187,10 +188,25 @@ def parse_osq_judged_samples(phase5_dir: Path, use_latest: bool = True) -> List[
             print(f"⚠️  Warning: No judged samples file found for {model_name}")
             continue
 
-        # Select file (latest or all)
+        # Select files: if use_latest, get the latest file PER JUDGE (not globally)
         if use_latest:
-            judged_file = get_latest_file(judged_files)
-            judged_files = [judged_file] if judged_file else []
+            # Group files by judge name to handle multiple runs per judge
+            judge_files_map = {}
+            for jf in judged_files:
+                # Extract judge identifier from filename
+                judge_match = re.search(r'__(.+)\.jsonl$', jf.name)
+                if judge_match:
+                    judge_id = judge_match.group(1)
+                    if judge_id not in judge_files_map:
+                        judge_files_map[judge_id] = []
+                    judge_files_map[judge_id].append(jf)
+
+            # For each judge, select the latest file
+            judged_files = []
+            for judge_id, files in judge_files_map.items():
+                latest = get_latest_file(files)
+                if latest:
+                    judged_files.append(latest)
 
         # Parse each judged file
         for judged_file in judged_files:
@@ -230,17 +246,36 @@ def parse_osq_judged_samples(phase5_dir: Path, use_latest: bool = True) -> List[
 
                         # Judge scores
                         judge = sample.get('judge', {})
-                        fields = judge.get('fields', {})
+                        fields = judge.get('fields')
 
-                        technical_accuracy = fields.get('technical_accuracy', {}).get('score', 0)
-                        conceptual_understanding = fields.get('conceptual_understanding', {}).get('score', 0)
-                        completeness = fields.get('completeness', {}).get('score', 0)
-                        clarity_organization = fields.get('clarity_organization', {}).get('score', 0)
-                        professional_relevance = fields.get('professional_relevance', {}).get('score', 0)
+                        # Handle missing or failed judge results
+                        if fields is None:
+                            # Judge API error (timeout, connection reset, etc.)
+                            error_msg = judge.get('error', 'unknown error')
+                            print(f"   ⚠️  Skipping line {line_num}: judge failed - {str(error_msg)[:80]}")
+                            skipped_lines += 1
+                            continue
+
+                        # Extract scores (default to None to detect missing values)
+                        technical_accuracy = fields.get('technical_accuracy', {}).get('score')
+                        conceptual_understanding = fields.get('conceptual_understanding', {}).get('score')
+                        completeness = fields.get('completeness', {}).get('score')
+                        clarity_organization = fields.get('clarity_organization', {}).get('score')
+                        professional_relevance = fields.get('professional_relevance', {}).get('score')
+
+                        scores = [technical_accuracy, conceptual_understanding,
+                                  completeness, clarity_organization, professional_relevance]
+
+                        # Handle missing individual scores
+                        if any(s is None for s in scores):
+                            missing = [name for name, s in zip(
+                                ['ta', 'cu', 'co', 'cl', 'pr'], scores) if s is None]
+                            print(f"   ⚠️  Skipping line {line_num}: missing scores {missing}")
+                            skipped_lines += 1
+                            continue
 
                         # Calculate total_score and percentage
-                        total_score = (technical_accuracy + conceptual_understanding +
-                                     completeness + clarity_organization + professional_relevance)
+                        total_score = sum(scores)
                         max_score = 100  # 5 fields × 20 points each
                         percentage = (total_score / max_score * 100) if max_score > 0 else 0.0
 
@@ -275,7 +310,7 @@ def parse_osq_judged_samples(phase5_dir: Path, use_latest: bool = True) -> List[
                     except Exception as e:
                         print(f"   ⚠️  Error processing line {line_num}: {e}")
 
-    print(f"✅ Parsed {len(osq_data)} OSQ judged samples")
+    print(f"✅ Parsed {len(osq_data)} OSQ judged samples (skipped {skipped_lines} with errors)")
     return osq_data
 
 
