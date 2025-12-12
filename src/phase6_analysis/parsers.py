@@ -8,8 +8,24 @@ and Phase 5 LLM-as-judge OSQ results into structured dataframes.
 import json
 from pathlib import Path
 from datetime import datetime
-from typing import Dict, List, Tuple, Optional
+from typing import Dict, List, Tuple, Optional, Union
 import re
+
+
+def _to_list_of_dicts(data: Union[List[Dict], 'pd.DataFrame']) -> List[Dict]:
+    """
+    Convert input to list of dicts. Handles both List[Dict] and pandas DataFrame.
+
+    Args:
+        data: Either a list of dictionaries or a pandas DataFrame
+
+    Returns:
+        List of dictionaries
+    """
+    # Check if it's a DataFrame (has to_dict method with 'records' option)
+    if hasattr(data, 'to_dict'):
+        return data.to_dict('records')
+    return data
 
 
 def parse_timestamp(filename: str) -> datetime:
@@ -420,7 +436,8 @@ def get_available_judges_and_prompts(osq_data: List[Dict]) -> Dict[str, List[str
     }
 
 
-def align_mcq_osq_results(mcq_data: List[Dict], osq_data: List[Dict],
+def align_mcq_osq_results(mcq_data: Union[List[Dict], 'pd.DataFrame'],
+                         osq_data: Union[List[Dict], 'pd.DataFrame'],
                          missing_data_strategy: str = 'drop') -> List[Dict]:
     """
     Align MCQ and OSQ results by question_id and model.
@@ -429,13 +446,17 @@ def align_mcq_osq_results(mcq_data: List[Dict], osq_data: List[Dict],
     and corresponding OSQ results.
 
     Args:
-        mcq_data: List of MCQ samples from parse_mcq_samples()
-        osq_data: List of OSQ samples from parse_osq_judged_samples()
+        mcq_data: MCQ samples (List[Dict] or DataFrame) from parse_mcq_samples()
+        osq_data: OSQ samples (List[Dict] or DataFrame) from parse_osq_judged_samples()
         missing_data_strategy: 'drop' (remove incomplete) or 'impute' (fill with None)
 
     Returns:
         List of aligned records
     """
+    # Convert DataFrames to list of dicts if needed
+    mcq_data = _to_list_of_dicts(mcq_data)
+    osq_data = _to_list_of_dicts(osq_data)
+
     aligned = []
 
     # Group MCQ data by (model, question_id)
