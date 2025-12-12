@@ -187,10 +187,25 @@ def parse_osq_judged_samples(phase5_dir: Path, use_latest: bool = True) -> List[
             print(f"⚠️  Warning: No judged samples file found for {model_name}")
             continue
 
-        # Select file (latest or all)
+        # Select files: if use_latest, get the latest file PER JUDGE (not globally)
         if use_latest:
-            judged_file = get_latest_file(judged_files)
-            judged_files = [judged_file] if judged_file else []
+            # Group files by judge name to handle multiple runs per judge
+            judge_files_map = {}
+            for jf in judged_files:
+                # Extract judge identifier from filename
+                judge_match = re.search(r'__(.+)\.jsonl$', jf.name)
+                if judge_match:
+                    judge_id = judge_match.group(1)
+                    if judge_id not in judge_files_map:
+                        judge_files_map[judge_id] = []
+                    judge_files_map[judge_id].append(jf)
+
+            # For each judge, select the latest file
+            judged_files = []
+            for judge_id, files in judge_files_map.items():
+                latest = get_latest_file(files)
+                if latest:
+                    judged_files.append(latest)
 
         # Parse each judged file
         for judged_file in judged_files:
