@@ -230,8 +230,21 @@ def parse_osq_judged_samples(phase5_dir: Path, use_latest: bool = True) -> List[
                         sample = json.loads(line.strip())
 
                         # Extract from phase4_row
-                        phase4_row = sample.get('phase4_row', {})
-                        doc = phase4_row.get('doc', {})
+                        # phase4_row = sample.get('phase4_row', {})
+                        # doc = phase4_row.get('doc', {})
+
+                        phase4_row = sample.get("phase4_row", {})
+                        doc = phase4_row.get("doc", {})
+
+                        # FIX: decode nested JSON string
+                        if isinstance(doc, str):
+                            try:
+                                doc = json.loads(doc)
+                                phase4_row["doc"] = doc   # overwrite with parsed dict
+                            except Exception as e:
+                                print(f"   ⚠️ Nested doc JSON parse failed: {e}")
+                                continue
+
 
                         question_id = doc.get('Question ID')
                         category = doc.get('INCOSE Handbook Category', '')
@@ -241,8 +254,16 @@ def parse_osq_judged_samples(phase5_dir: Path, use_latest: bool = True) -> List[
                         blooms_level = doc.get('blooms_level', '')
 
                         # Model's response
-                        filtered_resps = phase4_row.get('filtered_resps', [])
-                        model_response = filtered_resps[0] if filtered_resps else ''
+                        # filtered_resps = phase4_row.get('filtered_resps', [])
+                        # model_response = filtered_resps[0] if filtered_resps else ''
+
+                        model_response = phase4_row.get("filtered_resps", [])
+                        if model_response and isinstance(model_response[0], str):
+                            try:
+                                model_response[0] = json.loads(model_response[0])
+                            except:
+                                pass
+
 
                         # Judge scores
                         judge = sample.get('judge', {})
