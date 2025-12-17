@@ -280,44 +280,66 @@ def parse_osq_judged_samples(phase5_dir: Path, use_latest: bool = True) -> List[
                             except:
                                 pass
 
+                        # Detect if model provided a non-empty response
+                        response_text = str(model_response[0]) if model_response else ''
+                        has_response = bool(response_text.strip())
 
                         # Judge scores
                         judge = sample.get('judge', {})
                         fields = judge.get('fields')
 
-                        # Handle missing or failed judge results
-                        if fields is None:
-                            # Judge API error (timeout, connection reset, etc.)
-                            error_msg = judge.get('error', 'unknown error')
-                            print(f"   ⚠️  Skipping line {line_num}: judge failed - {str(error_msg)[:80]}")
-                            skipped_lines += 1
-                            continue
-
                         # Extract scores (default to None to detect missing values)
-                        technical_accuracy = fields.get('technical_accuracy', {}).get('score')
-                        conceptual_understanding = fields.get('conceptual_understanding', {}).get('score')
-                        completeness = fields.get('completeness', {}).get('score')
-                        clarity_organization = fields.get('clarity_organization', {}).get('score')
-                        professional_relevance = fields.get('professional_relevance', {}).get('score')
+                        technical_accuracy = None
+                        conceptual_understanding = None
+                        completeness = None
+                        clarity_organization = None
+                        professional_relevance = None
+                        
+                        if fields is not None:
+                            technical_accuracy = fields.get('technical_accuracy', {}).get('score')
+                            conceptual_understanding = fields.get('conceptual_understanding', {}).get('score')
+                            completeness = fields.get('completeness', {}).get('score')
+                            clarity_organization = fields.get('clarity_organization', {}).get('score')
+                            professional_relevance = fields.get('professional_relevance', {}).get('score')
 
                         scores = [technical_accuracy, conceptual_understanding,
                                   completeness, clarity_organization, professional_relevance]
 
-                        # Handle missing individual scores
-                        if any(s is None for s in scores):
-                            missing = [name for name, s in zip(
-                                ['ta', 'cu', 'co', 'cl', 'pr'], scores) if s is None]
-                            print(f"   ⚠️  Skipping line {line_num}: missing scores {missing}")
-                            skipped_lines += 1
-                            continue
+                        # Determine parse status and handle errors appropriately
+                        if fields is None:
+                            # Judge API error (timeout, connection reset, etc.)
+                            parse_status = 'api_error'
+                            error_msg = judge.get('error', 'unknown error')
+                            print(f"   ⚠️  Line {line_num}: API error - {str(error_msg)[:80]}")
+                        elif any(s is None for s in scores):
+                            # Judge failed to extract all scores
+                            if has_response:
+                                parse_status = 'judge_error'
+                                missing = [name for name, s in zip(
+                                    ['ta', 'cu', 'co', 'cl', 'pr'], scores) if s is None]
+                                print(f"   ⚠️  Line {line_num}: judge error - missing scores {missing}")
+                            else:
+                                parse_status = 'model_error'
+                                print(f"   ⚠️  Line {line_num}: model error - empty response")
+                        else:
+                            parse_status = 'success'
 
-                        # Calculate total_score and percentage
-                        total_score = sum(scores)
-                        max_score = 100  # 5 fields × 20 points each
-                        percentage = (total_score / max_score * 100) if max_score > 0 else 0.0
-
-                        # Determine correctness (>= 70/100)
-                        is_correct = total_score >= 70
+                        # Calculate total_score and percentage based on parse status
+                        if parse_status == 'success':
+                            total_score = sum(scores)
+                            max_score = 100  # 5 fields × 20 points each
+                            percentage = (total_score / max_score * 100) if max_score > 0 else 0.0
+                            is_correct = total_score >= 70
+                        elif parse_status == 'model_error':
+                            # Model failed - assign score of 0
+                            total_score = 0
+                            percentage = 0.0
+                            is_correct = False
+                        else:
+                            # api_error or judge_error - exclude from scoring (None)
+                            total_score = None
+                            percentage = None
+                            is_correct = None
 
                         osq_data.append({
                             'model': model_name,
@@ -338,6 +360,8 @@ def parse_osq_judged_samples(phase5_dir: Path, use_latest: bool = True) -> List[
                             'total_score': total_score,
                             'percentage': percentage,
                             'is_correct': is_correct,
+                            'parse_status': parse_status,
+                            'has_response': has_response,
                             'sample_id': sample.get('sample_id'),
                             'file': judged_file.name
                         })
@@ -347,7 +371,7 @@ def parse_osq_judged_samples(phase5_dir: Path, use_latest: bool = True) -> List[
                     except Exception as e:
                         print(f"   ⚠️  Error processing line {line_num}: {e}")
 
-    print(f"✅ Parsed {len(osq_data)} OSQ judged samples (skipped {skipped_lines} with errors)")
+    print(f"✅ Parsed {len(osq_data)} OSQ judged samples")
     return osq_data
 
 
