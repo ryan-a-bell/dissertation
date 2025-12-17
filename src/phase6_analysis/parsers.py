@@ -464,10 +464,11 @@ def align_mcq_osq_results(mcq_data: Union[List[Dict], 'pd.DataFrame'],
                          osq_data: Union[List[Dict], 'pd.DataFrame'],
                          missing_data_strategy: str = 'drop') -> List[Dict]:
     """
-    Align MCQ and OSQ results by question_id and model.
+    Align MCQ and OSQ results by question_id, model, and judge_model.
 
-    Creates one row per (model, question_id) with MCQ results across all variants
-    and corresponding OSQ results.
+    Creates one row per (model, question_id, judge_model) with MCQ results across 
+    all variants and corresponding OSQ results. This preserves all judge evaluations
+    rather than overwriting when multiple judges are present.
 
     Args:
         mcq_data: MCQ samples (List[Dict] or DataFrame) from parse_mcq_samples()
@@ -475,7 +476,7 @@ def align_mcq_osq_results(mcq_data: Union[List[Dict], 'pd.DataFrame'],
         missing_data_strategy: 'drop' (remove incomplete) or 'impute' (fill with None)
 
     Returns:
-        List of aligned records
+        List of aligned records (one per model/question/judge combination)
     """
     # Convert DataFrames to list of dicts if needed
     mcq_data = _to_list_of_dicts(mcq_data)
@@ -514,10 +515,10 @@ def align_mcq_osq_results(mcq_data: Union[List[Dict], 'pd.DataFrame'],
         elif variant == 'd':
             mcq_grouped[key]['mcq_d_correct'] = record['is_correct']
 
-    # Group OSQ data by (model, question_id)
+    # Group OSQ data by (model, question_id, judge_model) to preserve all judges
     osq_grouped = {}
     for record in osq_data:
-        key = (record['model'], record['question_id'])
+        key = (record['model'], record['question_id'], record['judge_model'])
         osq_grouped[key] = {
             'osq_total_score': record['total_score'],
             'osq_percentage': record['percentage'],
@@ -529,19 +530,74 @@ def align_mcq_osq_results(mcq_data: Union[List[Dict], 'pd.DataFrame'],
             'osq_professional_relevance': record['professional_relevance'],
             'blooms_level': record['blooms_level'],
             'judge_model': record['judge_model'],
-            'prompt_id': record['prompt_id']
+            'prompt_id': record['prompt_id'],
+            'parse_status': record.get('parse_status', 'success'),
+            'has_response': record.get('has_response', True)
         }
 
-    # Merge MCQ and OSQ
-    all_keys = set(mcq_grouped.keys()) | set(osq_grouped.keys())
-
-    for key in all_keys:
-        model, question_id = key
-
-        # Start with MCQ data
-        if key in mcq_grouped:
-            record = mcq_grouped[key].copy()
-        else:
+    # Collect all unique judges from OSQ data
+    all_judges = set(key[2] for key in osq_grouped.keys())
+    
+    # For each MCQ (model, question_id), create one aligned record per judge
+    for mcq_key in mcq_grouped.keys():
+        model, question_id = mcq_key
+        mcq_record = mcq_grouped[mcq_key]
+        
+        # Calculate MCQ average once (same for all judges)
+        mcq_scores = [
+            mcq_record['mcq_a_correct'],
+            mcq_record['mcq_b_correct'],
+            mcq_record['mcq_c_correct'],
+            mcq_record['mcq_d_correct']
+        ]
+        mcq_scores_valid = [s for s in mcq_scores if s is not None]
+        mcq_avg = (
+            sum(mcq_scores_valid) / len(mcq_scores_valid)
+            if mcq_scores_valid else None
+        )
+        
+        # Create one record per judge
+        for judge in all_judges:
+            osq_key = (model, question_id, judge)
+            
+            record = mcq_record.copy()
+            record['mcq_avg_correct'] = mcq_avg
+            
+            if osq_key in osq_grouped:
+                record.update(osq_grouped[osq_key])
+            else:
+                record.update({
+                    'osq_total_score': None,
+                    'osq_percentage': None,
+                    'osq_is_correct': None,
+                    'osq_technical_accuracy': None,
+                    'osq_conceptual_understanding': None,
+                    'osq_completeness': None,
+                    'osq_clarity_organization': None,
+                    'osq_professional_relevance': None,
+                    'blooms_level': None,
+                    'judge_model': judge,
+                    'prompt_id': None,
+                    'parse_status': None,
+                    'has_response': None
+                })
+            
+            # Apply missing data strategy
+            if missing_data_strategy == 'drop':
+                has_mcq = mcq_avg is not None
+                has_osq = record['osq_total_score'] is not None
+                if not (has_mcq or has_osq):
+                    continue
+            
+            aligned.append(record)
+    
+    # Also include OSQ-only records (questions not in MCQ)
+    mcq_model_questions = set(mcq_grouped.keys())
+    for osq_key, osq_record in osq_grouped.items():
+        model, question_id, judge = osq_key
+        mcq_key = (model, question_id)
+        
+        if mcq_key not in mcq_model_questions:
             record = {
                 'model': model,
                 'question_id': question_id,
@@ -552,51 +608,21 @@ def align_mcq_osq_results(mcq_data: Union[List[Dict], 'pd.DataFrame'],
                 'mcq_a_correct': None,
                 'mcq_b_correct': None,
                 'mcq_c_correct': None,
-                'mcq_d_correct': None
+                'mcq_d_correct': None,
+                'mcq_avg_correct': None
             }
+            record.update(osq_record)
+            
+            if missing_data_strategy == 'drop':
+                has_osq = record['osq_total_score'] is not None
+                if not has_osq:
+                    continue
+            
+            aligned.append(record)
 
-        # Add OSQ data
-        if key in osq_grouped:
-            record.update(osq_grouped[key])
-        else:
-            record.update({
-                'osq_total_score': None,
-                'osq_percentage': None,
-                'osq_is_correct': None,
-                'osq_technical_accuracy': None,
-                'osq_conceptual_understanding': None,
-                'osq_completeness': None,
-                'osq_clarity_organization': None,
-                'osq_professional_relevance': None,
-                'blooms_level': None,
-                'judge_model': None,
-                'prompt_id': None
-            })
-
-        # Calculate MCQ average (across fixed position variants a/b/c/d, excluding random)
-        mcq_scores = [
-            record['mcq_a_correct'],
-            record['mcq_b_correct'],
-            record['mcq_c_correct'],
-            record['mcq_d_correct']
-        ]
-        mcq_scores_valid = [s for s in mcq_scores if s is not None]
-        record['mcq_avg_correct'] = (
-            sum(mcq_scores_valid) / len(mcq_scores_valid)
-            if mcq_scores_valid else None
-        )
-
-        # Apply missing data strategy
-        if missing_data_strategy == 'drop':
-            # Drop if missing both MCQ and OSQ data
-            has_mcq = record['mcq_avg_correct'] is not None
-            has_osq = record['osq_total_score'] is not None
-            if not (has_mcq or has_osq):
-                continue
-
-        aligned.append(record)
-
-    print(f"✅ Aligned {len(aligned)} records (strategy: {missing_data_strategy})")
+    # Summary stats
+    n_judges = len(all_judges)
+    print(f"✅ Aligned {len(aligned)} records across {n_judges} judge(s) (strategy: {missing_data_strategy})")
     return aligned
 
 
