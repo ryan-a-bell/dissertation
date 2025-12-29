@@ -1,0 +1,26 @@
+@startuml
+!theme plain
+skinparam backgroundColor white
+skinparam defaultFontName Arial
+
+start
+
+:Select Judge Model;
+
+:Load OSQ Response Data;
+
+while (More Samples?) is (Yes)
+  :Build Judge Prompt
+  Rubric: 5 Dimensions
+  0-20 Scale Each;
+  
+  :LLM Judge API Call;
+  
+  :Parse JSON with Scores;
+  
+  :Append to Judged Data File;
+endwhile (No)
+
+stop
+
+@enduml

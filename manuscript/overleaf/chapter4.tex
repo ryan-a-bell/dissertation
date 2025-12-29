@@ -1,0 +1,197 @@
+\chapter{Results}\label{ch:results}
+
+\section{Conversion Success of MCQ to OSQ}
+
+Figure \ref{fig:distribution-of-suitability} presents the distribution of suitability scores assigned during the MCQ-to-OSQ conversion process. Scores range from 1 to 10, and the figure distinguishes questions scoring below the suitability threshold ($<7$) from those meeting or exceeding the threshold ($\ge7$). A dashed vertical line marks the threshold between the rejected and accepted regions.
+
+The histogram shows the number of questions receiving each score, with the lower-scoring bins (1–6) displayed in red and higher-scoring bins (7–10) displayed in green. A total of 299 questions (26.1\%) fall below the suitability threshold, distributed across scores 1 through 6. The largest concentration within this group occurs at score 3, with 96 questions (8.4\%). In contrast, 845 questions (73.9\%) meet the inclusion criteria for OSQ conversion. The accepted group is primarily concentrated at scores 8 and 9, with 195 questions (17.0\%) scoring 8 and 496 questions (43.4\%) scoring 9.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=1.0\linewidth]{figs/ch4/4.1/distribution-of-suitability.png}
+    \caption{Distribution of Suitability Scores}
+    \label{fig:distribution-of-suitability}
+\end{figure}
+
+Figure \ref{fig:osq-conversion-category-distribution} summarizes the number of questions accepted for conversion and rejected across each Systems Engineering category and sub-category represented in the SysEngBench dataset. Categories are listed on the vertical axis, ordered by total question count, while the horizontal axis denotes the number of questions. For each category, green bars indicate questions that met the suitability threshold and were successfully converted, while red bars indicate questions rejected during the filtering process.
+
+Substantial variation in the number of questions per category can be observed. Several categories contain relatively large question pools, such as Design Standards, DODAF, Requirements, and Project Management. Within these categories, both accepted and rejected questions appear, with total counts ranging from approximately 50 to over 90. Mid-sized categories such as Use Cases, Activity Diagrams, Sequence Diagrams, Parametric Diagrams, and Requirements Diagrams contain between 10 and 30 questions each, again with both accepted and rejected items.
+
+A wide range of smaller categories is also present, many containing fewer than 10 questions. These include technical areas such as Fault Tree Analysis, Maintainability Demonstration, Usability, Environmental Considerations, among other topics. Across these categories, the distribution of accepted and rejected questions varies, with some categories showing only a small number of accepted items and others showing a near-balanced split.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=1\linewidth]{figs/ch4/4.1/osq-conversion-category-distribution.png}
+    \caption{Sub-Category Level Distribution of Converted and Rejected SysEngBench Questions}
+    \label{fig:osq-conversion-category-distribution}
+\end{figure}
+
+% \newpage
+\clearpage
+\section{Performance on Multiple Choice Questions}\label{sec:performance_mcq}
+
+Figure \ref{fig:mcq_position_heatmap} displays a heatmap of \ac{mcq} accuracy for each model across the four answer-key positions (A, B, C, and D). Models are listed on the vertical axis sorted in descending order of average per-position accuracy, while the horizontal axis corresponds to the correct answer position. The color scale reflects accuracy values between 0.70 and 1.00, with darker greens indicating higher accuracy and shades moving toward yellow or red representing lower accuracy.
+
+The \acp{mcq} included consist only of the subset of questions that passed the suitability filtering process and therefore have a corresponding \ac{osq} equivalent. This subset of converted \acp{mcq} represents the portion of the dataset that is used for both \ac{mcq} and \ac{osq} evaluation, and reflects only those questions eligible for direct cross-modality comparison. 
+
+Across the models, accuracy values range from approximately 0.56 to 0.97. Several models show consistently high accuracy across all four positions, with the highest values occurring in the upper rows of the heatmap. Mid-tier models exhibit moderate accuracy with small variations between positions. Lower-accuracy models display more pronounced variation between positions and include several cells shaded in orange or red. Individual accuracy values are printed within each cell for reference.
+
+
+add pareto curve like from the sysengbench journal. Have the variance bars for a/b/c/d results
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.75\linewidth]{figs/ch4/4.2/mcq_position_heatmap.png}
+    \caption{MCQ Per-Position Heatmap}
+    \label{fig:mcq_position_heatmap}
+\end{figure}
+
+Bootstrap confidence intervals work by repeatedly remixing the existing test data (sampling with replacement) to see how much the result—like accuracy—would change if one had gotten a slightly different test set. The spread of those results gives an estimate of how uncertain your measured accuracy is, shown as the little error bars in the chart.
+
+Figure \ref{fig:mcq_bootstrap_ci} presents \ac{mcq} accuracy for all evaluated models along with 95\% bootstrap confidence intervals. Models are ordered from lowest to highest accuracy along the horizontal axis, and the vertical axis shows accuracy on a scale from 0.50 to 1.00. Each point represents the mean accuracy estimate for a model, and the accompanying vertical error bars indicate the lower and upper bounds of the corresponding bootstrap interval.
+
+The bootstrap method used involves repeatedly resampling the evaluation set with replacement to generate many synthetic samples of equal size. Accuracy is computed on each resampled dataset, and the resulting distribution of values is used to derive the confidence interval. This provides an empirical estimate of uncertainty around each model’s accuracy without imposing assumptions about the underlying distribution of responses.
+
+Accuracy values span a range from approximately 0.69 to 0.95 across models. Lower-accuracy models show wider-spread error bars in the lower portion of the figure, while higher-accuracy models appear clustered near the upper portion with intervals that remain relatively narrow. The spacing between points indicates an increase in accuracy from left to right. The plot provides a summary of accuracy estimates together with the associated uncertainty for each model under the \ac{mcq} variation evaluation procedure.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=1\linewidth]{figs/ch4/4.2/mcq_bootstrap_ci.png}
+    \caption{MCQ Bootstrap Confidence Intervals}
+    \label{fig:mcq_bootstrap_ci}
+\end{figure}
+
+
+
+% \begin{table}[htbp]
+% \centering
+% \caption{Chi-Square Test Results for Position Bias}
+% \label{tab:chi_square_position}
+% \begin{tabular}{llrrrr}
+% \toprule
+%  & model & $\chi^2$ stat & $p$-value & Cram\'er's $V$ & significant \\
+% \midrule
+% 0 & \texttt{anthropic__claude-sonnet-4.5} & 19.6878 & 0.0006 & 0.0587 & Yes \\
+% 1 & \texttt{devstral__24b} & 27.4997 & 0.0000 & 0.0693 & Yes \\
+% 2 & \texttt{gemma3__12b} & 12.0941 & 0.0167 & 0.0460 & Yes \\
+% 3 & \texttt{gemma3__1b} & 167.3455 & 0.0000 & 0.1710 & Yes \\
+% 4 & \texttt{gemma3__27b} & 9.2407 & 0.0554 & 0.0402 & No \\
+% 5 & \texttt{gemma3__4b} & 16.1660 & 0.0028 & 0.0532 & Yes \\
+% 6 & \texttt{google__gemini-2.5-flash} & 1.1259 & 0.8901 & 0.0140 & No \\
+% 7 & \texttt{llama3.2__1b} & 262.7687 & 0.0000 & 0.2143 & Yes \\
+% 8 & \texttt{llama3.2__3b} & 224.0432 & 0.0000 & 0.1979 & Yes \\
+% 9 & \texttt{llama3.3__70b} & 10.5591 & 0.0320 & 0.0430 & Yes \\
+% 10 & \texttt{llama4__16x17b} & 8.8055 & 0.0661 & 0.0392 & No \\
+% 11 & \texttt{mistral-large__123b} & 21.7815 & 0.0002 & 0.0617 & Yes \\
+% 12 & \texttt{mistral-small3.2__24b} & 30.4726 & 0.0000 & 0.0730 & Yes \\
+% 13 & \texttt{mixtral__8x22b} & 7.1135 & 0.1300 & 0.0353 & No \\
+% 14 & \texttt{openai__gpt-4.1} & 6.7320 & 0.1507 & 0.0343 & No \\
+% 15 & \texttt{phi3.5__3.8b} & 13.9079 & 0.0076 & 0.0493 & Yes \\
+% 16 & \texttt{phi3__14b} & 11.4524 & 0.0219 & 0.0447 & Yes \\
+% 17 & \texttt{phi4-mini__3.8b} & 71.6395 & 0.0000 & 0.1119 & Yes \\
+% 18 & \texttt{phi4__14b} & 7.4316 & 0.1148 & 0.0360 & No \\
+% \bottomrule
+% \end{tabular}
+% \end{table}
+
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=1\linewidth]{figs/ch4/fig_cramers_v_position_bias.png}
+    \caption{Cramer's V Position Bias}
+    \label{fig:mcq_cramers_v}
+\end{figure}
+
+Figure \ref{fig:mcq_cramers_v} presents position bias effect, quantified using Cramér’s V, which measures the strength of association between answer choice position and the model’s selected response in \acp{mcq}. Each horizontal bar corresponds to a model, with the x-axis indicating the magnitude of the effect size and the y-axis listing models sorted from highest to lowest bias, top to bottom. Larger values of Cramér’s V indicate stronger dependence on option position, while values near zero indicate little to no position bias. 
+
+Color coding and reference lines provide interpretive structure for these effect sizes. Green bars denote models whose position bias falls in the negligible range, while orange bars indicate models exceeding the conventional threshold for a small effect (approximately Cramér’s V = 0.10). Vertical dashed lines mark standard benchmarks for small and medium-to-large effects. Notably, while several models exceed the small-effect threshold, none approach the medium or large effect range.
+ 
+
+
+
+
+
+% \newpage
+\clearpage
+\section{Performance on Open Style Questions}\label{sec:performance_osq}
+
+Need to add:
+
+- Updated judgement samples that had timeout errors (less than 40) across all models. Claude has a singular missing OSQ response -- but not going to redo those evals as it was deterministic. It should yield the same missing response if ran again since it was not a timeout error.
+
+ (December 11, 2025 at 10:49 PM)
+
+Hash:
+
+  b9902ba   |   Open on GitHub
+
+- add pareto curve for the grading like the sysengbnech froniter / pareto curve format
+
+- Investigate llm-sensitivity of llm-as-judge (e.g. gpt-5-mini vs gpt-5 vs gpt-oss?)to baseline judging results
+
+- Show all charts of OSQ ratings (all 5 modalities) for all judges.
+
+- do comparisons of performance across the different categories of sysengbench
+
+Figure \ref{fig:osq_violin_scores} presents violin plots of OSQ total scores for each model, showing the distributional shape, central tendency, and spread of scores. Models appear along the horizontal axis, and OSQ total scores are plotted on the vertical axis. Within each violin, a filled density shape depicts the distribution of scores, while an embedded box plot indicates the inter-quartile range, median, and approximate extrema. A horizontal dashed red line marks the passing threshold of 70 points.
+
+Across models, the widths of the violins vary, indicating differences in score dispersion. Some models display narrow, high-centered distributions, while others present wider shapes with scores spanning a larger range. Several violins extend below the passing threshold, while others remain predominantly above. 
+
+The violins are constructed using kernel density estimation (KDE), which Seaborn computes independently for each language model using a Gaussian kernel and standard bandwidth selection. As Gaussian kernels have unbounded support, the density estimate can extend slightly below 0 or above 100 while all underlying rubric-assigned OSQ scores lie strictly within the 0–100 scoring range. The vertical extent of each violin therefore reflects both the observed score distribution and the smooth KDE-based interpolation used to visualize it.
+
+The figure provides a model-by-model comparison of OSQ score distributions, illustrating the central scoring tendencies and the degree of variability in OSQ performance across all evaluated models.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=1\linewidth]{figs/ch4/4.3/osq_violin_scores.png}
+    \caption{osq violin scores}
+    \label{fig:osq_violin_scores}
+\end{figure}
+
+Figure \ref{fig:osq_score_histogram} displays kernel density estimates (KDEs) of total \ac{osq} scores for all evaluated models. Each curve represents the estimated score distribution for a single model, with OSQ total scores plotted along the horizontal axis and density values shown on the vertical axis. A vertical dashed red line indicates the passing threshold of 70 points.
+
+The KDE curves were generated using the default Gaussian kernel in Seaborn with standard bandwidth selection, applied independently to each model’s distribution of OSQ scores. Gaussian kernels extend smoothly beyond the minimum and maximum observed values, the resulting density curves may extend slightly below 0 or above 100 even though all underlying rubric scores fall within the 0–100 range. The vertical axis represents probability density rather than counts, and therefore the area under each curve integrates to 1 for each model.
+
+Across models, the density curves exhibit varied shapes, spreads, and peak locations, reflecting differences in score distributions. Some models show narrow, high-centered curves, whereas others display wider or multi-modal distributions. The figure provides an aggregate visualization of OSQ total score distributions and their relation to the passing threshold across all evaluated models.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=1\linewidth]{figs/ch4/4.3/osq_score_histogram.png}
+    \caption{OSQ Score Distribution, Kernel Density Estimate}
+    \label{fig:osq_score_histogram}
+\end{figure}
+
+
+
+% \newpage
+\clearpage
+\section{Comparison Across MCQ and OSQ Evaluation Modalities}\label{sec:comparison_evalaution_modalities}
+
+Figure \ref{fig:mcq-vs-osq-mean-score} presents a scatter plot comparing each model’s MCQ accuracy (horizontal axis) with its mean normalized OSQ score (vertical axis). Each point represents a single model, and labels are positioned adjacent to the corresponding markers. The red dotted line indicates the line of perfect agreement between MCQ and OSQ performance, representing locations where a model would achieve identical values under both modalities. A fitted linear regression line is shown in gray, accompanied by the model’s coefficient of determination (R² = 0.671) and associated p-value.
+
+Across the distribution of points, MCQ accuracy values range approximately from 0.70 to 0.98, while normalized OSQ mean scores span roughly from 0.72 to 0.95. The plot shows with several clusters appearing toward the upper-right portion of the figure. A regression line provides a summary of the linear relationship between the two axes within the evaluated subset.
+
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=1.00\linewidth]{figs/ch4/4.4/mcq-vs-osq-mean-score.png}
+    \caption{MCQ Accuracy vs OSQ Mean Score}
+    \label{fig:mcq-vs-osq-mean-score}
+\end{figure}
+
+% \newpage
+\clearpage
+\section{Tokenomics and Cost}\label{sec:tok}
+
+The top panel of Figure \ref{fig:tokenomics_distribution} shows violin plots illustrating the distribution of response token counts for each evaluated model. Models are displayed along the horizontal axis, and response length in tokens is plotted on the vertical axis. Each violin represents a kernel density estimate of token usage for that model, with wider regions indicating more frequently occurring token counts. The embedded box plot within each violin highlights the median, inter-quartile range, and approximate overall spread.
+
+Across models, response token counts range from fewer than 20 tokens to more than 500 tokens. Several models display relatively compact distributions centered near shorter responses, while others show broader or more elongated violins indicative of greater variability in response length. A number of models include long upper tails reflecting occasional high-token responses. The prompt was limited to 500 tokens maximum, with recommendations for 1-2 sentence responses by default, with few question prompts for 3-4 sentence responses.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=1\linewidth]{figs/ch4/4.5/tokenomics_distribution.png}
+    \caption{tokenomics distribution}
+    \label{fig:tokenomics_distribution}
+\end{figure}
+
+Consider adding in the efficiency scatter plot but make the x-axis logarithmic
