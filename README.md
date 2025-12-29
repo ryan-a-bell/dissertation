@@ -14,22 +14,23 @@ The benchmark dataset, **SysEngBench**, is publicly available on [HuggingFace](h
 
 ```
 dissertation/
-├── assets/                # Storage for Files
-├── docs/                  # Project documentation (built with MkDocs)
-├── src/                   # Source code organized by evaluation phases
-│   ├── phase1_prep/       # Initial dataset tagging and preprocessing
-│   ├── phase2_conversion/ # Conversion of MCQs to OSQs
-│   ├── phase3_variants/   # Generation of distractor variant MCQs
-│   ├── phase4_inference/  # Inference code for evaluating language models
-│   ├── phase5_metrics/    # Calculation of evaluation metrics
-│   └── phase6_tables/     # Aggregation and summary table generation
-|   └── phase7_analysis/   # Analysis of the previous phases
-├── .github/               # GitHub CI workflows
-├── .env.template          # Template for API keys
-├── requirements.txt       # Python dependencies for venv
-├── Makefile               # Automation commands
-├── README.md              # Project overview (this file)
-└── LICENSE                # License information
+├── docs/                       # Project documentation (built with MkDocs)
+├── manuscript/                 # Dissertation manuscript (Overleaf snapshots)
+├── research/                   # Research artifacts and exploratory notebooks
+├── src/                        # Source code organized by evaluation phases
+│   ├── phase1_prep/            # Initial dataset tagging and preprocessing
+│   ├── phase2_conversion/      # Conversion of MCQs to OSQs
+│   ├── phase3_variants/        # Generation of distractor variant MCQs
+│   ├── phase4_inference/       # Inference code for evaluating language models
+│   ├── phase5_llm_as_a_judge/  # LLM-as-a-Judge grading of OSQ responses
+│   └── phase6_analysis/        # Comprehensive statistical analysis and visualization
+├── scripts/                    # Automation scripts (e.g., generate_docs.py)
+├── .github/                    # GitHub CI workflows
+├── .env.template               # Template for API keys
+├── requirements.txt            # Python dependencies for venv
+├── Makefile                    # Automation commands
+├── README.md                   # Project overview (this file)
+└── LICENSE                     # License information
 ```
 
 ## Getting Started
@@ -143,7 +144,7 @@ This architecture ensures documentation stays in sync with your project files an
 
 ## Dissertation Timeline Gantt Chart
 
-This Gantt chart visualizes the dissertation schedule, showing tasks, their durations, and dependencies. The vertical line represents today's date (July 22, 2025) to track progress against the planned timeline.
+This Gantt chart visualizes the dissertation schedule, showing tasks, their durations, and dependencies. The vertical line represents today's date to track progress against the planned timeline.
 
 ```mermaid
 gantt
@@ -151,39 +152,51 @@ gantt
     dateFormat  YYYY-MM-DD
     axisFormat %b %Y
     todayMarker on
-    
+
     section Planning Phase
     T.1 Develop Dissertation Outline       :t1, 2025-01-15, 2025-03-15
     T.2 Complete Dissertation Proposal     :t2, after t1, 2025-05-15
     T.3 Draft Research Questions (Ch 1)    :t3, 2025-04-01, 2025-05-31
-    
+
     section Journal Submissions
     T.4 Submit Journal 1                   :t4, 2025-02-01, 2025-03-15
     T.7 Submit Journal 2                   :t7, 2025-02-01, 2025-03-15
-    
+
     section Literature & Methods
     T.5 Complete Literature Review (Ch 2)  :t5, after t2, 2025-07-31
     T.6 Complete Materials & Methods (Ch 3):t6, after t5, 2025-08-31
-    
+
     section Research & Results
     T.8 Conduct Experiments                :t8, after t6, 2025-09-30
     T.9 Complete Results & Discussion (Ch 4-5) :t9, after t8, 2025-10-31
     T.10 Complete Conclusion (Ch 6)        :t10, after t9, 2025-10-31
-    
+
     section Finalization
     T.11 Submit Initial Draft              :t11, after t10, 2025-10-31
     T.12 Defend Dissertation               :t12, after t11, 2025-11-30
     T.13 Complete Final Edits              :t13, after t12, 2025-12-15
     T.14 Route Final Draft                 :t14, after t13, 2025-12-31
     T.15 Graduate                          :t15, after t14, 2026-03-15
+
+    section Conference Milestones
+    CSER 2026 Submission                   :cser1, 2025-12-17, 1d
+    INCOSE IS 2026 Submission              :incose1, 2026-01-02, 1d
+    CSER 2026 Acceptance Notification      :cser2, 2026-02-01, 1d
+    CSER 2026 Final Submission             :cser3, 2026-03-01, 1d
+    INCOSE IS 2026 Acceptance Notification :incose2, 2026-03-16, 1d
+    INCOSE IS 2026 Authors Accept          :incose3, 2026-03-31, 1d
+    CSER 2026 Conference                   :cser4, 2026-04-06, 4d
+    INCOSE IS 2026 Final Papers Due        :incose4, 2026-05-16, 1d
+    INCOSE IS 2026 Conference              :incose5, 2026-06-13, 6d
 ```
 
 ### Timeline Notes
 
-- **Current Date**: September 2, 2025
-- **Completed Tasks**: T.1-T.4, T.7 (Dissertation Outline, Journal Submissions)
-- **In Progress**: T.5 (Literature Review)
-- **Upcoming**: T.6-T.15 (Methods, Experiments, Results, Defense, Graduation)
+- **Current Date**: December 29, 2025
+- **Completed Tasks**: T.1-T.10 (Planning, Journal Submissions, Literature Review, Methods, Experiments, Results & Discussion)
+- **In Progress**: T.11-T.13 (Finalizing dissertation manuscript)
+- **Upcoming**: T.14-T.15 (Route final draft, Graduate)
+- **Conference Deadlines**: CSER 2026 submission due Dec 17, 2025; INCOSE IS 2026 submission due Jan 2, 2026
 
 ### Task Details
 
@@ -204,6 +217,20 @@ gantt
 | T.13 | Complete Final Edits and Submit to TPO and Department Chair | Dec 2025 | Dec 2025 |
 | T.14 | Route Final Draft | Dec 2025 | Dec 2025 |
 | T.15 | Graduate | Jan 2026 | March 2026 |
+
+### Conference Deadlines
+
+| Event | Key Dates |
+|-------|-----------|
+| **CSER 2026 (Systems Engineering Research)** | Conference: **Apr 6–9, 2026** |
+|  | Submission Deadline: **Dec 17, 2025** |
+|  | Acceptance Notification: **Feb 1, 2026** |
+|  | Final Submission: **Mar 1, 2026** |
+| **INCOSE IS 2026 (International Symposium)** | Conference: **Jun 13–18, 2026** |
+|  | All Submissions Due: **Jan 2, 2026** |
+|  | Notification of Acceptance: **Mar 16, 2026** |
+|  | Authors Accept Due: **Mar 31, 2026** |
+|  | Final Papers Due: **May 16, 2026** |
 
 The Gantt chart provides a visual representation of the dissertation timeline, showing task dependencies and progress. The "today" marker helps track current progress against the planned schedule.
 
