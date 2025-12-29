@@ -193,13 +193,9 @@ Each question record includes the following fields:
     \item \texttt{justification}: Explanation of correct answer
 \end{itemize}
 
-The dataset was saved locally as \texttt{sysengbench.csv} for subsequent processing.
+The dataset was saved locally as \texttt{sysengbench.csv} for subsequent processing. Some questions belong to multiple INCOSE categories; for distributional analysis, these were expanded into separate rows, resulting in 1,210 category-question pairs from the original 1,144 questions.
 
 An extensive analysis of the benchmark was conducted in \cite{Bell2025SysEngBench}, still under review with Wiley that includes sub-categories with distributions visualized using bar charts, pie charts, and stacked visualizations to express the coverage of the benchmark across the systems engineering domain.
-
-
-%% PICK BACK UP HERE WITH THE CHAPTER3 MATERIALS AND METHODS MARKDOWN FILE
-
 
 \subsection{MCQ to OSQ Conversion (Phase 2)}\label{sec:phase2}
 
@@ -374,7 +370,8 @@ Several quality control mechanisms ensured conversion fidelity:
 
 \begin{itemize}
     \item \textbf{Deterministic Generation}: Temperature=0.0 ensured consistent outputs across runs
-    \item \textbf{Comprehensive Logging}: All prompts and responses were logged with timestamps to separate artifact directories
+    \item \textbf{Automatic Retry}: JSON parsing errors triggered automatic retry with a reminder prompt to enforce strict JSON output
+    \item \textbf{Comprehensive Logging}: All prompts and responses were logged with timestamps to separate artifact directories, enabling full auditability
     \item \textbf{Manual Spot-Checks}: A random sample of 50 conversions was manually reviewed to verify semantic preservation and rubric quality
 \end{itemize}
 
@@ -538,48 +535,28 @@ Key differences from \ac{mcq} configuration:
 \begin{itemize}
     \item \textbf{Higher max\_tokens}: 10000 depending on model, allowing for detailed explanations
     \item \textbf{No REGEX filtering}: Full response text retained
-    \item \textbf{No automatic metrics}: Accuracy cannot be computed via string matching; leads us to the LLM-as-a-judge phase <<optional ref>>
+    \item \textbf{No automatic metrics}: Accuracy cannot be computed via string matching; responses are passed to Phase 5 for LLM-based evaluation
 \end{itemize}
-
-
-
-perhaps we just show an example of the output and say that's what we pass on to the grader. The output is simply a long string. Snag an example from a jsonl file for an example if desired.
 
 
 \subsection{LLM-as-a-Judge Scoring (Phase 5)}\label{sec:llm_judge}
 
-Since the literature doesn’t yet have extensive numbers for GPT-4o / GPT-4.1 / GPT-5-class models as judges:
-
-“Most published alignment studies focus on GPT-3.5 and GPT-4. We therefore treat GPT-4-class results as a lower bound on the judge capability of the more recent ChatGPT models used in this work, while empirically validating judge reliability on a held-out, human-graded subset of our benchmark.”
-
-Scoring open-ended responses requires deeper understanding rather than simple string matching. This research employs LLM-as-a-judge~cite, a methodology where a frontier language model evaluates responses based on rubrics and expected answers.
-
+Scoring open-ended responses requires semantic understanding rather than simple string matching. This research employs LLM-as-a-judge, a methodology where a frontier language model evaluates responses based on structured rubrics and expected answers. Most published alignment studies focus on GPT-3.5 and GPT-4~\cite{zheng_large_2024}; we therefore treat GPT-4-class results as a lower bound on judge capability while empirically validating inter-judge reliability across multiple judge models.
 
 \paragraph{Judge Model Selection}
 
-Used Chat-GPT4o (I did some with gpt5, but i think we'll go to gpt4o since that was a benchmark in (refs). COnsider the price difference on the tokens.
-
-Accessed via OpenRouter with temperature=0.0.
-
-
-\paragraph{Judging Approaches}
-
-I only ended up doing the rubric-based judging for now. Did not use multiple rubrics. Cite another paper that did similar here from Zotero.
-
-\paragraph{Rubric-Based Judging}
-Uses the grading rubric generated in Phase 2 (Section~\ref{sec:phase2}). Judge assigns:
+To assess judge consistency and reduce single-model bias, three judge models were employed:
 \begin{itemize}
-    \item \textbf{Full credit} (1.0): Response meets full credit criteria
-    \item \textbf{Partial credit} (0.5): Response meets partial credit criteria
-    \item \textbf{No credit} (0.0): Response meets no credit criteria
+    \item \textbf{GPT-5} (OpenAI): Primary judge model accessed via OpenRouter
+    \item \textbf{GPT-5-mini} (OpenAI): Smaller variant for cost-efficiency comparison
+    \item \textbf{GPT-OSS-120B}: Open-source alternative for cross-architecture validation
 \end{itemize}
 
-Prompt structure (abridged; full prompt in Appendix~\ref{app:judge_prompts}):
-<< consider adding a prompt snipet here... >> 
-
+All judge models were accessed via OpenRouter with temperature=0.0 for deterministic scoring. Each model response was independently evaluated by all three judges, enabling inter-judge agreement analysis in Phase 6.
 
 \paragraph{Multi-Dimensional Scoring}
-Rooted in Lin \& Chen (2023)~\cite{lin2023multidim} approach, this approach evaluates five dimensions on 0-20 scale:
+
+The judging approach employs multi-dimensional scoring adapted from Lin \& Chen (2023)~\cite{lin2023multidim}. Each response is evaluated across five dimensions on a 0--20 scale:
 
 \begin{enumerate}
     \item \textbf{Technical Accuracy}: Correctness of facts, principles, terminology
@@ -589,7 +566,7 @@ Rooted in Lin \& Chen (2023)~\cite{lin2023multidim} approach, this approach eval
     \item \textbf{Professional Relevance}: Real-world applicability
 \end{enumerate}
 
-Figure~\ref{fig:llm-as-judge-process} illustrates the judging workflow.
+The dimension scores are summed to produce a total score out of 100. Figure~\ref{fig:llm-as-judge-workflow} illustrates the judging workflow.
 
 \begin{figure}[htbp]
     \centering
@@ -601,7 +578,7 @@ Figure~\ref{fig:llm-as-judge-process} illustrates the judging workflow.
 
 \subsubsection{Output Format}
 
-Judged samples are stored in JSONL format:
+Judged samples are stored in JSONL format, with each record containing the original Phase 4 response and the judge's evaluation:
 
 \begin{lstlisting}[language=json,
     basicstyle=\ttfamily\footnotesize,
@@ -609,21 +586,26 @@ Judged samples are stored in JSONL format:
     label={lst:osq-eval-json}
 ]
 {
-  "task": "sysengbench-osq",
-  "doc_id": 42,
-  "question": "...",
-  "expected_answer": "...",
-  "model_response": "...",
-  "judge_model": "gpt-5",
-  "judging_approach": "multi_dimensional",
-  "judgment": {
-    "score": 0.82,
-    "reasoning": "...",
-    "technical_accuracy": 9,
-    "conceptual_understanding": 8,
-    "completeness": 9,
-    "clarity": 7,
-    "professional_relevance": 8
+  "sample_id": 42,
+  "phase4_row": {
+    "doc_id": 42,
+    "doc": { "Question ID": 43, "osq_prompt": "...", ... },
+    "resps": [["Model response text..."]],
+    "filtered_resps": ["Model response text..."]
+  },
+  "judge": {
+    "fields": {
+      "technical_accuracy": {"score": 18},
+      "conceptual_understanding": {"score": 17},
+      "completeness": {"score": 19},
+      "clarity_organization": {"score": 18},
+      "professional_relevance": {"score": 20},
+      "overall_score": 92
+    },
+    "meta": {
+      "judge_model": "openai/gpt-5",
+      "temperature": 0.0
+    }
   }
 }
 \end{lstlisting}
