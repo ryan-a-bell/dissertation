@@ -1,0 +1,155 @@
+\label{appendix-b}
+This appendix provides the task configurations for evaluating \acp{llm} on the variants of SysEngBench via \texttt{lm-evaluation-harness}. Including these files ensures complete reproducibility of the methodology described in Chapter~\ref{ch:materials_methods}. 
+
+This section includes the lm-evaluation-harness task configurations used
+for \ac{mcq} and \ac{osq} evaluations. These YAML files define 
+prompt templates, parsing rules, metrics, stopping conditions, and dataset 
+sources.
+
+
+\section{Multiple Choice Question Tasks}
+\label{app:tasks_mcq}
+
+Each task other than the original SysEngBench task forces the correct answer to appear at a fixed position (A–D), supporting the position bias experiments discussed in 
+Section~\ref{sec:position_bias_analysis}.
+
+% \newpage
+\clearpage
+\subsection{SysEngBench}
+\begin{figure}[htbp]
+\centering
+\begin{scriptsize}
+\lstinputlisting[
+    language=json,
+    basicstyle=\ttfamily\scriptsize,
+    frame=single,
+    numbers=left
+]{figs/appendix-b-tasks/sysengbench.yaml}
+\end{scriptsize}
+\caption{sysengbench.yaml}
+\label{lst:sysengbench}
+\end{figure}
+
+% \newpage
+\clearpage
+\subsection{SysEngBench-A}
+
+\begin{figure}[htbp]
+\centering
+\begin{scriptsize}
+\lstinputlisting[
+    language=json,
+    basicstyle=\ttfamily\scriptsize,
+    frame=single,
+    numbers=left
+]{figs/appendix-b-tasks/sysengbench-a.yaml}
+\end{scriptsize}
+\caption{sysengbench-a.yaml}
+\label{lst:sysengbench-a}
+\end{figure}
+
+% \newpage
+\clearpage
+\subsection{SysEngBench-B}
+
+\begin{figure}[htbp]
+\centering
+\begin{scriptsize}
+\lstinputlisting[
+    language=json,
+    basicstyle=\ttfamily\scriptsize,
+    frame=single,
+    numbers=left
+]{figs/appendix-b-tasks/sysengbench-b.yaml}
+\end{scriptsize}
+\caption{sysengbench-b.yaml}
+\label{lst:sysengbench-b}
+\end{figure}
+
+% \newpage
+\clearpage
+\subsection{SysEngBench-C}
+
+\begin{figure}[htbp]
+\centering
+\begin{scriptsize}
+\lstinputlisting[
+    language=json,
+    basicstyle=\ttfamily\scriptsize,
+    frame=single,
+    numbers=left
+]{figs/appendix-b-tasks/sysengbench-c.yaml}
+\end{scriptsize}
+\caption{sysengbench-c.yaml}
+\label{lst:sysengbench-c}
+\end{figure}
+
+% \newpage
+\clearpage
+\subsection{SysEngBench-D}
+
+\begin{figure}[htbp]
+\centering
+\begin{scriptsize}
+\lstinputlisting[
+    language=json,
+    basicstyle=\ttfamily\scriptsize,
+    frame=single,
+    numbers=left
+]{figs/appendix-b-tasks/sysengbench-d.yaml}
+\end{scriptsize}
+\caption{sysengbench-d.yaml}
+\label{lst:sysengbench-d}
+\end{figure}
+
+
+% \newpage
+\clearpage
+\section{Open Style Question Task}
+\label{app:tasks_osq}
+
+This task evaluates models on open-ended short-answer questions using the 
+converted \ac{osq} dataset described in Section~\ref{sec:phase2}.
+
+\begin{figure}[htbp]
+\centering
+\begin{scriptsize}
+\lstinputlisting[
+    language=json,
+    basicstyle=\ttfamily\scriptsize,
+    frame=single,
+    numbers=left
+]{figs/appendix-b-tasks/sysengbench-osq.yaml}
+\end{scriptsize}
+\caption{sysengbench-osq.yaml}
+\label{lst:sysengbench-osq}
+\end{figure}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

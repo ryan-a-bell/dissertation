@@ -1,0 +1,71 @@
+@startuml
+class Analysis {
+  +run_all_analyses()
+}
+
+' ----------------------------
+' MCQ Position Bias
+' ----------------------------
+class MCQ_PositionBias_Analysis {
+  .. Visual Diagnostics ..
+  - Accuracy-by-Position Bar Charts
+  - Δp Deviation Plots / Heatmaps
+
+  .. Core Tests ..
+  - Chi-Square Test of Independence
+  - Friedman Test (Repeated Measures)
+  - Cramér's V Effect Size
+}
+
+Analysis *-- MCQ_PositionBias_Analysis
+
+' ----------------------------
+' OSQ Analysis
+' ----------------------------
+class OSQ_Analysis {
+  .. Visual Diagnostics ..
+  - Score Histograms with KDE
+  - Judge-Level Box/Violin Plots
+  - Rubric Dimension Bar Charts
+
+  .. Core Statistics ..
+  - Inter-Judge Correlation (Spearman or Pearson)
+  - Bootstrap Confidence Intervals for Mean Scores
+}
+
+Analysis *-- OSQ_Analysis
+
+' ----------------------------
+' MCQ vs OSQ Comparative Analysis
+' ----------------------------
+class MCQ_vs_OSQ_Comparative {
+  .. Visual Diagnostics ..
+  - MCQ vs OSQ Scatter Plot
+  - Regression Line + Diagonal Reference
+
+  .. Core Tests ..
+  - Pearson Correlation
+  - Spearman Rank Correlation
+  - Wilcoxon Signed-Rank Test (Paired)
+  - Cohen's d (Paired Effect Size)
+}
+
+Analysis *-- MCQ_vs_OSQ_Comparative
+
+' ----------------------------
+' Tokenomics / Cost-Effectiveness
+' ----------------------------
+class Tokenomics_and_Cost_Analysis {
+  .. Visual Diagnostics ..
+  - Pareto Frontier Plot (Cost vs Quality)
+  - Cost per 1000 Questions Charts
+
+  .. Core Metrics ..
+  - Token Usage Statistics (Input / Output / Total)
+  - Cost per Response / per 1000 Questions
+  - Efficiency Metric (e.g., Cost-per-Score)
+}
+
+Analysis *-- Tokenomics_and_Cost_Analysis
+
+@enduml

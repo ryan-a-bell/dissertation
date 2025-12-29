@@ -1,0 +1,28 @@
+@startuml
+!theme plain
+skinparam backgroundColor white
+skinparam defaultFontName Arial
+
+start
+:Load Dataset;
+
+while (More MCQs?) is (Yes)
+  :Build Classifier Prompt;
+  
+  :LLM API Call;
+
+  :Parse Score
+  1-10 Scale;
+  
+  if (Score ≥ 7?) then (Yes)
+    :Mark Suitable;
+  else (No)
+    :Mark Unsuitable;
+  endif
+endwhile (No)
+
+:Save Suitable Results;
+
+stop
+
+@enduml

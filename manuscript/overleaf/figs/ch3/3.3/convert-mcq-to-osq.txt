@@ -1,0 +1,25 @@
+@startuml
+!theme plain
+skinparam backgroundColor white
+skinparam defaultFontName Arial
+
+start
+:Load Suitable MCQ Results;
+
+while (More MCQs?) is (Yes)
+  :Build Converter Prompt;
+  
+  :LLM API Call
+  JSON Response;
+  
+  :Parse JSON;
+
+  :Log Response;
+  
+endwhile (No)
+
+:Save OSQ Dataset;
+
+stop
+
+@enduml

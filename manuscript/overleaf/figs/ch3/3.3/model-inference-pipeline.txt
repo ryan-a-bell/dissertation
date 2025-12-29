@@ -1,0 +1,21 @@
+@startuml
+start
+
+:Initialize log;
+
+:Ensure Ollama Server Running 
+(auto-start and retries);
+
+repeat
+
+  :Prepare and Evaluate Model
+  (auto-retry on server failure);
+
+  :Record model result;
+
+repeat while (More models?) is (yes)
+
+:Write final summary log;
+
+stop
+@enduml

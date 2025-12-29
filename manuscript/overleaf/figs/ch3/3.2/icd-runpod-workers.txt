@@ -1,0 +1,55 @@
+@startuml
+skinparam componentStyle rectangle
+skinparam packageStyle rectangle
+skinparam shadowing false
+skinparam linetype ortho
+
+actor "Jupyter Notebook" as JN
+
+'------------------------------------
+' LOCAL SUBPROCESSES
+'------------------------------------
+package "Local Execution Environment" {
+    component "Subprocess 1\n(RunPod Runner)" as S1
+    component "Subprocess 2\n(RunPod Runner)" as S2
+    component "Subprocess N\n(RunPod Runner)" as SN
+}
+
+'------------------------------------
+' RUNPOD CLOUD INFRASTRUCTURE
+'------------------------------------
+package "RunPod Cloud Infrastructure" {
+    component "RunPod Orchestrator" as API
+
+    package "Runner Pool" as RP {
+        frame "Pod 1" as P1 {
+            component "GPU Runner" as R1
+        }
+        frame "Pod 2" as P2 {
+            component "GPU Runner" as R2
+        }
+        frame "Pod N" as PN {
+            component "GPU Runner" as RN
+        }
+    }
+}
+
+'------------------------------------
+' INTERFACE CONNECTIONS (RECTANGULAR)
+'------------------------------------
+
+JN <-down-> S1
+JN <-down-> S2
+JN <-down-> SN
+
+S1 <-down-> API
+S2 <-down-> API
+SN <-down-> API
+
+API <-down-> RP
+
+S1 <-down-> P1 : DirectChannel
+S2 <-down-> P2 : DirectChannel
+SN <-down-> PN : DirectChannel
+
+@enduml

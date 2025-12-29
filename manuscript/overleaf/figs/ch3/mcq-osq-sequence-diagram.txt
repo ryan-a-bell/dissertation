@@ -1,0 +1,55 @@
+@startuml
+title MCQ Versus OSQ - Creation and Evaluation Process
+hide footbox
+
+participant "Python Script" as PY
+participant "MCQ Database" as MCQDB
+participant "Filter LLM" as FLLM
+participant "Conversion LLM" as CLLM
+participant "Judge LLM" as LJ
+participant "LLM Under Evaluation" as LLM_EVAL
+participant "OSQ Database" as OSQDB
+
+
+== Filter ==
+PY -> MCQDB : Request benchmark
+MCQDB -> PY: Respond with benchmark
+
+loop For each MCQ
+    PY -> FLLM : PROMPT 1 - Filter prompt
+    FLLM -> PY : Filter response
+end
+
+== Convert ==
+loop For each filter response
+    alt Filter response is above threshold
+        PY -> CLLM : PROMPT 2 - Conversion prompt
+        CLLM -> PY : Conversion response
+    else Filter response below threshold
+        PY -> PY : Discard MCQ
+    end
+end
+
+PY -> PY : Aggregate conversion responses
+create OSQDB
+PY -> OSQDB : Store responses in OSQ Database
+
+== Evaluate ==
+PY -> MCQDB : Request benchmark
+MCQDB -> PY: Respond with MCQ benchmark
+PY -> OSQDB : Request benchmark
+OSQDB -> PY: Respond with OSQ benchmark
+
+loop For each MCQ and OSQ pair
+    PY -> LLM_EVAL : MCQ query
+    LLM_EVAL -> PY : MCQ response
+    PY -> LLM_EVAL : OSQ query
+    LLM_EVAL -> PY : OSQ response
+    PY -> LJ : PROMPT 3 - OSQ response grading prompt
+    LJ -> PY: Judge score response
+
+end
+
+PY -> PY : Compare MCQ score with OSQ Judge score
+
+@enduml

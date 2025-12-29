@@ -1,0 +1,78 @@
+\chapter{Discussion}\label{ch:discussion}
+
+\section{Interpretation of Findings}\label{sec:interpretation_findings}
+
+What this implies:
+- MCQ and OSQ measure related but not interchangeable capabilities
+- OSQ may impose systematic additional cognitive load
+- Scores may need calibration before being compared or mixed
+- Using MCQ as a proxy for OSQ may bias conclusions
+
+“A statistically significant and practically large difference was observed, indicating that MCQ and OSQ formats are not interchangeable, despite strong rank-order alignment.”
+
+Executive summary version:
+“While model rankings are consistent across formats, absolute performance differs substantially, with OSQ imposing a significantly higher performance bar.”
+
+\section{Implications for Benchmarking Methodologies}\label{sec:implications_benchmarking}
+
+\section{Practical Applications for Systems Engineering and Insights for LLM Deployment}\label{sec:practical_applications}
+
+
+\section{Limitations and Future Work}\label{sec:limits_and_future_work}
+
+Highlight the importance of conceptual reasoning and Bloom’s taxonomy for deeper LLM evaluation with the new reasoning models
+
+Filtered/Omitted Results
+add in a figure on how many were tossed and by which section. (e.g. the thinking models b/c of their responses... Can pull from the repo to show some outputs -- pick the deepseek ones, they show it easily!)
+
+Ones not included:
+\begin{itemize}
+    \item 4.1 was OK
+    \item 2.5 flash was OK
+    \item 5.1gpt  maybe -- wanted to think
+    \item gpt5 -- wanted to think
+    \item sonnet 4.5 OK
+    \item gpt-4o OK
+    \item gemini 2.5 pro -- wanted to think
+\end{itemize}
+
+original was 2000 tokens. Hit limits on some thinking models so upped it to 10000 and only had the models that were in "indefinite loops" unable to respond.
+
+%%%% section was previously near the intro. Mold it into whatever i want it to be.
+This study was scoped to evaluate large language models (LLMs) for systems engineering tasks through comparative \ac{mcq} and \ac{osq} benchmarking, including hybrid approaches and tokenomics analysis. The work is anchored in foundational systems engineering concepts drawn from the INCOSE Handbook and related activities such as requirements analysis, conceptual design, risk management, and model-based systems engineering. The overarching goal is to make SysEngBench the definitive benchmarking resource for systems engineering, supplying a methodological template for both its ongoing development and for those creating private or derivative benchmarks, and to guide LLM integration into SE workflows.
+
+The research is deliberately bounded in both concept and method. It examines model performance and evaluation modalities rather than downstream system builds, hardware prototyping, or full lifecycle automation. The analysis focuses on frontier and small LLMs. Benchmarks are confined to MCQ and OSQ formats and their hybrid combinations; interactive dialogues, multimodal, or agentic inputs remain outside the present scope. From a data and temporal perspective, the study relies on SysEngBench content drawn from publicly available systems engineering sources and does not incorporate proprietary industrial datasets. The technology snapshot reflects the 2024 – late-2025 LLM landscape, recognizing that future models may shift absolute performance while leaving the analytical framework relevant.
+
+Several limitations qualify the findings. Automated scoring of \acp{osq} combines algorithmic metrics with language model as a judge, introducing some subjectivity. Tokenomics analysis focuses on token counts and inference latency to highlight cost-modeling trade-offs, rather than offering a full economic forecast such as dollars per million tokens, especially as inference costs continue to compress with large-scale adoption. In terms of generalizability, the conclusions are most applicable to systems engineering and may not fully extend to highly specialized engineering subfields or non-engineering disciplines. Finally, SysEngBench is designed for extensibility, and thus this dissertation documents only its initial large-scale iteration; subsequent updates will be needed to capture future advances in \ac{llm} capabilities.
+
+\subsubsection{Non-thinking Models}
+
+\begin{itemize}
+    \item Running models in Ollama with
+    \begin{itemize}
+        \item Standard model settings
+        \begin{itemize}
+            \item Thinking models can think; other models that do not require thinking do not think.
+            \item Outputs were either:
+            \begin{itemize}
+                \item Standard REGEX parsing snags the first ``A/B/C/D'', which is usually ``A'' when the model repeats the question during thinking. This would require manually re-parsing all of the files.
+                \item Thinking models frequently exceeded the typical token expectations. Token limits were increased to 10{,}000 to investigate the behavior. The behavior exhibited a form of ``crashing'' or convergence on a single word. In the example below, the repeated word was ``Wait'', generated until the token limit was reached.
+                
+                \item \texttt{\textless{}\textless{} add the ``Wait'' example here\textgreater{}\textgreater{}}
+            \end{itemize}
+        \end{itemize}
+
+        \item \texttt{think=false}
+        \begin{itemize}
+            \item Models such as Phi-4 continued to output their thinking process, as they are not currently compatible with Ollama's configuration for no-thinking.
+        \end{itemize}
+
+        \item \texttt{hidethinking=true}
+        \begin{itemize}
+            \item Models still reached the token limit even when thinking traces were hidden, which resulted in an empty string (``'') output.
+        \end{itemize}
+
+        \item Ultimately, the decision was made that the focal point of the research is not thinking models, but rather the evaluation of the evaluation method (commonly called meta-evaluation). Proprietary models such as GPT-5 hide their thinking by default when accessed through the API. For this reason, open-source thinking models that would be hosted on Ollama are excluded from this research.
+    \end{itemize}
+\end{itemize}
+

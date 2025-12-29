@@ -1,0 +1,146 @@
+\chapter{[Chapter Title]}\label{ch:labelhere}
+
+
+\section{The References}\label{sec:hello}
+Do not fret about how to enter your references in your bib file \cite{pollan_2006}! In the {\tt references.bib} file included with this template, we have reproduced for you all the examples from the NPS library's IEEE guide~\cite{pollan_2006,locke_2020,strindberg_warn_2011,haynes_2009,krishnan_2008,Crabtree:Chaplin:2013,abramowitz_64,orend_2013,bonds_2014,myer_77,
+Houston:2016,comprehensive_2005,katz_2007,Teplin:EtAl:2005,morentz_2009,Suro:2004,nsa_ipac_2012,Blanche:2006,DOD.8570.01-M,JP-3-01,sniper_2011,erwin_2011,takai_2013,merriam_2017,FLSA:2008,transmission_comm_85,TSP-168:1972,sanico_2018,Griffin:2009,congress_1991,americans_1991,google_2017,linguine_2016,Beforebad:2014,bell_1876,Wunkerbunk:2002,dixon_2017,Wonka:1972,standard_1968,Nekeip:2008,Yoshi:1988,Horse:1996,Horse:1995,Sushi:1995,Python:2017,FBI_2017,Janes_2017,wiki_2016,sushi_2021,youtube_2014}, so that you do not have to guess the input you need to get your references to ``look right.'' 
+
+Generally, the most commonly used references are
+   books~\cite{pollan_2006,strindberg_warn_2011,haynes_2009,krishnan_2008,abramowitz_64,orend_2013,bonds_2014},
+   journal articles~\cite{Griffin:2009,sanico_2018},
+   conference proceedings~\cite{katz_2007,Teplin:EtAl:2005,morentz_2009},
+   government documents~\cite{DOD.8570.01-M,JP-3-01,sniper_2011,erwin_2011},
+   web articles~\cite{Sushi:1995,Python:2017,FBI_2017,Janes_2017},
+   theses~\cite{Nekeip:2008},
+   personal communications~\cite{Wunkerbunk:2002}, and
+   class notes~\cite{Houston:2016}.
+   The NPS examples are at \url{https://libguides.nps.edu/citation/ieee} and the  bib entries herein are also reproduced at \url{https://libguides.nps.edu/citation/ieee-bibtex}.
+
+
+\subsection{Start with [1]!}\label{sec:firstone}
+The references should begin with citation [1] in your main thesis body. If they start with another number, it is most likely caused by citation numbers in your figure captions or table titles, which appear ``first'' in the List of Figures and List of Tables, since these appear before your first chapter. To fix this, use a \underline{two-part caption}; see the caption for Figure \ref{fig:dragon}. If references in the Executive Summary are causing it, see ``bibunits'' in the ``thesis\_exec\_sum'' file in the ``examples'' folder of this template.
+
+A simple equation to check equation numbering.
+\begin{equation}
+a^2 + b^2 = c^2
+\end{equation}
+
+
+\section{Acronym Management}\label{sec:fun}
+This shows the acronym macro being used for \ac{TCP}, which is
+produced in its short form \ac{TCP} on all subsequent uses of the macro.
+Acronyms are re-set after the abstract and executive summary, and will be
+shown in their long form in their first use by default. You can mark some
+special acronyms so they appear in their short form by default. Here is another example using \ac{USN} and then \ac{USN}. And another using \ac{DOD} then \ac{DOD}. And yet another: \ac{SRWBR}, then \ac{SRWBR}. And finally, \ac{MASINT}, then \ac{MASINT}.
+
+
+\section{Figure Formatting}\label{sec:something}
+Examine Figure \ref{fig:dragon} in the source file for code placement.
+\begin{itemize}
+    \item Use an [H] float to prevent figures from landing in the middle of paragraphs. 
+    \item Use a \verb+\vspace+ to add space between each figure and the text above it. 
+    \item You may also want or need to change the image size. Image scaling is also shown in Figure \ref{fig:dragon}.  
+    \item Refer to each figure by its number in the body text. Examine the source file in this section for how to label and then cross reference your figures.
+\end{itemize}
+
+
+\begin{figure}[H] % IMPORTANT! H float prevents figure from landing in between paragraphs (bad!)
+    \vspace{10mm} % IMPORTANT! Use if figure is really close to the text above it (usually is!)
+    \centering
+    \includegraphics[scale=0.45]{figs/dragon.jpg}
+    \caption[Short caption for List of Figures only; full caption in main text.]{Compare this caption to its match in the List of Figures. The caption displays in full here, but only the text enclosed in the brackets appears in the LoF. This method prevents citations from appearing in the LoF, ensuring the first citation will start at ``1'' in the main text. This is also a way to have longer captions, but a succinct List of Figures. Source:~\cite[table 5]{congress_1991}.}
+    \label{fig:dragon} % cross-referencing label
+\end{figure}
+
+
+\section{Footnotes}
+Here we demonstrate footnotes. Be sure to end all footnotes with a period.\footnote{This is a sample footnote.} See the bottom of the page for the footnote.
+
+
+\subsection{Another Subsection}
+A simple equation to check numbering.
+\begin{equation}
+    L' = {L}{\sqrt{1-\frac{v^2}{c^2}}}
+\end{equation}
+\lipsum[3] % remove me
+\begin{quote}
+    Block quote example block quote example block quote example block quote example block quote example block quote example block quote example block quote example block quote example block quote example block quote example block quote example block quote example block quote example block quote example block quote example block quote example block quote example block quote example block quote example.\cite{katz_2007}  
+\end{quote}
+\lipsum[2] % remove me
+
+
+\section{Table Formatting}\label{section:tableformat}
+See lines of code used to create Table \ref{table:sample} in the source document for format considerations regarding tables. 
+\begin{itemize}
+    \item If a table lands at the top of the page, it will look low because of the built-in space above table titles. To remedy this, reduce the built-in white space above the table title, by using a negative \verb+\vspace+ command under the table command. Examine Table \ref{table:sample} in the source file for \verb+\vspace+ placement.
+    \item Notice I did not say ``below'' or ``above'' when referring to the table; please do the same. Notice also the characters used around the words \emph{below} and \emph{above} to produce true-type quotation marks.
+\end{itemize}
+     
+     
+\begin{table}[H] % H prevents table from landing in the middle of a paragraph
+    \vspace{0mm} % use as needed to control white space above table (negative values, too) 
+    \caption[Short table title (customized for LoT; full title in body text)]{Short table title. Adapted from~\cite[table 5]{congress_1991}.} % note brackets and curly brackets to display citation here but not in the List of Tables; note also that this table is not entirely original and therefore requires an ``Adapted from'' in the table title.
+    \begin{center}
+    \begin{tabular}{ c c c }
+    \hline
+      1 & 2 & 3 \\ \hline
+      4 & 5 & 6 \\
+      7 & 8 & 9 \\
+      10 & 11 & 12 \\
+      13 & 14 & 15 \\
+    \hline
+    \end{tabular}
+    \end{center}
+    \label{table:sample}
+\end{table}
+
+
+\lipsum[2]
+
+
+\subsection{A subsection that is long and continues onto two lines should be single-spaced within the title}\label{sec:another}
+\lipsum[3]
+
+
+\subsubsection{A subsubsection}\label{sec:minorstuff}
+\lipsum[4]
+
+
+\section{Quick Tips}\label{sec:tips}
+\begin{enumerate}[leftmargin=0.75in] % specify this left margin, if items immediately follow heading, such as this list (looks better)
+    \item Punctuation (periods and commas) go \emph{inside} quotation marks. 
+    \item The macros \verb+\etal+, \verb+\ie+, \verb+\eg+ and \verb+\etc+ force proper
+      American English convention for these (\ie a comma follows).
+      It is redundant to use \etc with e.g.\ at the end of a list of
+      examples (\eg apples, pears, \etc).
+    \item Chicago style recommends subordinate clauses using \verb+\ie+ and \verb+\eg+ be
+    separated from the main clause using parentheses (\eg, as shown above).
+    \item Use the \LaTeX{} \verb+\begin{figure}+ and \verb+\begin{table}+ environment to
+      create floating figures and tables. Use the \verb+\caption+ command
+      to create your captions. Label your captions with the
+      \verb+\label{foo}+ command inside the caption itself. Reference
+      these figures and tables with the \verb+\ref{foo}+ reference command. 
+    \item Use \verb+\vspace+ commands, \verb+\pagebreak+, and floats to control placement. See figure examples for code suggestions.
+    \item Master's degree has an apostrophe and Postgraduate is one word. 
+    \item Most acronyms do not need periods, like \ac{NPS}. Common acronyms need not appear in the list of acronyms (\eg, \ac{US}, \ac{FBI}, \ac{CIA}).
+    \item When typing a date, do not use ``st'' or ``th.'' Instead, just
+      note the date: July 4, 1776, is Independence Day. Commas go 
+    after month/date, year: both Jefferson and Adams died on July 4, 1826.
+    No comma between month/yr: \textit{Alice's Adventures in Wonderland} was published in July 1865.
+    \item In general, spell out numbers one through nine, and use numerals for 10 and greater.
+    \item Capitalize C in Chapter, F in Figure, T in Table and E in Equation when referring
+    to your own chapters, figures, tables and equations.
+    \item When there is more than one reference, put them both into the \verb+\cite+ command: \verb+\cite{john1,john2}+. It will render like this \cite{Nekeip:2008,Sushi:1995}.
+    \item When typing equations in text, use ``where'' or ``if.'' Use
+      Math Mode. 
+    \item When inserting symbols, use Math Mode.
+\end{enumerate}
+
+
+\section{Look (Quote) Smart} \label{sec:smart}
+To output curly (``smart'') quotes, versus undesirable straight quotes ("like this"), use two tildes for the opening quote mark, and two apostrophes for the closing quote mark. There are many examples in this template, including in this paragraph.
+
+
+\section{About Those Widows ... }\label{sec:widows}
+Oftentimes you will see just a few words---or even only one word---at the top of a page. This is called a page widow and is considered ``ugly.'' 
+Make sure there are no widows at the top of any page---if \LaTeX{} gives you a hard time, you may need to add or remove text so that everything works out properly. You can also use the \verb+\pagebreak+ command. For more ideas, \href{https://wiki.nps.edu/pages/viewpage.action?pageId=720175227}{click here}.
