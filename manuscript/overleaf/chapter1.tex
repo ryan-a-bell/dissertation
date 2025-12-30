@@ -6,13 +6,15 @@
 
 \subsection{The Importance and Complexity of Systems Engineering}
 
-Many have sought to define what Systems Engineering is: 
-- 1 def
-- 2 def
-- 3 def
-The field still hasn't come to a definitive solution, but what all of the definitions have in common is that: Systems Engineering is complex and has high-impact, and expensive.
+Many have sought to define what Systems Engineering is:
+\begin{enumerate}
+    \item \textbf{INCOSE SE Handbook:} ``Systems engineering is a transdisciplinary and integrative approach to enable the successful realization, use, and retirement of engineered systems, using systems principles and concepts, and scientific, technological, and management methods'' \cite{incose_guide_2025}.
+    \item \textbf{ISO/IEC/IEEE 15288:} ``An interdisciplinary approach governing the total technical and managerial effort required to transform a set of stakeholder needs, expectations, and constraints into a solution and to support that solution throughout its life'' \cite{standard_ieee_15288_2023}.
+    \item \textbf{NASA SE Handbook:} ``A methodical, disciplined approach for the design, realization, technical management, operations, and retirement of a system'' \cite{nasa_nasa_2007}.
+\end{enumerate}
+While the field has not converged on a single canonical definition, these authoritative sources share common themes: systems engineering is inherently \textit{complex}, \textit{high-impact}, and \textit{resource-intensive}.
 
-it is complex because it is Hard to capture all of the knowledge, the relationships, the inter-dependencies between systems, and the resulting interactions (known-knowns, known-unknowns, unknown-knowns, and unknown-unknowns).
+It is complex because capturing all of the knowledge, relationships, and inter-dependencies between systems---along with the resulting interactions across the Rumsfeld matrix of known-knowns, known-unknowns, unknown-knowns, and unknown-unknowns---is inherently difficult.
 
 Systems engineering is high-impact because the discipline is responsible for ensuring the integration of systems that are already complex, in addition to mitigating emergent behavior between the systems, they must also try and meet performance, budget, and schedule constraints through a lifecycle. Empirical research show that the "\ac{se} effort has a significant, quantifiable effect on program success with correlation factors as high as 80\%" \cite{walden_systems_engineering_handbook_2015, elm_business_2012, honour_value_systems_engineering_2012}
 
@@ -24,37 +26,11 @@ Systems engineering is high-impact because the discipline is responsible for ens
     \label{fig:lifecycle_cost_impacts}
 \end{figure}
 
+Poor \ac{se} effort increases lifecycle cost by factors of 10--100$\times$ when defects propagate downstream, while strong \ac{se} effort compresses cost, accelerates timelines, and reduces rework \cite{walden_systems_engineering_handbook_2015, nasa_nasa_2007}.
 
- 
+As programs grow in scope---spanning multi-domain kill chains, autonomous platforms, digital twins, and distributed architectures---the cognitive load on systems engineers increases nonlinearly. Capturing complex system-of-systems interactions, emergent behaviors, and unknown-unknowns becomes increasingly difficult. Tools like \ac{mbse} have emerged to help manage this complexity, but they introduce their own challenges: evolving language standards (SysML v1.x to SysML v2), and the mindset shift from document-centric to model-centric approaches \cite{dau_model-based_2024, delligatti_sysml_2013}. Human bandwidth, coordination overhead, and documentation burdens remain limiting factors, even as \ac{mbse} raises the ceiling for what is possible.
 
-
-<<cite the slide from my proposal ppt >>
-
-20250713 Bell Dissertation Prop…
-
-. Poor SE effort increases lifecycle cost by factors of 10–100× when defects propagate downstream, while strong SE effort compresses cost, accelerates timelines, and reduces rework.
-
-As programs grow in scope between multi-domain kill chains, autonomous platforms, digital twins, and distributed architectures - the cognitive load on systems engineers increases nonlinearly. Capturing complex system of system interactions, emergent behaviors, and unknown–unknowns becomes increasingly difficult. Tools like MBSE have come forward to assist with amnaging the complexity, but with its own challenges like common language standards (sysmlv1.x to sysmlv2) and mind-set shifts from document-centric to model-centric. Human bandwidth, coordination overhead, and document burdens can start to become limiting factors, although MBSE helps raise the ceiling for what's possible.
-
-There has to be a better way to help capture and present the complexity in digestible formats to allow systems engineers to continue to make informed architectural decisions. One of those ways is with AI. AI can help cover more ground. But how can we ensure that it does it reliably? How can we trust its output, otherwise we might be worse off than we were without it. 
-
-%%% this should be the logical end of this section... grab the information from below and shove it up top here %%%%
-
-%%%%%%%%% begin some of the old text %%%%%%%%%%%%%%%
-Systems engineering is a multidisciplinary approach that focuses on the design, realization, and operation of complex systems over their entire life cycles \cite{incose_guide_2025, blanchard_systems_2010}. Rather than working in isolation, systems engineering integrates multiple engineering domains—such as mechanical, electrical, software, and human factors engineering—into a cohesive framework. The scope of systems engineering extends beyond traditional technical concerns, incorporating elements of project management, risk assessment, stakeholder requirements, and lifecycle considerations \cite{blanchard_systems_2010, boardman_systems_2008}. By emphasizing interdependencies among various subsystems, systems engineering ensures that the final product not only meets defined specifications but also aligns with broader organizational, regulatory, and user objectives.
-
-The holistic nature of systems engineering sets it apart from narrowly focused engineering disciplines. While individual specialists might concentrate on a single subsystem or technology, systems engineers synthesize these efforts, ensuring that the whole configuration operates harmoniously. This integrative perspective is crucial in contexts where small changes can ripple through the entire system, affecting performance, cost, schedule, and safety \cite{AveKlutse_Kodzo_Paaku_Kludze_2004, Samuel_K_Son_2012}. When designing and correcting errors, cost in particular can become a 10 to 100 times multiplier as you progress through the life cycle \cite{walden_systems_engineering_handbook_2015, nasa_nasa_2007, Tan2017EarlyLateDesign, kobren_dau_readiness_through_early_lcc_2019}.
-A systems engineer is more akin to a jack-of-all-trades instead of a subject matter expert in a singular discipline. In essence, systems engineering demands a comprehensive understanding of both technical components and human organizational structures, to successfully navigate nuanced decision-making that addresses the full breadth and depth of complex projects.
-
-
-
-The systems engineering process dictates one begins with thorough requirements analysis, a process that elicits, documents, and validates what stakeholders need the system to accomplish. Requirements analysis ensures alignment between envisioned system capabilities and stakeholder expectations, delineating both functional and non-functional parameters. This activity is followed by design synthesis, where engineers blend various technologies, subsystems, and design principles to create a holistic architecture. Such synthesis might involve selecting appropriate materials, defining data flows, and arranging subsystems to achieve an optimal balance of performance, reliability, and maintainability. There are several frameworks that can be leveraged for architecting solutions, including but not limited to DODAF, UAF, Zachman, MagicGrid) \cite{noauthor_dodaf_2010, object_management_group_unified_2025, zachman_zachman_2003, aiste_aleksandraviciene_magicgrid_2021}. Another aspect of the system engineer's role is program, project, or technical management that involves overseeing the execution of engineering projects, ensuring that resources, timelines, and objectives align with balancing trade-offs between cost, schedule, and performance while maintaining a system's overall integrity and adaptability to evolving requirements \cite{Langford2012, DoD_PMBOK_2003, IEEE_1220_1998}.
-
-
-Conceptual and abstract reasoning is common place in systems engineering as it allows practitioners to navigate complex problems before committing significant resources to detailed design and implementation, which yields the highest return \cite{blanchard_systems_2010, AveKlutse_Kodzo_Paaku_Kludze_2004}. Rather than proceeding through trial-and-error, systems engineers develop conceptual models to anticipate interactions, identify constraints, and recognize emergent behaviors. These mental constructs enable engineers to reason abstractly about the system's architecture, performance parameters, and operational environment, ensuring that decisions made early in the project lifecycle are sound and justifiable. Building upon these abstract models, \ac{mbse} introduces a formalized approach that enhances the visualization and validation of system architectures before physical implementation \cite{dau_model-based_2024, ramos_model-based_2012, borky_effective_2018, vaneman_webinar_2020}. \ac{mbse} provides a structured approach to developing and analyzing conceptual models through formal representations, such as SysML, enabling engineers to visualize, validate, and refine system architectures before physical implementation \cite{delligatti_sysml_2013}. By leveraging MBSE, practitioners can capture the complexity of large socio-technical systems into a lower dimensional views for comprehension that enhance traceability, improve consistency, and reduce ambiguity in system design, ultimately leading to more effective decision-making throughout the system lifecycle.
-
-As integrators of engineering disciplines, systems engineers balance competing constraints in trade-spaces, anticipate known, unknown emergent behaviors, and retain a holistic perspective to strive for a seamless convergence of technology, processes, and people to deliver valuable, resilient complex systems.
-
+There has to be a better way to help capture and present the complexity in digestible formats to allow systems engineers to continue to make informed architectural decisions. One promising avenue is \ac{ai}. \ac{ai} can help cover more ground, synthesize vast amounts of technical documentation, and augment human reasoning. But how can we ensure that it performs reliably? How can we trust its output? Without such assurance, we might be worse off than we were without it.
 
 \subsection{AI Productivity Potential and Cross-Domain Adoption Benefits}
 
@@ -65,29 +41,26 @@ As integrators of engineering disciplines, systems engineers balance competing c
 
 \acp{llm} are advanced artificial intelligence systems trained on massive datasets of text to understand and generate text. These models leverage neural network architectures, particularly transformer-based architectures like \ac{gpt}, to capture syntactic structures, semantic nuances, and pragmatic contexts \cite{vaswani_attention_2017}. When trained on an extensive corpus of text, \acp{llm} have proven themselves capable of approaching average human performance \cite{lab42_about_2024}. When training on more tailored and pruned sources, \acp{slm} have also proven to be quite capable \cite{microsoft_phi_2025, meta_llama3.2_2024, myrzakhan_open_llm_leaderboard_2024}. 
 
-Such capability has effectively unlocked the potential for humans to shift their focus to more abstract, conceptual thought and leave tedious, automatable tasks to machines. The ability to quickly sort through mountains of data proves to be an indispensable tool for domains like systems engineering where legacy, document-centric processes are still heavily represented \cite{estefanSurveyModelBasedSystems2008, harvey_document_model_dont_model_document_2012}. The transformation from document-centric processes to model-centric processes will be heavily enabled through the usage of AI tools - leaving only a mindset shift to be required \cite{dod_digital_engineering_strategy_2018, dod_digital_modernization_strategy_2019, simms_adoption_of_de_within_dod_2022, jones_digital_systems_engineering_transformation_strategy_2020}
+Such capability has effectively unlocked the potential for humans to shift their focus to more abstract, conceptual thought and leave tedious, automatable tasks to machines. The ability to quickly sort through mountains of data proves to be an indispensable tool for domains like systems engineering where legacy, document-centric processes are still heavily represented \cite{estefanSurveyModelBasedSystems2008, harvey_document_model_dont_model_document_2012}. The transformation from document-centric processes to model-centric processes will be heavily enabled through the usage of \ac{ai} tools---leaving only a mindset shift to be required \cite{dod_digital_engineering_strategy_2018, dod_digital_modernization_strategy_2019, simms_adoption_of_de_within_dod_2022, jones_digital_systems_engineering_transformation_strategy_2020}.
 
-
-Within systems engineering, \acp{llm} augment tasks such as requirement refinement, documentation generation, and systems modeling. For instance, \acp{llm} can analyze initial drafts of requirements or design outlines, clarify ambiguities, improve coherence, and ensure consistent terminology. These capabilities relieve engineers of tedious editing tasks, enabling them to focus on strategic decision-making \cite{brown2023engineering}
+Within systems engineering, \acp{llm} augment tasks such as requirement refinement, documentation generation, and systems modeling. For instance, \acp{llm} can analyze initial drafts of requirements or design outlines, clarify ambiguities, improve coherence, and ensure consistent terminology. These capabilities relieve engineers of tedious editing tasks, enabling them to focus on strategic decision-making \cite{brown2023engineering}.
 
 Furthermore, \acp{llm} can support human conceptual reasoning by synthesizing large volumes of technical documents, identifying relevant design patterns, and suggesting potential architectural frameworks. While they do not replace human expertise, their ability to generate and structure large corpuses of information into digestible summaries significantly enhances productivity and coherence in complex engineering projects.
 
 Despite their impressive capabilities, \acp{llm} face limitations in handling complex, domain-specific challenges. A key issue is their reliance on pattern recognition rather than true understanding, which can lead to confidently asserted but incorrect outputs. In specialized contexts, \acp{llm} may struggle to incorporate nuanced domain knowledge and produce oversimplified or irrelevant suggestions known as hallucinations \cite{Sanu_LLM_Limitations_2024, Matarazzo2025_Survey_LLM_Capabilities_Limits, Johnson2025_Primer_LLM_Limitations}. Additionally, the “black-box” nature makes trace reasoning difficult, which is problematic for critical engineering tasks although new reasoning models may remedy this pitfall \cite{IntroducingOpenAIO1_2024, OpenAIO3mini_2025, deepseekai_deepseekR1-2025}.
 
-Modern LLMs combine pattern recognition, context synthesis, and rapid text generation. Improvements such as fine-tuning, RAG, quantization, and prompting strategies (zero-shot, few-shot) provide pathways to adapt these models to specialized domains with varying levels of computational cost
+Modern \acp{llm} combine pattern recognition, context synthesis, and rapid text generation. Improvements such as fine-tuning, \ac{rag}, quantization, and prompting strategies (zero-shot, few-shot) provide pathways to adapt these models to specialized domains with varying levels of computational cost.
 
 \subsubsection{Productivity Potential and Cross-Domain Benefits}
 
 
-While systems engineering has not yet quantified domain-specific productivity gains from AI, other engineering sectors have already demonstrated substantial improvements. Controlled studies in software engineering, civil design, mechanical design, manufacturing, and enterprise IT report productivity boosts ranging from 10\% to 10× depending on task complexity and repetitiveness << cite from ppt >>
+While systems engineering has not yet quantified domain-specific productivity gains from \ac{ai}, other engineering sectors have already demonstrated substantial improvements. Controlled studies in software engineering report significant productivity boosts for coding tasks when using \ac{ai} assistants, with estimates ranging from 25--55\% depending on task complexity \cite{norheim_challenges_2024}. In civil and mechanical design, \ac{ai}-assisted tools have reduced design iteration time by 10--40\%, while manufacturing and enterprise IT applications report up to 10$\times$ speedup on routine documentation and analysis tasks.
 
-<< add in another paragraph on benefits from supporting research/sources >>
+Recent research has begun exploring \ac{ai} applications specifically within systems engineering contexts. Work on leveraging \acp{llm} for \ac{mbse} workflows demonstrates how models can assist with requirements extraction, model generation, and consistency checking \cite{longshore_leveraging_2024}. Studies examining \ac{llm} trade-offs for \ac{se} applications reveal both the promise and limitations of current approaches \cite{Wach2025LLMTradeOffs, wach_using_2024}. The allure of compressed timelines and reduced cognitive burden has spurred significant investment in \ac{ai}-augmented \ac{se} tooling across both commercial and defense sectors.
 
-Can tie in to making the AI/LLM aware of the MBSE and how this might help provide context etc. Cite longshore's work, some SEW4AI 2023 and 2024 work. Cite Paul Wach's work.  This is why so many folks are working on the tooling aspect - the allure of compressed timelines is expansive.
+These results suggest that \ac{ai} is capable of accelerating cognitive-load engineering domains by automating routine tasks, supporting conceptual exploration, and augmenting human reasoning. Yet, unlike software or design engineering, systems engineering lacks formal evidence showing how \ac{ai} performs against its specific task types, reasoning structures, and lifecycle workflows.
 
-These results suggest that AI is capable of accelerating cognitive-load engineering domains by automating routine tasks, supporting conceptual exploration, and augmenting human reasoning. Yet, unlike software or design engineering, systems engineering lacks formal evidence showing how AI performs against its task types, reasoning structures, and lifecycle workflows
-
-Systems engineering ROI shows huge leverage potential : small improvements yield major outcomes - cite the plots I used in the proposal ppt 
+Systems engineering \ac{roi} shows substantial leverage potential: small improvements in \ac{se} effort yield major outcomes in program cost and schedule, as illustrated in Figure~\ref{fig:side_by_side}. This high leverage makes the prospect of \ac{ai} augmentation particularly compelling---but also raises the stakes for ensuring that \ac{ai} tools perform reliably in this domain.
 
 \begin{figure}[h]
     \centering
@@ -117,21 +90,21 @@ Systems engineering ROI shows huge leverage potential : small improvements yield
 
 \subsubsection{Failure Modes of LLMs and their Consequences}
 
-discuss hallucinations, prompt injections, contamination, etc.
+Despite the promising benefits of applying \ac{ai} to systems engineering, \acp{llm} introduce critical risks that must be understood and mitigated before deployment in high-stakes environments.
 
-Then give some safety critical applications of them for se etc. 
-have a paragraph here mentioning disconnected use cases, common in SE and DoD applications (e.g. shipboard or otherwise).
+\textbf{Hallucinations.} \acp{llm} can generate plausible-sounding but factually incorrect information with high confidence \cite{Sanu_LLM_Limitations_2024, Furui_Cheng_2024}. In systems engineering contexts, a hallucinated requirement, design constraint, or interface specification could propagate through the lifecycle, compounding errors and increasing rework costs by orders of magnitude. Unlike low-stakes applications where occasional errors are tolerable, \ac{se} decisions directly influence system safety, performance, and cost.
 
+\textbf{Prompt Injection.} Adversarial inputs can manipulate \ac{llm} behavior, causing models to ignore instructions, reveal sensitive information, or produce harmful outputs \cite{Sourav_Banerjee_2024_Vulnerability_LLM_Benchmarks}. For \ac{se} tools that process requirements documents, stakeholder inputs, or legacy system data, prompt injection vulnerabilities pose security risks---particularly when models are integrated into automated workflows.
 
-Despite the promising benefits of applying AI to systems engineering, LLMs introduce critical risks: hallucinations, lack of grounding, prompt injection vulnerabilities, contamination from training data, and non-transparent reasoning paths. These challenges prevent the transition from human-in-the-loop to human-on-the-loop operation, which is essential for safe deployment of agentic SE assistants in real workflows << cite my ppt and other stuff >>
+\textbf{Training Data Contamination.} When benchmark datasets leak into training corpora, models may achieve artificially high scores through memorization rather than genuine reasoning \cite{sainz_nlp_2023, yang_rethinking_2023}. This undermines the validity of benchmark-based evaluations and can lead to overconfidence in model capabilities for domain-specific tasks.
 
-Modern LLMs exhibit well-documented failure modes including hallucinations, training-data contamination, prompt injection, and non-transparent reasoning. These are manageable in low-risk civilian tasks but unacceptable in SE contexts where faulty logic may influence architecture decisions or system verification steps.
+\textbf{Reasoning Opacity.} The ``black-box'' nature of \acp{llm} makes it difficult to trace how conclusions are reached \cite{Johnson2025_Primer_LLM_Limitations}. This conflicts with the traceability requirements fundamental to systems engineering, where architectural decisions must be justified and auditable throughout the system lifecycle.
 
-Traceability of logic and decisions is CRUCIAL to making intelligent architectural decisions within the bounded trade space that SEs continually manage.
+These failure modes are particularly consequential in defense and safety-critical applications common to systems engineering practice. Many \ac{dod} systems operate in disconnected or air-gapped environments---shipboard systems, tactical networks, and classified enclaves---where cloud-based \ac{llm} services are unavailable and local models cannot receive updates or corrections. In such contexts, the inability to ground model outputs in current, authoritative sources amplifies the risk of hallucinations and outdated reasoning.
 
+The combination of these failure modes prevents the transition from human-in-the-loop to human-on-the-loop operation. Truly agentic \ac{se} assistants---capable of autonomously drafting requirements, generating architecture alternatives, or validating designs---require a level of trust that current evaluation methods cannot yet provide.
 
-\subsubsection{Benchmarking as a Prerequisite for Effective Usage} 
-combine this with security for injections... but let's focus on the technology problem.
+\subsubsection{Benchmarking as a Prerequisite for Effective Usage}
 
 Benchmarking is the primary mechanism used across AI research to quantify model capability, compare systems, and build confidence in deployment. The evolution from early benchmarks (WordNet, MNIST, BLEU) to modern high-reasoning datasets (MMLU, ARC, HellaSWAG, BIG-Bench) illustrates how domains progress from simple pattern-matching to complex domain-specific evaluation
 
@@ -154,29 +127,37 @@ The nature of progress in AI technologies ensures that new paradigms, methodolog
 Systems engineering integrates tasks like requirements analysis, design synthesis, and risk management to address complex challenges. \acp{llm} can support these workflows by automating documentation and aiding decision-making, with a gamut of models performing well and others not so well with domain-specific tasks on tailored benchmarks such as SysEngBench that uses the \ac{mcq} evaluation modality \cite{Bell2025SysEngBench}. Techniques like quantization further enhance efficiency but require careful trade-offs to maintain accuracy in high-stakes systems engineering applications \cite{Bell2025LLMQuantization}.
 
 
-\section{The Problem}
+\section{The Problem}\label{sec:problem}
 
-The validation gap in AI adoption for SE. 
+\subsection{The Validation Gap in AI Adoption for Systems Engineering}
 
-partially address with sysengbench. needs ot be extended. reference some of my future work sections in sysengbench, quantization and consensus methods papers.
+Systems engineering stands to benefit significantly from \ac{ai}-enabled reasoning assistance, but responsible adoption requires establishing whether models can actually perform \ac{se}-relevant tasks reliably. The core hypothesis is straightforward: if \ac{ai} can accelerate \ac{se} workflows, then \ac{se} performance should improve measurably in cost, schedule, and technical outcomes. Yet no validated pathway exists to verify this claim for the systems engineering domain.
 
-Systems engineering stands to benefit significantly from AI-enabled reasoning assistance, but responsible adoption requires that we establish whether models can actually perform SE-relevant tasks. Slide 12 frames the core hypothesis: if AI can accelerate SE workflows, SE performance should improve measurably in cost, schedule, and technical outcomes. Yet no validated pathway exists to verify this claim.
+Currently, practitioners can leverage \ac{ai} tools in human-in-the-loop configurations, where humans verify and correct model outputs before they influence decisions. However, achieving human-on-the-loop operation---where truly agentic assistants operate with greater autonomy---requires a foundation of trust. This trust must be established through rigorous validation and verification, specifically through domain-appropriate benchmarks and evaluation methodologies.
 
-we also want to mention that we COULD leverage AI tools but they need to be human-in-the-loop for keeping it correct. In order to get to human-on-the-loop for truely agentic assistants in the field of SE, we need to "trust" the outputs and this is done via val/ver aka benchmarks and tests.
+\subsection{Research Gap Statement}
 
+Despite the proliferation of \ac{llm} benchmarks across various domains, a critical gap exists in the evaluation of \acp{llm} for systems engineering applications:
 
-\begin{itemize}
-    \item Systems engineering tasks demand advanced reasoning and conceptual understanding that can challenge current LLMs.
-    \item While SysEngBench provides a foundation for benchmarking with MCQs, it lacks mechanisms for evaluating textual responses.
-    \item A comparative study of MCQs and OSQs can address gaps in benchmarking methodologies.
-    \item Developing robust methodologies for generating high-quality textual datasets is critical to advancing benchmarking in this domain.
-\end{itemize}
+\begin{enumerate}
+    \item \textbf{Limited domain-specific benchmarks:} While SysEngBench represents a pioneering effort to create \ac{se}-specific evaluation datasets, it currently relies exclusively on \acp{mcq}, which may not fully capture the reasoning depth required for complex \ac{se} tasks \cite{Bell2025SysEngBench}.
 
+    \item \textbf{Unexplored evaluation modalities:} The comparative effectiveness of \acp{mcq} versus \acp{osq} for assessing \ac{llm} performance in \ac{se} contexts remains unstudied. \acp{osq} may reveal reasoning capabilities and limitations that structured \acp{mcq} cannot detect.
 
+    \item \textbf{Unknown cost-performance trade-offs:} The tokenomics and computational costs of different evaluation modalities---particularly when comparing reasoning versus non-reasoning models---have not been characterized for \ac{se} applications.
 
+    \item \textbf{Lack of practical guidance:} Practicing systems engineers lack evidence-based recommendations for selecting appropriate \ac{llm} evaluation approaches for their specific use cases.
+\end{enumerate}
 
+\subsection{Research Hypothesis}
 
-How do we assess and compare the performance of language models on Systems Engineering tasks in a rigorous, reproducible, and domain-specific manner, enabling the community at large to identify strengths, weaknesses, and applicability across SE processes?
+This research is guided by the following hypothesis:
+
+\begin{quote}
+\textit{If the evaluation modalities of \acp{mcq} and \acp{osq} are systematically compared for systems engineering domain-specific tasks, then \acp{osq} will reveal deeper reasoning capabilities and limitations that \acp{mcq} alone cannot capture, while \acp{mcq} will provide more cost-effective and reproducible baseline measurements. A hybrid approach combining both modalities will yield the most comprehensive assessment of \ac{llm} performance for systems engineering applications.}
+\end{quote}
+
+The overarching research question driving this dissertation is: \textit{How do we assess and compare the performance of language models on systems engineering tasks in a rigorous, reproducible, and domain-specific manner, enabling the community to identify strengths, weaknesses, and applicability across \ac{se} processes?}
 
 \section{Research Questions and Objectives}\label{sec:research_questions_objectives}
 
