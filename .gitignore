@@ -3,7 +3,8 @@ src/phase4_inference/runpod_results/
 src/phase4_inference/runpod_logs/
 src/phase5_llm_as_a_judge/runpod_llm_judge_logs/
 
-
+# do not upload the viz/viz-outputs/ directory
+viz/viz-outputs/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
