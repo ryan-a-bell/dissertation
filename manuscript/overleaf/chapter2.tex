@@ -1,13 +1,6 @@
 \chapter{Literature Review}\label{ch:literature_review}
 
-Specifics to do list:
-\begin{itemize}
-    \item AI4se and se4ai 23/24/25/
-    \item incose IS, etc
-    \item SERC conferences 
-    \item dimensions research gpt 53/54/40/6
-\end{itemize}
-
+This chapter surveys the foundational literature that informs this dissertation's investigation of evaluation modalities for large language models in systems engineering contexts. Section~\ref{sec:se_mbse_ai} establishes the systems engineering and \ac{mbse} foundations, including the emerging role of AI in SE workflows. Section~\ref{sec:benchmarking} examines the benchmarking landscape, evaluation modalities, and the LLM-as-a-Judge paradigm central to this research. Section~\ref{sec:cost_modeling_tokenomics} reviews cost modeling foundations relevant to the tokenomics analysis.
 
 \section{Systems Engineering, MBSE, and AI Foundations}\label{sec:se_mbse_ai}
 
@@ -28,11 +21,11 @@ In contrast, a System of Systems is composed of multiple, independently useful c
 
 Seminal work by Maier identifies several hallmark characteristics of SoS—operational independence, managerial independence, evolutionary development, geographic distribution, and emergent behavior.
 
-\begin{figure}
+\begin{figure}[htbp]
     \centering
     \includegraphics[width=0.5\linewidth]{figs/ch2/system-vs-sos.png}
-    \caption{Enter Caption cite giachetti slides}
-    \label{fig:placeholder}
+    \caption{Distinction between a traditional system and a System of Systems (SoS). A system integrates components into a unified whole, while a SoS comprises independently operational constituent systems contributing to emergent capabilities. Adapted from Giachetti \cite{giachetti_se4950_2024}.}
+    \label{fig:system_vs_sos}
 \end{figure}
 
 Lifecycle perspective: concept → development → production → operations → retirement 
@@ -74,9 +67,20 @@ Hybrid reality: most organizations operate with mixed document/model approaches
 
 \subsection{Opportunities for AI and Large Language Models in Systems Engineering}\label{subsec:ai_opportunities}
 
-Provide examples of typical SE tasks such as requirements analysis, trade-space exploration, and risk management. Outline current and potential uses of LLMs in SE toolchains (e.g., MBSE, traceability, decision support).
+The integration of artificial intelligence into systems engineering workflows has emerged as a significant area of research and practice, often characterized under the complementary paradigms of \textit{AI for Systems Engineering} (AI4SE) and \textit{Systems Engineering for AI} (SE4AI) \cite{incose_artificial_2020}. AI4SE focuses on leveraging AI capabilities to augment traditional SE tasks, while SE4AI addresses the unique challenges of engineering AI-enabled systems. This dissertation primarily concerns the former—specifically, how \acp{llm} can support SE knowledge work and how to evaluate their reliability for such applications.
 
-consensus methods (cite some of the work i did along with other classical consensus methods found in my nps ars paper) 
+Recent work has explored AI applications across the systems engineering lifecycle. Chagnon et al. demonstrated AI usage within the INCOSE Technical Process, mapping AI platform capabilities to a generic Product Development Process and identifying both advantages and limitations in practice \cite{Chagnon2024AIUsageINCOSE}. Their findings suggest that while AI can accelerate documentation and analysis tasks, careful validation remains essential. Similarly, research presented at INCOSE International Symposia (2023--2025) has examined AI-assisted requirements analysis, architecture generation, and decision support, though systematic evaluation of AI reliability in these contexts remains nascent.
+
+Typical SE tasks amenable to LLM augmentation include:
+\begin{itemize}
+    \item \textbf{Requirements analysis}: Extraction, classification, and consistency checking of requirements from natural language documents
+    \item \textbf{Trade-space exploration}: Synthesis of design alternatives and articulation of trade-offs among competing objectives
+    \item \textbf{Risk management}: Identification and categorization of potential failure modes and mitigation strategies
+    \item \textbf{Documentation generation}: Automated drafting of technical descriptions, interface specifications, and verification procedures
+    \item \textbf{MBSE support}: Translation between natural language and formal modeling languages such as SysML
+\end{itemize}
+
+However, the application of LLMs to these tasks raises fundamental questions about reliability and trust. Unlike conventional software tools with deterministic behavior, LLMs exhibit stochastic outputs that may vary across invocations and can produce confidently-stated but incorrect information. This uncertainty motivates the need for rigorous benchmarking methodologies—the central focus of this dissertation—to characterize LLM performance on SE-specific tasks before integration into operational workflows. 
 
 \subsection{Foundational Capabilities, Failure Modes, and Limitations of Language Models}\label{subsec:llm_foundation_failure_limitations}
 
@@ -179,29 +183,24 @@ Discuss dataset creation practices and constraints that affect benchmark validit
 
 
 \subsection{General Benchmark Frameworks and Evaluation Tools}\label{subsec:benchmark_tools}
-% LM-Eval-Harness, HELM, BenchBuilder, HF Evaluate, evaluation strategies, implementation differences
-% (Pull content from your prior papers)
+
+The proliferation of LLM benchmarks has driven development of standardized evaluation frameworks that enable consistent, reproducible assessment across models and tasks. These frameworks address practical challenges including prompt formatting, output parsing, metric computation, and result aggregation.
+
+\paragraph{lm-evaluation-harness}
+The Language Model Evaluation Harness (lm-eval), developed by EleutherAI, has emerged as a widely-adopted open-source framework for LLM benchmarking \cite{eleutherai_eleutherailm-evaluation-harness_2024}. It provides a unified interface for evaluating models across hundreds of tasks, supporting both locally-hosted models and API-based access to proprietary systems. Key features include configurable prompt templates, automatic metric calculation, and structured output logging. The framework's extensibility allows researchers to define custom tasks via YAML configuration files, facilitating domain-specific benchmark development such as the SysEngBench tasks employed in this dissertation.
+
+\paragraph{HELM}
+The Holistic Evaluation of Language Models (HELM) framework, developed at Stanford, emphasizes comprehensive multi-dimensional evaluation \cite{liang_holistic_2022}. Beyond accuracy, HELM assesses models across dimensions including calibration, robustness, fairness, and efficiency. This holistic approach recognizes that model selection for real-world applications requires balancing multiple quality attributes, not optimizing for a single metric.
+
+\paragraph{Other Frameworks}
+Additional frameworks serve specialized evaluation needs. HuggingFace Evaluate provides metric implementations compatible with the transformers ecosystem. BenchBuilder focuses on automated benchmark construction from existing datasets. OpenAI Evals offers a framework for evaluating chat-based models with human preference data. Each framework embodies design decisions about prompt formatting, few-shot example selection, and output parsing that can affect measured performance, underscoring the importance of documenting evaluation methodology for reproducibility.
 
 
 \subsection{Evaluation Modalities for LLM Performance}\label{subsec:evaluation_modalities}
 
-\begin{itemize}
-    \item Strategies for selecting representative benchmark questions, creating training/validation/test splits, and avoiding data leakage.
-    \begin{itemize}
-        \item Selecting benchmark questions
-        \item creating training/validation/test splits
-        \item avoiding data leakage
-    \end{itemize}
-    \item Outline conventional evaluation metrics used in LLM research (accuracy, F1, BLEU, etc.). ROUGEL
-    \item Detail multiple-choice question (MCQ) evaluation: design principles, scoring methods, and diagnostic power.
-    \item Present open-style question (OSQ) evaluation: rationale, metrics, and grading complexity.
-    \begin{itemize}
-        \item regular osq metrics? rubrics?
-        \item LLM-as-a-judge
-    \end{itemize}
-    \item Compare MCQ and OSQ approaches, highlighting trade-offs in objectivity, conceptual depth, and cost.
-    \item Show how these modalities support the measurement of reasoning and conceptual understanding in SE tasks.
-\end{itemize}
+Evaluation modality refers to the format of questions and expected responses used to assess model capabilities. The two primary modalities—multiple-choice questions (MCQs) and open-style questions (OSQs)—embody fundamentally different assumptions about what constitutes valid evidence of understanding and present distinct trade-offs in objectivity, depth, and evaluation cost.
+
+This section reviews both modalities, examining their strengths, limitations, and applicability to systems engineering evaluation. Understanding these trade-offs is essential for designing benchmarks that provide meaningful signal about model capabilities while remaining practical to administer at scale.
 
 \subsubsection{Multiple-Choice Question (MCQ) Evaluation}\label{subsubsec:mcq_eval}
 
@@ -222,7 +221,14 @@ Similar problems in Visual MCQs where choice selected without the model reading 
 
 However, \acp{mcq} inherently conceal the complexity of the reasoning processes that can be assessed, meaning they offer little insight into how or why a model arrived at a particular choice. For systems engineering, the how or why is critical to evaluating competing trade-spaces and picking a solution that balances competing interests. 
 
-By constraining possible answers, \acp{mcq} may oversimplify complex topics. Systems engineering scenarios that require in-depth reasoning, synthesis of multiple concepts, or consideration of subtle trade-offs are not easily captured by a handful of fixed options. This lack of nuance means MCQs may not truly reflect the model’s capacity for deep understanding or its ability to articulate reasoning processes \cite{zheng_large_2024, fu_mcq_reasoning_more_confident_when_wrong_2025}. In complex engineering environments, relying solely on MCQs risks obtaining an incomplete picture of the model’s actual capabilities. Recent research suggests that providing \acp{llm} with no correct \ac{mcq} can assist in measuring reasoning and critical thinking \cite{goral_when_all_options_are_wrong_2024}.
+By constraining possible answers, \acp{mcq} may oversimplify complex topics. Systems engineering scenarios that require in-depth reasoning, synthesis of multiple concepts, or consideration of subtle trade-offs are not easily captured by a handful of fixed options. This lack of nuance means MCQs may not truly reflect the model's capacity for deep understanding or its ability to articulate reasoning processes \cite{zheng_large_2024, fu_mcq_reasoning_more_confident_when_wrong_2025}. In complex engineering environments, relying solely on MCQs risks obtaining an incomplete picture of the model's actual capabilities. Recent research suggests that providing \acp{llm} with no correct \ac{mcq} can assist in measuring reasoning and critical thinking \cite{goral_when_all_options_are_wrong_2024}.
+
+\paragraph{Position Bias in MCQ Evaluation}
+A significant threat to MCQ evaluation validity is \textit{position bias}—the tendency of language models to favor answers at particular positions (e.g., option A or option C) independent of question content. Zheng et al. demonstrated that \acp{llm} exhibit systematic position preferences when evaluating responses, with some models showing statistically significant bias toward earlier or later options \cite{zheng_large_2024}. This phenomenon has important implications for benchmark design: if the correct answers in a benchmark are not uniformly distributed across positions, measured accuracy may reflect positional heuristics rather than genuine understanding.
+
+Position bias can manifest as either \textit{primacy effects} (preference for early options) or \textit{recency effects} (preference for later options), and the direction and magnitude of bias varies across model families and sizes. Ko et al. found that larger models do not necessarily exhibit less position bias, suggesting that scale alone does not resolve this limitation \cite{ko_large_2024}. To detect and quantify position bias, researchers have employed techniques such as rotating the correct answer through all positions and measuring accuracy variance. A model with no position bias should achieve consistent accuracy regardless of where the correct answer appears.
+
+The implications for systems engineering benchmarks are particularly relevant. If an SE benchmark contains questions where correct answers cluster at certain positions—whether by design or accident—comparative model rankings may be confounded by position sensitivity rather than domain knowledge. This motivates the position-variant methodology employed in this dissertation (Chapter~\ref{ch:materials_methods}), which systematically rotates correct answers to isolate position effects from content-based performance.
 
 Textual response formats challenge LLMs to generate answers in free form, demanding a richer comprehension of the underlying material. By forgoing multiple-choice constraints, these formats encourage models to articulate reasoning, structure their responses coherently, and demonstrate the ability to connect concepts holistically. For instance, a prompt might ask the LLM to explain how a particular subsystem interacts with other components or to propose a solution that balances performance and cost.
 
@@ -231,34 +237,48 @@ The advantage of textual responses lies in their ability to reveal more about th
 Despite their merits, textual responses pose significant practical challenges. Creating a dataset of open-ended questions is often more involved than formulating MCQs. It requires careful thought to ensure that prompts are unambiguous and representative of real-world tasks, while maintaining a relatively tightly bounded question. Since textual responses are not strictly right or wrong in the same way MCQ choices are, developing reliable evaluation metrics is complex. Traditional measures like accuracy scores do not directly apply. The model might produce grammatically correct but conceptually vacuous answers or resort to vague generalities that sound authoritative but lack technical rigor \cite{fu_mcq_reasoning_more_confident_when_wrong_2025,Sourav_Banerjee_2024_Vulnerability_LLM_Benchmarks}. Addressing these challenges will involve combining automated metrics with domain expert human evaluation. 
 
 \subsubsection{Open Style Question and Free-Response Evaluation}\label{subsubsec:osq_eval}
-% Conceptual reasoning, rubric-based judging, human scoring, LLM-as-judge
 
+Open-style questions (OSQs) and free-response formats require models to generate unconstrained textual answers, enabling evaluation of reasoning depth, explanation quality, and conceptual understanding that MCQs cannot capture. However, the open-ended nature of these responses introduces significant evaluation challenges: unlike MCQs where correctness is binary, OSQ responses exist on a continuum of quality and may be partially correct, technically accurate but incomplete, or correct via alternative reasoning paths not anticipated by benchmark designers.
 
-% LLM as a judge
+\paragraph{Rubric-Based Evaluation}
+Educational assessment research provides foundational approaches for evaluating open-ended responses. Rubric-based evaluation employs structured criteria that define performance levels—typically full credit, partial credit, and no credit—along with descriptive indicators for each level. Effective rubrics balance specificity (enabling consistent scoring) with flexibility (accommodating valid alternative responses). Anderson and Krathwohl's revised Bloom's Taxonomy provides a widely-adopted framework for classifying question cognitive demands across six levels: Remember, Understand, Apply, Analyze, Evaluate, and Create \cite{anderson_taxonomy_2001}. This taxonomy informs rubric design by aligning scoring criteria with the intended cognitive level of each question—a recall question should be scored differently than one requiring synthesis or evaluation.
 
+For SE benchmarks, rubric design must account for domain-specific considerations: technical terminology, multiple valid solution approaches, and the importance of justification quality alongside answer correctness. A systems engineer might arrive at the correct architectural decision through different reasoning paths, all of which should receive credit if the underlying logic is sound.
 
+\paragraph{The LLM-as-a-Judge Paradigm}
+Human expert evaluation, while providing high-quality assessments, does not scale to the thousands of responses generated when evaluating multiple models across comprehensive benchmarks. This scalability challenge has driven adoption of the \textit{LLM-as-a-Judge} paradigm, wherein a capable language model (typically a frontier model such as GPT-4) evaluates responses generated by other models \cite{zheng_judging_2023}.
 
+The foundational work by Zheng et al. introduced MT-Bench and demonstrated that GPT-4 judgments achieve high agreement with human preferences, establishing LLM-as-a-Judge as a viable alternative to human evaluation for many use cases \cite{zheng_judging_2023}. Subsequent research has refined and extended this paradigm. Li et al. provide a comprehensive survey of LLM-based evaluation methods, cataloging approaches ranging from pointwise scoring (rating individual responses) to pairwise comparison (selecting the better of two responses) to listwise ranking \cite{li_llms_as_judges_2024}. Gu et al. further systematize the field, identifying best practices for prompt design, judge model selection, and result aggregation \cite{gu_survey_on_llm_as_a_judge_2025}.
 
-below is from page 5 of "LLMs-as-Judges: A Comprehensive Survey on LLM-based Evaluation Methods" by haitao li. Snag the diagram before this one too. It was good.
-\begin{figure}
+\paragraph{Limitations and Biases of LLM Judges}
+Despite its utility, the LLM-as-a-Judge paradigm exhibits systematic biases that evaluators must consider. Figure~\ref{fig:llm_judge_limitations} illustrates a taxonomy of known limitations. Key concerns include:
+
+\begin{itemize}
+    \item \textbf{Position bias}: Similar to MCQ position effects, judges may favor responses presented first or last in pairwise comparisons
+    \item \textbf{Verbosity bias}: Longer responses often receive higher scores regardless of content quality
+    \item \textbf{Self-enhancement bias}: Models tend to rate their own outputs more favorably than outputs from other models
+    \item \textbf{Style over substance}: Judges may reward confident, well-structured prose even when factual content is incorrect
+    \item \textbf{Limited domain expertise}: General-purpose judges may lack specialized knowledge to evaluate technical accuracy in fields like systems engineering
+\end{itemize}
+
+\begin{figure}[htbp]
     \centering
     \includegraphics[width=1\linewidth]{figs/ch2/taxonomy-of-llm-as-judge-limitations.png}
-    \caption{Enter Caption add citation "LLMs-as-Judges: A Comprehensive Survey on LLM-based Evaluation Methods" by haitao li}
-    \label{fig:placeholder}
+    \caption{Taxonomy of LLM-as-a-Judge limitations, adapted from Li et al. \cite{li_llms_as_judges_2024}. Limitations span cognitive biases, evaluation inconsistencies, and domain knowledge gaps.}
+    \label{fig:llm_judge_limitations}
 \end{figure}
 
+\paragraph{Inter-Rater Reliability and Judge Validation}
+Establishing the reliability of LLM judges requires quantifying agreement both among multiple judges and between LLM judges and human experts. Standard inter-rater reliability metrics include Cohen's Kappa for pairwise agreement, Krippendorff's Alpha for multiple raters, and intraclass correlation coefficients (ICC) for continuous scores. Research suggests that GPT-4 class models achieve agreement rates with human preferences exceeding 80\% in general domains, though agreement varies by task type and domain specificity \cite{zheng_judging_2023}.
 
-\begin{figure}
+\begin{figure}[htbp]
     \centering
-    \includegraphics[width=0.5\linewidth]{figs//ch2/llm-agreement-rate.png}
-    \caption{Agreement Rate between LLM Judges and Human Preferences by Domain from Chatbot Arena <cite the 9 and 9 from website below}
-    \label{fig:placeholder}
+    \includegraphics[width=0.6\linewidth]{figs/ch2/llm-agreement-rate.png}
+    \caption{Agreement rates between LLM judges and human preferences across domains, from Chatbot Arena data \cite{chiang_chatbot_arena_2024}. Agreement varies by domain, with technical and specialized domains showing lower concordance.}
+    \label{fig:llm_agreement_rate}
 \end{figure}
 
-% the website to cite this from
-https://sambanova.ai/blog/can-llama-405b-outperform-gpt4?
-https://huggingface.co/datasets/lmarena-ai/arena-human-preference-55k
-https://lmarena.ai/
+For domain-specific applications like systems engineering, judge validation becomes particularly important. General-purpose LLMs may lack the specialized vocabulary, conceptual frameworks, and professional standards necessary to accurately evaluate SE responses. This dissertation addresses judge reliability through multiple validation approaches described in Chapter~\ref{ch:materials_methods}.
 
 \subsection{Current Benchmarking Landscape}\label{subsec:benchmark_landscape}
 
