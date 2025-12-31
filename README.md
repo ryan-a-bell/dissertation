@@ -4,7 +4,7 @@
 
 This repository contains code, datasets, and documentation supporting the dissertation titled:
 
-**"Evaluation Modality Alignment to Systems Engineering Task Types: A Methodological Study of Language Models' Domain-Specific and Task-Specific Effectiveness Using Distractor Variation and Consensus-Based Grading."**
+**"Evaluation Modality Alignment to Systems Engineering Task Types: An Empirical Study of Language Model Domain-Specific Knowledge and Task-Specific Effectiveness Using Distractor Variation and Consensus-Based Grading."**
 
 The research systematically benchmarks Large Language Models (LLMs) using multiple evaluation modalities (Multiple-Choice Questions \[MCQ] and Open-Style Questions \[OSQ]) across Systems Engineering (SE) tasks aligned to INCOSE Handbook categories.
 
