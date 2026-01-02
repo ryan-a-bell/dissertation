@@ -2,13 +2,22 @@
 
 ## Overview
 
-This repository contains code, datasets, and documentation supporting the dissertation titled:
+This repository contains the code, datasets, and supporting documentation for the dissertation titled:
 
-**"Evaluation Modality Alignment to Systems Engineering Task Types: A Methodological Study of Language Models' Domain-Specific and Task-Specific Effectiveness Using Distractor Variation and Consensus-Based Grading."**
+**"An Empirical Meta-Evaluation of Language Model Evaluation Methods for Systems Engineering Using Distractor Sensitivity and Consensus Judging"**
 
-The research systematically benchmarks Large Language Models (LLMs) using multiple evaluation modalities (Multiple-Choice Questions \[MCQ] and Open-Style Questions \[OSQ]) across Systems Engineering (SE) tasks aligned to INCOSE Handbook categories.
+This research focuses on meta-evaluation—the systematic evaluation of language model evaluation methods themselves—within the context of Systems Engineering (SE). The study leverages the existing SysEngBench benchmark as its empirical foundation and extends it through the creation of Open-Style Question (OSQ) variants derived from the original Multiple-Choice Question (MCQ) dataset.
 
-The benchmark dataset, **SysEngBench**, is publicly available on [HuggingFace](https://huggingface.co/datasets/rabell/SysEngBench).
+Specifically, this work investigates:
+- Comparative behavior of **MCQ and OSQ evaluation modalities**,
+- The sensitivity of MCQ-based evaluation to **distractor variation**,
+- The reliability and agreement of **LLM-as-a-Judge** evaluation using **rubric-based scoring**, and
+- **Consensus and correlation** across multiple language model judges.
+
+The OSQ dataset is systematically constructed from SysEngBench to preserve domain coverage and conceptual equivalence while enabling open-ended response evaluation. All evaluations are conducted on domain-specific Systems Engineering content aligned with established INCOSE Handbook categories, with the goal of assessing evaluation robustness, consistency, and interpretability across modalities.
+
+The original **SysEngBench** benchmark dataset is publicly available on [HuggingFace](https://huggingface.co/datasets/rabell/SysEngBench) and is used in this repository without modification. The derived OSQ dataset, along with all evaluation pipelines and analysis code, is provided to support reproducibility and further meta-evaluation research. It is also publicly available on [HuggingFace](https://huggingface.co/datasets/rabell/SysEngBench-OSQ) 
+
 
 ## Repository Structure
 
