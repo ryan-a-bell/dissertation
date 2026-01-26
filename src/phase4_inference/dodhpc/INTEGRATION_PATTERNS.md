@@ -799,104 +799,549 @@ while True:
 
 ## Pattern 2: Enhanced OOD Form Application
 
-**Concept**: Build a production-ready Open OnDemand batch app with job arrays, progress tracking, and result visualization.
+**Concept**: Build a **fully automated** Open OnDemand app that handles everything - container setup, model caching, job submission, and results collection - all through the web form.
 
-### Architecture
+### Architecture: All-in-One OOD App
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
 │                    Open OnDemand Portal                          │
 ├─────────────────────────────────────────────────────────────────┤
 │  ┌─────────────────────────────────────────────────────────┐    │
-│  │           LM-Eval Batch App (Interactive Form)           │    │
+│  │         LM-Eval Inference App (All-in-One Form)          │    │
+│  │                                                          │    │
 │  │  ┌─────────────────────────────────────────────────────┐│    │
-│  │  │ Job Configuration Form                              ││    │
-│  │  │ ┌─────────────────┐ ┌─────────────────────────────┐││    │
-│  │  │ │ Model Selection │ │ Task Selection              │││    │
-│  │  │ │ [ ] gemma3:1b   │ │ [x] sysengbench             │││    │
-│  │  │ │ [x] gemma3:4b   │ │ [x] sysengbench-osq         │││    │
-│  │  │ │ [x] llama3.2:3b │ │ [ ] sysengbench-a           │││    │
-│  │  │ └─────────────────┘ └─────────────────────────────┘││    │
+│  │  │ ▼ Environment Status (auto-detected)                ││    │
 │  │  │ ┌─────────────────────────────────────────────────┐││    │
-│  │  │ │ Resources: GPUs [1▼] Memory [16G▼] Time [4h▼]   │││    │
+│  │  │ │ Container: ✓ Ready (CUDA 12.4)                  │││    │
+│  │  │ │ Model Cache: ✓ 6 models cached                  │││    │
+│  │  │ │ CUDA Version: 12.4 (compatible)                 │││    │
+│  │  │ │ Network: Offline mode (using cache)             │││    │
 │  │  │ └─────────────────────────────────────────────────┘││    │
-│  │  │                    [Submit Batch]                   ││    │
 │  │  └─────────────────────────────────────────────────────┘│    │
 │  │                                                          │    │
 │  │  ┌─────────────────────────────────────────────────────┐│    │
-│  │  │ Active Jobs Dashboard                               ││    │
-│  │  │ ┌───────────────────────────────────────────────┐  ││    │
-│  │  │ │ Batch #4521 (gemma3:4b × sysengbench)         │  ││    │
-│  │  │ │ ████████████░░░░░░░░ 60% (6/10 complete)      │  ││    │
-│  │  │ │ [View Logs] [Cancel] [View Results]           │  ││    │
-│  │  │ └───────────────────────────────────────────────┘  ││    │
+│  │  │ ▼ Job Mode: [Run Evaluation ▼]                      ││    │
+│  │  │                                                      ││    │
+│  │  │   • Run Evaluation - Submit inference jobs          ││    │
+│  │  │   • Setup Environment - Build container + pull models││   │
+│  │  │   • Add Models - Pre-pull additional models         ││    │
 │  │  └─────────────────────────────────────────────────────┘│    │
+│  │                                                          │    │
+│  │  ┌─────────────────────────────────────────────────────┐│    │
+│  │  │ ▼ Model Selection (shows cache status)              ││    │
+│  │  │ ┌─────────────────────────────────────────────────┐││    │
+│  │  │ │ [✓] gemma3:4b      ✓ Cached (2.7GB)            │││    │
+│  │  │ │ [✓] llama3.2:3b    ✓ Cached (2.0GB)            │││    │
+│  │  │ │ [ ] mistral:7b     ✓ Cached (4.1GB)            │││    │
+│  │  │ │ [ ] llama3.3:70b   ⚠ Not cached - will fail!   │││    │
+│  │  │ └─────────────────────────────────────────────────┘││    │
+│  │  └─────────────────────────────────────────────────────┘│    │
+│  │                                                          │    │
+│  │  ┌─────────────────────────────────────────────────────┐│    │
+│  │  │ ▼ Task Selection                                    ││    │
+│  │  │ [✓] sysengbench  [✓] sysengbench-osq  [ ] a/b/c/d  ││    │
+│  │  └─────────────────────────────────────────────────────┘│    │
+│  │                                                          │    │
+│  │  ┌─────────────────────────────────────────────────────┐│    │
+│  │  │ ▼ Resources                                         ││    │
+│  │  │ Partition: [gpu-shared▼]  GPUs: [1▼]  Time: [4h▼]  ││    │
+│  │  └─────────────────────────────────────────────────────┘│    │
+│  │                                                          │    │
+│  │           [Submit 12 Jobs] or [Setup First]             │    │
 │  └──────────────────────────────────────────────────────────┘    │
-│              │                                                   │
-│              ▼ SLURM Job Array                                   │
-│  ┌─────────────────────────────────────────────────────────┐    │
-│  │   Job Array 4521[1-10]                                   │    │
-│  │   4521_1: gemma3:4b × sysengbench    [COMPLETED]        │    │
-│  │   4521_2: gemma3:4b × sysengbench-a  [RUNNING]          │    │
-│  │   4521_3: gemma3:4b × sysengbench-b  [PENDING]          │    │
-│  │   ...                                                    │    │
-│  └─────────────────────────────────────────────────────────┘    │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
+### Key Features
+
+1. **Auto-detects environment status** - Shows if container exists, what's cached
+2. **Multiple job modes** - Setup, Add Models, Run Evaluation
+3. **Model cache awareness** - Shows which models are cached, warns on uncached
+4. **Validation before submit** - Blocks submission if prerequisites missing
+5. **One-click setup** - Builds container and pulls models automatically
+
 ### Implementation Components
 
-#### 2.1 Enhanced Form Configuration (`ood_app/lm_eval_batch/form.yml`)
+#### 2.1 Form Configuration with Environment Detection (`ood_app/lm_eval_batch/form.yml`)
 
 ```yaml
 ---
-title: "LM Evaluation Batch Launcher"
+title: "LM Evaluation Inference"
 cluster: "your_cluster"
+description: |
+  Run LLM evaluations on SysEngBench. First-time users: select "Setup Environment" mode.
+
+# Form JavaScript for dynamic behavior
+form_js: |
+  // Check environment status on page load
+  async function checkEnvironment() {
+    const statusDiv = document.getElementById('env-status');
+    const response = await fetch('/pun/sys/lm_eval/check_status');
+    const status = await response.json();
+
+    // Update status display
+    statusDiv.innerHTML = formatStatus(status);
+
+    // Disable uncached models if offline
+    if (status.network_mode === 'offline') {
+      document.querySelectorAll('.model-option').forEach(opt => {
+        if (!status.cached_models.includes(opt.value)) {
+          opt.disabled = true;
+          opt.parentElement.classList.add('uncached-warning');
+        }
+      });
+    }
+  }
+
+  // Show/hide form sections based on job mode
+  document.getElementById('job_mode').addEventListener('change', function() {
+    const mode = this.value;
+    document.getElementById('eval-options').style.display =
+      mode === 'evaluate' ? 'block' : 'none';
+    document.getElementById('setup-options').style.display =
+      mode === 'setup' ? 'block' : 'none';
+    document.getElementById('add-models-options').style.display =
+      mode === 'add_models' ? 'block' : 'none';
+  });
 
 attributes:
+  # ===== Job Mode Selection =====
+  job_mode:
+    widget: "select"
+    label: "Job Mode"
+    value: "evaluate"
+    options:
+      - ["Run Evaluation", "evaluate"]
+      - ["Setup Environment (first time)", "setup"]
+      - ["Add Models to Cache", "add_models"]
+    help: |
+      - **Run Evaluation**: Submit inference jobs (requires setup complete)
+      - **Setup Environment**: Build container and pull initial models
+      - **Add Models**: Pre-pull additional models to cache
+
+  # ===== Setup Mode Options =====
+  cuda_version:
+    widget: "select"
+    label: "CUDA Version (for container build)"
+    value: "12.4"
+    options:
+      - ["CUDA 12.4 (recommended)", "12.4"]
+      - ["CUDA 12.6", "12.6"]
+      - ["CUDA 12.1", "12.1"]
+      - ["CUDA 11.8 (legacy)", "11.8"]
+    help: "Run 'nvidia-smi' on login node to check your CUDA version"
+
+  initial_models:
+    widget: "check_box"
+    label: "Models to pre-pull during setup"
+    options:
+      - ["Gemma3 1B (0.8GB)", "gemma3:1b"]
+      - ["Gemma3 4B (2.7GB)", "gemma3:4b"]
+      - ["Llama 3.2 3B (2.0GB)", "llama3.2:3b"]
+      - ["Mistral 7B (4.1GB)", "mistral:7b"]
+      - ["Phi4 14B (8.5GB)", "phi4:14b"]
+    help: "Select models to cache. Larger models need more GPU memory."
+
+  # ===== Add Models Mode Options =====
+  additional_models:
+    widget: "check_box"
+    label: "Additional models to pull"
+    options:
+      - ["Gemma3 12B (7.3GB)", "gemma3:12b"]
+      - ["Gemma3 27B (15GB)", "gemma3:27b"]
+      - ["Llama 3.3 70B Q4 (40GB)", "llama3.3:70b-instruct-q4_K_M"]
+      - ["Mixtral 8x7B (26GB)", "mixtral:8x7b"]
+      - ["DeepSeek Coder 33B (19GB)", "deepseek-coder:33b"]
+
+  # ===== Evaluation Mode Options =====
+  models:
+    widget: "check_box"
+    label: "Models to evaluate"
+    # Dynamic options populated by JavaScript based on cache
+    options:
+      - ["gemma3:1b", "gemma3:1b"]
+      - ["gemma3:4b", "gemma3:4b"]
+      - ["llama3.2:3b", "llama3.2:3b"]
+      - ["mistral:7b", "mistral:7b"]
+      - ["phi4:14b", "phi4:14b"]
+
+  tasks:
+    widget: "check_box"
+    label: "Benchmark tasks"
+    value: ["sysengbench", "sysengbench-osq"]
+    options:
+      - ["SysEngBench MCQ", "sysengbench"]
+      - ["SysEngBench OSQ (open-ended)", "sysengbench-osq"]
+      - ["Position Bias A", "sysengbench-a"]
+      - ["Position Bias B", "sysengbench-b"]
+      - ["Position Bias C", "sysengbench-c"]
+      - ["Position Bias D", "sysengbench-d"]
+
+  bc_queue:
+    widget: "select"
+    label: "Partition"
+    options:
+      - ["GPU Shared", "gpu-shared"]
+      - ["GPU Full Node", "gpu"]
+      - ["GPU Debug (testing)", "gpu-debug"]
+
+  bc_num_slots:
+    widget: "number_field"
+    label: "GPUs per job"
+    value: 1
+    min: 1
+    max: 4
+
   bc_num_hours:
+    widget: "number_field"
     label: "Wall time (hours)"
     value: 4
     min: 1
     max: 24
 
-  bc_num_slots:
-    label: "GPUs per job"
-    value: 1
-    min: 1
-    max: 4
-    widget: "number_field"
+  notify_email:
+    widget: "email_field"
+    label: "Email on completion (optional)"
+    required: false
 
-  bc_queue:
-    label: "Partition"
-    widget: "select"
-    options:
-      - ["GPU Shared (1-2 GPUs)", "gpu-shared"]
-      - ["GPU Full Node (4 GPUs)", "gpu"]
-      - ["GPU Debug (15 min)", "gpu-debug"]
+# Form layout - sections shown/hidden by JavaScript
+form:
+  - job_mode
+  - cuda_version
+  - initial_models
+  - additional_models
+  - models
+  - tasks
+  - bc_queue
+  - bc_num_slots
+  - bc_num_hours
+  - notify_email
+```
 
-  models:
-    label: "Models to evaluate"
-    widget: "check_box"
-    options:
-      - ["Gemma3 1B", "gemma3:1b", data-min-gpu: 1]
-      - ["Gemma3 4B", "gemma3:4b", data-min-gpu: 1]
-      - ["Gemma3 12B", "gemma3:12b", data-min-gpu: 1]
-      - ["Llama 3.2 3B", "llama3.2:3b", data-min-gpu: 1]
-      - ["Llama 3.3 70B (Q4)", "llama3.3:70b-instruct-q4_K_M", data-min-gpu: 2]
-      - ["Mistral 7B", "mistral:7b", data-min-gpu: 1]
-      - ["Phi4 14B", "phi4:14b", data-min-gpu: 1]
-      - ["Mixtral 8x7B", "mixtral:8x7b", data-min-gpu: 2]
+#### 2.2 Multi-Mode Job Script (`ood_app/lm_eval_batch/template/script.sh.erb`)
 
-  tasks:
-    label: "Benchmark tasks"
-    widget: "check_box"
-    options:
-      - ["SysEngBench (MCQ)", "sysengbench"]
-      - ["SysEngBench-A (Position A)", "sysengbench-a"]
-      - ["SysEngBench-B (Position B)", "sysengbench-b"]
-      - ["SysEngBench-C (Position C)", "sysengbench-c"]
-      - ["SysEngBench-D (Position D)", "sysengbench-d"]
+```bash
+#!/bin/bash
+<% if job_mode == "setup" %>
+#SBATCH --job-name=lm_eval_setup
+#SBATCH --partition=<%= bc_queue %>
+#SBATCH --gres=gpu:1
+#SBATCH --cpus-per-task=4
+#SBATCH --mem=32G
+#SBATCH --time=02:00:00
+<% elsif job_mode == "add_models" %>
+#SBATCH --job-name=lm_eval_addmodels
+#SBATCH --partition=<%= bc_queue %>
+#SBATCH --gres=gpu:1
+#SBATCH --cpus-per-task=4
+#SBATCH --mem=32G
+#SBATCH --time=02:00:00
+<% else %>
+#SBATCH --job-name=lm_eval_batch
+#SBATCH --partition=<%= bc_queue %>
+#SBATCH --gres=gpu:<%= bc_num_slots %>
+#SBATCH --cpus-per-task=4
+#SBATCH --mem=<%= bc_num_slots.to_i * 16 %>G
+#SBATCH --time=<%= bc_num_hours %>:00:00
+#SBATCH --array=1-<%= job_count %>
+<% end %>
+#SBATCH --output=<%= output_dir %>/logs/%x-%j.out
+<% if notify_email.present? %>
+#SBATCH --mail-type=END,FAIL
+#SBATCH --mail-user=<%= notify_email %>
+<% end %>
+
+set -euo pipefail
+
+# Common paths
+BASE_DIR="$HOME/hpc_lm_eval"
+CONTAINER_DIR="$BASE_DIR/containers"
+SHARED_MODELS="${SHARED_MODELS:-$PROJECT/shared_models/ollama}"
+TASKS_DIR="$BASE_DIR/tasks"
+OUTPUT_DIR="$BASE_DIR/output"
+
+export OLLAMA_MODELS="$SHARED_MODELS"
+
+<% if job_mode == "setup" %>
+#==============================================================================
+# SETUP MODE: Build container and pre-pull initial models
+#==============================================================================
+echo "=========================================="
+echo "LM-Eval Environment Setup"
+echo "=========================================="
+
+# Create directory structure
+mkdir -p "$CONTAINER_DIR" "$SHARED_MODELS" "$TASKS_DIR" "$OUTPUT_DIR" logs
+
+# Step 1: Build container
+echo "[1/3] Building container for CUDA <%= cuda_version %>..."
+cd "$CONTAINER_DIR"
+
+# Download build script if needed
+if [[ ! -f build_container.sh ]]; then
+    echo "[INFO] Downloading build scripts..."
+    # Copy from shared install location or git
+    cp /shared/apps/lm_eval/containers/* . 2>/dev/null || \
+    curl -sL https://raw.githubusercontent.com/your-repo/dodhpc/containers/build_container.sh -o build_container.sh
+    chmod +x build_container.sh
+fi
+
+./build_container.sh <%= cuda_version %>
+CONTAINER_IMAGE="$CONTAINER_DIR/lm_eval_ollama_cuda<%= cuda_version %>.sif"
+
+# Step 2: Pre-pull models
+echo "[2/3] Pre-pulling models to shared cache..."
+echo "[INFO] Cache location: $SHARED_MODELS"
+
+# Start Ollama inside container to pull models
+MODELS_TO_PULL="<%= initial_models.join(' ') %>"
+
+if command -v apptainer &>/dev/null; then CNT=apptainer; else CNT=singularity; fi
+
+$CNT exec --nv \
+    --bind "$SHARED_MODELS:$SHARED_MODELS" \
+    "$CONTAINER_IMAGE" bash -c "
+    export OLLAMA_MODELS='$SHARED_MODELS'
+
+    # Start Ollama
+    ollama serve &
+    sleep 15
+
+    # Pull each model
+    for MODEL in $MODELS_TO_PULL; do
+        echo \"[PULL] \$MODEL\"
+        ollama pull \"\$MODEL\" || echo \"[WARN] Failed to pull \$MODEL\"
+    done
+
+    # List what's cached
+    echo ''
+    echo 'Cached models:'
+    ollama list
+
+    pkill ollama || true
+"
+
+# Step 3: Copy task YAML files
+echo "[3/3] Setting up task configurations..."
+cp /shared/apps/lm_eval/tasks/*.yaml "$TASKS_DIR/" 2>/dev/null || \
+    echo "[INFO] Copy task YAMLs manually to $TASKS_DIR"
+
+echo ""
+echo "=========================================="
+echo "Setup Complete!"
+echo "=========================================="
+echo "Container: $CONTAINER_IMAGE"
+echo "Model Cache: $SHARED_MODELS"
+echo "Tasks Dir: $TASKS_DIR"
+echo ""
+echo "You can now run evaluations from the form."
+
+<% elsif job_mode == "add_models" %>
+#==============================================================================
+# ADD MODELS MODE: Pre-pull additional models to cache
+#==============================================================================
+echo "=========================================="
+echo "Adding Models to Cache"
+echo "=========================================="
+
+CONTAINER_IMAGE="$CONTAINER_DIR/lm_eval_ollama.sif"
+MODELS_TO_PULL="<%= additional_models.join(' ') %>"
+
+if [[ ! -f "$CONTAINER_IMAGE" ]]; then
+    echo "[ERROR] Container not found. Run Setup mode first."
+    exit 1
+fi
+
+if command -v apptainer &>/dev/null; then CNT=apptainer; else CNT=singularity; fi
+
+$CNT exec --nv \
+    --bind "$SHARED_MODELS:$SHARED_MODELS" \
+    "$CONTAINER_IMAGE" bash -c "
+    export OLLAMA_MODELS='$SHARED_MODELS'
+
+    ollama serve &
+    sleep 15
+
+    for MODEL in $MODELS_TO_PULL; do
+        echo \"[PULL] \$MODEL\"
+        ollama pull \"\$MODEL\" || echo \"[WARN] Failed to pull \$MODEL\"
+    done
+
+    echo ''
+    echo 'All cached models:'
+    ollama list
+
+    pkill ollama || true
+"
+
+echo "[INFO] Model cache updated."
+
+<% else %>
+#==============================================================================
+# EVALUATE MODE: Run inference jobs
+#==============================================================================
+
+# Read job config for this array task
+CONFIG_FILE="<%= output_dir %>/batch_config.txt"
+LINE=$(sed -n "${SLURM_ARRAY_TASK_ID}p" "$CONFIG_FILE")
+MODEL=$(echo "$LINE" | cut -d'|' -f1)
+TASK=$(echo "$LINE" | cut -d'|' -f2)
+
+echo "[INFO] Evaluation job: MODEL=$MODEL TASK=$TASK"
+
+CONTAINER_IMAGE="$CONTAINER_DIR/lm_eval_ollama.sif"
+SCRATCH_DIR="${SLURM_TMPDIR:-/tmp/lm_${SLURM_JOB_ID}}"
+mkdir -p "$SCRATCH_DIR"
+cd "$SCRATCH_DIR"
+
+if command -v apptainer &>/dev/null; then CNT=apptainer; else CNT=singularity; fi
+
+$CNT exec --nv \
+    --bind "$SHARED_MODELS:$SHARED_MODELS" \
+    --bind "$TASKS_DIR:$TASKS_DIR" \
+    "$CONTAINER_IMAGE" bash -c "
+    set -e
+    export OLLAMA_MODELS='$SHARED_MODELS'
+
+    mkdir -p tasks output
+    cp '$TASKS_DIR/$TASK.yaml' tasks/
+
+    # Start Ollama with cached models
+    ollama serve &
+    sleep 15
+
+    # Verify model is cached
+    if ! ollama list | grep -q '$MODEL'; then
+        echo '[ERROR] Model $MODEL not in cache!'
+        echo '[ERROR] Run Add Models mode first.'
+        exit 1
+    fi
+
+    # Run evaluation
+    lm_eval \\
+        --model local-chat-completions \\
+        --model_args 'model=$MODEL,base_url=http://localhost:11434/v1/chat/completions,num_concurrent=1' \\
+        --include_path ./tasks \\
+        --tasks '$TASK' \\
+        --output 'output/$TASK' \\
+        --log_samples \\
+        --num_fewshot 0 \\
+        --batch_size auto \\
+        --gen_kwargs temperature=0.0 \\
+        --apply_chat_template
+
+    pkill ollama || true
+"
+
+# Copy results
+DEST_DIR="$OUTPUT_DIR/${MODEL//\//_}/${TASK}"
+mkdir -p "$DEST_DIR"
+cp -r "$SCRATCH_DIR/output/$TASK/." "$DEST_DIR/" 2>/dev/null || true
+
+echo "[INFO] Results saved to: $DEST_DIR"
+<% end %>
+```
+
+#### 2.3 Pre-Submit Hook: Generate Job Config (`ood_app/lm_eval_batch/submit.yml.erb`)
+
+```yaml
+---
+batch_connect:
+  template: "basic"
+
+script:
+  native:
+<% if job_mode == "evaluate" %>
+    # Generate job array configuration
+    - |
+      CONFIG_FILE="<%= output_dir %>/batch_config.txt"
+      mkdir -p "<%= output_dir %>"
+      rm -f "$CONFIG_FILE"
+      <% models.each do |model| %>
+      <% tasks.each do |task| %>
+      echo "<%= model %>|<%= task %>" >> "$CONFIG_FILE"
+      <% end %>
+      <% end %>
+      echo "[INFO] Generated config with $(wc -l < $CONFIG_FILE) jobs"
+<% end %>
+```
+
+#### 2.4 Status Check Endpoint (`ood_app/lm_eval_batch/bin/check_status.rb`)
+
+This Ruby script provides the `/check_status` endpoint for the form JavaScript:
+
+```ruby
+#!/usr/bin/env ruby
+# Returns JSON with environment status for the OOD form
+
+require 'json'
+
+base_dir = File.expand_path("~/hpc_lm_eval")
+container_dir = "#{base_dir}/containers"
+shared_models = ENV['SHARED_MODELS'] || "#{ENV['PROJECT']}/shared_models/ollama"
+
+status = {
+  container_exists: false,
+  container_cuda_version: nil,
+  cached_models: [],
+  network_mode: 'unknown',
+  setup_complete: false
+}
+
+# Check container
+container_files = Dir.glob("#{container_dir}/lm_eval_ollama*.sif")
+if container_files.any?
+  status[:container_exists] = true
+  # Extract CUDA version from filename
+  if match = container_files.first.match(/cuda(\d+\.\d+)/)
+    status[:container_cuda_version] = match[1]
+  end
+end
+
+# Check cached models
+manifest_file = "#{shared_models}/model_manifest.txt"
+if File.exist?(manifest_file)
+  status[:cached_models] = File.readlines(manifest_file)
+    .drop(1)  # Skip header
+    .map { |line| line.split.first }
+    .compact
+end
+
+# Detect network mode (simplified check)
+status[:network_mode] = system("ping -c 1 -W 2 ollama.ai > /dev/null 2>&1") ? 'online' : 'offline'
+
+# Setup complete if container exists and at least one model cached
+status[:setup_complete] = status[:container_exists] && status[:cached_models].any?
+
+puts JSON.pretty_generate(status)
+```
+
+### User Workflow with All-in-One Form
+
+**First-time user:**
+1. Open LM-Eval app in Open OnDemand
+2. Form shows "Environment Status: Not configured"
+3. Select **"Setup Environment"** mode
+4. Choose CUDA version, select initial models
+5. Click Submit → Runs setup job
+6. Wait ~30 min for container build + model pulls
+7. Return to form → Status shows "Ready"
+
+**Running evaluations:**
+1. Open LM-Eval app
+2. Form shows cached models with ✓ indicators
+3. Select **"Run Evaluation"** mode
+4. Check models (only cached ones enabled)
+5. Check tasks
+6. Click Submit → Jobs queued
+7. Check OOD "Active Jobs" for progress
+
+**Adding more models:**
+1. Select **"Add Models"** mode
+2. Check additional models to pull
+3. Submit → Pulls to shared cache
+4. New models now available for evaluation
       - ["SysEngBench-OSQ (Open Short)", "sysengbench-osq"]
 
   job_strategy:
