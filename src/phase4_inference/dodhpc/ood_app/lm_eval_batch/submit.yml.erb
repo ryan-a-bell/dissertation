@@ -1,0 +1,19 @@
+---
+batch_connect:
+  template: "basic"
+
+script:
+  native:
+<% if job_mode == "evaluate" %>
+    # Generate job array configuration
+    - |
+      CONFIG_FILE="<%= output_dir %>/batch_config.txt"
+      mkdir -p "<%= output_dir %>"
+      rm -f "$CONFIG_FILE"
+      <% models.each do |model| %>
+      <% tasks.each do |task| %>
+      echo "<%= model %>|<%= task %>" >> "$CONFIG_FILE"
+      <% end %>
+      <% end %>
+      echo "[INFO] Generated config with $(wc -l < $CONFIG_FILE) jobs"
+<% end %>
