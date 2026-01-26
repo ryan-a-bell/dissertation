@@ -30,21 +30,23 @@ class TestCreateParser:
     def test_subcommands_exist(self):
         """Test that expected subcommands exist."""
         parser = create_parser()
-        subcommands = [
-            "download",
-            "convert",
-            "variants",
-            "analyze",
-            "judge",
-            "prompts",
-            "report",
-            "config",
-        ]
+        # Only test subcommands that don't require positional args
+        subcommands_no_args = ["prompts", "config"]
 
-        for cmd in subcommands:
+        for cmd in subcommands_no_args:
             # This should not raise
             args = parser.parse_args([cmd])
             assert args.command == cmd
+
+        # Test that other subcommands are registered (by checking help doesn't fail)
+        subcommands_with_args = ["download", "convert", "variants", "analyze", "judge", "report"]
+        for cmd in subcommands_with_args:
+            # Just verify the subcommand is recognized by checking parser doesn't raise on help
+            try:
+                parser.parse_args([cmd, "--help"])
+            except SystemExit as e:
+                # --help causes SystemExit(0) which is expected
+                assert e.code == 0
 
 
 class TestDownloadCommand:

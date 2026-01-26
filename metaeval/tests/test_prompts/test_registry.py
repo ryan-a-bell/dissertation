@@ -55,19 +55,30 @@ class TestPromptTemplate:
         with pytest.raises(KeyError):
             template.format()
 
-    def test_from_yaml_dict(self):
-        """Test creating template from YAML dict."""
-        data = {
-            "name": "test_prompt",
-            "category": "convert",
-            "template": "Convert this: {input}",
-            "description": "Conversion prompt",
-            "version": "2.0",
-            "variables": ["input"],
-        }
-        template = PromptTemplate.from_yaml_dict(data)
+    def test_direct_creation(self):
+        """Test creating template directly with keyword args."""
+        template = PromptTemplate(
+            name="test_prompt",
+            category="convert",
+            template="Convert this: {input}",
+            description="Conversion prompt",
+            version="2.0",
+            variables=["input"],
+        )
         assert template.name == "test_prompt"
         assert template.version == "2.0"
+
+    def test_to_dict(self):
+        """Test converting template to dict."""
+        template = PromptTemplate(
+            name="test",
+            category="judge",
+            template="Test: {var}",
+            version="1.0",
+        )
+        data = template.to_dict()
+        assert data["name"] == "test"
+        assert data["category"] == "judge"
 
 
 class TestPromptRegistry:

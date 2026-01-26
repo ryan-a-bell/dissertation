@@ -18,28 +18,27 @@ class TestRotateChoices:
 
     def test_rotation_a(self):
         """Test rotation with A as correct answer."""
-        choices = ["Alpha", "Beta", "Gamma", "Delta"]
+        choices = {"A": "Alpha", "B": "Beta", "C": "Gamma", "D": "Delta"}
         correct = "A"
 
-        result = rotate_choices(choices, correct, new_position="B")
-        assert result["choices"][1] == "Alpha"  # Alpha should be at position B
-        assert result["new_answer"] == "B"
+        new_choices, new_answer = rotate_choices(choices, correct, target_position="B")
+        assert new_choices["B"] == "Alpha"  # Alpha should be at position B
+        assert new_answer == "B"
 
     def test_rotation_preserves_count(self):
         """Test rotation preserves number of choices."""
-        choices = ["A1", "B1", "C1", "D1"]
-        result = rotate_choices(choices, "A", "C")
-        assert len(result["choices"]) == 4
+        choices = {"A": "A1", "B": "B1", "C": "C1", "D": "D1"}
+        new_choices, new_answer = rotate_choices(choices, "A", "C")
+        assert len(new_choices) == 4
 
     def test_all_positions(self):
         """Test rotation to all positions."""
-        choices = ["First", "Second", "Third", "Fourth"]
+        choices = {"A": "First", "B": "Second", "C": "Third", "D": "Fourth"}
         positions = ["A", "B", "C", "D"]
 
         for pos in positions:
-            result = rotate_choices(choices, "A", pos)
-            new_idx = positions.index(result["new_answer"])
-            assert result["choices"][new_idx] == "First"
+            new_choices, new_answer = rotate_choices(choices, "A", pos)
+            assert new_choices[new_answer] == "First"
 
 
 class TestCreatePositionVariants:
@@ -111,17 +110,18 @@ class TestSaveVariants:
     def test_saves_all_variants(self, sample_variants):
         """Test that all variants are saved."""
         with tempfile.TemporaryDirectory() as tmpdir:
-            paths = save_variants(sample_variants, Path(tmpdir))
+            paths = save_variants(sample_variants, tmpdir)
 
             assert len(paths) == 4
             for pos in ["A", "B", "C", "D"]:
                 assert pos in paths
-                assert paths[pos].exists()
+                # paths values are strings, not Path objects
+                assert Path(paths[pos]).exists()
 
     def test_file_contents(self, sample_variants):
         """Test that saved files contain correct data."""
         with tempfile.TemporaryDirectory() as tmpdir:
-            paths = save_variants(sample_variants, Path(tmpdir))
+            paths = save_variants(sample_variants, tmpdir)
 
             for pos, path in paths.items():
                 df = pd.read_csv(path)
@@ -131,18 +131,17 @@ class TestSaveVariants:
     def test_custom_prefix(self, sample_variants):
         """Test custom prefix in filenames."""
         with tempfile.TemporaryDirectory() as tmpdir:
-            paths = save_variants(
-                sample_variants, Path(tmpdir), prefix="custom"
-            )
+            paths = save_variants(sample_variants, tmpdir, prefix="custom")
 
             for path in paths.values():
-                assert "custom" in path.name
+                # path is a string
+                assert "custom" in path
 
     def test_creates_directory(self, sample_variants):
         """Test that output directory is created."""
         with tempfile.TemporaryDirectory() as tmpdir:
             new_dir = Path(tmpdir) / "new_subdir"
-            paths = save_variants(sample_variants, new_dir)
+            paths = save_variants(sample_variants, str(new_dir))
 
             assert new_dir.exists()
             assert len(list(new_dir.glob("*.csv"))) == 4

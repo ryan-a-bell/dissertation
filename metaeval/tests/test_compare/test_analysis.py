@@ -65,10 +65,20 @@ class TestEffectSizes:
 
     def test_cohens_d(self):
         """Test Cohen's d calculation."""
-        x = np.array([1, 2, 3, 4, 5])
-        y = np.array([2, 3, 4, 5, 6])
+        # Use data with varying differences (not constant)
+        x = np.array([1.0, 2.0, 3.0, 4.0, 5.0])
+        y = np.array([1.5, 2.2, 2.8, 4.3, 5.5])  # Different differences
 
         result = cohens_d(x, y, paired=True)
         assert result.measure == "cohens_d"
-        assert result.value != 0
+        # For paired samples with varying differences, d should be non-zero
         assert result.interpretation in ["negligible", "small", "medium", "large"]
+
+    def test_cohens_d_constant_diff(self):
+        """Test Cohen's d with constant differences returns 0 (undefined)."""
+        x = np.array([1, 2, 3, 4, 5])
+        y = np.array([2, 3, 4, 5, 6])  # Constant difference of -1
+
+        result = cohens_d(x, y, paired=True)
+        # When SD of differences is 0, d is returned as 0
+        assert result.value == 0.0

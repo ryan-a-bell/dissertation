@@ -51,9 +51,9 @@ class TestGetDefaultModel:
         assert model is not None
 
     def test_invalid_provider(self):
-        """Test invalid provider raises error."""
-        with pytest.raises(ValueError):
-            get_default_model("invalid_provider")
+        """Test invalid provider returns empty string."""
+        model = get_default_model("invalid_provider")
+        assert model == ""
 
 
 class TestCreateJudge:

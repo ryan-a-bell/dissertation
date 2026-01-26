@@ -8,6 +8,7 @@ from metaeval.benchmark.convert import (
     ConversionResult,
     conversions_to_dataframe,
 )
+from metaeval.core.types import GradingRubric, BloomsLevel
 
 
 class TestConversionResult:
@@ -16,36 +17,31 @@ class TestConversionResult:
     def test_creation(self):
         """Test creating a conversion result."""
         result = ConversionResult(
-            question_id="q1",
+            question_id=1,
             original_question="What is SE?",
+            original_answer="B",
             osq_prompt="Explain systems engineering.",
             expected_answer="Systems engineering is...",
             rubric={"full_credit": "Complete answer", "partial_credit": "Some points"},
             blooms_level="Understand",
-            suitability_score=8,
-            conversion_success=True,
+            conversion_score=8,
         )
-        assert result.question_id == "q1"
-        assert result.conversion_success is True
-        assert result.suitability_score == 8
+        assert result.question_id == 1
+        assert result.conversion_score == 8
+        assert result.blooms_level == "Understand"
 
-    def test_to_dict(self):
-        """Test converting result to dict."""
+    def test_default_conversion_score(self):
+        """Test default conversion score is None."""
         result = ConversionResult(
-            question_id="q1",
+            question_id=1,
             original_question="Test?",
+            original_answer="A",
             osq_prompt="Test prompt",
             expected_answer="Test answer",
             rubric={"full": "good"},
             blooms_level="Apply",
-            suitability_score=9,
-            conversion_success=True,
         )
-        data = result.to_dict()
-
-        assert isinstance(data, dict)
-        assert data["question_id"] == "q1"
-        assert data["conversion_success"] is True
+        assert result.conversion_score is None
 
 
 class TestConversionsToDataFrame:
@@ -59,40 +55,49 @@ class TestConversionsToDataFrame:
 
     def test_single_conversion(self):
         """Test converting single result."""
+        rubric = GradingRubric(
+            full_credit="Full credit response",
+            partial_credit="Partial credit response",
+            no_credit="No credit response",
+        )
         result = ConversionResult(
-            question_id="q1",
+            question_id=1,
             original_question="Test?",
+            original_answer="A",
             osq_prompt="Test prompt",
             expected_answer="Test answer",
-            rubric={"full": "good"},
-            blooms_level="Apply",
-            suitability_score=9,
-            conversion_success=True,
+            rubric=rubric,
+            blooms_level=BloomsLevel.APPLY,
+            conversion_score=9,
         )
         df = conversions_to_dataframe([result])
 
         assert len(df) == 1
-        assert df.iloc[0]["question_id"] == "q1"
+        assert df.iloc[0]["question_id"] == 1
 
     def test_multiple_conversions(self):
         """Test converting multiple results."""
         results = [
             ConversionResult(
-                question_id=f"q{i}",
+                question_id=i,
                 original_question=f"Question {i}?",
+                original_answer="A",
                 osq_prompt=f"Prompt {i}",
                 expected_answer=f"Answer {i}",
-                rubric={},
-                blooms_level="Apply",
-                suitability_score=i + 5,
-                conversion_success=True,
+                rubric=GradingRubric(
+                    full_credit="Full",
+                    partial_credit="Partial",
+                    no_credit="None",
+                ),
+                blooms_level=BloomsLevel.APPLY,
+                conversion_score=i + 5,
             )
             for i in range(5)
         ]
         df = conversions_to_dataframe(results)
 
         assert len(df) == 5
-        assert list(df["question_id"]) == ["q0", "q1", "q2", "q3", "q4"]
+        assert list(df["question_id"]) == [0, 1, 2, 3, 4]
 
 
 class TestMCQToOSQConverter:
@@ -135,8 +140,21 @@ class TestMCQToOSQConverter:
             classification_prompt="classification",
             conversion_prompt="standard",
         )
-        assert converter.classification_prompt == "classification"
-        assert converter.conversion_prompt == "standard"
+        # Actual attributes have '_name' suffix
+        assert converter.classification_prompt_name == "classification"
+        assert converter.conversion_prompt_name == "standard"
+
+    def test_converter_attributes(self):
+        """Test converter has expected attributes."""
+        converter = MCQToOSQConverter(
+            api_key="test-key",
+            model="gpt-4-turbo",
+            confidence_threshold=8,
+            temperature=0.1,
+        )
+        assert converter.model == "gpt-4-turbo"
+        assert converter.confidence_threshold == 8
+        assert converter.temperature == 0.1
 
     def test_convert_single_requires_api(self, sample_mcq_df):
         """Test that conversion requires valid API key."""
