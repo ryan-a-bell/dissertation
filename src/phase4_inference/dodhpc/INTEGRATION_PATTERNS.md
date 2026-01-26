@@ -49,14 +49,64 @@ We support two deployment modes that can coexist:
 The Apptainer/Singularity container (`lm_eval_ollama.sif`) bundles all dependencies:
 - Ollama runtime
 - lm_eval with API support
-- Python 3.11 + CUDA 12.8
+- Python 3.11 + CUDA support
 
 **Advantages:**
 - Fully portable across HPC systems
 - No module conflicts
 - Reproducible environment
 
-**Build once on login node:**
+#### Multi-CUDA Version Support
+
+Different HPC systems have different CUDA versions. We support building containers for multiple CUDA versions:
+
+| CUDA Version | HPC Compatibility | Build Command |
+|--------------|-------------------|---------------|
+| **11.7** | Older systems (pre-2023) | `./build_container.sh 11.7` |
+| **11.8** | Legacy systems | `./build_container.sh 11.8` |
+| **12.1** | Early 2024 systems | `./build_container.sh 12.1` |
+| **12.4** | Most modern HPCs (recommended) | `./build_container.sh 12.4` |
+| **12.6** | Late 2024 systems | `./build_container.sh 12.6` |
+| **12.8** | Cutting edge | `./build_container.sh 12.8` |
+
+**Check your HPC's CUDA version:**
+```bash
+# On the HPC login or compute node:
+nvidia-smi | grep "CUDA Version"
+# Or:
+nvcc --version
+```
+
+**Build for your CUDA version:**
+```bash
+cd dodhpc/containers
+
+# Build for CUDA 12.4 (most common modern HPC)
+./build_container.sh 12.4
+
+# Or for older systems with CUDA 11.8
+./build_container.sh 11.8
+
+# Output: lm_eval_ollama_cuda12.4.sif (or similar)
+# Also creates symlink: lm_eval_ollama.sif -> your version
+```
+
+**How it works:**
+- The build script uses NVIDIA's official PyTorch images as base
+- Each image is tested with specific CUDA driver versions
+- The `--nv` flag in Apptainer maps host GPU drivers into container
+- Container CUDA libraries must be compatible with host drivers
+
+**CUDA Driver Compatibility:**
+| Container CUDA | Minimum Driver Version |
+|----------------|----------------------|
+| 11.7 | 515.43.04+ |
+| 11.8 | 520.61.05+ |
+| 12.1 | 530.30.02+ |
+| 12.4 | 550.54.14+ |
+| 12.6 | 560.28.03+ |
+
+**Legacy build (if you just need default):**
 ```bash
 cd dodhpc/containers
 apptainer build lm_eval_ollama.sif lm_eval_ollama.def
@@ -482,9 +532,15 @@ echo "[INFO] Done: MODEL=$MODEL TASK=$TASK"
 ### One-Time Setup (Login Node)
 
 ```bash
-# 1. Build container (or set up venv)
+# 0. Check your HPC's CUDA version first!
+nvidia-smi | grep "CUDA Version"
+# Example output: "CUDA Version: 12.4"
+
+# 1. Build container for YOUR CUDA version
 cd dodhpc/containers
-apptainer build lm_eval_ollama.sif lm_eval_ollama.def
+./build_container.sh 12.4   # Use your version here!
+# Creates: lm_eval_ollama_cuda12.4.sif
+# Also symlinks: lm_eval_ollama.sif -> lm_eval_ollama_cuda12.4.sif
 
 # 2. Create shared model cache directory
 export SHARED_MODELS=$PROJECT/shared_models/ollama
@@ -1389,6 +1445,16 @@ rule aggregate:
 | **Offline compute nodes** | Yes* | Yes* | Yes* |
 
 *Requires pre-pulling models to shared cache on login node
+
+### CUDA Compatibility Matrix
+
+| CUDA Version | Container Support | Typical HPC Systems |
+|--------------|------------------|---------------------|
+| 11.7 - 11.8 | Yes | Older DoD, legacy academic |
+| 12.1 - 12.4 | Yes (recommended) | Most modern HPCs |
+| 12.6 - 12.8 | Yes | Cutting-edge systems |
+
+Build for your specific CUDA: `./containers/build_container.sh <version>`
 
 ---
 
