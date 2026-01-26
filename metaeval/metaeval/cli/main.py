@@ -154,19 +154,30 @@ def create_parser() -> argparse.ArgumentParser:
     )
     judge_parser.add_argument(
         "--model",
-        default="llama3.1:8b",
-        help="Judge model",
+        help="Judge model (default depends on provider)",
     )
     judge_parser.add_argument(
         "--provider",
-        choices=["local", "openai", "anthropic"],
-        default="local",
+        choices=["ollama", "openai", "anthropic", "openrouter"],
+        default="ollama",
         help="Model provider",
     )
     judge_parser.add_argument(
         "--prompt",
         default="multi_dimensional",
         help="Judge prompt name (use 'metaeval prompts judge' to list)",
+    )
+    judge_parser.add_argument(
+        "--temperature",
+        type=float,
+        default=0.0,
+        help="Generation temperature (default: 0.0)",
+    )
+    judge_parser.add_argument(
+        "--max-tokens",
+        type=int,
+        default=2048,
+        help="Maximum tokens to generate (default: 2048)",
     )
 
     # Prompts command
@@ -211,6 +222,24 @@ def create_parser() -> argparse.ArgumentParser:
         "--title",
         default="Meta-Evaluation Analysis Report",
         help="Report title",
+    )
+
+    # Config command
+    config_parser = subparsers.add_parser(
+        "config",
+        help="Show or manage configuration",
+    )
+    config_parser.add_argument(
+        "action",
+        nargs="?",
+        choices=["show", "init", "path"],
+        default="show",
+        help="Action: show (display config), init (create config file), path (show config path)",
+    )
+    config_parser.add_argument(
+        "--output",
+        type=Path,
+        help="Output path for init (default: ~/.metaeval/config.yaml)",
     )
 
     return parser
@@ -353,8 +382,18 @@ def cmd_analyze(args: argparse.Namespace) -> int:
 def cmd_judge(args: argparse.Namespace) -> int:
     """Handle judge command."""
     import json
+    from metaeval.judges import create_judge, get_default_model, JudgeSettings
 
-    logger.info(f"Running LLM-as-a-Judge on {args.input} using prompt '{args.prompt}'...")
+    # Get model (use default if not specified)
+    model = args.model or get_default_model(args.provider)
+
+    logger.info(
+        f"Running LLM-as-a-Judge on {args.input}\n"
+        f"  Provider: {args.provider}\n"
+        f"  Model: {model}\n"
+        f"  Prompt: {args.prompt}\n"
+        f"  Temperature: {args.temperature}"
+    )
 
     try:
         # Load input
@@ -364,13 +403,14 @@ def cmd_judge(args: argparse.Namespace) -> int:
             else:
                 items = json.load(f)
 
-        if args.provider == "local":
-            from metaeval.inference.local import OllamaJudge
-            judge = OllamaJudge(model=args.model, prompt_style=args.prompt)
-        else:
-            # API-based judging would go here
-            logger.error(f"Provider {args.provider} not yet implemented for judging")
-            return 1
+        # Create judge with settings
+        settings = JudgeSettings(
+            temperature=args.temperature,
+            max_tokens=args.max_tokens,
+            prompt_style=args.prompt,
+        )
+
+        judge = create_judge(args.provider, model, settings=settings)
 
         results = judge.batch_judge(items)
 
@@ -485,6 +525,56 @@ def cmd_report(args: argparse.Namespace) -> int:
         return 1
 
 
+def cmd_config(args: argparse.Namespace) -> int:
+    """Handle config command."""
+    from metaeval.core.config import get_config, get_config_path, generate_default_config
+
+    if args.action == "path":
+        print(get_config_path())
+        return 0
+
+    elif args.action == "init":
+        output_path = args.output or get_config_path()
+        output_path.parent.mkdir(parents=True, exist_ok=True)
+
+        config_content = generate_default_config()
+        with open(output_path, "w") as f:
+            f.write(config_content)
+
+        logger.info(f"Created config file at {output_path}")
+        return 0
+
+    else:  # show
+        config = get_config()
+        print("\nCurrent Configuration:")
+        print("=" * 50)
+        print(f"\n[Judge Settings]")
+        print(f"  temperature: {config.judge.temperature}")
+        print(f"  max_tokens: {config.judge.max_tokens}")
+        print(f"  timeout: {config.judge.timeout}")
+        print(f"  default_prompt: {config.judge.default_prompt}")
+        print(f"  default_provider: {config.judge.default_provider}")
+
+        print(f"\n[Stats Settings]")
+        print(f"  alpha: {config.stats.alpha}")
+        print(f"  bootstrap_iterations: {config.stats.bootstrap_iterations}")
+        print(f"  confidence_level: {config.stats.confidence_level}")
+        print(f"  random_seed: {config.stats.random_seed}")
+
+        print(f"\n[Ollama Settings]")
+        print(f"  host: {config.ollama.host}")
+        print(f"  port: {config.ollama.port}")
+        print(f"  default_model: {config.ollama.default_model}")
+        print(f"  auto_pull: {config.ollama.auto_pull}")
+
+        print(f"\n[Paths]")
+        print(f"  data_dir: {config.paths.data_dir}")
+        print(f"  cache_dir: {config.paths.cache_dir}")
+        print(f"  output_dir: {config.paths.output_dir}")
+
+        return 0
+
+
 def app(args: list[str] | None = None) -> int:
     """Run the CLI application."""
     parser = create_parser()
@@ -504,6 +594,7 @@ def app(args: list[str] | None = None) -> int:
         "judge": cmd_judge,
         "prompts": cmd_prompts,
         "report": cmd_report,
+        "config": cmd_config,
     }
 
     if parsed.command is None:
