@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import json
 from dataclasses import dataclass
-from typing import Any, Literal
+from typing import Any
 
 import pandas as pd
 from openai import OpenAI
@@ -12,64 +12,9 @@ from tqdm import tqdm
 
 from metaeval.core.logging import get_logger
 from metaeval.core.types import GradingRubric, BloomsLevel
+from metaeval.prompts import get_prompt, list_prompts
 
 logger = get_logger(__name__)
-
-
-CLASSIFICATION_PROMPT = """You are an expert in educational assessment and question design. Your task is to evaluate whether a multiple-choice question (MCQ) is suitable for conversion to an open-style question (OSQ).
-
-Evaluate the following MCQ and provide:
-1. A suitability score from 1-10 (where 10 is highly suitable for conversion)
-2. A brief justification for your score
-
-Criteria for high suitability:
-- Question tests understanding, application, or analysis (not just recall)
-- Answer requires explanation or reasoning
-- Distractors are plausible and educational
-- Question is not purely definitional or factual lookup
-
-MCQ to evaluate:
-Question: {question}
-A) {choice_a}
-B) {choice_b}
-C) {choice_c}
-D) {choice_d}
-Correct Answer: {answer}
-Justification: {justification}
-
-Respond in JSON format:
-{{"score": <1-10>, "justification": "<brief explanation>"}}"""
-
-
-CONVERSION_PROMPT = """You are an expert in educational assessment for systems engineering. Convert the following multiple-choice question (MCQ) into an open-style question (OSQ) that tests the same knowledge but requires a written response.
-
-Original MCQ:
-Question: {question}
-A) {choice_a}
-B) {choice_b}
-C) {choice_c}
-D) {choice_d}
-Correct Answer: {answer}
-Justification: {justification}
-
-Create:
-1. An open-ended question that tests the same concept
-2. A model answer (expected response)
-3. A grading rubric with criteria for full credit, partial credit, and no credit
-4. Bloom's taxonomy classification (Remember, Understand, Apply, Analyze, Evaluate, Create)
-
-Respond in JSON format:
-{{
-    "osq_prompt": "<open-ended question>",
-    "expected_answer": "<model answer>",
-    "rubric": {{
-        "full_credit": "<criteria for full credit>",
-        "partial_credit": "<criteria for partial credit>",
-        "no_credit": "<criteria for no credit>"
-    }},
-    "blooms_level": "<Bloom's level>",
-    "blooms_justification": "<brief justification for Bloom's classification>"
-}}"""
 
 
 @dataclass
@@ -96,6 +41,16 @@ class ConversionResult:
     conversion_score: int | None = None
 
 
+def get_available_classification_prompts() -> list[str]:
+    """Get list of available classification prompt names."""
+    return [p for p in list_prompts("convert") if "classif" in p.lower()]
+
+
+def get_available_conversion_prompts() -> list[str]:
+    """Get list of available conversion prompt names."""
+    return [p for p in list_prompts("convert") if "classif" not in p.lower()]
+
+
 class MCQToOSQConverter:
     """Convert MCQ questions to open-style questions using LLM."""
 
@@ -106,6 +61,8 @@ class MCQToOSQConverter:
         base_url: str | None = None,
         confidence_threshold: int = 7,
         temperature: float = 0.0,
+        classification_prompt: str = "classification",
+        conversion_prompt: str = "standard",
     ):
         """
         Initialize the converter.
@@ -116,11 +73,35 @@ class MCQToOSQConverter:
             base_url: Optional base URL for API (e.g., OpenRouter)
             confidence_threshold: Minimum score for conversion (1-10)
             temperature: Temperature for generation
+            classification_prompt: Name of classification prompt from registry
+            conversion_prompt: Name of conversion prompt from registry
         """
         self.client = OpenAI(api_key=api_key, base_url=base_url)
         self.model = model
         self.confidence_threshold = confidence_threshold
         self.temperature = temperature
+        self.classification_prompt_name = classification_prompt
+        self.conversion_prompt_name = conversion_prompt
+
+    def _get_classification_template(self) -> str:
+        """Get the classification prompt template."""
+        prompt = get_prompt(self.classification_prompt_name, "convert")
+        if prompt is None:
+            raise ValueError(
+                f"Classification prompt '{self.classification_prompt_name}' not found. "
+                f"Available: {get_available_classification_prompts()}"
+            )
+        return prompt.template
+
+    def _get_conversion_template(self) -> str:
+        """Get the conversion prompt template."""
+        prompt = get_prompt(self.conversion_prompt_name, "convert")
+        if prompt is None:
+            raise ValueError(
+                f"Conversion prompt '{self.conversion_prompt_name}' not found. "
+                f"Available: {get_available_conversion_prompts()}"
+            )
+        return prompt.template
 
     def _call_llm(self, prompt: str) -> dict[str, Any]:
         """Make an LLM API call and parse JSON response."""
@@ -155,7 +136,8 @@ class MCQToOSQConverter:
         Returns:
             ClassificationResult with score and justification
         """
-        prompt = CLASSIFICATION_PROMPT.format(
+        template = self._get_classification_template()
+        prompt = template.format(
             question=question,
             choice_a=choices.get("A", ""),
             choice_b=choices.get("B", ""),
@@ -198,7 +180,8 @@ class MCQToOSQConverter:
         Returns:
             ConversionResult with OSQ prompt, answer, and rubric
         """
-        prompt = CONVERSION_PROMPT.format(
+        template = self._get_conversion_template()
+        prompt = template.format(
             question=question,
             choice_a=choices.get("A", ""),
             choice_b=choices.get("B", ""),
@@ -334,3 +317,15 @@ def conversions_to_dataframe(conversions: list[ConversionResult]) -> pd.DataFram
             "conversion_score": c.conversion_score,
         })
     return pd.DataFrame(records)
+
+
+# Legacy compatibility
+def __getattr__(name: str) -> str:
+    """Module-level attribute access for legacy prompt constants."""
+    if name == "CLASSIFICATION_PROMPT":
+        prompt = get_prompt("classification", "convert")
+        return prompt.template if prompt else ""
+    elif name == "CONVERSION_PROMPT":
+        prompt = get_prompt("standard", "convert")
+        return prompt.template if prompt else ""
+    raise AttributeError(f"module {__name__!r} has no attribute {name!r}")

@@ -1,0 +1,53 @@
+name: multi_dimensional
+category: judge
+version: "1.0"
+author: metaeval
+description: |
+  Multi-dimensional scoring prompt (Lin & Chen 2023 style).
+  Evaluates responses across 5 dimensions, 20 points each.
+  Best for detailed, nuanced evaluation of open-ended responses.
+
+variables:
+  - question
+  - expected_answer
+  - rubric
+  - response
+
+metadata:
+  dimensions: 5
+  max_score: 100
+  output_format: json
+  recommended_for:
+    - osq_evaluation
+    - detailed_feedback
+
+template: |
+  You are an expert evaluator for systems engineering education. Evaluate the student's response across five dimensions, scoring each from 0-20 points for a total of 100 points.
+
+  Question: {question}
+
+  Expected Answer: {expected_answer}
+
+  Grading Rubric:
+  {rubric}
+
+  Student Response: {response}
+
+  Evaluate the response across these five dimensions:
+
+  1. **Technical Accuracy (0-20)**: Correctness of facts, principles, terminology, and technical details.
+  2. **Conceptual Understanding (0-20)**: Depth of understanding of systems engineering concepts and their relationships.
+  3. **Completeness (0-20)**: Coverage of all required elements and aspects of the question.
+  4. **Clarity & Organization (0-20)**: Quality of communication, logical structure, and presentation.
+  5. **Professional Relevance (0-20)**: Real-world applicability and professional context.
+
+  Respond in JSON format:
+  {{
+      "technical_accuracy": <0-20>,
+      "conceptual_understanding": <0-20>,
+      "completeness": <0-20>,
+      "clarity_organization": <0-20>,
+      "professional_relevance": <0-20>,
+      "total_score": <0-100>,
+      "justification": "<detailed explanation for each dimension>"
+  }}

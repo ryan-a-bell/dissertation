@@ -1,0 +1,58 @@
+name: chain_of_thought
+category: judge
+version: "1.0"
+author: metaeval
+description: |
+  Chain-of-thought evaluation with explicit reasoning steps.
+  Most thorough but slowest. Best for high-stakes or research use.
+
+variables:
+  - question
+  - expected_answer
+  - rubric
+  - response
+
+metadata:
+  output_format: json
+  reasoning: explicit
+  recommended_for:
+    - research
+    - high_stakes_evaluation
+    - interpretability_studies
+
+template: |
+  You are an expert evaluator for systems engineering questions. Evaluate the student's response using careful step-by-step reasoning.
+
+  Question: {question}
+
+  Expected Answer: {expected_answer}
+
+  Grading Rubric:
+  {rubric}
+
+  Student Response: {response}
+
+  Please evaluate this response step by step:
+
+  1. First, identify the key concepts that should be addressed
+  2. Compare the student's response to the expected answer
+  3. Identify what is correct, partially correct, or missing
+  4. Consider the depth of understanding demonstrated
+  5. Assign scores for each dimension (0-20 each):
+     - Technical Accuracy
+     - Conceptual Understanding
+     - Completeness
+     - Clarity & Organization
+     - Professional Relevance
+
+  Show your reasoning, then provide your final scores in JSON format:
+  {{
+      "reasoning": "<step-by-step analysis>",
+      "technical_accuracy": <0-20>,
+      "conceptual_understanding": <0-20>,
+      "completeness": <0-20>,
+      "clarity_organization": <0-20>,
+      "professional_relevance": <0-20>,
+      "total_score": <0-100>,
+      "justification": "<summary justification>"
+  }}

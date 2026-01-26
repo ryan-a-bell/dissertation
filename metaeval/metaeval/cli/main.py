@@ -81,6 +81,16 @@ def create_parser() -> argparse.ArgumentParser:
         default=7,
         help="Suitability threshold (1-10)",
     )
+    convert_parser.add_argument(
+        "--prompt",
+        default="standard",
+        help="Conversion prompt name (use 'metaeval prompts convert' to list)",
+    )
+    convert_parser.add_argument(
+        "--classification-prompt",
+        default="classification",
+        help="Classification prompt name",
+    )
 
     # Variants command
     variants_parser = subparsers.add_parser(
@@ -153,6 +163,33 @@ def create_parser() -> argparse.ArgumentParser:
         default="local",
         help="Model provider",
     )
+    judge_parser.add_argument(
+        "--prompt",
+        default="multi_dimensional",
+        help="Judge prompt name (use 'metaeval prompts judge' to list)",
+    )
+
+    # Prompts command
+    prompts_parser = subparsers.add_parser(
+        "prompts",
+        help="List or show available prompts",
+    )
+    prompts_parser.add_argument(
+        "category",
+        nargs="?",
+        choices=["judge", "convert"],
+        help="Category to list (omit for all)",
+    )
+    prompts_parser.add_argument(
+        "--show",
+        metavar="NAME",
+        help="Show full prompt template by name",
+    )
+    prompts_parser.add_argument(
+        "--path",
+        type=Path,
+        help="Add custom prompts directory",
+    )
 
     # Report command
     report_parser = subparsers.add_parser(
@@ -211,7 +248,7 @@ def cmd_convert(args: argparse.Namespace) -> int:
         logger.error("OPENAI_API_KEY environment variable required")
         return 1
 
-    logger.info(f"Converting {args.input}...")
+    logger.info(f"Converting {args.input} using prompt '{args.prompt}'...")
 
     try:
         df = pd.read_csv(args.input)
@@ -220,6 +257,8 @@ def cmd_convert(args: argparse.Namespace) -> int:
             api_key=api_key,
             model=args.model,
             confidence_threshold=args.threshold,
+            classification_prompt=args.classification_prompt,
+            conversion_prompt=args.prompt,
         )
 
         conversions, _ = converter.batch_convert(df)
@@ -315,7 +354,7 @@ def cmd_judge(args: argparse.Namespace) -> int:
     """Handle judge command."""
     import json
 
-    logger.info(f"Running LLM-as-a-Judge on {args.input}...")
+    logger.info(f"Running LLM-as-a-Judge on {args.input} using prompt '{args.prompt}'...")
 
     try:
         # Load input
@@ -327,7 +366,7 @@ def cmd_judge(args: argparse.Namespace) -> int:
 
         if args.provider == "local":
             from metaeval.inference.local import OllamaJudge
-            judge = OllamaJudge(model=args.model)
+            judge = OllamaJudge(model=args.model, prompt_style=args.prompt)
         else:
             # API-based judging would go here
             logger.error(f"Provider {args.provider} not yet implemented for judging")
@@ -347,6 +386,72 @@ def cmd_judge(args: argparse.Namespace) -> int:
     except Exception as e:
         logger.error(f"Judging failed: {e}")
         return 1
+
+
+def cmd_prompts(args: argparse.Namespace) -> int:
+    """Handle prompts command."""
+    from metaeval.prompts import get_registry, get_prompt, add_prompt_path
+
+    # Add custom path if provided
+    if args.path:
+        add_prompt_path(args.path)
+        logger.info(f"Added prompt path: {args.path}")
+
+    registry = get_registry()
+
+    # Show specific prompt
+    if args.show:
+        category = args.category or "judge"
+        prompt = get_prompt(args.show, category)
+        if prompt is None:
+            # Try the other category
+            other = "convert" if category == "judge" else "judge"
+            prompt = get_prompt(args.show, other)
+            if prompt:
+                category = other
+
+        if prompt is None:
+            logger.error(f"Prompt '{args.show}' not found")
+            return 1
+
+        print(f"\n{'='*60}")
+        print(f"Name: {prompt.name}")
+        print(f"Category: {prompt.category}")
+        print(f"Version: {prompt.version}")
+        print(f"Description: {prompt.description.strip()}")
+        print(f"Variables: {', '.join(prompt.variables)}")
+        print(f"{'='*60}")
+        print("\nTemplate:")
+        print("-" * 40)
+        print(prompt.template)
+        print("-" * 40)
+        return 0
+
+    # List prompts
+    prompts = registry.list(args.category)
+
+    if not prompts:
+        logger.info("No prompts found. Add custom prompts with --path")
+        return 0
+
+    print("\nAvailable Prompts:")
+    print("=" * 60)
+
+    # Group by category
+    by_category: dict[str, list] = {}
+    for p in prompts:
+        if p.category not in by_category:
+            by_category[p.category] = []
+        by_category[p.category].append(p)
+
+    for category, cat_prompts in sorted(by_category.items()):
+        print(f"\n[{category.upper()}]")
+        for p in sorted(cat_prompts, key=lambda x: x.name):
+            desc = p.description.split("\n")[0][:50] if p.description else ""
+            print(f"  {p.name:<25} {desc}")
+
+    print("\nUse --show NAME to view full prompt template")
+    return 0
 
 
 def cmd_report(args: argparse.Namespace) -> int:
@@ -397,6 +502,7 @@ def app(args: list[str] | None = None) -> int:
         "variants": cmd_variants,
         "analyze": cmd_analyze,
         "judge": cmd_judge,
+        "prompts": cmd_prompts,
         "report": cmd_report,
     }
 

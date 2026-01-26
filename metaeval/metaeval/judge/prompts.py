@@ -5,111 +5,7 @@ from __future__ import annotations
 from typing import Literal
 
 from metaeval.core.types import GradingRubric
-
-
-# Binary correct/incorrect prompt
-BINARY_PROMPT = """You are an expert evaluator for systems engineering questions. Evaluate whether the student's response is correct or incorrect.
-
-Question: {question}
-
-Expected Answer: {expected_answer}
-
-Student Response: {response}
-
-Evaluate the response and provide your judgment.
-
-Respond in JSON format:
-{{"judgment": "correct" or "incorrect", "justification": "<brief explanation>"}}"""
-
-
-# Rubric-based (full/partial/no credit) prompt
-RUBRIC_PROMPT = """You are an expert evaluator for systems engineering questions. Evaluate the student's response using the provided grading rubric.
-
-Question: {question}
-
-Expected Answer: {expected_answer}
-
-Grading Rubric:
-- Full Credit: {full_credit}
-- Partial Credit: {partial_credit}
-- No Credit: {no_credit}
-
-Student Response: {response}
-
-Evaluate the response according to the rubric.
-
-Respond in JSON format:
-{{"credit": "full", "partial", or "none", "score": <0-100>, "justification": "<explanation of grade>"}}"""
-
-
-# Multi-dimensional scoring prompt (Lin & Chen 2023 style)
-MULTI_DIMENSIONAL_PROMPT = """You are an expert evaluator for systems engineering education. Evaluate the student's response across five dimensions, scoring each from 0-20 points for a total of 100 points.
-
-Question: {question}
-
-Expected Answer: {expected_answer}
-
-Grading Rubric:
-{rubric}
-
-Student Response: {response}
-
-Evaluate the response across these five dimensions:
-
-1. **Technical Accuracy (0-20)**: Correctness of facts, principles, terminology, and technical details.
-2. **Conceptual Understanding (0-20)**: Depth of understanding of systems engineering concepts and their relationships.
-3. **Completeness (0-20)**: Coverage of all required elements and aspects of the question.
-4. **Clarity & Organization (0-20)**: Quality of communication, logical structure, and presentation.
-5. **Professional Relevance (0-20)**: Real-world applicability and professional context.
-
-Respond in JSON format:
-{{
-    "technical_accuracy": <0-20>,
-    "conceptual_understanding": <0-20>,
-    "completeness": <0-20>,
-    "clarity_organization": <0-20>,
-    "professional_relevance": <0-20>,
-    "total_score": <0-100>,
-    "justification": "<detailed explanation for each dimension>"
-}}"""
-
-
-# Chain-of-thought prompt
-CHAIN_OF_THOUGHT_PROMPT = """You are an expert evaluator for systems engineering questions. Evaluate the student's response using careful step-by-step reasoning.
-
-Question: {question}
-
-Expected Answer: {expected_answer}
-
-Grading Rubric:
-{rubric}
-
-Student Response: {response}
-
-Please evaluate this response step by step:
-
-1. First, identify the key concepts that should be addressed
-2. Compare the student's response to the expected answer
-3. Identify what is correct, partially correct, or missing
-4. Consider the depth of understanding demonstrated
-5. Assign scores for each dimension (0-20 each):
-   - Technical Accuracy
-   - Conceptual Understanding
-   - Completeness
-   - Clarity & Organization
-   - Professional Relevance
-
-Show your reasoning, then provide your final scores in JSON format:
-{{
-    "reasoning": "<step-by-step analysis>",
-    "technical_accuracy": <0-20>,
-    "conceptual_understanding": <0-20>,
-    "completeness": <0-20>,
-    "clarity_organization": <0-20>,
-    "professional_relevance": <0-20>,
-    "total_score": <0-100>,
-    "justification": "<summary justification>"
-}}"""
+from metaeval.prompts import get_prompt, list_prompts, get_registry
 
 
 def format_rubric(rubric: GradingRubric | dict | None) -> str:
@@ -137,12 +33,22 @@ def format_rubric(rubric: GradingRubric | dict | None) -> str:
     return "\n".join(lines) if lines else "No specific rubric provided."
 
 
+def get_available_judge_prompts() -> list[str]:
+    """
+    Get list of available judge prompt names.
+
+    Returns:
+        List of prompt names that can be used with build_judge_prompt
+    """
+    return list_prompts("judge")
+
+
 def build_judge_prompt(
     question: str,
     expected_answer: str,
     response: str,
     rubric: GradingRubric | dict | None = None,
-    prompt_style: Literal["binary", "rubric", "multi_dimensional", "chain_of_thought"] = "multi_dimensional",
+    prompt_style: str = "multi_dimensional",
 ) -> str:
     """
     Build a judge prompt from components.
@@ -152,61 +58,50 @@ def build_judge_prompt(
         expected_answer: The expected/model answer
         response: The student/model response to evaluate
         rubric: Optional grading rubric
-        prompt_style: Style of prompt to use
+        prompt_style: Style of prompt to use (from registry)
 
     Returns:
         Formatted prompt string
+
+    Raises:
+        ValueError: If prompt_style is not found in registry
     """
+    # Get prompt from registry
+    prompt_template = get_prompt(prompt_style, "judge")
+
+    if prompt_template is None:
+        available = get_available_judge_prompts()
+        raise ValueError(
+            f"Unknown prompt style: {prompt_style}. "
+            f"Available: {available}"
+        )
+
     rubric_text = format_rubric(rubric)
 
-    if prompt_style == "binary":
-        return BINARY_PROMPT.format(
-            question=question,
-            expected_answer=expected_answer,
-            response=response,
-        )
+    # Build kwargs based on template variables
+    kwargs = {
+        "question": question,
+        "expected_answer": expected_answer,
+        "response": response,
+        "rubric": rubric_text,
+    }
 
-    elif prompt_style == "rubric":
+    # Handle rubric-specific prompt that needs individual fields
+    if "full_credit" in prompt_template.variables:
         if isinstance(rubric, dict):
-            full = rubric.get("full_credit", "Demonstrates full understanding")
-            partial = rubric.get("partial_credit", "Demonstrates partial understanding")
-            no = rubric.get("no_credit", "Does not demonstrate understanding")
+            kwargs["full_credit"] = rubric.get("full_credit", "Demonstrates full understanding")
+            kwargs["partial_credit"] = rubric.get("partial_credit", "Demonstrates partial understanding")
+            kwargs["no_credit"] = rubric.get("no_credit", "Does not demonstrate understanding")
         elif rubric:
-            full = rubric.full_credit or "Demonstrates full understanding"
-            partial = rubric.partial_credit or "Demonstrates partial understanding"
-            no = rubric.no_credit or "Does not demonstrate understanding"
+            kwargs["full_credit"] = rubric.full_credit or "Demonstrates full understanding"
+            kwargs["partial_credit"] = rubric.partial_credit or "Demonstrates partial understanding"
+            kwargs["no_credit"] = rubric.no_credit or "Does not demonstrate understanding"
         else:
-            full = "Demonstrates full understanding"
-            partial = "Demonstrates partial understanding"
-            no = "Does not demonstrate understanding"
+            kwargs["full_credit"] = "Demonstrates full understanding"
+            kwargs["partial_credit"] = "Demonstrates partial understanding"
+            kwargs["no_credit"] = "Does not demonstrate understanding"
 
-        return RUBRIC_PROMPT.format(
-            question=question,
-            expected_answer=expected_answer,
-            response=response,
-            full_credit=full,
-            partial_credit=partial,
-            no_credit=no,
-        )
-
-    elif prompt_style == "multi_dimensional":
-        return MULTI_DIMENSIONAL_PROMPT.format(
-            question=question,
-            expected_answer=expected_answer,
-            response=response,
-            rubric=rubric_text,
-        )
-
-    elif prompt_style == "chain_of_thought":
-        return CHAIN_OF_THOUGHT_PROMPT.format(
-            question=question,
-            expected_answer=expected_answer,
-            response=response,
-            rubric=rubric_text,
-        )
-
-    else:
-        raise ValueError(f"Unknown prompt style: {prompt_style}")
+    return prompt_template.format(**kwargs)
 
 
 def build_system_prompt(
@@ -241,3 +136,41 @@ Evaluation Guidelines:
 - Be consistent in your scoring across similar responses
 
 Always provide clear justification for your scores."""
+
+
+# Legacy compatibility: Keep the old string constants for backwards compatibility
+# These are now loaded from YAML files via the registry
+
+def _get_legacy_prompt(name: str) -> str:
+    """Get a prompt template string for legacy compatibility."""
+    prompt = get_prompt(name, "judge")
+    return prompt.template if prompt else ""
+
+
+# Lazy-loaded legacy constants
+class _LegacyPrompts:
+    """Lazy loader for legacy prompt constants."""
+
+    _cache: dict[str, str] = {}
+
+    @classmethod
+    def get(cls, name: str) -> str:
+        if name not in cls._cache:
+            cls._cache[name] = _get_legacy_prompt(name)
+        return cls._cache[name]
+
+
+# For backwards compatibility, expose as module-level attributes
+def __getattr__(name: str) -> str:
+    """Module-level attribute access for legacy prompt constants."""
+    legacy_map = {
+        "BINARY_PROMPT": "binary",
+        "RUBRIC_PROMPT": "rubric",
+        "MULTI_DIMENSIONAL_PROMPT": "multi_dimensional",
+        "CHAIN_OF_THOUGHT_PROMPT": "chain_of_thought",
+    }
+
+    if name in legacy_map:
+        return _LegacyPrompts.get(legacy_map[name])
+
+    raise AttributeError(f"module {__name__!r} has no attribute {name!r}")

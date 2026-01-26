@@ -210,6 +210,7 @@ class OllamaJudge:
         temperature: float = 0.0,
         host: str = "localhost",
         port: int = 11434,
+        prompt_style: str = "multi_dimensional",
     ):
         """
         Initialize Ollama judge.
@@ -219,6 +220,7 @@ class OllamaJudge:
             temperature: Generation temperature
             host: Ollama host
             port: Ollama port
+            prompt_style: Name of judge prompt from registry
         """
         self.executor = LocalExecutor(
             model=model,
@@ -227,6 +229,7 @@ class OllamaJudge:
             temperature=temperature,
             max_tokens=2048,
         )
+        self.prompt_style = prompt_style
 
     def judge(
         self,
@@ -255,7 +258,7 @@ class OllamaJudge:
             expected_answer=expected_answer,
             response=response,
             rubric=rubric,
-            prompt_style="multi_dimensional",
+            prompt_style=self.prompt_style,
         )
 
         raw_judgment = self.executor.generate(prompt)
