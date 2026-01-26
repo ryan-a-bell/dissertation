@@ -21,6 +21,497 @@ Open OnDemand provides:
 
 ---
 
+## Critical Infrastructure: Environment & Network Considerations
+
+### The Problem
+
+Many HPC systems have **network-isolated compute nodes**:
+- **Login/head nodes**: Have internet access (can download models, packages)
+- **Compute nodes**: No internet (air-gapped for security)
+
+The current implementation does `ollama pull` inside the SLURM job, which **fails on isolated compute nodes**.
+
+### Solution: Dual-Mode Support
+
+We support two deployment modes that can coexist:
+
+| Mode | Internet on Compute? | Model Strategy | Best For |
+|------|---------------------|----------------|----------|
+| **Online** | Yes | Pull on-demand in job | Cloud HPC, academic clusters with NAT |
+| **Offline** | No | Pre-pull to shared cache | DoD, national labs, secure environments |
+
+---
+
+## Environment Setup Options
+
+### Option A: Container-Based (Recommended)
+
+The Apptainer/Singularity container (`lm_eval_ollama.sif`) bundles all dependencies:
+- Ollama runtime
+- lm_eval with API support
+- Python 3.11 + CUDA 12.8
+
+**Advantages:**
+- Fully portable across HPC systems
+- No module conflicts
+- Reproducible environment
+
+**Build once on login node:**
+```bash
+cd dodhpc/containers
+apptainer build lm_eval_ollama.sif lm_eval_ollama.def
+```
+
+### Option B: Virtual Environment (venv)
+
+For systems where containers are restricted or you need more flexibility:
+
+**Setup script (`scripts/setup_venv.sh`):**
+```bash
+#!/bin/bash
+# Run on login node (requires internet)
+
+set -euo pipefail
+
+VENV_DIR="${1:-$HOME/hpc_lm_eval/venv}"
+
+echo "[INFO] Creating virtual environment at $VENV_DIR"
+
+# Load required modules (adjust for your HPC)
+module load python/3.11
+module load cuda/12.4
+
+# Create venv
+python -m venv "$VENV_DIR"
+source "$VENV_DIR/bin/activate"
+
+# Install packages
+pip install --upgrade pip
+pip install "lm_eval[api]" ollama==0.3.3
+
+# Install Ollama binary to user space
+curl -fsSL https://ollama.com/install.sh | OLLAMA_INSTALL_DIR="$VENV_DIR/ollama" sh
+
+echo "[INFO] Setup complete. Activate with: source $VENV_DIR/bin/activate"
+echo "[INFO] Ollama binary at: $VENV_DIR/ollama/bin/ollama"
+```
+
+### Option C: Hybrid (Container + Shared venv)
+
+Use container for Ollama + CUDA, but mount a shared venv for lm_eval:
+```bash
+apptainer exec --nv \
+  --bind $HOME/hpc_lm_eval/venv:/opt/venv \
+  lm_eval_ollama.sif \
+  /opt/venv/bin/lm_eval --help
+```
+
+---
+
+## Model Caching for Network-Isolated Compute Nodes
+
+### Architecture: Shared Model Cache
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                         LOGIN NODE                               │
+│                      (has internet)                              │
+│  ┌─────────────────────────────────────────────────────────┐    │
+│  │  Model Pre-Pull Script                                   │    │
+│  │  $ ./prepull_models.sh gemma3:4b llama3.2:3b mistral:7b │    │
+│  └─────────────────────────────────────────────────────────┘    │
+│              │                                                   │
+│              ▼ Downloads to shared filesystem                    │
+│  ┌─────────────────────────────────────────────────────────┐    │
+│  │  Shared Filesystem (Lustre/GPFS/NFS)                     │    │
+│  │  $PROJECT/shared_models/                                 │    │
+│  │  └── ollama/                                             │    │
+│  │      ├── models/                                         │    │
+│  │      │   ├── manifests/registry.ollama.ai/...           │    │
+│  │      │   └── blobs/sha256-...                           │    │
+│  │      └── model_manifest.json  (tracks what's cached)    │    │
+│  └─────────────────────────────────────────────────────────┘    │
+│              │                                                   │
+│              │ OLLAMA_MODELS env var points here                 │
+│              ▼                                                   │
+│  ┌─────────────────────────────────────────────────────────┐    │
+│  │                    COMPUTE NODES                         │    │
+│  │                   (no internet)                          │    │
+│  │                                                          │    │
+│  │  SLURM Job reads from shared cache:                     │    │
+│  │  export OLLAMA_MODELS=$PROJECT/shared_models/ollama     │    │
+│  │  ollama serve &   # Finds models in cache               │    │
+│  │  ollama run gemma3:4b  # No download needed!            │    │
+│  └─────────────────────────────────────────────────────────┘    │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### Model Pre-Pull Script (`scripts/prepull_models.sh`)
+
+```bash
+#!/bin/bash
+# Run on LOGIN NODE before submitting jobs
+# Usage: ./prepull_models.sh model1 model2 model3 ...
+
+set -euo pipefail
+
+# Shared model cache location (adjust for your HPC)
+SHARED_MODELS="${SHARED_MODELS:-$PROJECT/shared_models/ollama}"
+
+echo "[INFO] Model cache: $SHARED_MODELS"
+mkdir -p "$SHARED_MODELS"
+
+# Point Ollama to shared cache
+export OLLAMA_MODELS="$SHARED_MODELS"
+
+# Start Ollama temporarily
+ollama serve &
+OLLAMA_PID=$!
+sleep 10
+
+# Pull each model
+for MODEL in "$@"; do
+    echo "[INFO] Pulling model: $MODEL"
+    if ollama pull "$MODEL"; then
+        echo "[OK] $MODEL cached successfully"
+    else
+        echo "[ERROR] Failed to pull $MODEL"
+    fi
+done
+
+# Record what's cached
+ollama list > "$SHARED_MODELS/model_manifest.txt"
+echo "[INFO] Cached models:"
+cat "$SHARED_MODELS/model_manifest.txt"
+
+kill $OLLAMA_PID 2>/dev/null || true
+echo "[INFO] Pre-pull complete"
+```
+
+### Model Cache Manager (`scripts/model_cache.py`)
+
+```python
+#!/usr/bin/env python3
+"""
+Model cache manager for HPC environments.
+Handles pre-pulling models on login nodes for offline compute nodes.
+"""
+import subprocess
+import json
+import os
+from pathlib import Path
+from dataclasses import dataclass
+from typing import List, Optional
+
+@dataclass
+class ModelInfo:
+    name: str
+    size: str
+    modified: str
+    digest: str
+
+class OllamaModelCache:
+    def __init__(self, cache_dir: Optional[Path] = None):
+        self.cache_dir = cache_dir or Path(os.environ.get(
+            "SHARED_MODELS",
+            Path.home() / "hpc_lm_eval" / "shared_models" / "ollama"
+        ))
+        self.cache_dir.mkdir(parents=True, exist_ok=True)
+        self.manifest_file = self.cache_dir / "model_manifest.json"
+
+    def _set_env(self):
+        """Set OLLAMA_MODELS to use shared cache."""
+        os.environ["OLLAMA_MODELS"] = str(self.cache_dir)
+
+    def _start_ollama(self) -> subprocess.Popen:
+        """Start Ollama server temporarily."""
+        self._set_env()
+        proc = subprocess.Popen(
+            ["ollama", "serve"],
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL
+        )
+        import time
+        time.sleep(10)  # Wait for server startup
+        return proc
+
+    def list_cached(self) -> List[ModelInfo]:
+        """List models in cache."""
+        self._set_env()
+        result = subprocess.run(
+            ["ollama", "list"],
+            capture_output=True, text=True
+        )
+        models = []
+        for line in result.stdout.strip().split("\n")[1:]:  # Skip header
+            if line.strip():
+                parts = line.split()
+                if len(parts) >= 4:
+                    models.append(ModelInfo(
+                        name=parts[0],
+                        digest=parts[1],
+                        size=parts[2],
+                        modified=parts[3]
+                    ))
+        return models
+
+    def pull_models(self, models: List[str], force: bool = False) -> dict:
+        """
+        Pull models to shared cache.
+        Run this on LOGIN NODE (with internet).
+        """
+        proc = self._start_ollama()
+        results = {"success": [], "failed": [], "skipped": []}
+
+        try:
+            cached = {m.name for m in self.list_cached()}
+
+            for model in models:
+                if model in cached and not force:
+                    print(f"[SKIP] {model} already cached")
+                    results["skipped"].append(model)
+                    continue
+
+                print(f"[PULL] {model}...")
+                pull_result = subprocess.run(
+                    ["ollama", "pull", model],
+                    capture_output=True, text=True
+                )
+                if pull_result.returncode == 0:
+                    print(f"[OK] {model}")
+                    results["success"].append(model)
+                else:
+                    print(f"[FAIL] {model}: {pull_result.stderr}")
+                    results["failed"].append(model)
+
+            # Update manifest
+            self._update_manifest()
+
+        finally:
+            proc.terminate()
+
+        return results
+
+    def _update_manifest(self):
+        """Update manifest file with cached models."""
+        models = self.list_cached()
+        manifest = {
+            "cache_dir": str(self.cache_dir),
+            "models": [
+                {"name": m.name, "size": m.size, "digest": m.digest}
+                for m in models
+            ]
+        }
+        self.manifest_file.write_text(json.dumps(manifest, indent=2))
+
+    def verify_model(self, model: str) -> bool:
+        """Check if model is available in cache."""
+        cached = {m.name for m in self.list_cached()}
+        # Handle tag variations (model:latest vs model)
+        model_base = model.split(":")[0]
+        return model in cached or f"{model_base}:latest" in cached
+
+    def get_env_export(self) -> str:
+        """Get export command for SBATCH scripts."""
+        return f'export OLLAMA_MODELS="{self.cache_dir}"'
+
+
+# CLI interface
+if __name__ == "__main__":
+    import argparse
+    parser = argparse.ArgumentParser(description="Manage Ollama model cache for HPC")
+    parser.add_argument("command", choices=["pull", "list", "verify", "env"])
+    parser.add_argument("models", nargs="*", help="Models to pull/verify")
+    parser.add_argument("--cache-dir", type=Path, help="Cache directory")
+    parser.add_argument("--force", action="store_true", help="Re-pull existing models")
+
+    args = parser.parse_args()
+    cache = OllamaModelCache(args.cache_dir)
+
+    if args.command == "pull":
+        if not args.models:
+            print("Error: specify models to pull")
+            exit(1)
+        results = cache.pull_models(args.models, force=args.force)
+        print(f"\nSummary: {len(results['success'])} pulled, "
+              f"{len(results['skipped'])} skipped, {len(results['failed'])} failed")
+
+    elif args.command == "list":
+        for m in cache.list_cached():
+            print(f"{m.name}\t{m.size}\t{m.digest}")
+
+    elif args.command == "verify":
+        for model in args.models:
+            status = "OK" if cache.verify_model(model) else "MISSING"
+            print(f"{model}: {status}")
+
+    elif args.command == "env":
+        print(cache.get_env_export())
+```
+
+### Updated SBATCH Template with Dual-Mode Support
+
+The SBATCH scripts need modification to:
+1. Use shared model cache via `OLLAMA_MODELS`
+2. Skip `ollama pull` if model already cached
+3. Fall back to pull if online and model missing
+
+**Updated `eval_lm_single_pair.sbatch`:**
+```bash
+#!/bin/bash
+#SBATCH --job-name=lm_eval_single
+#SBATCH --partition=gpu
+#SBATCH --gres=gpu:1
+#SBATCH --cpus-per-task=4
+#SBATCH --mem=16G
+#SBATCH --time=04:00:00
+#SBATCH --output=logs/%x-%j.out
+
+set -euo pipefail
+
+MODEL="$1"
+TASK="$2"
+TASKS_DIR="$3"
+OUTPUT_ROOT="$4"
+
+# === NEW: Shared model cache support ===
+# Set this to your shared filesystem location
+SHARED_MODELS="${SHARED_MODELS:-$PROJECT/shared_models/ollama}"
+
+if [[ -d "$SHARED_MODELS" ]]; then
+    export OLLAMA_MODELS="$SHARED_MODELS"
+    echo "[INFO] Using shared model cache: $OLLAMA_MODELS"
+    USE_CACHE=true
+else
+    echo "[INFO] No shared cache found, will attempt online pull"
+    USE_CACHE=false
+fi
+# === END NEW ===
+
+TASKS_DIR="$(readlink -f "$TASKS_DIR")"
+OUTPUT_ROOT="$(readlink -f "$OUTPUT_ROOT")"
+CONTAINER_IMAGE="$HOME/hpc_lm_eval/containers/lm_eval_ollama.sif"
+
+mkdir -p logs
+
+SCRATCH_DIR="${SLURM_TMPDIR:-/tmp/lm_${SLURM_JOB_ID}}"
+mkdir -p "$SCRATCH_DIR"
+cd "$SCRATCH_DIR"
+
+echo "[INFO] Running LM-Eval: MODEL=$MODEL TASK=$TASK"
+
+# Detect container runtime
+if command -v apptainer &>/dev/null; then
+  CNT=apptainer
+elif command -v singularity &>/dev/null; then
+  CNT=singularity
+else
+  echo "[ERROR] No container runtime found" >&2
+  exit 1
+fi
+
+export MODEL TASK TASKS_DIR OUTPUT_ROOT OLLAMA_MODELS USE_CACHE
+
+$CNT exec --nv \
+  ${OLLAMA_MODELS:+--bind "$OLLAMA_MODELS:$OLLAMA_MODELS"} \
+  "$CONTAINER_IMAGE" bash -lc '
+  set -e
+
+  echo "[INFO] Inside container. MODEL=${MODEL} TASK=${TASK}"
+  echo "[INFO] OLLAMA_MODELS=${OLLAMA_MODELS:-not set}"
+
+  mkdir -p tasks output
+  cp "${TASKS_DIR}/${TASK}.yaml" tasks/
+
+  # Start Ollama server (will use OLLAMA_MODELS if set)
+  echo "[INFO] Starting Ollama server..."
+  nohup ollama serve > ollama.log 2>&1 &
+  OLLAMA_PID=$!
+  sleep 15
+
+  # === NEW: Smart model loading ===
+  # Check if model is already available
+  if ollama list | grep -q "^${MODEL}"; then
+      echo "[INFO] Model ${MODEL} found in cache"
+  else
+      echo "[INFO] Model ${MODEL} not in cache, attempting pull..."
+      if ollama pull "${MODEL}"; then
+          echo "[INFO] Model pulled successfully"
+      else
+          echo "[ERROR] Failed to pull model. Is this node network-isolated?"
+          echo "[ERROR] Pre-pull models on login node: ./prepull_models.sh ${MODEL}"
+          exit 1
+      fi
+  fi
+  # === END NEW ===
+
+  echo "[INFO] Running lm_eval..."
+  lm_eval \
+    --model local-chat-completions \
+    --model_args "model=${MODEL},base_url=http://localhost:11434/v1/chat/completions,num_concurrent=1" \
+    --include_path ./tasks \
+    --tasks "${TASK}" \
+    --output "output/${TASK}" \
+    --log_samples \
+    --num_fewshot 0 \
+    --batch_size auto \
+    --gen_kwargs temperature=0.0 \
+    --apply_chat_template
+
+  echo "[INFO] lm_eval completed."
+  kill $OLLAMA_PID 2>/dev/null || true
+'
+
+DEST_DIR="${OUTPUT_ROOT}/${MODEL//\//_}/${TASK}"
+mkdir -p "$DEST_DIR"
+
+if [ -d "${SCRATCH_DIR}/output/${TASK}" ]; then
+  cp -r "${SCRATCH_DIR}/output/${TASK}/." "$DEST_DIR/"
+  echo "[INFO] Copied results to: $DEST_DIR"
+else
+  echo "[WARN] No output found"
+fi
+
+echo "[INFO] Done: MODEL=$MODEL TASK=$TASK"
+```
+
+---
+
+## Workflow Summary: Setting Up for Network-Isolated HPC
+
+### One-Time Setup (Login Node)
+
+```bash
+# 1. Build container (or set up venv)
+cd dodhpc/containers
+apptainer build lm_eval_ollama.sif lm_eval_ollama.def
+
+# 2. Create shared model cache directory
+export SHARED_MODELS=$PROJECT/shared_models/ollama
+mkdir -p $SHARED_MODELS
+
+# 3. Pre-pull all models you'll need
+./scripts/prepull_models.sh \
+    gemma3:1b gemma3:4b gemma3:12b \
+    llama3.2:3b llama3.3:70b-instruct-q4_K_M \
+    mistral:7b phi4:14b
+
+# 4. Verify cache
+python scripts/model_cache.py list
+```
+
+### Job Submission
+
+```bash
+# Set cache location (add to .bashrc or job scripts)
+export SHARED_MODELS=$PROJECT/shared_models/ollama
+
+# Submit jobs - they'll use cached models
+sbatch jobs/eval_lm_single_pair.sbatch gemma3:4b sysengbench tasks output
+```
+
+---
+
 ## Pattern 1: Interactive Jupyter Control Plane
 
 **Concept**: Use OOD's Jupyter Lab app as an interactive control plane for job submission, monitoring, and result analysis.
@@ -84,9 +575,10 @@ class JobConfig:
     time_limit: str = "04:00:00"
 
 class HPCInferenceSubmitter:
-    def __init__(self, base_dir: Path, container_image: Path):
+    def __init__(self, base_dir: Path, container_image: Path, shared_models: Path = None):
         self.base_dir = Path(base_dir)
         self.container = Path(container_image)
+        self.shared_models = Path(shared_models) if shared_models else None
         self.tasks_dir = self.base_dir / "tasks"
         self.output_dir = self.base_dir / "output"
         self.logs_dir = self.base_dir / "logs"
@@ -101,12 +593,18 @@ class HPCInferenceSubmitter:
             f"--cpus-per-task={config.cpus}",
             f"--mem={config.memory}",
             f"--time={config.time_limit}",
+        ]
+        # Pass shared model cache location via environment
+        if self.shared_models:
+            cmd.append(f"--export=ALL,SHARED_MODELS={self.shared_models}")
+
+        cmd.extend([
             str(self.sbatch_template),
             config.model,
             config.task,
             str(self.tasks_dir),
             str(self.output_dir)
-        ]
+        ])
         result = subprocess.run(cmd, capture_output=True, text=True)
         # Parse job ID from "Submitted batch job 12345"
         job_id = result.stdout.strip().split()[-1]
@@ -144,13 +642,51 @@ class HPCInferenceSubmitter:
 #### 1.2 Control Notebook Template (`notebooks/01_submit_inference_jobs.ipynb`)
 
 ```python
+# Cell 0: Environment Setup (run once)
+# This cell handles model pre-pulling for network-isolated compute nodes
+
+import subprocess
+import os
+from pathlib import Path
+
+# Configuration - adjust for your HPC
+USE_CONTAINER = True  # False to use venv instead
+SHARED_MODELS = Path(os.environ.get("PROJECT", Path.home())) / "shared_models" / "ollama"
+
+# Ensure model cache exists
+SHARED_MODELS.mkdir(parents=True, exist_ok=True)
+os.environ["SHARED_MODELS"] = str(SHARED_MODELS)
+os.environ["OLLAMA_MODELS"] = str(SHARED_MODELS)
+
+print(f"Model cache: {SHARED_MODELS}")
+print(f"Using container: {USE_CONTAINER}")
+
+# Cell 0b: Pre-pull models (run on LOGIN NODE with internet)
+# Skip this if models are already cached
+
+MODELS_TO_CACHE = [
+    "gemma3:1b", "gemma3:4b", "gemma3:12b",
+    "llama3.2:3b", "mistral:7b", "phi4:14b"
+]
+
+def prepull_models(models):
+    """Pre-pull models to shared cache. Run on login node only."""
+    from hpc_inference.model_cache import OllamaModelCache
+    cache = OllamaModelCache(SHARED_MODELS)
+    return cache.pull_models(models)
+
+# Uncomment to pre-pull (takes a while, do once):
+# prepull_results = prepull_models(MODELS_TO_CACHE)
+# print(prepull_results)
+
 # Cell 1: Configuration
 from hpc_inference.submit import HPCInferenceSubmitter, JobConfig
 from pathlib import Path
 
 submitter = HPCInferenceSubmitter(
     base_dir=Path.home() / "hpc_lm_eval",
-    container_image=Path.home() / "hpc_lm_eval/containers/lm_eval_ollama.sif"
+    container_image=Path.home() / "hpc_lm_eval/containers/lm_eval_ollama.sif",
+    shared_models=SHARED_MODELS  # Pass cache location to job scripts
 )
 
 # Define evaluation matrix
@@ -841,6 +1377,18 @@ rule aggregate:
 | **Scalability** | Good | Good | Excellent |
 | **Result Aggregation** | Custom pandas | Manual | Built-in |
 | **Best For** | Researchers | Lab-wide use | Production pipelines |
+
+### Environment Support Matrix
+
+| Environment Option | Pattern 1 | Pattern 2 | Pattern 3 |
+|-------------------|-----------|-----------|-----------|
+| **Container (Apptainer)** | Yes | Yes | Yes |
+| **Virtual Environment** | Yes | Yes | Yes |
+| **Hybrid (both)** | Yes | Yes | Yes |
+| **Online compute nodes** | Yes | Yes | Yes |
+| **Offline compute nodes** | Yes* | Yes* | Yes* |
+
+*Requires pre-pulling models to shared cache on login node
 
 ---
 
