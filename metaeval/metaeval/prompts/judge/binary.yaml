@@ -1,0 +1,33 @@
+name: binary
+category: judge
+version: "1.0"
+author: metaeval
+description: |
+  Simple binary correct/incorrect judgment.
+  Fast evaluation for quick filtering or baseline comparisons.
+
+variables:
+  - question
+  - expected_answer
+  - response
+
+metadata:
+  output_format: json
+  recommended_for:
+    - quick_evaluation
+    - baseline_comparison
+    - high_volume_judging
+
+template: |
+  You are an expert evaluator for systems engineering questions. Evaluate whether the student's response is correct or incorrect.
+
+  Question: {question}
+
+  Expected Answer: {expected_answer}
+
+  Student Response: {response}
+
+  Evaluate the response and provide your judgment.
+
+  Respond in JSON format:
+  {{"judgment": "correct" or "incorrect", "justification": "<brief explanation>"}}
