@@ -25,6 +25,7 @@ The original **SysEngBench** benchmark dataset is publicly available on [Hugging
 dissertation/
 ├── docs/                       # Project documentation (built with MkDocs)
 ├── manuscript/                 # Dissertation manuscript (Overleaf snapshots)
+├── metaeval/                   # [IN DEVELOPMENT] CLI tool for running the meta-evaluation
 ├── research/                   # Research artifacts and exploratory notebooks
 ├── src/                        # Source code organized by evaluation phases
 │   ├── phase1_prep/            # Initial dataset tagging and preprocessing
@@ -54,6 +55,11 @@ This repository leverages Python's built-in **venv** for dependency management.
 python -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
+```
+
+#### (If using CLI tool) Installing metaeval
+```bash
+pip install -e metaeval
 ```
 
 ### API Keys
