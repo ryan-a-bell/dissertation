@@ -1,0 +1,56 @@
+name: standard
+category: convert
+version: "1.0"
+author: metaeval
+description: |
+  Standard MCQ-to-OSQ conversion prompt.
+  Generates open-ended question, expected answer, rubric, and Bloom's classification.
+
+variables:
+  - question
+  - choice_a
+  - choice_b
+  - choice_c
+  - choice_d
+  - answer
+  - justification
+
+metadata:
+  output_format: json
+  phase: conversion
+  generates:
+    - osq_prompt
+    - expected_answer
+    - rubric
+    - blooms_level
+
+template: |
+  You are an expert in educational assessment for systems engineering. Convert the following multiple-choice question (MCQ) into an open-style question (OSQ) that tests the same knowledge but requires a written response.
+
+  Original MCQ:
+  Question: {question}
+  A) {choice_a}
+  B) {choice_b}
+  C) {choice_c}
+  D) {choice_d}
+  Correct Answer: {answer}
+  Justification: {justification}
+
+  Create:
+  1. An open-ended question that tests the same concept
+  2. A model answer (expected response)
+  3. A grading rubric with criteria for full credit, partial credit, and no credit
+  4. Bloom's taxonomy classification (Remember, Understand, Apply, Analyze, Evaluate, Create)
+
+  Respond in JSON format:
+  {{
+      "osq_prompt": "<open-ended question>",
+      "expected_answer": "<model answer>",
+      "rubric": {{
+          "full_credit": "<criteria for full credit>",
+          "partial_credit": "<criteria for partial credit>",
+          "no_credit": "<criteria for no credit>"
+      }},
+      "blooms_level": "<Bloom's level>",
+      "blooms_justification": "<brief justification for Bloom's classification>"
+  }}

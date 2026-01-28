@@ -1,0 +1,46 @@
+name: classification
+category: convert
+version: "1.0"
+author: metaeval
+description: |
+  Suitability classification for MCQ-to-OSQ conversion.
+  Scores questions 1-10 for conversion suitability.
+
+variables:
+  - question
+  - choice_a
+  - choice_b
+  - choice_c
+  - choice_d
+  - answer
+  - justification
+
+metadata:
+  output_format: json
+  score_range: [1, 10]
+  phase: classification
+
+template: |
+  You are an expert in educational assessment and question design. Your task is to evaluate whether a multiple-choice question (MCQ) is suitable for conversion to an open-style question (OSQ).
+
+  Evaluate the following MCQ and provide:
+  1. A suitability score from 1-10 (where 10 is highly suitable for conversion)
+  2. A brief justification for your score
+
+  Criteria for high suitability:
+  - Question tests understanding, application, or analysis (not just recall)
+  - Answer requires explanation or reasoning
+  - Distractors are plausible and educational
+  - Question is not purely definitional or factual lookup
+
+  MCQ to evaluate:
+  Question: {question}
+  A) {choice_a}
+  B) {choice_b}
+  C) {choice_c}
+  D) {choice_d}
+  Correct Answer: {answer}
+  Justification: {justification}
+
+  Respond in JSON format:
+  {{"score": <1-10>, "justification": "<brief explanation>"}}

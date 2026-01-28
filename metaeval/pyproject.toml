@@ -1,0 +1,96 @@
+[project]
+name = "metaeval"
+version = "0.1.0"
+description = "Meta-evaluation toolkit for LLM evaluation methods"
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+authors = [
+    {name = "Ryan Bell"}
+]
+keywords = ["llm", "evaluation", "meta-evaluation", "systems-engineering", "benchmark"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+
+dependencies = [
+    "pandas>=2.0.0",
+    "numpy>=1.24.0",
+    "scipy>=1.10.0",
+    "scikit-learn>=1.3.0",
+    "matplotlib>=3.7.0",
+    "seaborn>=0.12.0",
+    "pydantic>=2.0.0",
+    "datasets>=2.14.0",
+    "openai>=1.0.0",
+    "python-dotenv>=1.0.0",
+    "pyyaml>=6.0.0",
+    "tqdm>=4.65.0",
+    "typing-extensions>=4.5.0",
+]
+
+[project.optional-dependencies]
+cloud = [
+    "runpod>=1.0.0",
+    "paramiko>=3.0.0",
+]
+hpc = [
+    "dask>=2023.1.0",
+]
+local = [
+    "lm_eval>=0.4.0",
+]
+dev = [
+    "pytest>=7.0.0",
+    "pytest-cov>=4.0.0",
+    "pytest-asyncio>=0.21.0",
+    "mypy>=1.0.0",
+    "ruff>=0.1.0",
+    "black>=23.0.0",
+    "pre-commit>=3.0.0",
+]
+docs = [
+    "mkdocs>=1.5.0",
+    "mkdocs-material>=9.0.0",
+    "mkdocstrings[python]>=0.24.0",
+]
+all = [
+    "metaeval[cloud,hpc,local,dev,docs]",
+]
+
+[project.scripts]
+metaeval = "metaeval.cli.main:main"
+
+[project.urls]
+Homepage = "https://github.com/ryan-a-bell/dissertation"
+Documentation = "https://ryan-a-bell.github.io/dissertation/"
+Repository = "https://github.com/ryan-a-bell/dissertation"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["metaeval"]
+
+[tool.ruff]
+target-version = "py310"
+line-length = 100
+select = ["E", "F", "I", "N", "W", "UP"]
+
+[tool.mypy]
+python_version = "3.10"
+strict = true
+warn_return_any = true
+warn_unused_configs = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+addopts = "-v --cov=metaeval --cov-report=term-missing"

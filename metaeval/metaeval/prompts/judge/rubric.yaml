@@ -1,0 +1,41 @@
+name: rubric
+category: judge
+version: "1.0"
+author: metaeval
+description: |
+  Rubric-based evaluation with full/partial/no credit levels.
+  Good balance of detail and simplicity.
+
+variables:
+  - question
+  - expected_answer
+  - full_credit
+  - partial_credit
+  - no_credit
+  - response
+
+metadata:
+  output_format: json
+  credit_levels: 3
+  recommended_for:
+    - graded_assignments
+    - standardized_evaluation
+
+template: |
+  You are an expert evaluator for systems engineering questions. Evaluate the student's response using the provided grading rubric.
+
+  Question: {question}
+
+  Expected Answer: {expected_answer}
+
+  Grading Rubric:
+  - Full Credit: {full_credit}
+  - Partial Credit: {partial_credit}
+  - No Credit: {no_credit}
+
+  Student Response: {response}
+
+  Evaluate the response according to the rubric.
+
+  Respond in JSON format:
+  {{"credit": "full", "partial", or "none", "score": <0-100>, "justification": "<explanation of grade>"}}
