@@ -19,6 +19,7 @@ class AnthropicJudge(JudgeBase):
         model: str = "claude-3-5-sonnet-20241022",
         settings: JudgeSettings | None = None,
         api_key: str | None = None,
+        **kwargs: Any,
     ):
         """
         Initialize Anthropic judge.
@@ -27,6 +28,7 @@ class AnthropicJudge(JudgeBase):
             model: Anthropic model name (e.g., "claude-3-5-sonnet-20241022")
             settings: Judge settings
             api_key: Anthropic API key (default from config/env)
+            **kwargs: Additional arguments passed to JudgeBase (e.g., enable_cache)
         """
         config = get_config()
         self.api_key = api_key or config.api.anthropic_api_key
@@ -37,7 +39,7 @@ class AnthropicJudge(JudgeBase):
                 "or pass api_key parameter."
             )
 
-        super().__init__(model, settings)
+        super().__init__(model, settings, **kwargs)
 
     def _setup(self, **kwargs: Any) -> None:
         """Initialize Anthropic client."""
