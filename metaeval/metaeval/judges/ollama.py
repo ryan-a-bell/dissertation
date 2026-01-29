@@ -24,6 +24,7 @@ class OllamaJudge(JudgeBase):
         host: str | None = None,
         port: int | None = None,
         auto_pull: bool | None = None,
+        **kwargs: Any,
     ):
         """
         Initialize Ollama judge.
@@ -34,6 +35,7 @@ class OllamaJudge(JudgeBase):
             host: Ollama host (default from config)
             port: Ollama port (default from config)
             auto_pull: Whether to auto-pull missing models
+            **kwargs: Additional arguments passed to JudgeBase (e.g., enable_cache)
         """
         config = get_config()
         self.host = host or config.ollama.host
@@ -41,7 +43,7 @@ class OllamaJudge(JudgeBase):
         self.auto_pull = auto_pull if auto_pull is not None else config.ollama.auto_pull
         self._base_url = f"http://{self.host}:{self.port}"
 
-        super().__init__(model, settings)
+        super().__init__(model, settings, **kwargs)
 
     def _setup(self, **kwargs: Any) -> None:
         """Verify Ollama is running and model is available."""

@@ -1,0 +1,80 @@
+name: comparative
+category: judge
+version: "1.0"
+author: metaeval
+description: |
+  Head-to-head comparison of two responses.
+  Determines which response is better and by how much.
+  Best for A/B testing and model comparison studies.
+
+variables:
+  - question
+  - expected_answer
+  - response_a
+  - response_b
+  - rubric
+
+metadata:
+  output_format: json
+  comparison_type: pairwise
+  recommended_for:
+    - model_comparison
+    - a_b_testing
+    - response_ranking
+
+template: |
+  You are an expert evaluator comparing two responses to a systems engineering question. Your task is to determine which response is better and explain why.
+
+  Question: {question}
+
+  Reference Answer: {expected_answer}
+
+  Evaluation Criteria:
+  {rubric}
+
+  Response A:
+  {response_a}
+
+  Response B:
+  {response_b}
+
+  Compare the two responses across these dimensions:
+  1. **Technical Accuracy**: Correctness of facts, principles, and terminology
+  2. **Conceptual Understanding**: Depth of understanding demonstrated
+  3. **Completeness**: Coverage of required elements
+  4. **Clarity**: Quality of explanation and organization
+  5. **Professional Relevance**: Real-world applicability
+
+  For each response, identify:
+  - Key strengths
+  - Notable weaknesses
+  - Critical errors or omissions
+
+  Then determine the winner and the margin of victory.
+
+  Respond in JSON format:
+  {{
+      "response_a_scores": {{
+          "technical_accuracy": <0-20>,
+          "conceptual_understanding": <0-20>,
+          "completeness": <0-20>,
+          "clarity": <0-20>,
+          "professional_relevance": <0-20>,
+          "total": <0-100>
+      }},
+      "response_b_scores": {{
+          "technical_accuracy": <0-20>,
+          "conceptual_understanding": <0-20>,
+          "completeness": <0-20>,
+          "clarity": <0-20>,
+          "professional_relevance": <0-20>,
+          "total": <0-100>
+      }},
+      "response_a_strengths": ["<strength 1>", "<strength 2>"],
+      "response_a_weaknesses": ["<weakness 1>", "<weakness 2>"],
+      "response_b_strengths": ["<strength 1>", "<strength 2>"],
+      "response_b_weaknesses": ["<weakness 1>", "<weakness 2>"],
+      "winner": "<A|B|tie>",
+      "margin": "<decisive|moderate|slight|negligible>",
+      "justification": "<detailed explanation of why one response is better>"
+  }}

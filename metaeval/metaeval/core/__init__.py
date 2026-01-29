@@ -12,11 +12,20 @@ from metaeval.core.types import (
     TestResult,
     EffectSize,
 )
+from metaeval.core.cache import JudgeCache, get_cache, CacheEntry
+from metaeval.core.progress import (
+    BatchProgress,
+    CheckpointManager,
+    ProgressTracker,
+)
 
 __all__ = [
+    # Config
     "Config",
+    # Logging
     "get_logger",
     "setup_logging",
+    # Types
     "MCQQuestion",
     "OSQQuestion",
     "GradingRubric",
@@ -25,4 +34,12 @@ __all__ = [
     "ComparisonResult",
     "TestResult",
     "EffectSize",
+    # Cache
+    "JudgeCache",
+    "get_cache",
+    "CacheEntry",
+    # Progress
+    "BatchProgress",
+    "CheckpointManager",
+    "ProgressTracker",
 ]

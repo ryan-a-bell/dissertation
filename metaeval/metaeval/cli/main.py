@@ -179,6 +179,16 @@ def create_parser() -> argparse.ArgumentParser:
         default=2048,
         help="Maximum tokens to generate (default: 2048)",
     )
+    judge_parser.add_argument(
+        "--no-resume",
+        action="store_true",
+        help="Start fresh, ignoring any existing output file",
+    )
+    judge_parser.add_argument(
+        "--no-cache",
+        action="store_true",
+        help="Disable response caching",
+    )
 
     # Prompts command
     prompts_parser = subparsers.add_parser(
@@ -387,12 +397,22 @@ def cmd_judge(args: argparse.Namespace) -> int:
     # Get model (use default if not specified)
     model = args.model or get_default_model(args.provider)
 
+    # Determine output path
+    output_path = args.output or args.input.with_suffix(".judged.jsonl")
+
+    # Check for resume
+    resume = not args.no_resume
+    enable_cache = not args.no_cache
+
     logger.info(
         f"Running LLM-as-a-Judge on {args.input}\n"
         f"  Provider: {args.provider}\n"
         f"  Model: {model}\n"
         f"  Prompt: {args.prompt}\n"
-        f"  Temperature: {args.temperature}"
+        f"  Temperature: {args.temperature}\n"
+        f"  Output: {output_path}\n"
+        f"  Resume: {resume}\n"
+        f"  Cache: {enable_cache}"
     )
 
     try:
@@ -410,15 +430,28 @@ def cmd_judge(args: argparse.Namespace) -> int:
             prompt_style=args.prompt,
         )
 
-        judge = create_judge(args.provider, model, settings=settings)
+        judge = create_judge(
+            args.provider,
+            model,
+            settings=settings,
+            enable_cache=enable_cache,
+        )
 
-        results = judge.batch_judge(items)
+        # Run batch with checkpointing
+        results = judge.batch_judge(
+            items,
+            output_path=output_path,
+            resume=resume,
+        )
 
-        # Save results
-        output_path = args.output or args.input.with_suffix(".judged.jsonl")
-        with open(output_path, "w") as f:
-            for r in results:
-                f.write(json.dumps(r) + "\n")
+        # Log cache stats
+        cache_stats = judge.get_cache_stats()
+        if cache_stats["hits"] > 0 or cache_stats["misses"] > 0:
+            logger.info(
+                f"Cache stats: {cache_stats['hits']} hits, "
+                f"{cache_stats['misses']} misses "
+                f"({cache_stats['hit_rate']:.1%} hit rate)"
+            )
 
         logger.info(f"Judged {len(results)} items. Results saved to {output_path}")
         return 0
