@@ -110,7 +110,9 @@ class JudgeBase(ABC):
         from metaeval.judge.scorer import parse_judgment
 
         # Check cache first
+        cache_checked = False
         if use_cache and self._cache.enabled:
+            cache_checked = True
             cached = self._cache.get(
                 model=self.model,
                 question=question,
@@ -122,7 +124,9 @@ class JudgeBase(ABC):
                 cached["from_cache"] = True
                 return cached
 
-        self._cache_misses += 1
+        # Only count as miss if cache was checked but entry not found
+        if cache_checked:
+            self._cache_misses += 1
 
         prompt = build_judge_prompt(
             question=question,
@@ -189,8 +193,9 @@ class JudgeBase(ABC):
         skipped_count = 0
 
         for item in items:
-            question_id = str(item.get("question_id", ""))
-            if question_id in completed_ids:
+            question_id = item.get("question_id")
+            # Only skip if question_id exists and is in completed set
+            if question_id is not None and str(question_id) in completed_ids:
                 skipped_count += 1
             else:
                 items_to_process.append(item)
