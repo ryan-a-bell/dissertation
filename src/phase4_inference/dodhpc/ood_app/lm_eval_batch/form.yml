@@ -1,0 +1,117 @@
+---
+title: "LM Evaluation Inference"
+cluster: "your_cluster"
+description: |
+  Run LLM evaluations on SysEngBench. First-time users: select "Setup Environment" mode.
+
+attributes:
+  # ===== Job Mode Selection =====
+  job_mode:
+    widget: "select"
+    label: "Job Mode"
+    value: "evaluate"
+    options:
+      - ["Run Evaluation", "evaluate"]
+      - ["Setup Environment (first time)", "setup"]
+      - ["Add Models to Cache", "add_models"]
+    help: |
+      - **Run Evaluation**: Submit inference jobs (requires setup complete)
+      - **Setup Environment**: Build container and pull initial models
+      - **Add Models**: Pre-pull additional models to cache
+
+  # ===== Setup Mode Options =====
+  cuda_version:
+    widget: "select"
+    label: "CUDA Version (for container build)"
+    value: "12.4"
+    options:
+      - ["CUDA 12.4 (recommended)", "12.4"]
+      - ["CUDA 12.6", "12.6"]
+      - ["CUDA 12.1", "12.1"]
+      - ["CUDA 11.8 (legacy)", "11.8"]
+    help: "Run 'nvidia-smi' on login node to check your CUDA version"
+
+  initial_models:
+    widget: "check_box"
+    label: "Models to pre-pull during setup"
+    options:
+      - ["Gemma3 1B (0.8GB)", "gemma3:1b"]
+      - ["Gemma3 4B (2.7GB)", "gemma3:4b"]
+      - ["Llama 3.2 3B (2.0GB)", "llama3.2:3b"]
+      - ["Mistral 7B (4.1GB)", "mistral:7b"]
+      - ["Phi4 14B (8.5GB)", "phi4:14b"]
+    help: "Select models to cache. Larger models need more GPU memory."
+
+  # ===== Add Models Mode Options =====
+  additional_models:
+    widget: "check_box"
+    label: "Additional models to pull"
+    options:
+      - ["Gemma3 12B (7.3GB)", "gemma3:12b"]
+      - ["Gemma3 27B (15GB)", "gemma3:27b"]
+      - ["Llama 3.3 70B Q4 (40GB)", "llama3.3:70b-instruct-q4_K_M"]
+      - ["Mixtral 8x7B (26GB)", "mixtral:8x7b"]
+      - ["DeepSeek Coder 33B (19GB)", "deepseek-coder:33b"]
+
+  # ===== Evaluation Mode Options =====
+  models:
+    widget: "check_box"
+    label: "Models to evaluate"
+    options:
+      - ["gemma3:1b", "gemma3:1b"]
+      - ["gemma3:4b", "gemma3:4b"]
+      - ["llama3.2:3b", "llama3.2:3b"]
+      - ["mistral:7b", "mistral:7b"]
+      - ["phi4:14b", "phi4:14b"]
+
+  tasks:
+    widget: "check_box"
+    label: "Benchmark tasks"
+    value: ["sysengbench", "sysengbench-osq"]
+    options:
+      - ["SysEngBench MCQ", "sysengbench"]
+      - ["SysEngBench OSQ (open-ended)", "sysengbench-osq"]
+      - ["Position Bias A", "sysengbench-a"]
+      - ["Position Bias B", "sysengbench-b"]
+      - ["Position Bias C", "sysengbench-c"]
+      - ["Position Bias D", "sysengbench-d"]
+
+  bc_queue:
+    widget: "select"
+    label: "Partition"
+    options:
+      - ["GPU Shared", "gpu-shared"]
+      - ["GPU Full Node", "gpu"]
+      - ["GPU Debug (testing)", "gpu-debug"]
+
+  bc_num_slots:
+    widget: "number_field"
+    label: "GPUs per job"
+    value: 1
+    min: 1
+    max: 4
+
+  bc_num_hours:
+    widget: "number_field"
+    label: "Wall time (hours)"
+    value: 4
+    min: 1
+    max: 24
+
+  notify_email:
+    widget: "email_field"
+    label: "Email on completion (optional)"
+    required: false
+
+# Form layout
+form:
+  - job_mode
+  - cuda_version
+  - initial_models
+  - additional_models
+  - models
+  - tasks
+  - bc_queue
+  - bc_num_slots
+  - bc_num_hours
+  - notify_email

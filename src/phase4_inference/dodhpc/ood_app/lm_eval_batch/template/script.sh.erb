@@ -1,0 +1,250 @@
+#!/bin/bash
+<% if job_mode == "setup" %>
+#SBATCH --job-name=lm_eval_setup
+#SBATCH --partition=<%= bc_queue %>
+#SBATCH --gres=gpu:1
+#SBATCH --cpus-per-task=4
+#SBATCH --mem=32G
+#SBATCH --time=02:00:00
+<% elsif job_mode == "add_models" %>
+#SBATCH --job-name=lm_eval_addmodels
+#SBATCH --partition=<%= bc_queue %>
+#SBATCH --gres=gpu:1
+#SBATCH --cpus-per-task=4
+#SBATCH --mem=32G
+#SBATCH --time=02:00:00
+<% else %>
+#SBATCH --job-name=lm_eval_batch
+#SBATCH --partition=<%= bc_queue %>
+#SBATCH --gres=gpu:<%= bc_num_slots %>
+#SBATCH --cpus-per-task=4
+#SBATCH --mem=<%= bc_num_slots.to_i * 16 %>G
+#SBATCH --time=<%= bc_num_hours %>:00:00
+#SBATCH --array=1-<%= job_count %>
+<% end %>
+#SBATCH --output=<%= output_dir %>/logs/%x-%j.out
+<% if notify_email.present? %>
+#SBATCH --mail-type=END,FAIL
+#SBATCH --mail-user=<%= notify_email %>
+<% end %>
+
+set -euo pipefail
+
+# Common paths
+BASE_DIR="$HOME/hpc_lm_eval"
+CONTAINER_DIR="$BASE_DIR/containers"
+SHARED_MODELS="${SHARED_MODELS:-${PROJECT:-$HOME}/shared_models/ollama}"
+HF_CACHE="${HF_CACHE:-${PROJECT:-$HOME}/shared_models/huggingface}"
+TASKS_DIR="$BASE_DIR/tasks"
+OUTPUT_DIR="$BASE_DIR/output"
+
+export OLLAMA_MODELS="$SHARED_MODELS"
+export HF_HOME="$HF_CACHE"
+export HF_DATASETS_CACHE="$HF_CACHE/datasets"
+export TRANSFORMERS_CACHE="$HF_CACHE/transformers"
+
+<% if job_mode == "setup" %>
+#==============================================================================
+# SETUP MODE: Build container and pre-pull initial models
+#==============================================================================
+echo "=========================================="
+echo "LM-Eval Environment Setup"
+echo "=========================================="
+
+# Create directory structure
+mkdir -p "$CONTAINER_DIR" "$SHARED_MODELS" "$HF_CACHE" "$TASKS_DIR" "$OUTPUT_DIR" logs
+
+# Step 1: Build container
+echo "[1/4] Building container for CUDA <%= cuda_version %>..."
+cd "$CONTAINER_DIR"
+
+# Download build script if needed
+if [[ ! -f build_container.sh ]]; then
+    echo "[INFO] Downloading build scripts..."
+    cp /shared/apps/lm_eval/containers/* . 2>/dev/null || \
+    curl -sL https://raw.githubusercontent.com/your-repo/dodhpc/containers/build_container.sh -o build_container.sh
+    chmod +x build_container.sh
+fi
+
+./build_container.sh <%= cuda_version %>
+CONTAINER_IMAGE="$CONTAINER_DIR/lm_eval_ollama_cuda<%= cuda_version %>.sif"
+
+# Step 2: Pre-pull Ollama models
+echo "[2/4] Pre-pulling models to shared cache..."
+echo "[INFO] Cache location: $SHARED_MODELS"
+
+MODELS_TO_PULL="<%= initial_models.join(' ') %>"
+
+if command -v apptainer &>/dev/null; then CNT=apptainer; else CNT=singularity; fi
+
+$CNT exec --nv \
+    --bind "$SHARED_MODELS:$SHARED_MODELS" \
+    "$CONTAINER_IMAGE" bash -c "
+    export OLLAMA_MODELS='$SHARED_MODELS'
+
+    ollama serve &
+    sleep 15
+
+    for MODEL in $MODELS_TO_PULL; do
+        echo \"[PULL] \$MODEL\"
+        ollama pull \"\$MODEL\" || echo \"[WARN] Failed to pull \$MODEL\"
+    done
+
+    echo ''
+    echo 'Cached models:'
+    ollama list
+
+    pkill ollama || true
+"
+
+# Step 3: Pre-download HuggingFace datasets
+echo "[3/4] Pre-downloading HuggingFace datasets..."
+$CNT exec \
+    --bind "$HF_CACHE:$HF_CACHE" \
+    "$CONTAINER_IMAGE" bash -c "
+    export HF_HOME='$HF_CACHE'
+    export HF_DATASETS_CACHE='$HF_CACHE/datasets'
+
+    python3 << 'PYEOF'
+from datasets import load_dataset
+import os
+
+datasets_to_cache = [
+    'rabell/SysEngBench',
+    'rabell/SysEngBench-OSQ',
+]
+
+for ds_name in datasets_to_cache:
+    print(f'[CACHE] {ds_name}')
+    try:
+        ds = load_dataset(ds_name, trust_remote_code=True)
+        print(f'[OK] {ds_name} cached')
+    except Exception as e:
+        print(f'[WARN] Failed to cache {ds_name}: {e}')
+PYEOF
+"
+
+# Step 4: Copy task YAML files
+echo "[4/4] Setting up task configurations..."
+cp /shared/apps/lm_eval/tasks/*.yaml "$TASKS_DIR/" 2>/dev/null || \
+    echo "[INFO] Copy task YAMLs manually to $TASKS_DIR"
+
+echo ""
+echo "=========================================="
+echo "Setup Complete!"
+echo "=========================================="
+echo "Container: $CONTAINER_IMAGE"
+echo "Model Cache: $SHARED_MODELS"
+echo "HF Cache: $HF_CACHE"
+echo "Tasks Dir: $TASKS_DIR"
+echo ""
+echo "You can now run evaluations from the form."
+
+<% elsif job_mode == "add_models" %>
+#==============================================================================
+# ADD MODELS MODE: Pre-pull additional models to cache
+#==============================================================================
+echo "=========================================="
+echo "Adding Models to Cache"
+echo "=========================================="
+
+CONTAINER_IMAGE="$CONTAINER_DIR/lm_eval_ollama.sif"
+MODELS_TO_PULL="<%= additional_models.join(' ') %>"
+
+if [[ ! -f "$CONTAINER_IMAGE" ]]; then
+    echo "[ERROR] Container not found. Run Setup mode first."
+    exit 1
+fi
+
+if command -v apptainer &>/dev/null; then CNT=apptainer; else CNT=singularity; fi
+
+$CNT exec --nv \
+    --bind "$SHARED_MODELS:$SHARED_MODELS" \
+    "$CONTAINER_IMAGE" bash -c "
+    export OLLAMA_MODELS='$SHARED_MODELS'
+
+    ollama serve &
+    sleep 15
+
+    for MODEL in $MODELS_TO_PULL; do
+        echo \"[PULL] \$MODEL\"
+        ollama pull \"\$MODEL\" || echo \"[WARN] Failed to pull \$MODEL\"
+    done
+
+    echo ''
+    echo 'All cached models:'
+    ollama list
+
+    pkill ollama || true
+"
+
+echo "[INFO] Model cache updated."
+
+<% else %>
+#==============================================================================
+# EVALUATE MODE: Run inference jobs
+#==============================================================================
+
+# Read job config for this array task
+CONFIG_FILE="<%= output_dir %>/batch_config.txt"
+LINE=$(sed -n "${SLURM_ARRAY_TASK_ID}p" "$CONFIG_FILE")
+MODEL=$(echo "$LINE" | cut -d'|' -f1)
+TASK=$(echo "$LINE" | cut -d'|' -f2)
+
+echo "[INFO] Evaluation job: MODEL=$MODEL TASK=$TASK"
+
+CONTAINER_IMAGE="$CONTAINER_DIR/lm_eval_ollama.sif"
+SCRATCH_DIR="${SLURM_TMPDIR:-/tmp/lm_${SLURM_JOB_ID}}"
+mkdir -p "$SCRATCH_DIR"
+cd "$SCRATCH_DIR"
+
+if command -v apptainer &>/dev/null; then CNT=apptainer; else CNT=singularity; fi
+
+$CNT exec --nv \
+    --bind "$SHARED_MODELS:$SHARED_MODELS" \
+    --bind "$HF_CACHE:$HF_CACHE" \
+    --bind "$TASKS_DIR:$TASKS_DIR" \
+    "$CONTAINER_IMAGE" bash -c "
+    set -e
+    export OLLAMA_MODELS='$SHARED_MODELS'
+    export HF_HOME='$HF_CACHE'
+    export HF_DATASETS_CACHE='$HF_CACHE/datasets'
+    export HF_DATASETS_OFFLINE=1
+
+    mkdir -p tasks output
+    cp '$TASKS_DIR/$TASK.yaml' tasks/
+
+    # Start Ollama with cached models
+    ollama serve &
+    sleep 15
+
+    # Verify model is cached
+    if ! ollama list | grep -q '$MODEL'; then
+        echo '[ERROR] Model $MODEL not in cache!'
+        echo '[ERROR] Run Add Models mode first.'
+        exit 1
+    fi
+
+    # Run evaluation
+    lm_eval \\
+        --model local-chat-completions \\
+        --model_args 'model=$MODEL,base_url=http://localhost:11434/v1/chat/completions,num_concurrent=1' \\
+        --include_path ./tasks \\
+        --tasks '$TASK' \\
+        --output 'output/$TASK' \\
+        --log_samples \\
+        --num_fewshot 0 \\
+        --batch_size auto \\
+        --gen_kwargs temperature=0.0 \\
+        --apply_chat_template
+
+    pkill ollama || true
+"
+
+# Copy results
+DEST_DIR="$OUTPUT_DIR/${MODEL//\//_}/${TASK}"
+mkdir -p "$DEST_DIR"
+cp -r "$SCRATCH_DIR/output/$TASK/." "$DEST_DIR/" 2>/dev/null || true
+
+echo "[INFO] Results saved to: $DEST_DIR"
+<% end %>
