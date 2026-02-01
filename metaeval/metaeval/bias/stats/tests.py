@@ -174,8 +174,9 @@ def mcnemar_test(
     b, c = a_only, b_only
 
     if b + c < 25:
-        # Exact binomial test
-        p_value = stats.binom_test(min(b, c), b + c, 0.5) * 2  # Two-sided
+        # Exact binomial test (using binomtest, binom_test was deprecated in scipy 1.12)
+        result = stats.binomtest(min(b, c), b + c, 0.5, alternative='two-sided')
+        p_value = result.pvalue
         statistic = min(b, c)
         method = "exact"
     else:
