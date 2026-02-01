@@ -1,734 +1,462 @@
-# lm-eval Integration Plan
+# lm-eval Integration Plan (Revised)
 
-> **Goal**: Wrap lm-eval harness within metaeval to provide a unified evaluation experience with shared data schemas, seamless result flow, and single CLI interface.
+> **Goal**: Parse lm-eval outputs into metaeval types so `metaeval analyze` commands work seamlessly with lm-eval results. No wrapper CLI - users run lm-eval directly.
 
-## Executive Summary
+## Design Philosophy
 
-Currently, metaeval and lm-eval operate as loosely coupled systems with manual handoffs:
-- metaeval generates task YAMLs
-- Users manually invoke lm-eval CLI
-- Users manually import results for analysis
-
-This plan unifies them into a cohesive pipeline where `metaeval eval` handles end-to-end evaluation with automatic result ingestion.
+1. **Don't wrap lm-eval** - Users run `lm_eval` directly, refer them to lm-eval docs
+2. **Parse lm-eval outputs** - New `metaeval/harness/` module parses `results.json` and `samples.jsonl`
+3. **Unified types** - Convert lm-eval output → metaeval `MCQResult`/`OSQResult` for analysis
+4. **Support existing output structure** - Parse the output format from `src/phase4_inference/output/`
 
 ---
 
-## 1. Unified Data Schemas
+## 1. lm-eval Output Format (What We Parse)
 
-### 1.1 Core Evaluation Types
-
-```python
-# metaeval/core/types.py (additions)
-
-@dataclass
-class EvalConfig:
-    """Configuration for an evaluation run."""
-    model: str                          # e.g., "ollama/llama3.1:8b", "openai/gpt-4o"
-    benchmark: str                      # e.g., "sysenebench", "sysenebench-osq"
-    format: Literal["mcq", "osq"]       # Question format
-    variant: str | None = None          # Position variant for bias testing
-    num_fewshot: int = 0
-    batch_size: int | str = "auto"
-    temperature: float = 0.0
-    max_tokens: int = 512
-
-    # Execution settings
-    backend: Literal["lmeval", "direct"] = "lmeval"  # lmeval harness or direct API
-    provider: Literal["ollama", "openai", "anthropic", "openrouter", "hpc"] = "ollama"
-
-    def to_lmeval_args(self) -> list[str]:
-        """Convert to lm-eval CLI arguments."""
-        ...
-
-
-@dataclass
-class EvalRun:
-    """A complete evaluation run with metadata and results."""
-    run_id: str                         # UUID for this run
-    config: EvalConfig
-    status: Literal["pending", "running", "completed", "failed"]
-
-    # Timing
-    started_at: datetime | None = None
-    completed_at: datetime | None = None
-
-    # Results (populated after completion)
-    results: EvalResults | None = None
-
-    # Paths
-    output_dir: Path | None = None
-    lmeval_results_path: Path | None = None
-    lmeval_samples_path: Path | None = None
-
-
-@dataclass
-class EvalResults:
-    """Unified results from an evaluation run."""
-    # Aggregate metrics
-    accuracy: float | None = None       # MCQ accuracy (0-1)
-    mean_score: float | None = None     # OSQ mean score (0-100)
-    stderr: float | None = None
-
-    # Per-question results
-    mcq_results: list[MCQResult] = field(default_factory=list)
-    osq_results: list[OSQResult] = field(default_factory=list)
-    judged_results: list[JudgedResult] = field(default_factory=list)
-
-    # Metadata from lm-eval
-    n_samples: int = 0
-    eval_time_seconds: float = 0.0
-    model_name: str = ""
-
-    # Raw lm-eval output (for debugging)
-    raw_lmeval_results: dict | None = None
-
-
-@dataclass
-class ModelSpec:
-    """Normalized model specification."""
-    provider: str                       # ollama, openai, anthropic, openrouter
-    model_id: str                       # llama3.1:8b, gpt-4o, claude-3-5-sonnet
-    display_name: str                   # Human-readable name
-
-    # Provider-specific settings
-    base_url: str | None = None
-    api_key_env: str | None = None
-
-    @classmethod
-    def parse(cls, spec: str) -> "ModelSpec":
-        """Parse 'provider/model' format."""
-        if "/" in spec:
-            provider, model_id = spec.split("/", 1)
-        else:
-            provider, model_id = "ollama", spec
-        return cls(provider=provider, model_id=model_id, display_name=spec)
-
-    def to_lmeval_model_args(self) -> str:
-        """Generate lm-eval --model_args string."""
-        ...
+### Directory Structure
+```
+output/
+├── sysengbench-a/                    # Task name (MCQ variant A)
+│   └── llama3.3__70b/                # Model name (sanitized)
+│       ├── results_2025-11-15T01-12-13.json
+│       └── samples_sysengbench-a_2025-11-15T01-12-13.jsonl
+├── sysengbench-osq/                  # OSQ task
+│   └── llama3.3__70b/
+│       ├── results_2025-11-14T23-24-28.json
+│       └── samples_sysengbench-osq_2025-11-14T23-24-28.jsonl
 ```
 
-### 1.2 Result Parsing Types
-
-```python
-# metaeval/harness/results.py (new file)
-
-@dataclass
-class LMEvalResultsFile:
-    """Parsed lm-eval results.json structure."""
-    results: dict[str, dict[str, float]]    # task -> metrics
-    configs: dict[str, dict]                 # task -> config
-    n_samples: dict[str, dict[str, int]]    # task -> {original, effective}
-    model_source: str
-    model_name: str
-    total_evaluation_time_seconds: float
-    git_hash: str
-    date: float
-
-    @classmethod
-    def from_json(cls, path: Path) -> "LMEvalResultsFile":
-        """Load from lm-eval output file."""
-        ...
-
-    def get_accuracy(self, task: str) -> float | None:
-        """Extract accuracy metric for a task."""
-        ...
-
-    def get_metric(self, task: str, metric: str) -> float | None:
-        """Extract any metric for a task."""
-        ...
-
-
-@dataclass
-class LMEvalSample:
-    """Single sample from lm-eval samples.jsonl."""
-    doc: dict                           # Original document fields
-    resps: list                         # Model responses with logprobs
-    filtered_resps: list                # Post-filtering responses
-    target: str | int                   # Expected answer
-
-    # Computed fields
-    question_id: int = 0
-    is_correct: bool = False
-    model_answer: str = ""
-
-    @classmethod
-    def from_json(cls, line: dict) -> "LMEvalSample":
-        """Parse a single JSONL line."""
-        ...
-
-    def to_mcq_result(self, model: str, variant: str = "") -> MCQResult:
-        """Convert to metaeval MCQResult."""
-        ...
-
-    def to_osq_result(self, model: str) -> OSQResult:
-        """Convert to metaeval OSQResult."""
-        ...
+### results.json (Aggregate Metrics)
+```json
+{
+  "results": {
+    "sysengbench-a": {
+      "exact_match,strict-match": 0.9248,
+      "exact_match_stderr,strict-match": 0.0078
+    }
+  },
+  "model_name": "llama3.3:70b",
+  "model_name_sanitized": "llama3.3__70b",
+  "n-samples": {"sysengbench-a": {"original": 1144, "effective": 1144}},
+  "total_evaluation_time_seconds": "265.55"
+}
 ```
 
-### 1.3 Schema Mapping
+### samples.jsonl - MCQ Format
+```json
+{
+  "doc_id": 0,
+  "doc": {
+    "Question ID": 1,
+    "question": "What best describes...",
+    "choiceA": "...", "choiceB": "...", "choiceC": "...", "choiceD": "...",
+    "answer": "A",
+    "INCOSE Handbook Category": "...",
+    "Tags": "..."
+  },
+  "target": "A",
+  "filtered_resps": ["A"],
+  "exact_match": 1.0
+}
+```
 
-| lm-eval Field | metaeval Type | Notes |
-|---------------|---------------|-------|
-| `results.[task].acc` | `EvalResults.accuracy` | Direct mapping |
-| `results.[task].acc_stderr` | `EvalResults.stderr` | Direct mapping |
-| `config.model_name` | `EvalResults.model_name` | Direct mapping |
-| `total_evaluation_time_seconds` | `EvalResults.eval_time_seconds` | Direct mapping |
-| `samples.jsonl` lines | `MCQResult` / `OSQResult` | Via parser |
-| `doc.question_id` | `*.question_id` | Universal ID |
+### samples.jsonl - OSQ Format
+```json
+{
+  "doc_id": 0,
+  "doc": {
+    "Question ID": 1,
+    "osq_prompt": "Define \"uncertainty\" in systems engineering...",
+    "expected_answer": "A condition in which...",
+    "full_credit_criteria": "3 points: ...",
+    "partial_credit_criteria": "2 points: ...",
+    "no_credit_criteria": "0 points: ...",
+    "blooms_level": "Remember"
+  },
+  "target": "A condition in which...",
+  "resps": [["In systems engineering, uncertainty refers to..."]],
+  "filtered_resps": ["In systems engineering, uncertainty refers to..."]
+}
+```
 
 ---
 
-## 2. Module Architecture
-
-### 2.1 New Module: `metaeval/harness/`
+## 2. New Module: `metaeval/harness/`
 
 ```
 metaeval/harness/
 ├── __init__.py
-├── runner.py          # LMEvalRunner - orchestrates lm-eval execution
-├── results.py         # Result parsing (LMEvalResultsFile, LMEvalSample)
-├── models.py          # ModelSpec, model registry
-├── tasks.py           # Task generation (moved from benchmark/tasks.py)
-└── backends/
-    ├── __init__.py
-    ├── base.py        # ExecutionBackend ABC
-    ├── local.py       # LocalBackend (Ollama via lm-eval)
-    ├── api.py         # APIBackend (OpenAI/Anthropic via lm-eval)
-    └── hpc.py         # HPCBackend (SLURM job submission)
+├── parser.py         # LMEvalParser - main entry point
+├── results.py        # LMEvalResults dataclass (from results.json)
+├── samples.py        # LMEvalSample dataclass (from samples.jsonl)
+└── discovery.py      # Find lm-eval output directories
 ```
 
-### 2.2 Core Classes
+### 2.1 Core Parser
 
 ```python
-# metaeval/harness/runner.py
+# metaeval/harness/parser.py
 
-class LMEvalRunner:
-    """Unified lm-eval execution wrapper."""
+from pathlib import Path
+from metaeval.harness.results import LMEvalResults
+from metaeval.harness.samples import LMEvalSample
+from metaeval.parsers.mcq import MCQResult
+from metaeval.parsers.osq import OSQResult
 
-    def __init__(self, config: EvalConfig):
-        self.config = config
-        self.backend = self._get_backend()
+class LMEvalParser:
+    """Parse lm-eval output directories into metaeval types."""
 
-    def run(self, progress_callback: Callable | None = None) -> EvalRun:
-        """Execute evaluation and return results."""
-        run = EvalRun(
-            run_id=str(uuid.uuid4()),
-            config=self.config,
-            status="pending"
+    def __init__(self, output_dir: Path):
+        self.output_dir = Path(output_dir)
+
+    def parse(self) -> "ParsedRun":
+        """Parse results.json and samples.jsonl from output directory."""
+        results_file = self._find_results_json()
+        samples_file = self._find_samples_jsonl()
+
+        results = LMEvalResults.from_json(results_file)
+        samples = [LMEvalSample.from_json(line) for line in self._read_jsonl(samples_file)]
+
+        return ParsedRun(
+            results=results,
+            samples=samples,
+            task=results.task_name,
+            model=results.model_name,
+            format=self._detect_format(samples),
         )
 
-        try:
-            # 1. Generate task YAML if needed
-            task_path = self._ensure_task_yaml()
+    def to_mcq_results(self) -> list[MCQResult]:
+        """Convert to metaeval MCQResult objects for bias analysis."""
+        run = self.parse()
+        return [s.to_mcq_result(run.model, run.task) for s in run.samples]
 
-            # 2. Execute via backend
-            run.status = "running"
-            run.started_at = datetime.now()
+    def to_osq_results(self) -> list[OSQResult]:
+        """Convert to metaeval OSQResult objects for judging."""
+        run = self.parse()
+        return [s.to_osq_result(run.model) for s in run.samples]
 
-            output_dir = self.backend.execute(
-                task_path=task_path,
-                model_spec=ModelSpec.parse(self.config.model),
-                progress_callback=progress_callback
-            )
-
-            # 3. Parse results
-            run.output_dir = output_dir
-            run.results = self._parse_results(output_dir)
-            run.status = "completed"
-
-        except Exception as e:
-            run.status = "failed"
-            run.results = EvalResults()
-            raise
-        finally:
-            run.completed_at = datetime.now()
-
-        return run
-
-    def _parse_results(self, output_dir: Path) -> EvalResults:
-        """Parse lm-eval output into unified results."""
-        results_file = LMEvalResultsFile.from_json(output_dir / "results.json")
-        samples = self._parse_samples(output_dir)
-
-        return EvalResults(
-            accuracy=results_file.get_accuracy(self.config.benchmark),
-            n_samples=len(samples),
-            mcq_results=[s.to_mcq_result(self.config.model) for s in samples]
-                        if self.config.format == "mcq" else [],
-            osq_results=[s.to_osq_result(self.config.model) for s in samples]
-                        if self.config.format == "osq" else [],
-            raw_lmeval_results=results_file.__dict__
-        )
+    def _detect_format(self, samples: list[LMEvalSample]) -> str:
+        """Detect MCQ vs OSQ from sample structure."""
+        if samples and "osq_prompt" in samples[0].doc:
+            return "osq"
+        return "mcq"
 ```
 
-### 2.3 Backend Abstraction
+### 2.2 Results Dataclass
 
 ```python
-# metaeval/harness/backends/base.py
+# metaeval/harness/results.py
 
-class ExecutionBackend(ABC):
-    """Abstract backend for lm-eval execution."""
+@dataclass
+class LMEvalResults:
+    """Parsed lm-eval results.json."""
+    task_name: str
+    model_name: str
+    model_name_sanitized: str
 
-    @abstractmethod
-    def execute(
-        self,
-        task_path: Path,
-        model_spec: ModelSpec,
-        progress_callback: Callable | None = None
-    ) -> Path:
-        """
-        Execute lm-eval and return output directory.
+    # Metrics
+    accuracy: float | None = None
+    accuracy_stderr: float | None = None
 
-        Args:
-            task_path: Path to task YAML
-            model_spec: Model specification
-            progress_callback: Called with (current, total) progress
+    # Metadata
+    n_samples: int = 0
+    eval_time_seconds: float = 0.0
+    lm_eval_version: str = ""
+    date: datetime | None = None
 
-        Returns:
-            Path to output directory containing results.json
-        """
-        pass
+    # Raw data for extensibility
+    raw: dict = field(default_factory=dict)
 
-    @abstractmethod
-    def check_availability(self) -> tuple[bool, str]:
-        """Check if backend is available. Returns (available, message)."""
-        pass
+    @classmethod
+    def from_json(cls, path: Path) -> "LMEvalResults":
+        data = json.loads(path.read_text())
 
+        # Extract first task (usually only one)
+        task_name = list(data["results"].keys())[0]
+        task_results = data["results"][task_name]
 
-# metaeval/harness/backends/local.py
+        # Find accuracy metric (varies by filter name)
+        accuracy = None
+        accuracy_stderr = None
+        for key, value in task_results.items():
+            if key.startswith("exact_match") and "stderr" not in key:
+                accuracy = value
+            elif "stderr" in key:
+                accuracy_stderr = value
 
-class LocalBackend(ExecutionBackend):
-    """Execute lm-eval locally with Ollama."""
+        return cls(
+            task_name=task_name,
+            model_name=data.get("model_name", ""),
+            model_name_sanitized=data.get("model_name_sanitized", ""),
+            accuracy=accuracy,
+            accuracy_stderr=accuracy_stderr,
+            n_samples=data.get("n-samples", {}).get(task_name, {}).get("effective", 0),
+            eval_time_seconds=float(data.get("total_evaluation_time_seconds", 0)),
+            lm_eval_version=data.get("lm_eval_version", ""),
+            raw=data,
+        )
+```
 
-    def execute(self, task_path: Path, model_spec: ModelSpec,
-                progress_callback: Callable | None = None) -> Path:
-        output_dir = Path(f"output/{model_spec.model_id}/{task_path.stem}")
-        output_dir.mkdir(parents=True, exist_ok=True)
+### 2.3 Sample Dataclass
 
-        cmd = [
-            "lm_eval",
-            "--model", "local-chat-completions",
-            "--model_args", model_spec.to_lmeval_model_args(),
-            "--tasks", str(task_path),
-            "--output_path", str(output_dir),
-            "--log_samples",
-            "--batch_size", "auto",
-        ]
+```python
+# metaeval/harness/samples.py
 
-        # Stream output for progress
-        process = subprocess.Popen(
-            cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True
+@dataclass
+class LMEvalSample:
+    """Single sample from lm-eval samples.jsonl."""
+    doc_id: int
+    doc: dict
+    target: str
+    resps: list
+    filtered_resps: list
+    exact_match: float | None = None
+
+    @classmethod
+    def from_json(cls, data: dict) -> "LMEvalSample":
+        return cls(
+            doc_id=data["doc_id"],
+            doc=data["doc"],
+            target=data["target"],
+            resps=data.get("resps", []),
+            filtered_resps=data.get("filtered_resps", []),
+            exact_match=data.get("exact_match"),
         )
 
-        for line in process.stdout:
-            if progress_callback and "Running" in line:
-                # Parse progress from lm-eval output
-                progress_callback(...)
+    def to_mcq_result(self, model: str, variant: str = "") -> MCQResult:
+        """Convert to metaeval MCQResult."""
+        return MCQResult(
+            question_id=self.doc.get("Question ID", self.doc_id),
+            question=self.doc.get("question", ""),
+            choices={
+                "A": self.doc.get("choiceA", ""),
+                "B": self.doc.get("choiceB", ""),
+                "C": self.doc.get("choiceC", ""),
+                "D": self.doc.get("choiceD", ""),
+            },
+            correct_answer=self.doc.get("answer", self.target),
+            model_answer=self.filtered_resps[0] if self.filtered_resps else "",
+            is_correct=self.exact_match == 1.0,
+            model=model,
+            benchmark_variant=variant,
+            raw_response=self.resps[0][0] if self.resps else "",
+        )
 
-        process.wait()
-        if process.returncode != 0:
-            raise RuntimeError(f"lm-eval failed with code {process.returncode}")
-
-        return output_dir
+    def to_osq_result(self, model: str) -> OSQResult:
+        """Convert to metaeval OSQResult."""
+        return OSQResult(
+            question_id=self.doc.get("Question ID", self.doc_id),
+            question=self.doc.get("osq_prompt", ""),
+            expected_answer=self.doc.get("expected_answer", self.target),
+            model_response=self.filtered_resps[0] if self.filtered_resps else "",
+            model=model,
+            rubric={
+                "full_credit": self.doc.get("full_credit_criteria", ""),
+                "partial_credit": self.doc.get("partial_credit_criteria", ""),
+                "no_credit": self.doc.get("no_credit_criteria", ""),
+            },
+            raw_response=self.resps[0][0] if self.resps else "",
+        )
 ```
 
-### 2.4 Updated Module Map
+### 2.4 Discovery Helper
 
-```
-metaeval/
-├── core/
-│   ├── types.py        # + EvalConfig, EvalRun, EvalResults, ModelSpec
-│   ├── config.py       # + HarnessConfig section
-│   └── ...
-├── harness/            # NEW - lm-eval integration
-│   ├── runner.py       # LMEvalRunner
-│   ├── results.py      # Result parsing
-│   ├── models.py       # Model registry
-│   ├── tasks.py        # Task generation (from benchmark/)
-│   └── backends/       # Execution backends
-├── benchmark/
-│   ├── schemas.py      # Unchanged
-│   ├── convert.py      # Unchanged
-│   └── variants.py     # Unchanged
-├── parsers/
-│   ├── mcq.py          # + integration with harness results
-│   └── osq.py          # + integration with harness results
-├── judges/             # Unchanged
-├── judge/              # Unchanged
-├── bias/               # + accept EvalResults directly
-├── compare/            # + accept EvalResults directly
-└── cli/
-    └── main.py         # + eval, results commands
+```python
+# metaeval/harness/discovery.py
+
+def find_runs(base_dir: Path, task_filter: str | None = None) -> list[Path]:
+    """Find all lm-eval output directories."""
+    runs = []
+    for task_dir in base_dir.iterdir():
+        if task_filter and task_filter not in task_dir.name:
+            continue
+        for model_dir in task_dir.iterdir():
+            if (model_dir / "results.json").exists() or \
+               list(model_dir.glob("results_*.json")):
+                runs.append(model_dir)
+    return sorted(runs)
+
+def find_latest_results(model_dir: Path) -> Path:
+    """Find most recent results.json in a model directory."""
+    results_files = list(model_dir.glob("results_*.json"))
+    if results_files:
+        return max(results_files, key=lambda p: p.stat().st_mtime)
+    return model_dir / "results.json"
 ```
 
 ---
 
-## 3. CLI Commands
+## 3. CLI Integration
 
-### 3.1 New Commands
-
-```bash
-# Core evaluation command
-metaeval eval \
-  --model ollama/llama3.1:8b \
-  --benchmark sysenebench \
-  --format mcq \
-  --output ./results/
-
-# With position variant for bias testing
-metaeval eval \
-  --model ollama/llama3.1:8b \
-  --benchmark sysenebench \
-  --format mcq \
-  --variant position_b \
-  --output ./results/
-
-# OSQ with automatic judging
-metaeval eval \
-  --model ollama/llama3.1:8b \
-  --benchmark sysenebench-osq \
-  --format osq \
-  --judge ollama/llama3.1:70b \
-  --output ./results/
-
-# List available models/benchmarks
-metaeval models list
-metaeval benchmarks list
-
-# Check provider connectivity
-metaeval providers check
-
-# View/manage results
-metaeval results list
-metaeval results show <run-id>
-metaeval results export <run-id> --format csv
-
-# Import external lm-eval results
-metaeval results import ./path/to/lmeval/output/
-
-# Generate task YAML (for manual lm-eval runs)
-metaeval tasks generate \
-  --benchmark sysenebench \
-  --format mcq \
-  --output ./tasks/
-```
-
-### 3.2 CLI Structure
+### 3.1 Updated `metaeval analyze` Commands
 
 ```python
 # metaeval/cli/main.py
 
 @app.command()
-def eval(
-    model: str = typer.Option(..., help="Model spec (provider/model)"),
-    benchmark: str = typer.Option(..., help="Benchmark name"),
-    format: str = typer.Option("mcq", help="Question format (mcq/osq)"),
-    variant: str = typer.Option(None, help="Position variant"),
-    judge: str = typer.Option(None, help="Judge model for OSQ"),
-    output: Path = typer.Option("./output", help="Output directory"),
-    backend: str = typer.Option("local", help="Execution backend"),
+def analyze_bias(
+    output_dir: Path = typer.Argument(..., help="lm-eval output directory"),
+    task: str = typer.Option(None, help="Filter by task name"),
+    model: str = typer.Option(None, help="Filter by model name"),
 ):
-    """Run evaluation with lm-eval harness."""
-    config = EvalConfig(
-        model=model,
-        benchmark=benchmark,
-        format=format,
-        variant=variant,
-    )
+    """Analyze position bias from lm-eval MCQ results."""
+    from metaeval.harness.parser import LMEvalParser
+    from metaeval.harness.discovery import find_runs
 
-    runner = LMEvalRunner(config)
+    runs = find_runs(output_dir, task_filter=task)
+    if model:
+        runs = [r for r in runs if model in r.name]
 
-    with Progress() as progress:
-        task = progress.add_task("Evaluating...", total=100)
+    for run_dir in runs:
+        parser = LMEvalParser(run_dir)
+        mcq_results = parser.to_mcq_results()
+        # Feed to existing bias analyzer
+        ...
 
-        def update_progress(current, total):
-            progress.update(task, completed=current * 100 // total)
+@app.command()
+def analyze_judge(
+    output_dir: Path = typer.Argument(..., help="lm-eval output directory (OSQ)"),
+    judge_model: str = typer.Option("ollama/llama3.1:70b", help="Judge model"),
+):
+    """Judge OSQ responses from lm-eval output."""
+    from metaeval.harness.parser import LMEvalParser
 
-        run = runner.run(progress_callback=update_progress)
+    parser = LMEvalParser(output_dir)
+    osq_results = parser.to_osq_results()
 
-    # Auto-judge if OSQ
-    if format == "osq" and judge:
-        run.results.judged_results = _judge_results(run.results.osq_results, judge)
-
-    # Save results
-    _save_run(run, output)
-
-    # Print summary
-    console.print(f"[green]Completed![/green] Run ID: {run.run_id}")
-    console.print(f"Accuracy: {run.results.accuracy:.2%}")
+    # Feed to existing judge pipeline
+    for result in osq_results:
+        judgment = judge.evaluate(
+            question=result.question,
+            expected=result.expected_answer,
+            response=result.model_response,
+            rubric=result.rubric,
+        )
+        ...
 ```
 
-### 3.3 Seamless Analysis Flow
+### 3.2 Help Text for lm-eval
+
+```python
+@app.command()
+def eval():
+    """
+    Run model evaluation.
+
+    metaeval does not wrap lm-eval. Run lm-eval directly:
+
+        lm_eval \\
+          --model local-chat-completions \\
+          --model_args model=llama3.1:8b,base_url=http://localhost:11434/v1/chat/completions \\
+          --tasks ./tasks/sysengbench.yaml \\
+          --output_path ./output \\
+          --log_samples
+
+    See: https://github.com/EleutherAI/lm-evaluation-harness
+
+    Then analyze results with:
+        metaeval analyze bias ./output/sysengbench/llama3.1__8b/
+        metaeval analyze judge ./output/sysengbench-osq/llama3.1__8b/
+    """
+    console.print("[yellow]See lm-eval documentation for running evaluations.[/yellow]")
+    console.print("https://github.com/EleutherAI/lm-evaluation-harness")
+```
+
+---
+
+## 4. Updated Type Mappings
+
+### lm-eval → metaeval
+
+| lm-eval Field | metaeval Type | Field |
+|---------------|---------------|-------|
+| `doc.Question ID` | `MCQResult` | `question_id` |
+| `doc.question` | `MCQResult` | `question` |
+| `doc.choiceA/B/C/D` | `MCQResult` | `choices` |
+| `doc.answer` | `MCQResult` | `correct_answer` |
+| `filtered_resps[0]` | `MCQResult` | `model_answer` |
+| `exact_match` | `MCQResult` | `is_correct` |
+| `doc.osq_prompt` | `OSQResult` | `question` |
+| `doc.expected_answer` | `OSQResult` | `expected_answer` |
+| `resps[0][0]` | `OSQResult` | `model_response` |
+| `doc.full_credit_criteria` | `OSQResult` | `rubric["full_credit"]` |
+
+### Variant Detection
+
+Task name → position variant:
+- `sysengbench` or `sysengbench-a` → Position A (original)
+- `sysengbench-b` → Position B
+- `sysengbench-c` → Position C
+- `sysengbench-d` → Position D
+- `sysengbench-osq` → OSQ format
+
+---
+
+## 5. Implementation Plan
+
+### Phase 1: Core Parsing (Priority)
+
+- [ ] Create `metaeval/harness/` module
+- [ ] Implement `LMEvalResults.from_json()`
+- [ ] Implement `LMEvalSample.from_json()`
+- [ ] Implement `LMEvalSample.to_mcq_result()`
+- [ ] Implement `LMEvalSample.to_osq_result()`
+- [ ] Implement `LMEvalParser` with directory handling
+- [ ] Add unit tests with fixture data from `src/phase4_inference/output/`
+
+### Phase 2: CLI Integration
+
+- [ ] Update `metaeval analyze bias` to accept lm-eval output dir
+- [ ] Update `metaeval analyze judge` to accept lm-eval output dir
+- [ ] Add `find_runs()` discovery helper
+- [ ] Add `metaeval eval` help command pointing to lm-eval
+
+### Phase 3: Batch Processing
+
+- [ ] Support multiple model directories in one command
+- [ ] Support `--all-models` flag to process entire task directory
+- [ ] Add CSV/JSON export of parsed results
+- [ ] Add comparison tables across models
+
+---
+
+## 6. Example Workflows
+
+### Bias Analysis (MCQ)
 
 ```bash
-# Old workflow (fragmented)
-python -c "from metaeval.benchmark.tasks import ..."  # Generate YAML
-lm_eval --model ... --tasks ...                        # Manual execution
-# Manual JSON parsing
-metaeval analyze bias ./output/                        # Hope it works
+# User runs lm-eval (their responsibility)
+lm_eval --model local-chat-completions \
+  --model_args model=llama3.1:8b,base_url=http://localhost:11434/v1/chat/completions \
+  --tasks ./sysengbench-a.yaml,./sysengbench-b.yaml,./sysengbench-c.yaml,./sysengbench-d.yaml \
+  --output_path ./output \
+  --log_samples
 
-# New workflow (unified)
-metaeval eval --model ollama/llama3.1:8b --benchmark sysenebench --format mcq
-metaeval analyze bias --last                          # Uses last run automatically
-metaeval analyze compare --runs run1,run2             # Compare by run ID
+# metaeval parses and analyzes
+metaeval analyze bias ./output/ --task sysengbench
+```
+
+### OSQ Judging
+
+```bash
+# User runs lm-eval
+lm_eval --model local-chat-completions \
+  --model_args model=llama3.1:8b,base_url=http://localhost:11434/v1/chat/completions \
+  --tasks ./sysengbench-osq.yaml \
+  --output_path ./output \
+  --log_samples
+
+# metaeval parses and judges
+metaeval analyze judge ./output/sysengbench-osq/llama3.1__8b/ \
+  --judge ollama/llama3.1:70b
 ```
 
 ---
 
-## 4. Data Flow
+## 7. Benefits of This Approach
 
-```
-┌─────────────────────────────────────────────────────────────────────┐
-│                         metaeval eval                               │
-│                                                                     │
-│  ┌─────────────┐     ┌──────────────┐     ┌───────────────────┐   │
-│  │ EvalConfig  │────▶│ LMEvalRunner │────▶│ ExecutionBackend  │   │
-│  └─────────────┘     └──────────────┘     └───────────────────┘   │
-│         │                    │                      │              │
-│         │                    │                      ▼              │
-│         │                    │            ┌─────────────────┐      │
-│         │                    │            │    lm_eval      │      │
-│         │                    │            │  (subprocess)   │      │
-│         │                    │            └─────────────────┘      │
-│         │                    │                      │              │
-│         │                    ▼                      ▼              │
-│         │           ┌──────────────┐     ┌─────────────────┐      │
-│         │           │ ResultParser │◀────│ results.json    │      │
-│         │           └──────────────┘     │ samples.jsonl   │      │
-│         │                    │           └─────────────────┘      │
-│         │                    ▼                                     │
-│         │           ┌──────────────┐                               │
-│         └──────────▶│  EvalRun     │                               │
-│                     │  + Results   │                               │
-│                     └──────────────┘                               │
-│                            │                                       │
-└────────────────────────────┼───────────────────────────────────────┘
-                             │
-                             ▼
-              ┌──────────────────────────────┐
-              │      Analysis Pipeline        │
-              │                              │
-              │  ┌────────┐  ┌────────────┐  │
-              │  │  Bias  │  │  Compare   │  │
-              │  └────────┘  └────────────┘  │
-              │                              │
-              │  ┌────────┐  ┌────────────┐  │
-              │  │ Judge  │  │  Report    │  │
-              │  └────────┘  └────────────┘  │
-              └──────────────────────────────┘
-```
-
----
-
-## 5. Implementation Phases
-
-### Phase 1: Core Integration (Week 1-2)
-
-**Goal**: Basic `metaeval eval` working with local Ollama
-
-- [ ] Create `metaeval/harness/` module structure
-- [ ] Implement `EvalConfig`, `EvalRun`, `EvalResults` in `core/types.py`
-- [ ] Implement `ModelSpec` with provider parsing
-- [ ] Implement `LMEvalResultsFile` parser
-- [ ] Implement `LMEvalSample` parser with MCQ/OSQ conversion
-- [ ] Implement `LocalBackend` for Ollama execution
-- [ ] Implement basic `LMEvalRunner`
-- [ ] Add `metaeval eval` CLI command
-- [ ] Add `metaeval results list/show` commands
-
-**Deliverable**: Can run `metaeval eval --model llama3.1 --benchmark sysenebench`
-
-### Phase 2: Result Integration (Week 2-3)
-
-**Goal**: Seamless flow from eval to analysis
-
-- [ ] Update `bias/detection.py` to accept `EvalResults` directly
-- [ ] Update `compare/analysis.py` to accept `EvalResults` directly
-- [ ] Add `--last` flag to analysis commands
-- [ ] Add `--runs` flag for multi-run comparison
-- [ ] Implement result storage/retrieval by run ID
-- [ ] Add `metaeval results import` for external lm-eval outputs
-- [ ] Add `metaeval results export` (CSV, JSON)
-
-**Deliverable**: `metaeval eval ... && metaeval analyze bias --last`
-
-### Phase 3: Multi-Backend Support (Week 3-4)
-
-**Goal**: Support API providers and HPC
-
-- [ ] Implement `APIBackend` for OpenAI/Anthropic via lm-eval
-- [ ] Implement `HPCBackend` for SLURM job submission
-- [ ] Add `metaeval providers check` command
-- [ ] Add provider-specific configuration
-- [ ] Add async execution support for API calls
-- [ ] Add job status tracking for HPC
-
-**Deliverable**: `metaeval eval --model openai/gpt-4o --backend api`
-
-### Phase 4: OSQ + Judging Integration (Week 4-5)
-
-**Goal**: Unified OSQ evaluation with automatic judging
-
-- [ ] Integrate judge pipeline with eval command
-- [ ] Add `--judge` flag to eval command
-- [ ] Stream judging progress
-- [ ] Store judged results with eval run
-- [ ] Add consensus judging option
-- [ ] Add judge calibration hooks
-
-**Deliverable**: `metaeval eval --format osq --judge ollama/llama3.1:70b`
-
-### Phase 5: Polish & Documentation (Week 5-6)
-
-- [ ] Add comprehensive error handling
-- [ ] Add retry logic with exponential backoff
-- [ ] Add cost estimation for API runs
-- [ ] Add progress streaming for long runs
-- [ ] Write user documentation
-- [ ] Add integration tests
-- [ ] Update existing notebooks
-
----
-
-## 6. Configuration Updates
-
-### 6.1 New Config Section
-
-```python
-# metaeval/core/config.py
-
-@dataclass
-class HarnessConfig:
-    """Configuration for lm-eval harness integration."""
-
-    # Task generation
-    default_task_dir: Path = Path("tasks")
-    default_output_dir: Path = Path("output")
-
-    # Execution
-    default_backend: str = "local"
-    default_batch_size: str = "auto"
-    lmeval_path: str = "lm_eval"  # Path to lm-eval executable
-
-    # Results storage
-    results_db_path: Path = Path(".metaeval/runs.db")
-    keep_raw_outputs: bool = True
-
-    # Timeouts
-    eval_timeout_seconds: int = 7200  # 2 hours
-    sample_timeout_seconds: int = 60
-
-
-# Add to MetaevalConfig
-@dataclass
-class MetaevalConfig:
-    ...
-    harness: HarnessConfig = field(default_factory=HarnessConfig)
-```
-
-### 6.2 Model Registry
-
-```yaml
-# ~/.metaeval/models.yaml
-
-providers:
-  ollama:
-    base_url: "http://localhost:11434/v1"
-    lmeval_model_type: "local-chat-completions"
-
-  openai:
-    api_key_env: "OPENAI_API_KEY"
-    lmeval_model_type: "openai-chat-completions"
-
-  anthropic:
-    api_key_env: "ANTHROPIC_API_KEY"
-    lmeval_model_type: "anthropic-chat-completions"
-
-models:
-  llama3.1:8b:
-    provider: ollama
-    display_name: "Llama 3.1 8B"
-
-  gpt-4o:
-    provider: openai
-    display_name: "GPT-4o"
-```
-
----
-
-## 7. Backwards Compatibility
-
-### 7.1 Preserved Interfaces
-
-- All existing `metaeval` CLI commands unchanged
-- All existing dataclasses preserved
-- Parsers continue to work standalone
-- Direct lm-eval usage still possible
-
-### 7.2 Deprecation Path
-
-```python
-# benchmark/tasks.py - add deprecation warning
-import warnings
-
-def generate_mcq_task(...):
-    warnings.warn(
-        "generate_mcq_task() is deprecated. Use metaeval.harness.tasks instead.",
-        DeprecationWarning
-    )
-    from metaeval.harness.tasks import generate_mcq_task as new_func
-    return new_func(...)
-```
-
----
-
-## 8. Testing Strategy
-
-### 8.1 Unit Tests
-
-```python
-# tests/harness/test_results.py
-def test_parse_lmeval_results():
-    results = LMEvalResultsFile.from_json(FIXTURES / "lmeval_output.json")
-    assert results.get_accuracy("sysenebench_mcq") == 0.75
-
-def test_sample_to_mcq_result():
-    sample = LMEvalSample.from_json({"doc": {...}, "resps": [...], ...})
-    mcq = sample.to_mcq_result(model="llama3.1")
-    assert isinstance(mcq, MCQResult)
-```
-
-### 8.2 Integration Tests
-
-```python
-# tests/harness/test_runner.py
-@pytest.mark.integration
-def test_full_eval_run():
-    config = EvalConfig(model="ollama/llama3.1:8b", benchmark="test_task", format="mcq")
-    runner = LMEvalRunner(config)
-    run = runner.run()
-    assert run.status == "completed"
-    assert run.results.accuracy is not None
-```
-
----
-
-## 9. Open Questions
-
-1. **Result persistence**: SQLite DB vs. filesystem (JSON/JSONL)?
-2. **Run ID format**: UUID vs. human-readable (`llama3.1-sysenebench-20240115`)?
-3. **Streaming**: Real-time progress vs. polling?
-4. **HPC integration**: Job submission vs. result monitoring?
-5. **Model aliases**: Support `gpt4` → `openai/gpt-4o` mappings?
-
----
-
-## 10. Success Metrics
-
-- [ ] `metaeval eval` can replicate all current SBATCH workflows
-- [ ] Zero manual JSON parsing required for standard workflows
-- [ ] Analysis commands accept run IDs directly
-- [ ] < 5% overhead vs. direct lm-eval invocation
-- [ ] All existing tests pass
-- [ ] New integration tests cover critical paths
+1. **No maintenance burden** - Don't maintain lm-eval wrapper or duplicate docs
+2. **Always compatible** - Parse lm-eval's output format, not wrap its CLI
+3. **Clean separation** - lm-eval does inference, metaeval does analysis
+4. **Leverages existing code** - Reuses `MCQResult`, `OSQResult`, existing analyzers
+5. **Works with existing outputs** - Parses the 100+ runs already in `src/phase4_inference/output/`
