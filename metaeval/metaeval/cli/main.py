@@ -252,6 +252,51 @@ def create_parser() -> argparse.ArgumentParser:
         help="Output path for init (default: ~/.metaeval/config.yaml)",
     )
 
+    # Eval command (help/documentation only)
+    eval_parser = subparsers.add_parser(
+        "eval",
+        help="Run model evaluation (shows lm-eval usage)",
+    )
+    eval_parser.add_argument(
+        "--example",
+        choices=["mcq", "osq", "bias"],
+        help="Show example command for specific use case",
+    )
+
+    # Results command
+    results_parser = subparsers.add_parser(
+        "results",
+        help="List and inspect lm-eval results",
+    )
+    results_parser.add_argument(
+        "action",
+        nargs="?",
+        choices=["list", "show", "summary"],
+        default="list",
+        help="Action: list (show all runs), show (details for one run), summary (aggregate stats)",
+    )
+    results_parser.add_argument(
+        "path",
+        nargs="?",
+        type=Path,
+        default=Path("output"),
+        help="Path to lm-eval output directory (default: ./output)",
+    )
+    results_parser.add_argument(
+        "--task",
+        help="Filter by task name (e.g., 'sysengbench-a', 'osq')",
+    )
+    results_parser.add_argument(
+        "--model",
+        help="Filter by model name",
+    )
+    results_parser.add_argument(
+        "--format",
+        choices=["table", "json", "csv"],
+        default="table",
+        help="Output format (default: table)",
+    )
+
     return parser
 
 
@@ -558,6 +603,170 @@ def cmd_report(args: argparse.Namespace) -> int:
         return 1
 
 
+def cmd_eval(args: argparse.Namespace) -> int:
+    """Handle eval command - show lm-eval usage documentation."""
+    examples = {
+        "mcq": '''# Evaluate model on MCQ benchmark
+lm_eval \\
+  --model local-chat-completions \\
+  --model_args model=llama3.1:8b,base_url=http://localhost:11434/v1/chat/completions \\
+  --tasks ./sysengbench.yaml \\
+  --output_path ./output \\
+  --log_samples \\
+  --batch_size auto''',
+
+        "osq": '''# Evaluate model on OSQ (open-style) benchmark
+lm_eval \\
+  --model local-chat-completions \\
+  --model_args model=llama3.1:8b,base_url=http://localhost:11434/v1/chat/completions \\
+  --tasks ./sysengbench-osq.yaml \\
+  --output_path ./output \\
+  --log_samples \\
+  --batch_size auto''',
+
+        "bias": '''# Evaluate all position variants for bias analysis
+lm_eval \\
+  --model local-chat-completions \\
+  --model_args model=llama3.1:8b,base_url=http://localhost:11434/v1/chat/completions \\
+  --tasks ./sysengbench-a.yaml,./sysengbench-b.yaml,./sysengbench-c.yaml,./sysengbench-d.yaml \\
+  --output_path ./output \\
+  --log_samples \\
+  --batch_size auto''',
+    }
+
+    print("""
+metaeval does not wrap lm-eval for running evaluations.
+Run lm-eval directly, then use metaeval to analyze results.
+
+WORKFLOW
+========
+1. Run evaluation with lm-eval (see examples below)
+2. View results: metaeval results list ./output/
+3. Analyze:
+   - Bias analysis:  metaeval analyze bias ./output/
+   - Judge OSQ:      metaeval judge ./output/sysengbench-osq/model/
+
+INSTALLATION
+============
+pip install lm-eval
+
+DOCUMENTATION
+=============
+https://github.com/EleutherAI/lm-evaluation-harness
+""")
+
+    if args.example:
+        print(f"\nEXAMPLE: {args.example.upper()}")
+        print("=" * 50)
+        print(examples[args.example])
+    else:
+        print("QUICK START (MCQ)")
+        print("=" * 50)
+        print(examples["mcq"])
+        print("\nUse --example [mcq|osq|bias] for more examples.")
+
+    return 0
+
+
+def cmd_results(args: argparse.Namespace) -> int:
+    """Handle results command - list and inspect lm-eval outputs."""
+    import json
+    from metaeval.harness import LMEvalParser, find_runs
+    from metaeval.harness.discovery import list_models, list_tasks
+
+    output_dir = args.path
+
+    if not output_dir.exists():
+        logger.error(f"Output directory not found: {output_dir}")
+        print(f"\nNo results found at {output_dir}")
+        print("Run lm-eval first, or specify path: metaeval results list /path/to/output/")
+        return 1
+
+    if args.action == "list":
+        runs = find_runs(output_dir, task_filter=args.task, model_filter=args.model)
+
+        if not runs:
+            print(f"No lm-eval runs found in {output_dir}")
+            if args.task or args.model:
+                print(f"  (filtered by task={args.task}, model={args.model})")
+            return 0
+
+        # Collect run info
+        run_data = []
+        for run_dir in runs:
+            try:
+                parser = LMEvalParser(run_dir)
+                results = parser.results
+                run_data.append({
+                    "task": results.task_name,
+                    "model": results.model_name_sanitized,
+                    "accuracy": results.accuracy,
+                    "n_samples": results.n_samples,
+                    "variant": results.variant,
+                    "path": str(run_dir),
+                })
+            except Exception as e:
+                logger.warning(f"Failed to parse {run_dir}: {e}")
+
+        if args.format == "json":
+            print(json.dumps(run_data, indent=2))
+        elif args.format == "csv":
+            print("task,model,accuracy,n_samples,variant,path")
+            for r in run_data:
+                acc = f"{r['accuracy']:.4f}" if r['accuracy'] else "N/A"
+                print(f"{r['task']},{r['model']},{acc},{r['n_samples']},{r['variant']},{r['path']}")
+        else:  # table
+            print(f"\nlm-eval Results in {output_dir}")
+            print("=" * 90)
+            print(f"{'Task':<20} {'Model':<25} {'Accuracy':>10} {'Samples':>8} {'Variant':>8}")
+            print("-" * 90)
+            for r in run_data:
+                acc = f"{r['accuracy']:.2%}" if r['accuracy'] else "N/A"
+                print(f"{r['task']:<20} {r['model']:<25} {acc:>10} {r['n_samples']:>8} {r['variant']:>8}")
+            print("-" * 90)
+            print(f"Total: {len(run_data)} runs")
+
+    elif args.action == "summary":
+        tasks = list_tasks(output_dir)
+        models = list_models(output_dir)
+
+        print(f"\nSummary of {output_dir}")
+        print("=" * 50)
+        print(f"Tasks:  {len(tasks)}")
+        for t in tasks:
+            print(f"  - {t}")
+        print(f"\nModels: {len(models)}")
+        for m in models:
+            print(f"  - {m}")
+
+    elif args.action == "show":
+        # Show details for a specific run (first matching)
+        runs = find_runs(output_dir, task_filter=args.task, model_filter=args.model)
+        if not runs:
+            print("No matching runs found")
+            return 1
+
+        run_dir = runs[0]
+        parser = LMEvalParser(run_dir)
+        run = parser.parse()
+
+        print(f"\nRun Details: {run_dir}")
+        print("=" * 60)
+        print(f"Task:       {run.task}")
+        print(f"Model:      {run.model}")
+        print(f"Format:     {run.format}")
+        print(f"Variant:    {run.variant or 'N/A'}")
+        print(f"Accuracy:   {run.accuracy:.2%}" if run.accuracy else "Accuracy:   N/A")
+        print(f"Samples:    {len(run.samples)}")
+        print(f"Eval Time:  {run.results.eval_time_seconds:.1f}s")
+        print(f"lm-eval:    {run.results.lm_eval_version}")
+
+        if run.format == "osq" and run.samples:
+            print(f"\nRubric:     {'Yes' if run.samples[0].to_osq_result(run.model).rubric else 'No'}")
+
+    return 0
+
+
 def cmd_config(args: argparse.Namespace) -> int:
     """Handle config command."""
     from metaeval.core.config import get_config, get_config_path, generate_default_config
@@ -628,6 +837,8 @@ def app(args: list[str] | None = None) -> int:
         "prompts": cmd_prompts,
         "report": cmd_report,
         "config": cmd_config,
+        "eval": cmd_eval,
+        "results": cmd_results,
     }
 
     if parsed.command is None:
