@@ -1,0 +1,32 @@
+# SysEngBench Open-Style Questions (OSQ)
+# For use with lm-eval harness
+#
+# Usage:
+#   lm_eval --model local-chat-completions \
+#     --model_args model=llama3.2:3b,base_url=http://localhost:11434/v1/chat/completions \
+#     --tasks ./sysengbench-osq.yaml \
+#     --output_path ./output \
+#     --log_samples
+
+task: sysengbench-osq
+dataset_path: csv
+dataset_name: null
+dataset_kwargs:
+  data_files:
+    test: data/sysengbench_osq.csv
+output_type: generate_until
+doc_to_text: |
+  Answer the following systems engineering question. Be specific and technical.
+
+  Question: {{osq_question}}
+
+  Answer:
+doc_to_target: "{{expected_answer}}"
+generation_kwargs:
+  max_gen_toks: 512
+  temperature: 0.0
+  do_sample: false
+metric_list:
+  - metric: exact_match
+    aggregation: mean
+    higher_is_better: true

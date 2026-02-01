@@ -1,0 +1,39 @@
+# SysEngBench Position Variant A
+# For use with lm-eval harness
+#
+# Usage:
+#   lm_eval --model local-chat-completions \
+#     --model_args model=llama3.2:3b,base_url=http://localhost:11434/v1/chat/completions \
+#     --tasks ./sysengbench-a.yaml \
+#     --output_path ./output \
+#     --log_samples
+
+task: sysengbench-a
+dataset_path: csv
+dataset_name: null
+dataset_kwargs:
+  data_files:
+    test: variants/ryan-a-bell_SysEngBench_a.csv
+output_type: generate_until
+doc_to_text: |
+  Answer the following multiple choice question by responding with A, B, C, or D only.
+
+  Question: {{Question}}
+
+  A) {{choiceA}}
+  B) {{choiceB}}
+  C) {{choiceC}}
+  D) {{choiceD}}
+
+  Answer:
+doc_to_target: "{{Answer}}"
+generation_kwargs:
+  max_gen_toks: 1
+  temperature: 0.0
+  do_sample: false
+metric_list:
+  - metric: exact_match
+    aggregation: mean
+    higher_is_better: true
+    ignore_case: true
+    ignore_punctuation: true
