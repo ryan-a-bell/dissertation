@@ -136,6 +136,11 @@ def create_parser() -> argparse.ArgumentParser:
         default="markdown",
         help="Output format",
     )
+    analyze_parser.add_argument(
+        "--judged",
+        type=Path,
+        help="Path to judged OSQ results (for compare analysis)",
+    )
 
     # Judge command
     judge_parser = subparsers.add_parser(
@@ -392,46 +397,340 @@ def cmd_analyze(args: argparse.Namespace) -> int:
         if args.type == "bias":
             from metaeval.bias.detection import PositionBiasAnalyzer
 
-            df = pd.read_csv(args.input)
+            # Check if input is lm-eval output directory or CSV
+            if args.input.is_dir():
+                # Parse lm-eval output directory
+                from metaeval.harness import LMEvalParser
+
+                logger.info("Detected lm-eval output directory, parsing results...")
+                results_by_model = LMEvalParser.collect_mcq_by_variant(args.input)
+
+                if not results_by_model:
+                    logger.error("No MCQ results found. Need variants A, B, C, D.")
+                    return 1
+
+                # Convert to DataFrame expected by PositionBiasAnalyzer
+                rows = []
+                for model, variants in results_by_model.items():
+                    for variant, mcq_results in variants.items():
+                        for r in mcq_results:
+                            rows.append({
+                                "model": model,
+                                "variant": variant,
+                                "question_id": r.question_id,
+                                "is_correct": int(r.is_correct),
+                            })
+                df = pd.DataFrame(rows)
+                logger.info(f"Loaded {len(df)} results from {len(results_by_model)} models")
+            else:
+                # Load from CSV
+                df = pd.read_csv(args.input)
+
             analyzer = PositionBiasAnalyzer(df)
             reports = analyzer.analyze_all_models()
 
+            # Print summary table first (always useful)
+            _print_bias_summary_table(reports)
+
             # Save results
-            results = {m: r.to_dict() for m, r in reports.items()}
+            results = {m: _serialize_report(r.to_dict()) for m, r in reports.items()}
 
             if args.format == "json":
                 with open(args.output / "bias_results.json", "w") as f:
-                    json.dump(results, f, indent=2)
+                    json.dump(results, f, indent=2, default=str)
             elif args.format == "markdown":
-                from metaeval.report.markdown import generate_summary_report
-                report = generate_summary_report(bias_reports=reports)
-                with open(args.output / "bias_report.md", "w") as f:
-                    f.write(report)
+                try:
+                    from metaeval.report.markdown import generate_summary_report
+                    report = generate_summary_report(bias_reports=reports)
+                    with open(args.output / "bias_report.md", "w") as f:
+                        f.write(report)
+                except ImportError as e:
+                    logger.warning(f"Markdown generation skipped: {e}")
 
         elif args.type == "compare":
             from metaeval.compare.analysis import FormatComparator
 
-            df = pd.read_csv(args.input)
+            # Check if input is lm-eval output directory
+            if args.input.is_dir():
+                # Look for judged results to compare with MCQ
+                judged_dir = args.output / "judged"  # Default location
+                if hasattr(args, 'judged') and args.judged:
+                    judged_dir = args.judged
+
+                if not judged_dir.exists():
+                    logger.error(
+                        "MCQ vs OSQ comparison requires judged OSQ results.\n"
+                        "First run: metaeval judge ./output/sysengbench-osq/<model>/\n"
+                        "Then run: metaeval analyze compare ./output/ --judged ./judged/"
+                    )
+                    return 1
+
+                df = _build_comparison_dataframe(args.input, judged_dir)
+            else:
+                df = pd.read_csv(args.input)
+
+            if df.empty:
+                logger.error("No aligned MCQ/OSQ data found")
+                return 1
+
             comparator = FormatComparator(df)
             reports = comparator.analyze_all_models()
 
-            results = {m: r.to_dict() for m, r in reports.items()}
+            # Print summary table
+            _print_comparison_summary_table(reports)
+
+            results = {m: _serialize_report(r.to_dict()) for m, r in reports.items()}
 
             if args.format == "json":
                 with open(args.output / "compare_results.json", "w") as f:
-                    json.dump(results, f, indent=2)
+                    json.dump(results, f, indent=2, default=str)
             elif args.format == "markdown":
-                from metaeval.report.markdown import generate_summary_report
-                report = generate_summary_report(comparison_reports=reports)
-                with open(args.output / "compare_report.md", "w") as f:
-                    f.write(report)
+                try:
+                    from metaeval.report.markdown import generate_summary_report
+                    report = generate_summary_report(comparison_reports=reports)
+                    with open(args.output / "compare_report.md", "w") as f:
+                        f.write(report)
+                except ImportError as e:
+                    logger.warning(f"Markdown generation skipped: {e}")
 
         logger.info(f"Analysis complete. Results saved to {args.output}")
         return 0
 
     except Exception as e:
         logger.error(f"Analysis failed: {e}")
+        import traceback
+        traceback.print_exc()
         return 1
+
+
+def _serialize_report(obj):
+    """Recursively convert numpy types to Python types for JSON serialization."""
+    import numpy as np
+    if isinstance(obj, dict):
+        return {k: _serialize_report(v) for k, v in obj.items()}
+    elif isinstance(obj, list):
+        return [_serialize_report(v) for v in obj]
+    elif isinstance(obj, (np.bool_, bool)):
+        return bool(obj)
+    elif isinstance(obj, (np.integer, int)):
+        return int(obj)
+    elif isinstance(obj, (np.floating, float)):
+        return float(obj)
+    elif isinstance(obj, np.ndarray):
+        return obj.tolist()
+    return obj
+
+
+def _print_bias_summary_table(reports: dict) -> None:
+    """Print a summary table of bias analysis results."""
+    print("\n" + "=" * 100)
+    print("POSITION BIAS SUMMARY")
+    print("=" * 100)
+    print(f"{'Model':<30} {'Overall':>8} {'A':>7} {'B':>7} {'C':>7} {'D':>7} {'Spread':>7} {'Bias?':>6}")
+    print("-" * 100)
+
+    # Sort by overall accuracy descending
+    sorted_models = sorted(
+        reports.items(),
+        key=lambda x: x[1].overall_accuracy,
+        reverse=True
+    )
+
+    for model, report in sorted_models:
+        acc = report.accuracy_by_position
+        spread = max(acc.values()) - min(acc.values())
+        bias = "YES" if report.has_significant_bias else "no"
+
+        print(
+            f"{model:<30} "
+            f"{report.overall_accuracy:>7.1%} "
+            f"{acc.get('A', 0):>6.1%} "
+            f"{acc.get('B', 0):>6.1%} "
+            f"{acc.get('C', 0):>6.1%} "
+            f"{acc.get('D', 0):>6.1%} "
+            f"{spread:>6.1%} "
+            f"{bias:>6}"
+        )
+
+    print("-" * 100)
+    biased_count = sum(1 for r in reports.values() if r.has_significant_bias)
+    print(f"Models with significant bias: {biased_count}/{len(reports)}")
+    print("=" * 100)
+
+
+def _build_comparison_dataframe(mcq_dir: Path, judged_dir: Path) -> "pd.DataFrame":
+    """
+    Build aligned MCQ/OSQ comparison DataFrame from lm-eval outputs and judged results.
+
+    Args:
+        mcq_dir: Base lm-eval output directory with MCQ results
+        judged_dir: Directory containing judged OSQ results (*.judged.jsonl)
+
+    Returns:
+        DataFrame with columns: model, question_id, mcq_score, osq_score
+    """
+    import json
+    import pandas as pd
+    from metaeval.harness import LMEvalParser
+
+    logger.info(f"Building comparison DataFrame from {mcq_dir} and {judged_dir}")
+
+    # Collect MCQ results by model - average across position variants
+    mcq_results = LMEvalParser.collect_mcq_by_variant(mcq_dir)
+
+    if not mcq_results:
+        logger.warning("No MCQ results found")
+        return pd.DataFrame()
+
+    # Build MCQ scores DataFrame (average across variants per question)
+    mcq_rows = []
+    for model, variants in mcq_results.items():
+        # Aggregate by question across variants
+        question_scores: dict[int, list[int]] = {}
+        for variant, results in variants.items():
+            for r in results:
+                if r.question_id not in question_scores:
+                    question_scores[r.question_id] = []
+                question_scores[r.question_id].append(1 if r.is_correct else 0)
+
+        # Average across variants
+        for qid, scores in question_scores.items():
+            mcq_rows.append({
+                "model": model,
+                "question_id": qid,
+                "mcq_score": sum(scores) / len(scores),
+            })
+
+    mcq_df = pd.DataFrame(mcq_rows)
+    logger.info(f"Loaded {len(mcq_df)} MCQ results from {len(mcq_results)} models")
+
+    # Load judged OSQ results
+    osq_rows = []
+    judged_files = list(judged_dir.glob("*.judged.jsonl")) + list(judged_dir.glob("judged.jsonl"))
+
+    if not judged_files:
+        # Also check subdirectories (model-specific judged files)
+        judged_files = list(judged_dir.glob("**/judged.jsonl"))
+
+    for judged_file in judged_files:
+        logger.info(f"Loading judged results from {judged_file}")
+        with open(judged_file) as f:
+            for line in f:
+                if not line.strip():
+                    continue
+                try:
+                    item = json.loads(line)
+                    # Extract model from path or item
+                    model = item.get("model", judged_file.parent.name)
+                    qid = item.get("question_id", item.get("doc_id"))
+                    score = item.get("total_score", item.get("score", 0))
+
+                    if qid is not None:
+                        osq_rows.append({
+                            "model": model,
+                            "question_id": qid,
+                            "osq_score": float(score),
+                        })
+                except json.JSONDecodeError:
+                    continue
+
+    if not osq_rows:
+        logger.warning(f"No judged OSQ results found in {judged_dir}")
+        return pd.DataFrame()
+
+    osq_df = pd.DataFrame(osq_rows)
+    logger.info(f"Loaded {len(osq_df)} OSQ judgments")
+
+    # Normalize model names (lm-eval sanitizes with __)
+    def normalize_model(name: str) -> str:
+        return name.replace("__", ":").replace(":", "__")
+
+    mcq_df["model_normalized"] = mcq_df["model"].apply(normalize_model)
+    osq_df["model_normalized"] = osq_df["model"].apply(normalize_model)
+
+    # Merge on normalized model and question_id
+    merged = mcq_df.merge(
+        osq_df,
+        left_on=["model_normalized", "question_id"],
+        right_on=["model_normalized", "question_id"],
+        how="inner",
+        suffixes=("", "_osq")
+    )
+
+    if merged.empty:
+        # Try merging without model normalization
+        logger.info("Normalized merge empty, trying direct merge...")
+        merged = mcq_df.merge(
+            osq_df,
+            on=["model", "question_id"],
+            how="inner",
+        )
+
+    if merged.empty:
+        logger.warning("No aligned MCQ/OSQ data found after merge")
+        logger.info(f"MCQ models: {mcq_df['model'].unique().tolist()}")
+        logger.info(f"OSQ models: {osq_df['model'].unique().tolist()}")
+        return pd.DataFrame()
+
+    # Use the original model name from MCQ
+    result = merged[["model", "question_id", "mcq_score", "osq_score"]].copy()
+    logger.info(f"Built comparison DataFrame with {len(result)} aligned question-model pairs")
+
+    return result
+
+
+def _print_comparison_summary_table(reports: dict) -> None:
+    """Print a summary table of format comparison results."""
+    print("\n" + "=" * 110)
+    print("MCQ vs OSQ COMPARISON SUMMARY")
+    print("=" * 110)
+    print(
+        f"{'Model':<30} "
+        f"{'MCQ':>8} "
+        f"{'OSQ':>8} "
+        f"{'Diff':>8} "
+        f"{'Pearson':>9} "
+        f"{'Spearman':>9} "
+        f"{'Effect':>9} "
+        f"{'N':>6}"
+    )
+    print("-" * 110)
+
+    # Sort by MCQ accuracy descending
+    sorted_models = sorted(
+        reports.items(),
+        key=lambda x: x[1].mcq_accuracy,
+        reverse=True
+    )
+
+    for model, report in sorted_models:
+        pearson = report.correlations.get("pearson")
+        spearman = report.correlations.get("spearman")
+        cohens = report.effect_sizes.get("cohens_d")
+
+        pearson_str = f"{pearson.coefficient:.3f}" if pearson else "N/A"
+        spearman_str = f"{spearman.coefficient:.3f}" if spearman else "N/A"
+        effect_str = f"{cohens.value:.3f}" if cohens else "N/A"
+        diff = report.mcq_accuracy - report.osq_normalized
+
+        print(
+            f"{model:<30} "
+            f"{report.mcq_accuracy:>7.1%} "
+            f"{report.osq_normalized:>7.1%} "
+            f"{diff:>+7.1%} "
+            f"{pearson_str:>9} "
+            f"{spearman_str:>9} "
+            f"{effect_str:>9} "
+            f"{report.n_questions:>6}"
+        )
+
+    print("-" * 110)
+
+    # Summary statistics
+    avg_mcq = sum(r.mcq_accuracy for r in reports.values()) / len(reports)
+    avg_osq = sum(r.osq_normalized for r in reports.values()) / len(reports)
+    print(f"Average across {len(reports)} models: MCQ={avg_mcq:.1%}, OSQ={avg_osq:.1%}, Diff={avg_mcq-avg_osq:+.1%}")
+    print("=" * 110)
 
 
 def cmd_judge(args: argparse.Namespace) -> int:
@@ -442,12 +741,55 @@ def cmd_judge(args: argparse.Namespace) -> int:
     # Get model (use default if not specified)
     model = args.model or get_default_model(args.provider)
 
-    # Determine output path
-    output_path = args.output or args.input.with_suffix(".judged.jsonl")
-
     # Check for resume
     resume = not args.no_resume
     enable_cache = not args.no_cache
+
+    try:
+        # Check if input is lm-eval output directory or file
+        if args.input.is_dir():
+            # Parse lm-eval OSQ output directory
+            from metaeval.harness import LMEvalParser
+
+            logger.info("Detected lm-eval output directory, parsing OSQ results...")
+            parser = LMEvalParser(args.input)
+            osq_results = parser.to_osq_results()
+
+            if not osq_results:
+                logger.error("No OSQ results found in directory")
+                return 1
+
+            # Convert to format expected by judge
+            items = [
+                {
+                    "question_id": r.question_id,
+                    "question": r.question,
+                    "expected_answer": r.expected_answer,
+                    "response": r.model_response,
+                    "rubric": r.rubric,
+                    "model": r.model,
+                }
+                for r in osq_results
+            ]
+
+            # Determine output path based on input directory
+            output_path = args.output or (args.input / "judged.jsonl")
+            evaluated_model = osq_results[0].model if osq_results else "unknown"
+            logger.info(f"Loaded {len(items)} OSQ responses from model: {evaluated_model}")
+        else:
+            # Load from file
+            with open(args.input) as f:
+                if args.input.suffix == ".jsonl":
+                    items = [json.loads(line) for line in f if line.strip()]
+                else:
+                    items = json.load(f)
+
+            # Determine output path
+            output_path = args.output or args.input.with_suffix(".judged.jsonl")
+
+    except Exception as e:
+        logger.error(f"Failed to load input: {e}")
+        return 1
 
     logger.info(
         f"Running LLM-as-a-Judge on {args.input}\n"
@@ -457,16 +799,11 @@ def cmd_judge(args: argparse.Namespace) -> int:
         f"  Temperature: {args.temperature}\n"
         f"  Output: {output_path}\n"
         f"  Resume: {resume}\n"
-        f"  Cache: {enable_cache}"
+        f"  Cache: {enable_cache}\n"
+        f"  Items: {len(items)}"
     )
 
     try:
-        # Load input
-        with open(args.input) as f:
-            if args.input.suffix == ".jsonl":
-                items = [json.loads(line) for line in f if line.strip()]
-            else:
-                items = json.load(f)
 
         # Create judge with settings
         settings = JudgeSettings(

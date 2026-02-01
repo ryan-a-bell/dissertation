@@ -124,13 +124,14 @@ def multi_run_dir(tmp_path):
     """Create multiple output directories for testing discovery."""
     # MCQ variants
     for variant in ["a", "b", "c", "d"]:
-        for model in ["llama3.3__70b", "gpt-4o"]:
-            output_dir = tmp_path / f"sysengbench-{variant}" / model
+        for sanitized_model, model_name in [("llama3.3__70b", "llama3.3:70b"), ("gpt-4o", "gpt-4o")]:
+            output_dir = tmp_path / f"sysengbench-{variant}" / sanitized_model
             output_dir.mkdir(parents=True)
 
             results = SAMPLE_MCQ_RESULTS.copy()
             results["results"] = {f"sysengbench-{variant}": SAMPLE_MCQ_RESULTS["results"]["sysengbench-a"]}
-            results["model_name_sanitized"] = model
+            results["model_name"] = model_name
+            results["model_name_sanitized"] = sanitized_model
 
             (output_dir / "results_2025-01-15.json").write_text(json.dumps(results))
             (output_dir / "samples_sysengbench-a_2025-01-15.jsonl").write_text(
@@ -138,12 +139,13 @@ def multi_run_dir(tmp_path):
             )
 
     # OSQ
-    for model in ["llama3.3__70b", "gpt-4o"]:
-        output_dir = tmp_path / "sysengbench-osq" / model
+    for sanitized_model, model_name in [("llama3.3__70b", "llama3.3:70b"), ("gpt-4o", "gpt-4o")]:
+        output_dir = tmp_path / "sysengbench-osq" / sanitized_model
         output_dir.mkdir(parents=True)
 
         results = SAMPLE_OSQ_RESULTS.copy()
-        results["model_name_sanitized"] = model
+        results["model_name"] = model_name
+        results["model_name_sanitized"] = sanitized_model
 
         (output_dir / "results_2025-01-15.json").write_text(json.dumps(results))
         (output_dir / "samples_sysengbench-osq_2025-01-15.jsonl").write_text(
