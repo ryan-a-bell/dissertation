@@ -106,6 +106,60 @@ class PositionBiasAnalyzer:
         accuracy = data.groupby(self.position_col)[self.correct_col].mean()
         return accuracy.to_dict()
 
+    def validate_model_data(self, model: str) -> dict[str, Any]:
+        """
+        Validate that a model has sufficient data for bias analysis.
+
+        Args:
+            model: Model name to validate
+
+        Returns:
+            Dict with 'valid', 'n_variants', 'variants', 'message'
+        """
+        model_data = self.data[self.data[self.model_col] == model]
+
+        if len(model_data) == 0:
+            return {
+                "valid": False,
+                "n_variants": 0,
+                "variants": [],
+                "message": f"No data found for model: {model}",
+            }
+
+        variants = sorted(model_data[self.position_col].unique().tolist())
+        n_variants = len(variants)
+
+        if n_variants < 2:
+            return {
+                "valid": False,
+                "n_variants": n_variants,
+                "variants": variants,
+                "message": (
+                    f"Insufficient variants for {model}: found {n_variants} ({', '.join(variants)}). "
+                    f"Position bias analysis requires at least 2 variants."
+                ),
+            }
+
+        if n_variants < 4:
+            expected = {"A", "B", "C", "D"}
+            missing = sorted(expected - set(variants))
+            return {
+                "valid": True,
+                "n_variants": n_variants,
+                "variants": variants,
+                "message": (
+                    f"Suboptimal coverage for {model}: {n_variants}/4 variants ({', '.join(variants)}). "
+                    f"Missing: {', '.join(missing)}. Results may be less reliable."
+                ),
+            }
+
+        return {
+            "valid": True,
+            "n_variants": n_variants,
+            "variants": variants,
+            "message": None,
+        }
+
     def analyze(self, model: str) -> PositionBiasReport:
         """
         Perform comprehensive bias analysis for a model.
@@ -115,7 +169,18 @@ class PositionBiasAnalyzer:
 
         Returns:
             PositionBiasReport with all analysis results
+
+        Raises:
+            ValueError: If model has insufficient data or variants
         """
+        # Validate before analysis
+        validation = self.validate_model_data(model)
+        if not validation["valid"]:
+            raise ValueError(validation["message"])
+
+        if validation["message"]:
+            logger.warning(validation["message"])
+
         model_data = self.data[self.data[self.model_col] == model].copy()
 
         if len(model_data) == 0:

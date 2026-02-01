@@ -409,6 +409,33 @@ def cmd_analyze(args: argparse.Namespace) -> int:
                     logger.error("No MCQ results found. Need variants A, B, C, D.")
                     return 1
 
+                # Validate variant coverage per model
+                validation_errors = _validate_variant_coverage(results_by_model)
+                if validation_errors["errors"]:
+                    for err in validation_errors["errors"]:
+                        logger.error(err)
+                    print("\n" + "=" * 80)
+                    print("INSUFFICIENT DATA FOR BIAS ANALYSIS")
+                    print("=" * 80)
+                    print("\nPosition bias analysis requires at least 2 variants (A, B, C, or D).")
+                    print("Ideally, run all 4 variants for each model.\n")
+                    print("To generate variants:")
+                    print("  metaeval variants data/benchmark.csv -o variants/\n")
+                    print("Then run lm-eval on each variant:")
+                    print("  lm_eval --tasks sysengbench-a.yaml,sysengbench-b.yaml,...")
+                    print("=" * 80)
+                    return 1
+
+                if validation_errors["warnings"]:
+                    print("\n" + "-" * 80)
+                    print("WARNING: Suboptimal variant coverage")
+                    print("-" * 80)
+                    for warn in validation_errors["warnings"]:
+                        print(f"  {warn}")
+                    print("\nFor best results, run all 4 variants (A, B, C, D) for each model.")
+                    print("Proceeding with available data...")
+                    print("-" * 80 + "\n")
+
                 # Convert to DataFrame expected by PositionBiasAnalyzer
                 rows = []
                 for model, variants in results_by_model.items():
@@ -501,6 +528,41 @@ def cmd_analyze(args: argparse.Namespace) -> int:
         import traceback
         traceback.print_exc()
         return 1
+
+
+def _validate_variant_coverage(
+    results_by_model: dict[str, dict[str, list]]
+) -> dict[str, list[str]]:
+    """
+    Validate that models have sufficient variant coverage for bias analysis.
+
+    Args:
+        results_by_model: Dict of {model: {variant: [results]}}
+
+    Returns:
+        Dict with "errors" and "warnings" lists
+    """
+    errors = []
+    warnings = []
+    expected_variants = {"A", "B", "C", "D"}
+
+    for model, variants in results_by_model.items():
+        found_variants = set(variants.keys())
+        n_variants = len(found_variants)
+        missing = expected_variants - found_variants
+
+        if n_variants < 2:
+            errors.append(
+                f"{model}: Only {n_variants} variant(s) found ({', '.join(sorted(found_variants))}). "
+                f"Need at least 2 for bias analysis."
+            )
+        elif n_variants < 4:
+            warnings.append(
+                f"{model}: {n_variants}/4 variants ({', '.join(sorted(found_variants))}). "
+                f"Missing: {', '.join(sorted(missing))}"
+            )
+
+    return {"errors": errors, "warnings": warnings}
 
 
 def _serialize_report(obj):
