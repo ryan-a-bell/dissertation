@@ -3,6 +3,10 @@ src/phase4_inference/runpod_results/
 src/phase4_inference/runpod_logs/
 src/phase5_llm_as_a_judge/runpod_llm_judge_logs/
 
+scripts/serc2024
+scripts/serc2025
+
+
 # do not upload the viz/viz-outputs/ directory
 viz/viz-outputs/
 
