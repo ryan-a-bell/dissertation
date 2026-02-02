@@ -33,6 +33,7 @@ class OpenRouterJudge(JudgeBase):
         api_key: str | None = None,
         site_url: str | None = None,
         site_name: str | None = None,
+        **kwargs: Any,
     ):
         """
         Initialize OpenRouter judge.
@@ -43,6 +44,7 @@ class OpenRouterJudge(JudgeBase):
             api_key: OpenRouter API key (default from config/env)
             site_url: Optional site URL for rankings
             site_name: Optional site name for rankings
+            **kwargs: Additional arguments passed to JudgeBase (e.g., enable_cache)
         """
         config = get_config()
         self.api_key = api_key or config.api.openrouter_api_key
@@ -56,7 +58,7 @@ class OpenRouterJudge(JudgeBase):
         self.site_url = site_url
         self.site_name = site_name or "metaeval"
 
-        super().__init__(model, settings)
+        super().__init__(model, settings, **kwargs)
 
     def _setup(self, **kwargs: Any) -> None:
         """Initialize OpenAI-compatible client for OpenRouter."""

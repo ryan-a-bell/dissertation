@@ -19,6 +19,7 @@ class OpenAIJudge(JudgeBase):
         model: str = "gpt-4o",
         settings: JudgeSettings | None = None,
         api_key: str | None = None,
+        **kwargs: Any,
     ):
         """
         Initialize OpenAI judge.
@@ -27,6 +28,7 @@ class OpenAIJudge(JudgeBase):
             model: OpenAI model name (e.g., "gpt-4o", "gpt-4o-mini")
             settings: Judge settings
             api_key: OpenAI API key (default from config/env)
+            **kwargs: Additional arguments passed to JudgeBase (e.g., enable_cache)
         """
         config = get_config()
         self.api_key = api_key or config.api.openai_api_key
@@ -37,7 +39,7 @@ class OpenAIJudge(JudgeBase):
                 "or pass api_key parameter."
             )
 
-        super().__init__(model, settings)
+        super().__init__(model, settings, **kwargs)
 
     def _setup(self, **kwargs: Any) -> None:
         """Initialize OpenAI client."""

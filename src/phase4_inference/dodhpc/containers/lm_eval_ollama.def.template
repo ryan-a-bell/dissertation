@@ -1,0 +1,46 @@
+# Parameterized container definition for LM-Eval + Ollama
+#
+# This is a TEMPLATE file. Use build_container.sh to build with your CUDA version.
+#
+# Build examples:
+#   ./build_container.sh 12.4    # For CUDA 12.4
+#   ./build_container.sh 11.8    # For CUDA 11.8
+#   ./build_container.sh 12.8    # For CUDA 12.8 (default)
+#
+# The actual .def file is generated from this template.
+
+Bootstrap: docker
+From: {{BASE_IMAGE}}
+
+%post
+    set -e
+
+    # System packages
+    apt-get update && apt-get install -y \
+        curl \
+        git \
+        lshw \
+        ca-certificates \
+        && rm -rf /var/lib/apt/lists/*
+
+    # Install Ollama CLI
+    curl -fsSL https://ollama.com/install.sh | sh
+
+    # Python packages
+    pip install --upgrade pip
+    pip install "lm_eval[api]" ollama==0.3.3
+
+%environment
+    export OLLAMA_HOST=0.0.0.0
+    export PYTHONUNBUFFERED=1
+    export LC_ALL=C.UTF-8
+    export LANG=C.UTF-8
+
+%runscript
+    exec "$@"
+
+%labels
+    Author dissertation-hpc
+    Version 1.0
+    CUDA_Version {{CUDA_VERSION}}
+    Description LM-Eval + Ollama inference container for HPC
