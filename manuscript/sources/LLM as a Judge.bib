@@ -1,0 +1,315 @@
+@misc{chandakAnswerMatchingOutperforms2025,
+  title = {Answer {{Matching Outperforms Multiple Choice}} for {{Language Model Evaluation}}},
+  author = {Chandak, Nikhil and Goel, Shashwat and Prabhu, Ameya and Hardt, Moritz and Geiping, Jonas},
+  year = 2025,
+  month = jul,
+  number = {arXiv:2507.02856},
+  eprint = {2507.02856},
+  primaryclass = {cs},
+  publisher = {arXiv},
+  doi = {10.48550/arXiv.2507.02856},
+  urldate = {2025-12-04},
+  abstract = {Multiple choice benchmarks have long been the workhorse of language model evaluation because grading multiple choice is objective and easy to automate. However, we show multiple choice questions from popular benchmarks can often be answered without even seeing the question. These shortcuts arise from a fundamental limitation of discriminative evaluation not shared by evaluations of the model's free-form, generative answers. Until recently, there appeared to be no viable, scalable alternative to multiple choice--but, we show that this has changed. We consider generative evaluation via what we call answer matching: Give the candidate model the question without the options, have it generate a free-form response, then use a modern language model with the reference answer to determine if the response matches the reference. To compare the validity of different evaluation strategies, we annotate MMLU-Pro and GPQA-Diamond to obtain human grading data, and measure the agreement of each evaluation approach. We find answer matching using recent models--even small ones--achieves near-perfect agreement, in the range of inter-annotator agreement. In contrast, both multiple choice evaluation and using LLM-as-a-judge without reference answers aligns poorly with human grading. Improving evaluations via answer matching is not merely a conceptual concern: the rankings of several models change significantly when evaluating their free-form responses with answer matching. In light of these findings, we discuss how to move the evaluation ecosystem from multiple choice to answer matching.},
+  archiveprefix = {arXiv},
+  keywords = {Computer Science - Artificial Intelligence,Computer Science - Computation and Language,Computer Science - Machine Learning},
+  note = {Comment: 34 pages, Code is available at https://github.com/nikhilchandak/answer-matching},
+  file = {C\:\\Users\\rabel\\Zotero\\storage\\WGKI7M65\\Chandak et al. - 2025 - Answer Matching Outperforms Multiple Choice for Language Model Evaluation.pdf;C\:\\Users\\rabel\\Zotero\\storage\\LUPXBUL7\\2507.html}
+}
+
+@article{chern2024trusted,
+  title = {Can Large Language Models Be Trusted for Evaluation? {{Scalable}} Meta-Evaluation of Llms as Evaluators via Agent Debate},
+  author = {Chern, Steffi and Chern, Ethan and Neubig, Graham and Liu, Pengfei},
+  year = 2024,
+  journal = {arXiv preprint arXiv:2401.16788},
+  eprint = {2401.16788},
+  archiveprefix = {arXiv}
+}
+
+@misc{dubois_Length_Controlled_Alpaca_Eval_Simple_2025,
+  title = {Length-{{Controlled AlpacaEval}}: {{A Simple Way}} to {{Debias Automatic Evaluators}}},
+  shorttitle = {Length-{{Controlled AlpacaEval}}},
+  author = {Dubois, Yann and Galambosi, Bal{\'a}zs and Liang, Percy and Hashimoto, Tatsunori B.},
+  year = 2025,
+  month = mar,
+  number = {arXiv:2404.04475},
+  eprint = {2404.04475},
+  primaryclass = {cs},
+  publisher = {arXiv},
+  doi = {10.48550/arXiv.2404.04475},
+  urldate = {2026-01-01},
+  abstract = {LLM-based auto-annotators have become a key component of the LLM development process due to their cost-effectiveness and scalability compared to human-based evaluation. However, these auto-annotators can introduce biases that are hard to remove. Even simple, known confounders such as preference for longer outputs remain in existing automated evaluation metrics. We propose a simple regression analysis approach for controlling biases in auto-evaluations. As a real case study, we focus on reducing the length bias of AlpacaEval, a fast and affordable benchmark for instruction-tuned LLMs that uses LLMs to estimate response quality. Despite being highly correlated with human preferences, AlpacaEval is known to favor models that generate longer outputs. We introduce a length-controlled AlpacaEval that aims to answer the counterfactual question: "What would the preference be if the model's and baseline's output had the same length?" To achieve this, we first fit a generalized linear model to predict the biased auto-annotator's preferences based on the mediators we want to control for (length difference) and other relevant features. We then obtain length-controlled preferences by predicting preferences while conditioning the GLM with a zero difference in lengths. Length-controlling not only improves the robustness of the metric to manipulations in model verbosity, but we also find that it increases the Spearman correlation with LMSYS Chatbot Arena from 0.94 to 0.98.},
+  archiveprefix = {arXiv},
+  keywords = {Computer Science - Artificial Intelligence,Computer Science - Computation and Language,Computer Science - Machine Learning,Statistics - Machine Learning},
+  note = {Comment: COLM 2024},
+  file = {C\:\\Users\\rabel\\Zotero\\storage\\A6IHDJ8M\\Dubois et al. - 2025 - Length-Controlled AlpacaEval A Simple Way to Debias Automatic Evaluators.pdf;C\:\\Users\\rabel\\Zotero\\storage\\39JEVTP2\\2404.html}
+}
+
+@inproceedings{fu2023reliable,
+  title = {Are Large Language Models Reliable Judges? {{A}} Study on the Factuality Evaluation Capabilities of Llms},
+  booktitle = {Proceedings of the {{GEM}} Workshop},
+  author = {Fu, Xue-Yong and Laskar, Md Tahmid Rahman and Chen, Cheng and TN, Shashi Bhushan},
+  year = 2023,
+  publisher = {Association for Computational Linguistics}
+}
+
+@article{gao2023humanlike,
+  title = {Human-like Summarization Evaluation with {{ChatGPT}}},
+  author = {Gao, Mingqi and Ruan, Jie and Sun, Renliang and Yin, Xunjian and Yang, Shiping and Wan, Xiaojun},
+  year = 2023,
+  journal = {arXiv preprint arXiv:2304.02554},
+  eprint = {2304.02554},
+  archiveprefix = {arXiv}
+}
+
+@misc{gu_survey_on_llm_as_a_judge_2025,
+  title = {A {{Survey}} on {{LLM-as-a-Judge}}},
+  author = {Gu, Jiawei and Jiang, Xuhui and Shi, Zhichao and Tan, Hexiang and Zhai, Xuehao and Xu, Chengjin and Li, Wei and Shen, Yinghan and Ma, Shengjie and Liu, Honghao and Wang, Saizhuo and Zhang, Kun and Wang, Yuanzhuo and Gao, Wen and Ni, Lionel and Guo, Jian},
+  year = 2025,
+  month = mar,
+  number = {arXiv:2411.15594},
+  eprint = {2411.15594},
+  primaryclass = {cs},
+  publisher = {arXiv},
+  doi = {10.48550/arXiv.2411.15594},
+  urldate = {2025-04-01},
+  abstract = {Accurate and consistent evaluation is crucial for decision-making across numerous fields, yet it remains a challenging task due to inherent subjectivity, variability, and scale. Large Language Models (LLMs) have achieved remarkable success across diverse domains, leading to the emergence of "LLM-as-a-Judge," where LLMs are employed as evaluators for complex tasks. With their ability to process diverse data types and provide scalable, cost-effective, and consistent assessments, LLMs present a compelling alternative to traditional expert-driven evaluations. However, ensuring the reliability of LLM-as-a-Judge systems remains a significant challenge that requires careful design and standardization. This paper provides a comprehensive survey of LLM-as-a-Judge, addressing the core question: How can reliable LLM-as-a-Judge systems be built? We explore strategies to enhance reliability, including improving consistency, mitigating biases, and adapting to diverse assessment scenarios. Additionally, we propose methodologies for evaluating the reliability of LLM-as-a-Judge systems, supported by a novel benchmark designed for this purpose. To advance the development and real-world deployment of LLM-as-a-Judge systems, we also discussed practical applications, challenges, and future directions. This survey serves as a foundational reference for researchers and practitioners in this rapidly evolving field.},
+  archiveprefix = {arXiv},
+  keywords = {Computer Science - Artificial Intelligence,Computer Science - Computation and Language},
+  note = {Comment: Project Page: https://awesome-llm-as-a-judge.github.io/},
+  file = {C\:\\Users\\rabel\\Zotero\\storage\\6KLCRX3B\\Gu et al. - 2025 - A Survey on LLM-as-a-Judge.pdf;C\:\\Users\\rabel\\Zotero\\storage\\4YAJ24RW\\2411.html}
+}
+
+@article{hada2023multilingual,
+  title = {Are Large Language Model-Based Evaluators the Solution to Scaling up Multilingual Evaluation?},
+  author = {Hada, Rishav and Gumma, Varun and {de Wynter}, Adrian and Diddee, Harshita and Ahmed, Mohamed and Choudhury, Monojit and Bali, Kalika and Sitaram, Sunayana},
+  year = 2023,
+  journal = {arXiv preprint arXiv:2309.07462},
+  eprint = {2309.07462},
+  archiveprefix = {arXiv}
+}
+
+@article{huang2024judge,
+  title = {An Empirical Study of {{LLM-as-a-judge}} for {{LLM}} Evaluation: {{Fine-tuned}} Judge Models Are Task-Specific Classifiers},
+  author = {Huang, Hui and Qu, Yingqi and Liu, Jing and Yang, Muyun and Zhao, Tiejun},
+  year = 2024,
+  journal = {arXiv preprint arXiv:2403.02839},
+  eprint = {2403.02839},
+  archiveprefix = {arXiv}
+}
+
+@article{huangEmpiricalStudyLLMasaJudge,
+  title = {An {{Empirical Study}} of {{LLM-as-a-Judge}} for {{LLM Evaluation}}: {{Fine-tuned Judge Model}} Is Not a {{General Substitute}} for {{GPT-4}}},
+  author = {Huang, Hui and Bu, Xingyuan and Zhou, Hongli and Qu, Yingqi and Liu, Jing and Yang, Muyun and Xu, Bing and Zhao, Tiejun},
+  abstract = {Recently, there has been a growing trend of utilizing Large Language Model (LLM) to evaluate the quality of other LLMs. Many studies have fine-tuned judge models based on opensource LLMs for evaluation. While the finetuned judge models are claimed to achieve comparable evaluation capability with GPT-4, in this work, we conduct an empirical study of LLM-as-a-Judge. Our findings indicate that although the fine-tuned judge models achieve high performance on in-domain test sets, even surpassing GPT-4, they underperform GPT-4 across several dimensions, including generalizability, fairness and adaptability. We also reveal that the fine-tuned judge model inherently operates as a task-specific classifier, consequently imposing the limitations1.},
+  langid = {english},
+  file = {C:\Users\rabel\Zotero\storage\UE25G26S\Huang et al. - An Empirical Study of LLM-as-a-Judge for LLM Evaluation Fine-tuned Judge Model is not a General Sub.pdf}
+}
+
+@misc{huTrainingLLMasaJudgeModel2025,
+  title = {Training an {{LLM-as-a-Judge Model}}: {{Pipeline}}, {{Insights}}, and {{Practical Lessons}}},
+  shorttitle = {Training an {{LLM-as-a-Judge Model}}},
+  author = {Hu, Renjun and Cheng, Yi and Meng, Libin and Xia, Jiaxin and Zong, Yi and Shi, Xing and Lin, Wei},
+  year = 2025,
+  month = feb,
+  eprint = {2502.02988},
+  primaryclass = {cs},
+  doi = {10.1145/3701716.3715265},
+  urldate = {2025-04-01},
+  abstract = {The rapid advancement of large language models (LLMs) has opened new possibilities for their adoption as evaluative judges. This paper introduces Themis, a fine-tuned LLM judge that delivers sophisticated context-aware evaluations. We provide a comprehensive overview of the development pipeline for Themis, highlighting its scenario-dependent evaluation prompts and two novel methods for controlled instruction generation. These designs enable Themis to effectively distill evaluative skills from teacher models, while retaining flexibility for continuous development. We introduce two human-labeled benchmarks for meta-evaluation, demonstrating that Themis can achieve high alignment with human preferences in an economical manner. Additionally, we explore insights into the LLM-as-a-judge paradigm, revealing nuances in performance and the varied effects of reference answers. Notably, we observe that pure knowledge distillation from strong LLMs, though common, does not guarantee performance improvement through scaling. We propose a mitigation strategy based on instruction-following difficulty. Furthermore, we provide practical guidelines covering data balancing, prompt customization, multi-objective training, and metric aggregation. We aim for our method and findings, along with the fine-tuning data, benchmarks, and model checkpoints, to support future research and development in this area.},
+  archiveprefix = {arXiv},
+  keywords = {Computer Science - Artificial Intelligence,Computer Science - Computation and Language,Computer Science - Machine Learning},
+  note = {Comment: accepted at WWW'25 (Industrial Track), extended version},
+  file = {C\:\\Users\\rabel\\Zotero\\storage\\LLEGPCNS\\Hu et al. - 2025 - Training an LLM-as-a-Judge Model Pipeline, Insights, and Practical Lessons.pdf;C\:\\Users\\rabel\\Zotero\\storage\\3F3T24HW\\2502.html}
+}
+
+@article{kenton2024arena,
+  title = {Chatbot Arena: {{An}} Open Platform for Evaluating Llms via Human and Model-Based Comparisons},
+  author = {Kenton, Lee and others},
+  year = 2024,
+  journal = {arXiv preprint},
+  note = {Often cited in context of Elo-based and LLM-judge evaluation}
+}
+
+@article{kim2024prometheus,
+  title = {Prometheus 2: {{An}} Open-Source {{LLM}} as a Judge with Human-Level Correlation},
+  author = {Kim, Seungone and others},
+  year = 2024,
+  journal = {arXiv preprint}
+}
+
+@article{kobayashi2024llmjudge,
+  title = {Large Language Models as Evaluators: A Comprehensive Analysis},
+  author = {Kobayashi, Goro and others},
+  year = 2024,
+  journal = {arXiv preprint}
+}
+
+@article{kocmi2023evaluation,
+  title = {Large Language Models Are State-of-the-Art Evaluators of Translation Quality},
+  author = {Kocmi, Tomas and Federmann, Christian},
+  year = 2023,
+  journal = {arXiv preprint arXiv:2302.14520},
+  eprint = {2302.14520},
+  archiveprefix = {arXiv}
+}
+
+@misc{li_llms_as_judges_2024,
+  title = {{{LLMs-as-Judges}}: {{A Comprehensive Survey}} on {{LLM-based Evaluation Methods}}},
+  shorttitle = {{{LLMs-as-Judges}}},
+  author = {Li, Haitao and Dong, Qian and Chen, Junjie and Su, Huixue and Zhou, Yujia and Ai, Qingyao and Ye, Ziyi and Liu, Yiqun},
+  year = 2024,
+  month = dec,
+  number = {arXiv:2412.05579},
+  eprint = {2412.05579},
+  primaryclass = {cs},
+  publisher = {arXiv},
+  doi = {10.48550/arXiv.2412.05579},
+  urldate = {2025-04-01},
+  abstract = {The rapid advancement of Large Language Models (LLMs) has driven their expanding application across various fields. One of the most promising applications is their role as evaluators based on natural language responses, referred to as ''LLMs-as-judges''. This framework has attracted growing attention from both academia and industry due to their excellent effectiveness, ability to generalize across tasks, and interpretability in the form of natural language. This paper presents a comprehensive survey of the LLMs-as-judges paradigm from five key perspectives: Functionality, Methodology, Applications, Meta-evaluation, and Limitations. We begin by providing a systematic definition of LLMs-as-Judges and introduce their functionality (Why use LLM judges?). Then we address methodology to construct an evaluation system with LLMs (How to use LLM judges?). Additionally, we investigate the potential domains for their application (Where to use LLM judges?) and discuss methods for evaluating them in various contexts (How to evaluate LLM judges?). Finally, we provide a detailed analysis of the limitations of LLM judges and discuss potential future directions. Through a structured and comprehensive analysis, we aim aims to provide insights on the development and application of LLMs-as-judges in both research and practice. We will continue to maintain the relevant resource list at https://github.com/CSHaitao/Awesome-LLMs-as-Judges.},
+  archiveprefix = {arXiv},
+  keywords = {Computer Science - Computation and Language,Computer Science - Information Retrieval},
+  note = {Comment: 60 pages, comprehensive and continuously updated},
+  file = {C\:\\Users\\rabel\\Zotero\\storage\\HTYQ5DFD\\Li et al. - 2024 - LLMs-as-Judges A Comprehensive Survey on LLM-based Evaluation Methods.pdf;C\:\\Users\\rabel\\Zotero\\storage\\FBJ9UYXR\\2412.html}
+}
+
+@misc{liCrowdsourcedDataHighQuality2024,
+  title = {From {{Crowdsourced Data}} to {{High-Quality Benchmarks}}: {{Arena-Hard}} and {{BenchBuilder Pipeline}}},
+  shorttitle = {From {{Crowdsourced Data}} to {{High-Quality Benchmarks}}},
+  author = {Li, Tianle and Chiang, Wei-Lin and Frick, Evan and Dunlap, Lisa and Wu, Tianhao and Zhu, Banghua and Gonzalez, Joseph E. and Stoica, Ion},
+  year = 2024,
+  month = oct,
+  number = {arXiv:2406.11939},
+  eprint = {2406.11939},
+  primaryclass = {cs},
+  publisher = {arXiv},
+  doi = {10.48550/arXiv.2406.11939},
+  urldate = {2024-12-23},
+  abstract = {The rapid evolution of Large Language Models (LLMs) has outpaced the development of model evaluation, highlighting the need for continuous curation of new, challenging benchmarks. However, manual curation of high-quality, human-aligned benchmarks is expensive and time-consuming. To address this, we introduce BenchBuilder, an automated pipeline that leverages LLMs to curate high-quality, open-ended prompts from large, crowd-sourced datasets, enabling continuous benchmark updates without human in the loop. We apply BenchBuilder to datasets such as Chatbot Arena and WildChat-1M, extracting challenging prompts and utilizing LLM-as-a-Judge for automatic model evaluation. To validate benchmark quality, we propose new metrics to measure a benchmark's alignment with human preferences and ability to separate models. We release Arena-Hard-Auto, a benchmark consisting 500 challenging prompts curated by BenchBuilder. Arena-Hard-Auto provides 3x higher separation of model performances compared to MT-Bench and achieves 98.6\% correlation with human preference rankings, all at a cost of \$20. Our work sets a new framework for the scalable curation of automated benchmarks from extensive data.},
+  archiveprefix = {arXiv},
+  keywords = {Computer Science - Artificial Intelligence,Computer Science - Computation and Language,Computer Science - Machine Learning},
+  file = {C\:\\Users\\rabel\\Zotero\\storage\\A3KPXVII\\Li et al. - 2024 - From Crowdsourced Data to High-Quality Benchmarks Arena-Hard and BenchBuilder Pipeline.pdf;C\:\\Users\\rabel\\Zotero\\storage\\BVK8BNCM\\2406.html}
+}
+
+@misc{LLMasajudgeCompleteGuide,
+  title = {{{LLM-as-a-judge}}: A Complete Guide to Using {{LLMs}} for Evaluations},
+  shorttitle = {{{LLM-as-a-judge}}},
+  urldate = {2025-03-17},
+  abstract = {LLM-as-a-judge is a common technique to evaluate LLM-powered products. In this guide, we'll cover how it works, how to build an LLM evaluator and craft good prompts, and what are the alternatives to LLM evaluations.},
+  howpublished = {https://www.evidentlyai.com/llm-guide/llm-as-a-judge},
+  langid = {english},
+  file = {C:\Users\rabel\Zotero\storage\CZLRPDY5\llm-as-a-judge.html}
+}
+
+@misc{LLMasaJudgeSimplyExplained,
+  title = {{{LLM-as-a-Judge Simply Explained}}: {{The Complete Guide}} to {{Run LLM Evals}} at {{Scale}} - {{Confident AI}}},
+  shorttitle = {{{LLM-as-a-Judge Simply Explained}}},
+  urldate = {2026-01-04},
+  abstract = {In this article, I'll debunk what LLM judges are and go through why they are the best for LLM evaluation.},
+  howpublished = {https://www.confident-ai.com/blog/why-llm-as-a-judge-is-the-best-llm-evaluation-method},
+  langid = {english},
+  file = {C:\Users\rabel\Zotero\storage\PAU3ZSJF\why-llm-as-a-judge-is-the-best-llm-evaluation-method.html}
+}
+
+@article{lu2024bias,
+  title = {{{LLMs}} as Judges: {{Biases}}, Variance, and Evaluation Stability},
+  author = {Lu, Yi and others},
+  year = 2024,
+  journal = {arXiv preprint}
+}
+
+@article{luo2023llm,
+  title = {Large Language Models as Human-Level Evaluators},
+  author = {Luo, Jie and others},
+  year = 2023,
+  journal = {arXiv preprint}
+}
+
+@article{perez2022discovering,
+  title = {Discovering Language Model Behaviors with Model-Written Evaluations},
+  author = {Perez, Ethan and others},
+  year = 2022,
+  journal = {arXiv preprint arXiv:2212.09251},
+  eprint = {2212.09251},
+  archiveprefix = {arXiv}
+}
+
+@book{raschka_build_llm_2024,
+  title = {Build a {{Large Language Model}} ({{From Scratch}})},
+  author = {{Sebastian Raschka}},
+  year = 2024,
+  month = sep,
+  urldate = {2024-12-21},
+  abstract = {Learn how to create, train, and tweak large language models (LLMs) by building one from the ground up! In Build a Large Language Model (from Scratch) bestselling author Sebastian Raschka guides you step by step through creating your own LLM. Each stage is explained with clear text, diagrams, and examples. You'll go from the initial design and creation, to pretraining on a general corpus, and on to fine-tuning for specific tasks. Build a Large Language Model (from Scratch) teaches you how to: Plan and code all the parts of an LLM{$<$}/li{$>$} Prepare a dataset suitable for LLM training{$<$}/li{$>$} Fine-tune LLMs for text classification and with your own data{$<$}/li{$>$} Use human feedback to ensure your LLM follows instructions{$<$}/li{$>$} Load pretrained weights into an LLM{$<$}/li{$>$} {$<$}/ul{$>$} Build a Large Language Model (from Scratch) takes you inside the AI black box to tinker with the internal systems that power generative AI. As you work through each key stage of LLM creation, you'll develop an in-depth understanding of how LLMs work, their limitations, and their customization methods. Your LLM can be developed on an ordinary laptop, and used as your own personal assistant.},
+  isbn = {978-1-63343-716-6},
+  langid = {english},
+  file = {C:\Users\rabel\Zotero\storage\5AE9APH8\build-a-large-language-model-from-scratch.html}
+}
+
+@misc{raschkaBuildLargeLanguage2024,
+  title = {Build {{A Large Language Model}} ({{From Scratch}}), {{Published}} by {{Manning}}, {{ISBN}} 978-1633437166},
+  author = {Raschka, Sebastian},
+  year = 2024,
+  month = sep,
+  urldate = {2024-12-21},
+  abstract = {Implement a ChatGPT-like LLM in PyTorch from scratch, step by step}
+}
+
+@article{shankar2024evaluation,
+  title = {Who Validates the Validators? {{Aligning LLM-based}} Evaluation with Human Judgment},
+  author = {Shankar, Shreya and others},
+  year = 2024,
+  journal = {arXiv preprint}
+}
+
+@misc{thakurJudgingJudgesEvaluating2025,
+  title = {Judging the {{Judges}}: {{Evaluating Alignment}} and {{Vulnerabilities}} in {{LLMs-as-Judges}}},
+  shorttitle = {Judging the {{Judges}}},
+  author = {Thakur, Aman Singh and Choudhary, Kartik and Ramayapally, Venkat Srinik and Vaidyanathan, Sankaran and Hupkes, Dieuwke},
+  year = 2025,
+  month = jan,
+  number = {arXiv:2406.12624},
+  eprint = {2406.12624},
+  primaryclass = {cs},
+  publisher = {arXiv},
+  doi = {10.48550/arXiv.2406.12624},
+  urldate = {2025-04-01},
+  abstract = {Offering a promising solution to the scalability challenges associated with human evaluation, the LLM-as-a-judge paradigm is rapidly gaining traction as an approach to evaluating large language models (LLMs). However, there are still many open questions about the strengths and weaknesses of this paradigm, and what potential biases it may hold. In this paper, we present a comprehensive study of the performance of various LLMs acting as judges, focusing on a clean scenario in which inter-human agreement is high. Investigating thirteen judge models of different model sizes and families, judging answers of nine different 'examtaker models' - both base and instruction-tuned - we find that only the best (and largest) models achieve reasonable alignment with humans. However, they are still quite far behind inter-human agreement and their assigned scores may still differ with up to 5 points from human-assigned scores. In terms of their ranking of the nine exam-taker models, instead, also smaller models and even the lexical metric contains may provide a reasonable signal. Through error analysis and other studies, we identify vulnerabilities in judge models, such as their sensitivity to prompt complexity and length, and a tendency toward leniency. The fact that even the best judges differ from humans in this comparatively simple setup suggest that caution may be wise when using judges in more complex setups. Lastly, our research rediscovers the importance of using alignment metrics beyond simple percent alignment, showing that judges with high percent agreement can still assign vastly different scores.},
+  archiveprefix = {arXiv},
+  keywords = {Computer Science - Artificial Intelligence,Computer Science - Computation and Language},
+  file = {C\:\\Users\\rabel\\Zotero\\storage\\2JVHUZ79\\Thakur et al. - 2025 - Judging the Judges Evaluating Alignment and Vulnerabilities in LLMs-as-Judges.pdf;C\:\\Users\\rabel\\Zotero\\storage\\2VQG74IU\\2406.html}
+}
+
+@misc{zhengJudgingLLMasaJudgeMTBench2023,
+  title = {Judging {{LLM-as-a-Judge}} with {{MT-Bench}} and {{Chatbot Arena}}},
+  author = {Zheng, Lianmin and Chiang, Wei-Lin and Sheng, Ying and Zhuang, Siyuan and Wu, Zhanghao and Zhuang, Yonghao and Lin, Zi and Li, Zhuohan and Li, Dacheng and Xing, Eric P. and Zhang, Hao and Gonzalez, Joseph E. and Stoica, Ion},
+  year = 2023,
+  month = dec,
+  number = {arXiv:2306.05685},
+  eprint = {2306.05685},
+  primaryclass = {cs},
+  publisher = {arXiv},
+  doi = {10.48550/arXiv.2306.05685},
+  urldate = {2025-03-17},
+  abstract = {Evaluating large language model (LLM) based chat assistants is challenging due to their broad capabilities and the inadequacy of existing benchmarks in measuring human preferences. To address this, we explore using strong LLMs as judges to evaluate these models on more open-ended questions. We examine the usage and limitations of LLM-as-a-judge, including position, verbosity, and self-enhancement biases, as well as limited reasoning ability, and propose solutions to mitigate some of them. We then verify the agreement between LLM judges and human preferences by introducing two benchmarks: MT-bench, a multi-turn question set; and Chatbot Arena, a crowdsourced battle platform. Our results reveal that strong LLM judges like GPT-4 can match both controlled and crowdsourced human preferences well, achieving over 80\% agreement, the same level of agreement between humans. Hence, LLM-as-a-judge is a scalable and explainable way to approximate human preferences, which are otherwise very expensive to obtain. Additionally, we show our benchmark and traditional benchmarks complement each other by evaluating several variants of LLaMA and Vicuna. The MT-bench questions, 3K expert votes, and 30K conversations with human preferences are publicly available at https://github.com/lm-sys/FastChat/tree/main/fastchat/llm\_judge.},
+  archiveprefix = {arXiv},
+  keywords = {Computer Science - Artificial Intelligence,Computer Science - Computation and Language},
+  note = {Comment: NeurIPS 2023 Datasets and Benchmarks Track},
+  file = {C\:\\Users\\rabel\\Zotero\\storage\\2AX9ERNY\\Zheng et al. - 2023 - Judging LLM-as-a-Judge with MT-Bench and Chatbot Arena.pdf;C\:\\Users\\rabel\\Zotero\\storage\\654SNZUL\\2306.html}
+}
+
+@misc{zhouMitigatingBiasLarge2024,
+  title = {Mitigating the {{Bias}} of {{Large Language Model Evaluation}}},
+  author = {Zhou, Hongli and Huang, Hui and Long, Yunfei and Xu, Bing and Zhu, Conghui and Cao, Hailong and Yang, Muyun and Zhao, Tiejun},
+  year = 2024,
+  month = sep,
+  number = {arXiv:2409.16788},
+  eprint = {2409.16788},
+  primaryclass = {cs},
+  publisher = {arXiv},
+  doi = {10.48550/arXiv.2409.16788},
+  urldate = {2025-04-01},
+  abstract = {Recently, there has been a trend of evaluating the Large Language Model (LLM) quality in the flavor of LLM-as-a-Judge, namely leveraging another LLM to evaluate the current output quality. However, existing judges are proven to be biased, namely they would favor answers which present better superficial quality (such as verbosity, fluency) while ignoring the instruction following ability. In this work, we propose systematic research about the bias of LLM-as-a-Judge. Specifically, for closed-source judge models, we apply calibration to mitigate the significance of superficial quality, both on probability level and prompt level. For open-source judge models, we propose to mitigate the bias by contrastive training, with curated negative samples that deviate from instruction but present better superficial quality. We apply our methods on the bias evaluation benchmark, and experiment results show our methods mitigate the bias by a large margin while maintaining a satisfactory evaluation accuracy.},
+  archiveprefix = {arXiv},
+  keywords = {Computer Science - Computation and Language},
+  file = {C\:\\Users\\rabel\\Zotero\\storage\\KJ2C3CJA\\Zhou et al. - 2024 - Mitigating the Bias of Large Language Model Evaluation.pdf;C\:\\Users\\rabel\\Zotero\\storage\\4X5B9EJ7\\2409.html}
+}

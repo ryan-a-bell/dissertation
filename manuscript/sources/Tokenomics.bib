@@ -1,0 +1,90 @@
+@article{Bharath_Raj_S_2024_Optimal_Segmentation,
+  title = {When Every Token Counts: {{Optimal}} Segmentation for Low-Resource Language Models},
+  author = {S, Bharath Raj and Suri, Gaurav and Dewangan, Vikrant and Sonavane, Raghav},
+  year = 2024,
+  doi = {10.48550/arxiv.2412.06926},
+  abstract = {Traditional greedy tokenization methods have been a critical step in Natural Language Processing (NLP), influencing how text is converted into tokens and directly impacting model performance. While subword tokenizers like Byte-Pair Encoding (BPE) are widely used, questions remain about their optimality across model scales and languages. In this work, we demonstrate through extensive experiments that an optimal BPE configuration significantly reduces token count compared to greedy segmentation, yielding improvements in token-saving percentages and performance benefits, particularly for smaller models.},
+  publication_type = {article},
+  annotation = {Bharath\_Raj\_S\_2024\_Optimal\_Segmentation},
+  note = {Insights: Optimal BPE segmentation minimizes token count, enhancing efficiency and performance, especially for smaller and multilingual models. Reducing tokens improves processing time and memory efficiency. \textbar\textbar{} TL;DR: The study optimizes BPE configurations to reduce token count and improve model performance, especially for smaller and low-resource models, emphasizing efficient tokenization. \textbar\textbar{} Contributions: - Identifies inefficiencies in greedy segmentation for BPE tokenizers. - Proposes an algorithmic optimization for token segmentation, improving compression and accuracy. - Demonstrates performance gains across generation and classification benchmarks. - Suggests benefits for multilingual and low-resource language processing. \textbar\textbar{} Challenges: - Generalization across diverse linguistic morphologies not yet proven. - Computational cost of finding optimal segmentation can be high. - Further research needed on scalability and model-size interactions.}
+}
+
+@article{Dong_Liu_2025_SemToken,
+  title = {{{SemToken}}: {{Semantic-aware}} Tokenization for Efficient Long-Context Language Modeling},
+  author = {Liu, Dong and Yu, Yanxuan},
+  year = 2025,
+  journal = {arXiv.org},
+  volume = {abs/2508.15190},
+  doi = {10.48550/arxiv.2508.15190},
+  abstract = {Tokenization plays a critical role in language modeling, yet existing approaches such as Byte-Pair Encoding (BPE) or WordPiece operate purely on frequency statistics, ignoring the underlying semantic structure of text. This leads to over-tokenization of semantically redundant spans and underutilization of contextual coherence, particularly in long-context scenarios. In this work, we propose SemToken, a semantic-aware tokenization framework that jointly reduces token redundancy and improves computation efficiency.},
+  publication_type = {article},
+  annotation = {Dong\_Liu\_2025\_SemToken},
+  note = {Insights: Incorporating semantic information into tokenization reduces redundancy and improves computation without sacrificing model accuracy, particularly in long-context tasks. \textbar\textbar{} TL;DR: SemToken introduces a semantic-aware tokenization framework that merges semantically equivalent spans, reducing token count by up to 2.4\texttimes{} and improving efficiency without accuracy loss. \textbar\textbar{} Contributions: - Introduces SemToken, a tokenization framework leveraging contextual embeddings. - Performs local semantic clustering for efficient token merging. - Adapts granularity dynamically to semantic density in text. - Demonstrates up to 2.4\texttimes{} fewer tokens and 1.9\texttimes{} speedup on long-context benchmarks. \textbar\textbar{} Challenges: - Added pre-tokenization compute for semantic clustering. - Limited evaluation beyond English datasets. - Requires lightweight encoders for real-time integration.}
+}
+
+@misc{dongLargeLanguageModels2024,
+  title = {Large {{Language Models}} ({{LLMs}}): {{Deployment}}, {{Tokenomics}} and {{Sustainability}}},
+  shorttitle = {Large {{Language Models}} ({{LLMs}})},
+  author = {Dong, Haiwei and Xie, Shuang},
+  year = 2024,
+  month = may,
+  number = {arXiv:2405.17147},
+  eprint = {2405.17147},
+  primaryclass = {cs},
+  publisher = {arXiv},
+  doi = {10.48550/arXiv.2405.17147},
+  urldate = {2025-11-08},
+  abstract = {The rapid advancement of Large Language Models (LLMs) has significantly impacted human-computer interaction, epitomized by the release of GPT-4o, which introduced comprehensive multi-modality capabilities. In this paper, we first explored the deployment strategies, economic considerations, and sustainability challenges associated with the state-of-the-art LLMs. More specifically, we discussed the deployment debate between Retrieval-Augmented Generation (RAG) and fine-tuning, highlighting their respective advantages and limitations. After that, we quantitatively analyzed the requirement of xPUs in training and inference. Additionally, for the tokenomics of LLM services, we examined the balance between performance and cost from the quality of experience (QoE)'s perspective of end users. Lastly, we envisioned the future hybrid architecture of LLM processing and its corresponding sustainability concerns, particularly in the environmental carbon footprint impact. Through these discussions, we provided a comprehensive overview of the operational and strategic considerations essential for the responsible development and deployment of LLMs.},
+  archiveprefix = {arXiv},
+  keywords = {Computer Science - Multimedia},
+  note = {Comment: Accepted by IEEE CTSoc-NCT},
+  file = {C\:\\Users\\rabel\\Zotero\\storage\\S69G8PWI\\Dong and Xie - 2024 - Large Language Models (LLMs) Deployment, Tokenomics and Sustainability.pdf;C\:\\Users\\rabel\\Zotero\\storage\\FCCIFC5F\\2405.html}
+}
+
+@misc{Harold_Chiappe_2024_Dynamic_Tokenization,
+  title = {Optimizing Knowledge Extraction in Large Language Models Using Dynamic Tokenization Dictionaries},
+  author = {Chiappe, Harold and Lennon, Gerard P.},
+  year = 2024,
+  doi = {10.31219/osf.io/svj2z},
+  abstract = {Tokenization methods have long been a critical component in the performance of language models, yet traditional static approaches often fall short in capturing the dynamic nature of language. The novel concept of implementing a dynamic tokenization dictionary within the Llama model presents a significant advancement, offering real-time adaptability in response to evolving linguistic patterns.},
+  publication_type = {misc},
+  annotation = {Harold\_Chiappe\_2024\_Dynamic\_Tokenization},
+  note = {Insights: Dynamic tokenization updates token sets in real time, adapting to changing linguistic patterns and improving coherence and contextual accuracy in model outputs. \textbar\textbar{} TL;DR: Dynamic token dictionaries enable LLMs to adapt in real time to language evolution, improving perplexity, BLEU, and ROUGE scores across domains. \textbar\textbar{} Contributions: - Introduces adaptive tokenization within the Llama model. - Updates token sets based on frequency and contextual use. - Demonstrates performance improvements across Wikipedia, Common Crawl, and BookCorpus benchmarks. - Achieves gains in perplexity, F1, BLEU, and ROUGE scores. \textbar\textbar{} Challenges: - Limited evaluation across languages and domains. - Resource overhead of frequent token dictionary updates. - Lacks detailed analysis of training-time versus inference-time cost.}
+}
+
+@misc{Junlin_Wang_2024_Budget_Aware_Reasoning,
+  title = {Reasoning in Token Economies: {{Budget-aware}} Evaluation of {{LLM}} Reasoning Strategies},
+  author = {Wang, Junlin and Jain, Siddhartha and Zhang, Dejiao and Ray, Baishakhi and Kumar, Vijay and Athiwaratkun, Ben},
+  year = 2024,
+  doi = {10.48550/arxiv.2406.06461},
+  abstract = {Traditional evaluations of reasoning strategies for large language models often ignore compute budget, skewing assessments of efficiency. This paper introduces a budget-aware evaluation framework that integrates computational cost into performance comparisons, revealing that simpler methods can outperform complex ones when compute is matched.},
+  publication_type = {misc},
+  annotation = {Junlin\_Wang\_2024\_Budget\_Aware\_Reasoning},
+  note = {Insights: Many reasoning strategies appear superior due to larger compute allocation; when normalized for budget, simple methods often excel. \textbar\textbar{} TL;DR: A budget-aware evaluation framework shows that simpler reasoning strategies like self-consistency outperform complex ones when compute is equalized. \textbar\textbar{} Contributions: - Introduces compute-aware framework for fair comparison of reasoning strategies. - Reveals that self-consistency frequently outperforms multi-agent and debate-based approaches. - Provides a metric linking performance and compute cost. - Highlights that increased compute can degrade some complex strategies. \textbar\textbar{} Challenges: - Limited strategy and task coverage due to compute cost. - Evaluation constrained to arithmetic and logic reasoning datasets. - Findings may shift with larger-scale or multimodal models.},
+  file = {C:\Users\rabel\Zotero\storage\UJRQSMTJ\Wang et al. - 2024 - Reasoning in token economies Budget-aware evaluation of LLM reasoning strategies.pdf}
+}
+
+@inproceedings{Xiangyu_Hu_2025_Vocabulary_Pruning,
+  title = {Efficient Language Models through Static Vocabulary Pruning of Low-Impact Tokens},
+  author = {Hu, Xiangyu},
+  year = 2025,
+  pages = {1--5},
+  doi = {10.1109/eeiss65394.2025.11086014},
+  abstract = {Recent advances in language models have led to increasingly large vocabularies, many of which contain tokens that contribute minimally to model performance while significantly increasing computational overhead. We present a static vocabulary pruning technique for language models that removes low-impact tokens based on their contribution to the loss function.},
+  publication_type = {inproceedings},
+  annotation = {Xiangyu\_Hu\_2025\_Vocabulary\_Pruning},
+  note = {Insights: Static pruning of low-utility tokens reduces model size and speeds inference while maintaining comparable accuracy and perplexity. \textbar\textbar{} TL;DR: Static vocabulary pruning removes low-impact tokens, reducing model size by 15\textbar\textbar{} Contributions: - Defines token importance via contribution to model loss. - Reduces vocabulary size by 15- Improves inference speed by 20- Demonstrates consistent results through statistical validation. \textbar\textbar{} Challenges: - Potential over-pruning in domain-specific contexts. - Applicability to multilingual models not tested. - Requires dynamic adaptation for streaming vocabularies.}
+}
+
+@article{Zheng_WenLin_2024_Rho1_Selective_LM,
+  title = {Rho-1: {{Not}} All Tokens Are What You Need},
+  author = {{Wen-Lin}, Zheng and Gou, Zhibin and Gong, Yeyun and Liu, Xiao and Shen, Yelong and Xu, Ruochen and Lin, Chen and Yang, Yujiu and Jiao, Jian and Duan, Nan and Chen, Weizhu},
+  year = 2024,
+  journal = {arXiv.org},
+  volume = {abs/2404.07965},
+  doi = {10.48550/arxiv.2404.07965},
+  abstract = {Traditional language model pretraining uniformly applies a next-token prediction loss to all tokens. This work introduces Rho-1, a Selective Language Modeling (SLM) approach that prioritizes training on useful tokens identified via a reference model's loss distribution. Rho-1 achieves higher efficiency and accuracy while using fewer training tokens.},
+  publication_type = {article},
+  annotation = {Zheng\_WenLin\_2024\_Rho1\_Selective\_LM},
+  note = {Insights: Not all tokens contribute equally to language model learning; selectively focusing on high-value tokens increases efficiency and performance. \textbar\textbar{} TL;DR: Rho-1 uses selective training on high-loss tokens to improve model efficiency, achieving SOTA math performance with only 3\textbar\textbar{} Contributions: - Introduces Selective Language Modeling (SLM) for efficient training. - Trains only on informative tokens identified via reference model scoring. - Improves math reasoning accuracy by up to 30- Matches DeepSeekMath results with 3\textbar\textbar{} Challenges: - Relies on quality of reference model for token scoring. - Not yet applied beyond math and general-language benchmarks. - Potential bias toward high-loss tokens without diversity correction.}
+}

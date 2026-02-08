@@ -1,0 +1,217 @@
+@misc{Bradshaw_Accelerating_Systems_Engineering_Generative_AI_2025,
+  title = {Accelerating Systems Engineering with Generative {{AI}}: A Lockheed Martin Case Study for Digital Transformation},
+  author = {Bradshaw, Melissa},
+  year = 2025,
+  month = sep,
+  howpublished = {Lockheed Martin Enterprise Business \& Digital Transformation presentation},
+  note = {Insights: Demonstrates how generative AI, embedded within Lockheed Martin's 1LMX digital transformation, measurably accelerates systems engineering workflows through agentic automation, requirements generation, testing, and lifecycle integration. \textbar\textbar{} TL;DR: This case study shows that GenAI-enabled systems engineering tools at Lockheed Martin achieved major cost, schedule, and quality gains when integrated with existing SE and SDLC workflows. \textbar\textbar{} Contributions: - Presents real-world GenAI deployments across the full systems engineering lifecycle (requirements, design, test, deployment). - Introduces agentic AI frameworks integrated with DOORS, Cameo, Confluence. - Reports quantified impact: 67\% cost savings, 70\% schedule reduction, and 7\% quality improvement. - Describes an innovation model combining incubation, hackathons, and productionization within 1LMX. \textbar\textbar{} Challenges: - Scaling governance and responsible AI practices across enterprise programs. - Managing demand and prioritization to ensure ROI. - Sustaining cultural transformation alongside technical adoption. - Ensuring human-in-the-loop oversight for mission-critical engineering decisions.
+\par
+Presented September 17, 2025. \copyright{} 2025 Lockheed Martin Corporation. All Rights Reserved},
+  file = {C:\Users\rabel\Zotero\storage\PYYAHC67\Bradshaw - 2025 - Accelerating systems engineering with generative AI a lockheed martin case study for digital transf.pdf}
+}
+
+@misc{Brown_Open_Local_AI_Ola_Chat_2025,
+  title = {Ola Chat Methods and Tools: {{Open}} Local {{AI}} for Secure and Practical Generative {{AI}}},
+  author = {Brown, Barclay R.},
+  year = 2025,
+  howpublished = {Collins Aerospace Applied Research and Technology (ART) presentation},
+  note = {Insights: Argues that a majority of enterprise and systems engineering GenAI workloads will migrate on-prem due to security, export control, and data sovereignty constraints, and demonstrates a practical open-source path to do so. \textbar\textbar{} TL;DR: This presentation introduces Open Local AI and the Ola Chat platform, showing how locally deployed, MIT-licensed GenAI tools can deliver ChatGPT-like capabilities while keeping sensitive data fully on-prem. \textbar\textbar{} Contributions: - Defines the Open Local AI design principles: open, auditable, local, offline-capable, and fast to adopt. - Presents the Ola Chat architecture integrating Ollama, AnythingLLM, local vector databases, and optional cloud models. - Demonstrates end-user applications including RAG chat, document summarization, comparison, and spreadsheet-based AI (Ola XL). - Provides installation, model loading, and deployment guidance for air-gapped and regulated environments. \textbar\textbar{} Challenges: - Model performance varies widely across local and frontier models, requiring careful selection. - GPU availability and infrastructure constraints limit scalability for larger models. - Governance is still required to prevent data leakage when optional web search or cloud models are enabled. - Users must manage rapid model evolution and evaluation complexity.
+\par
+mostly ollama + anythingLLM for local stuff. Has some mention of customGPTs with OpenAI.
+\par
+Senior Technical Fellow, AI Research. Describes the Ola Chat open-source, local-first generative AI platform for enterprise and systems engineering use},
+  file = {C:\Users\rabel\Zotero\storage\53KP2ETN\Brown - 2025 - Ola chat methods and tools Open local AI for secure and practical generative AI.pdf}
+}
+
+@misc{Collard_Automated_Knowledge_Base_Generation_Open_Source_LLMs_RAG_2025,
+  title = {Automated Knowledge Base Generation from Technical Documents Using Open-Source Large Language Models and Retrieval-Augmented Generation},
+  author = {Collard, Charles and Blackburn, Mark and Dunbar, Daniel},
+  year = 2025,
+  howpublished = {Systems Engineering Research Center (SERC), Stevens Institute of Technology research presentation},
+  note = {\copyright{} 2025 Stevens Institute of Technology. Describes automated transformation of systems engineering handbooks into graph-backed wiki knowledge bases
+\par
+did LLM as judge on the SERC DE engineering handbook. I did it on foundational SE textbooks
+\par
+metrics they used were: accuracy, relevance, fluency, coherence, insightfulness, factual consistency.
+\par
+they had temperature at 0.2. needed to be at temp=0.
+\par
+did not share grader temperature or grader sensitivity. did not do MCQ vs OSQ comparison.
+\par
+claimed `` Prompt engineering is not dead: chain of thought, few-shot patterns were critical for good results.'' but did not share the prompts or process. not repeatable. results are not repeatable at this point b/c of temperature and other lack of systematic evaluation rigor common in the software/CS community.
+\par
+Insights: Demonstrates that open-source LLMs combined with semantic knowledge graphs and RAG pipelines can automatically convert dense technical handbooks into scalable, navigable, and evaluable knowledge bases. \textbar\textbar{} TL;DR: This presentation presents an end-to-end pipeline that uses open-source LLMs, knowledge graphs, and RAG to automatically generate and evaluate wiki-based knowledge bases from systems engineering technical documents. \textbar\textbar{} Contributions: - Proposes a four-step pipeline for automated knowledge base generation: semantic graph derivation, node-level wiki generation, diagram association, and deployment. - Integrates open-source tooling (Ollama, FAISS, LangChain, NetworkX, GitLab Wiki) into a reproducible architecture. - Introduces chain-of-thought and few-shot prompting strategies for structured wiki page generation. - Applies LLM-as-a-judge techniques with multi-metric evaluation (accuracy, relevance, fluency, coherence, factual consistency). - Provides empirical evidence that model choice dominates generation quality over temperature or chunk size. \textbar\textbar{} Challenges: - Automated content generation still requires human review for correctness and usability. - Ontology and semantic graph construction remains domain- and source-dependent. - Context window management is critical for large technical documents. - Rapid evolution of open-source models complicates long-term reproducibility.}
+}
+
+@misc{Crabb_Axiom_Me_a_Question_VLM_Axioms_Systems_Diagrams_2025,
+  title = {Axiom Me a Question! {{The}} Effectiveness of Visual Language Models in the Generation of Axioms for Systems Diagrams},
+  author = {Smith Crabb, Erin and Freeman, Keegan and Shamberger, Logan and Dakota, Daniel},
+  year = 2025,
+  howpublished = {AI4SE 2025 conference presentation},
+  note = {Insights: Demonstrates that visual language models can infer structured, logically ordered axioms directly from systems diagrams, offering a lightweight alternative to full model translation for improving systems understanding by non-experts. \textbar\textbar{} TL;DR: This study evaluates GPT-4o and Claude Sonnet 3.5 on generating axioms from state machine diagrams and finds that VLMs---especially Claude---produce useful, engineer-aligned representations, though with systematic limitations. \textbar\textbar{} Contributions: - Defines axioms as image-derived logical statements capturing system structure, states, behaviors, and transitions. - Establishes an experimental protocol for evaluating VLM-generated axioms using human quantitative and qualitative assessment. - Compares GPT-4o and Claude Sonnet 3.5 across multiple diagram complexities and question categories. - Reports strong interclass correlation coefficients ({$\approx$}0.67--0.68) indicating consistent evaluator agreement. - Identifies strengths of Claude in handling increased diagram complexity and explicitness. \textbar\textbar{} Challenges: - VLMs struggle with decision gates and non-top-down transition flows. - Performance varies with diagram complexity and model choice. - Limited model set and diagram corpus restrict generalizability. - Prompt sensitivity and generation variability affect reproducibility.
+\par
+Leidos research presentation. Non-export controlled information. Evaluates GPT-4o and Claude Sonnet 3.5 for diagram-to-axiom generation
+\par
+Visual Language Models (VLMs) to translate diagrams into statements of logical operations},
+  file = {C:\Users\rabel\Zotero\storage\E9Q6568U\Smith Crabb et al. - 2025 - Axiom me a question! The effectiveness of visual language models in the generation of axioms for sys.pdf}
+}
+
+@misc{Helmerich_Transforming_Systems_Engineering_Agentic_AI_2025,
+  title = {Transforming Systems Engineering through Agentic {{AI}}},
+  author = {Helmerich, Chris},
+  year = 2025,
+  howpublished = {Celedon Solutions presentation},
+  note = {Insights: Demonstrates that agentic AI systems can collapse end-to-end systems engineering workflows---from requirements through architecture, simulation, risk, cost, and documentation---by orders of magnitude when integrated into a unified, traceable data environment. \textbar\textbar{} TL;DR: This presentation shows how the DaVinci agentic AI platform reduces systems engineering tasks that traditionally take weeks or months to minutes by orchestrating LLMs, engineering tools, and knowledge graphs. \textbar\textbar{} Contributions: - Introduces an agentic AI architecture that generates connected and traceable engineering data products across the full SE lifecycle. - Quantifies dramatic time reductions (e.g., system model creation: 100 hours {$\rightarrow$} 20 minutes; requirements, architecture, interfaces, behaviors, schedules, and risks in minutes). - Demonstrates integration across requirements, SysML-like models, CAD, simulations, risk matrices, schedules, and documentation. - Presents the DaVinci platform as LLM-agnostic, scalable, and deployable, integrating multiple model providers and engineering tools. - Provides a case study converting PDFs and goals into architectures and multi-document proposals within hours. \textbar\textbar{} Challenges: - Validation, verification, and trust of AI-generated engineering artifacts at scale. - Governance and configuration control in rapidly generated models. - Integration with legacy enterprise toolchains and data standards. - Human oversight and accountability for safety-critical engineering decisions.
+\par
+Presentation describing the DaVinci agentic AI platform for end-to-end systems engineering acceleration
+\par
+works through an agentic digital thread example},
+  file = {C:\Users\rabel\Zotero\storage\UUUTTB5P\Helmerich - 2025 - Transforming systems engineering through agentic AI.pdf}
+}
+
+@misc{Hetherington_Using_LLMs_Accelerate_SysML_Requirements_Gap_Analysis_2025,
+  title = {Using Llms to Accelerate {{SysML}} Model Requirements Gap Analysis},
+  author = {Hetherington, David and Paugh, Connor and Ahern, Sam},
+  year = 2025,
+  month = sep,
+  howpublished = {System Strategy, Inc. research presentation},
+  note = {Insights: Evaluates the practical effectiveness of large language models for accelerating SysML-based requirements gap analysis in time-constrained RFP and RFQ scenarios, showing that LLMs are most effective for structuring and mapping requirements rather than fully extracting them. \textbar\textbar{} TL;DR: This presentation shows that LLMs can significantly reduce effort in SysML requirements gap analysis by adding short names, atomizing requirements, generating functions, and identifying coverage gaps, though substantial human oversight remains necessary. \textbar\textbar{} Contributions: - Defines a repeatable LLM-assisted workflow for requirements gap analysis against SysML models. - Demonstrates automated generation of short names for legacy requirements, a high-value and otherwise tedious task. - Shows successful atomization of compound requirements after prompt refinement. - Uses LLMs to recommend functions and component allocations supporting new requirements. - Empirically compares ChatGPT-4o, ChatGPT-5.0, and Gemini 2.5 across multiple subtasks. \textbar\textbar{} Challenges: - Extraction of clean requirements from legacy human-written documents performed poorly. - Results exhibit intermittent instability and variability across LLMs. - Extensive prompt engineering and manual checking are still required. - Cost and scalability concerns remain for API-based deployment at enterprise scale.
+\par
+Publicly released. Presented September 18, 2025. Case study evaluating LLM-assisted requirements clarification, allocation, and gap analysis against SysML models
+\par
+Requirements Extraction -- Not very promising. Considerable human oversight needed. Not clear that the LLM ends up adding value.
+\par
+Short Names -- Using the LLM for this tedious task shows great promise.
+\par
+Atomize Requirements -- More work needed, but looks promising.
+\par
+Function Names -- Using the LLM worked well after we used a 3-Shot prompt
+\par
+Model Matching -- Worked well after some prompt engineering.},
+  file = {C:\Users\rabel\Zotero\storage\UYAG3RTA\Hetherington et al. - 2025 - Using llms to accelerate SysML model requirements gap analysis.pdf}
+}
+
+@misc{Kambhampaty_Generating_Simulation_Metadata_LLMs_2025,
+  title = {Generating Simulation Metadata with Large Language Models},
+  author = {Kambhampaty, Jaya and Pinon Fischer, Olivia and Mavris, Dimitri},
+  year = 2025,
+  howpublished = {SERC AI4SE \& SE4AI Workshop 2025 presentation},
+  note = {Aerospace Systems Design Laboratory, Georgia Institute of Technology. Presented by Jaya Kambhampaty
+\par
+Insights: Frames simulation metadata generation as a core systems engineering knowledge-management problem and shows that open-source LLMs can partially automate population of large, standardized metadata schemas for engineering simulations. \textbar\textbar{} TL;DR: This presentation introduces the MetaGator framework and demonstrates that LLMs can generate useful simulation metadata across schemas like Dublin Core and the NAFEMS Engineering Simulation Metadata Specification, though formatting and dataset scale remain major challenges. \textbar\textbar{} Contributions: - Defines simulation metadata generation as a structured LLM task over engineering artifacts, context, and schema elements. - Introduces MetaGator, a metadata aggregation architecture using prompting and inference-time techniques. - Constructs a proof-of-concept benchmark using open-source simulation tools (JSBSim, SU2, Elmer, OpenMDAO). - Evaluates open-source LLMs across model sizes and prompting strategies using semantic similarity and macro-F1 metrics. - Identifies formatting correctness (e.g., valid JSON) as a primary bottleneck to usable outputs. \textbar\textbar{} Challenges: - Dataset size is too small for statistically rigorous conclusions. - Metadata schemas (e.g., ESMS with 600+ fields) require deep domain expertise. - Formatting errors dramatically reduce effective yield despite semantically close outputs. - Real-world engineering repositories pose access, context, and interpretability barriers.},
+  file = {C:\Users\rabel\Zotero\storage\PYTZDNNU\Kambhampaty et al. - 2025 - Generating simulation metadata with large language models.pdf}
+}
+
+@misc{Legesse_AI_Enhanced_Requirements_Traceability_MBSE_LLMs_2025,
+  title = {{{AI-enhanced}} Requirements Traceability Using {{MBSE}} and Large Language Models for Complex Systems},
+  author = {Legesse, Henock and Bicknell, Stanley},
+  year = 2025,
+  month = sep,
+  howpublished = {AI4SE \& SE4AI Research Workshop presentation},
+  note = {Insights: Demonstrates that large language models, when integrated with MBSE workflows and constrained by architectural context, can substantially improve the efficiency and quality of requirements traceability without removing human oversight. \textbar\textbar{} TL;DR: This presentation shows that an AI-augmented, MBSE-integrated traceability approach increased coverage from 35\% to 67\% and accuracy from 76.7\% to 92\%, reducing analysis time by over 80\% compared to manual tracing. \textbar\textbar{} Contributions: - Proposes a five-phase, AI-augmented methodology for requirements traceability emphasizing recommendation quality and human validation (pp. 4--5). - Introduces architectural enhancements such as requirement rewriting and allocation-based filtering that significantly reduce incorrect trace links (pp. 6--7, 13). - Demonstrates seamless integration via a MagicDraw MBSE plugin, preserving existing SE workflows (pp. 8, 15). - Provides empirical evaluation on a real space mission dataset with 636 child and 670 parent requirements, reporting large gains in coverage and accuracy (pp. 9--12). - Establishes AI augmentation---not AI replacement---as the optimal design principle for traceability tasks (pp. 14, 17). \textbar\textbar{} Challenges: - Performance depends strongly on the quality and structure of input requirements (pp. 14, 16). - LLM context-length limitations constrain scalability to very large documents (p. 16). - Current implementation focuses on vertical (parent--child) traceability only. - A significant fraction of requirements still require manual analysis and expert judgment.
+\par
+Presented September 18, 2025. NASA Goddard Space Flight Center and ASRC Federal Analytical Services. Demonstrates an LLM-augmented, human-in-the-loop approach to requirements traceability integrated with MBSE tools},
+  file = {C:\Users\rabel\Zotero\storage\AJDUQCJU\Legesse and Bicknell - 2025 - AI-enhanced requirements traceability using MBSE and large language models for complex systems.pdf}
+}
+
+@misc{Lipizzi_LLM_Augmented_Pipelines_Validated_System_Model_Creation_2025,
+  title = {{{LLM-augmented}} Pipelines for Validated System Model Creation: {{Extracting}} and Structuring Complex System Representations from Text},
+  author = {Lipizzi, Carlo},
+  year = 2025,
+  howpublished = {Stevens Institute of Technology research presentation},
+  note = {Insights: Presents a semi-automated, trustworthy pipeline that combines LLM-based extraction, semantic knowledge graphs, SME validation, and graph neural networks to transform unstructured engineering artifacts into validated system models. \textbar\textbar{} TL;DR: This presentation proposes LLM-augmented pipelines that convert text, specifications, and MBSE artifacts into validated, queryable system models by integrating expert validation and graph-based reasoning. \textbar\textbar{} Contributions: - Defines a five-step pipeline for system model creation: data collection, LLM-based extraction, semantic graph construction, SME validation, and embedding-based analysis (pp. 5--9). - Demonstrates extraction of subject--predicate--object triplets from specifications and SysML/UML artifacts to build knowledge graphs (pp. 7, 12--15). - Integrates SME validation as a core assurance mechanism to prevent error propagation (p. 8). - Introduces GNN-based reasoning for link prediction, anomaly detection, fault propagation, and design pattern discovery (pp. 9, 13--15). - Shows how validated graphs enable RAG-style natural language queries over trusted system knowledge (pp. 9--10). \textbar\textbar{} Challenges: - Current prototypes do not fully close the loop by automatically regenerating corrected requirements (p. 11). - Effectiveness depends on SME availability for validation and correction. - Scaling graph construction and validation for very large systems remains challenging. - Integration into production MBSE toolchains requires further engineering and governance.
+\par
+Presented in 2025. Systems Engineering Research Center (SERC) affiliated work. Focuses on trustworthy AI augmentation of MBSE and digital engineering workflows
+\par
+semantic RAG search on an MBSE model (XML format)},
+  file = {C:\Users\rabel\Zotero\storage\ZKLZZRIL\Lipizzi - 2025 - LLM-augmented pipelines for validated system model creation Extracting and structuring complex syst.pdf}
+}
+
+@misc{Maldonado_Retrieval_Augmented_Generation_Operations_Order_Evaluation_2025,
+  title = {Retrieval-Augmented Generation for Operations Order Evaluation},
+  author = {Maldonado, Wilmer and Cassenti, Dan and Burbank, Brian},
+  year = 2025,
+  month = sep,
+  howpublished = {U.S. Army DEVCOM research briefing},
+  note = {Approved for Public Release. Presented September 18, 2025. Describes RAG-based tools to support OPORD generation, question answering, and evaluation within the MDMP
+\par
+Evaluation dataset is limited to a single primary OPORD exercise for 240 questions across
+\par
+▪ Single Document Questions
+\par
+-- Fact-seeking questions found in a single OPORD or Annex.
+\par
+▪ Multi Document Questions
+\par
+-- Fact-seeking questions found in a two or more OPORDs or Annexes.
+\par
+▪ Structural Questions
+\par
+-- Accurate answers depend on understanding the OPORD's formatting, such as section
+\par
+hierarchies/indentations and outline notation.
+\par
+▪ Table Queries
+\par
+-- Require looking up specific information from tables within the document(s).
+\par
+▪ Reasoning/Inference Queries
+\par
+-- Require deducing information that is implied but not explicitly stated.
+\par
+▪ 10 Negative Questions
+\par
+-- LLM acknowledges when the document does not contain the answer.
+\par
+Insights: Shows that Retrieval-Augmented Generation augmented with OPORD outline schemas can substantially improve accuracy, transparency, and usability of LLM-based analysis for military operations orders. \textbar\textbar{} TL;DR: This presentation demonstrates a schema-aware RAG approach that enables high-accuracy question answering and task-based evaluation of OPORDs, reducing cognitive load on Army planners while preserving human oversight. \textbar\textbar{} Contributions: - Introduces a schema-aware RAG architecture that preserves OPORD hierarchical structure extracted from Microsoft Word XML (pp. 8--10). - Develops four LLM-based tools: OPORD RAG QA, Feature Extractor QA, OPORD Evaluator, and OPORD Task Tracker (pp. 6, 11, 14). - Demonstrates strong empirical performance across 240 evaluation questions, achieving 97.5\% overall accuracy (p. 16). - Applies METL-aligned grading (Trained/Needs Practice/Untrained) for automated OPORD section evaluation with human-in-the-loop validation (pp. 14--15). - Shows how schema-aware retrieval outperforms baseline RAG for structurally dependent OPORD queries (pp. 12--13). \textbar\textbar{} Challenges: - Evaluation dataset is limited to a single primary OPORD exercise (p. 17). - Limited testing with multiple planners and real training scenarios. - QA benchmark covers only a subset of annexes. - Further benchmarking against baseline and advanced RAG variants is needed.}
+}
+
+@misc{McDermott_Generative_AI_Visualization_Managing_Megaprojects_2025,
+  title = {Generative {{AI}}, Visualization, and the Future of Managing Megaprojects},
+  author = {McDermott, Tom},
+  year = 2025,
+  month = sep,
+  howpublished = {AIRC--DAU Quarterly Research Forum presentation},
+  note = {Acquisition Innovation Research Center (AIRC). DAU Public Affairs approved for public release October 22, 2024. Presented September 19, 2025
+\par
+Insights: Argues that megaproject failures stem from fat-tailed uncertainty distributions, stakeholder misalignment, and rigidity, and that generative AI combined with interactive visualization can surface early warning signals and support adaptive decision-making. \textbar\textbar{} TL;DR: This presentation shows how integrating LLMs with visualization dashboards can help leaders manage uncertainty, stakeholder dynamics, and complexity in billion-dollar megaprojects. \textbar\textbar{} Contributions: - Synthesizes megaproject risk literature (fat tails, behavioral bias, stakeholder complexity) into a practical uncertainty framework (pp. 3--6). - Introduces a four-context megaproject uncertainty model (system, stakeholder, implementation, strategic) with eight mitigation strategies (p. 6). - Proposes VIS+AI interaction loops (interaction, execution, intelligence optimization) for human--AI collaboration (p. 7). - Maps LLM capabilities across project management tasks from automation to augmentation, highlighting where human judgment remains essential (pp. 8--9). - Demonstrates an AI-enabled uncertainty dashboard and metaphor-based visualization (train metaphor) to improve shared situational awareness among stakeholders (pp. 9--11). \textbar\textbar{} Challenges: - LLM outputs depend heavily on data quality and schema alignment. - Visualization metaphors risk oversimplification if not carefully governed. - Continuous learning systems introduce governance and validation challenges. - Adoption requires cultural change among leaders accustomed to deterministic planning.},
+  file = {C:\Users\rabel\Zotero\storage\CGL3A8AQ\McDermott - 2025 - Generative AI, visualization, and the future of managing megaprojects.pdf}
+}
+
+@misc{Ouzzif_Leveraging_AI_Manage_Technical_Debt_Test_Evaluation_2025,
+  title = {Leveraging {{AI}} to Manage Technical Debt during Test \& Evaluation in Aerospace Systems Engineering},
+  author = {Ouzzif, Zak and Bhada, Shamsnaz},
+  year = 2025,
+  month = sep,
+  howpublished = {AI4SE \& SE4AI Workshop 2025 presentation},
+  note = {Insights: Positions technical debt as an explicit, engineerable risk in aerospace test and evaluation and shows that LLM-based document analysis can surface hidden verification, test, and documentation debt early in the V-model lifecycle. \textbar\textbar{} TL;DR: This presentation presents ATLAS, an LLM-powered system that identifies, classifies, and prioritizes technical debt in aerospace T\&E artifacts, achieving large time savings and earlier risk mitigation through human-in-the-loop validation. \textbar\textbar{} Contributions: - Defines three categories of T\&E technical debt---verification, test, and documentation---and shows how they compound across the V-model (pp. 8--9). - Introduces the Technical Debt Management Framework (TDMF) integrating preprocessing, LLM analysis, expert validation, and decision support (pp. 7, 9). - Presents ATLAS, an LLM-powered system that parses verification and test artifacts and exports results into SE tools such as DOORS and JIRA (pp. 6, 12). - Reports quantitative gains including  45\% time reduction versus manual review and 87\% expert validation agreement (pp. 10--11). - Demonstrates alignment with DoD Digital Engineering strategy and NASA NPR 7123.1B for lifecycle integration (p. 12). \textbar\textbar{} Challenges: - Calibration and generalization across programs with different data standards. - Dependence on expert availability for validation and governance. - Managing false positives and auditability of AI-generated debt assessments. - Scaling real-time monitoring and multimodal analysis in operational environments.
+\par
+Introduces the Aerospace Technical-debt Learning and Assessment System (ATLAS) and the Technical Debt Management Framework (TDMF) for AI-assisted test and evaluation in aerospace systems engineering},
+  file = {C:\Users\rabel\Zotero\storage\64Q4LRFI\Ouzzif and Bhada - 2025 - Leveraging AI to manage technical debt during test & evaluation in aerospace systems engineering.pdf}
+}
+
+@techreport{SERC_AI4SE_SE4AI_Research_Application_Workshop_Report_2025,
+  title = {6th Annual {{AI4SE}} \& {{SE4AI}} Research and Application Workshop: {{Final}} Report},
+  author = {{Systems Engineering Research Center}},
+  year = 2025,
+  month = sep,
+  institution = {Systems Engineering Research Center (SERC)},
+  note = {Insights: Synthesizes state-of-the-practice and state-of-the-art advances in Artificial Intelligence for Systems Engineering (AI4SE) and Systems Engineering for AI (SE4AI), highlighting a convergence toward agentic, knowledge-grounded, human-centered, and assurance-driven engineering workflows. \textbar\textbar{} TL;DR: This report captures the outcomes of the 6th AI4SE \& SE4AI Workshop, documenting how AI is transforming systems engineering practice while systems engineering provides the rigor needed to assure trustworthy, mission-critical AI. \textbar\textbar{} Contributions: - Documents key themes across AI4SE and SE4AI, including digital engineering transformation, agentic AI, RAG/GraphRAG, SysMLv2, and lifecycle traceability. - Articulates emerging best practices for AI assurance, including continuous, layered T\&E, governance artifacts as traceable SE elements, and human-in-the-loop system design. - Provides cross-sector perspectives from government, industry, academia, and FFRDCs on operationalizing trustworthy AI. - Highlights empirical results and case studies demonstrating measurable gains in cost, schedule, quality, and traceability from AI-augmented SE workflows. - Identifies the evolving role of the systems engineer as an orchestrator of human--AI collaboration. \textbar\textbar{} Challenges: - Scaling AI assurance and test regimes to keep pace with rapidly evolving AI models. - Integrating AI into legacy systems and organizational cultures without eroding engineering rigor. - Managing data quality, governance, and interoperability across enterprise digital threads. - Establishing shared benchmarks, metrics, and reference architectures for AI-enabled systems engineering.
+\par
+Jointly sponsored by U.S. Army DEVCOM Armaments Center (AC) Systems Engineering Directorate and SERC. Distribution Statement A: Approved for Public Release. September 17--18, 2025, Washington, DC \& Virtual},
+  file = {C:\Users\rabel\Zotero\storage\IUFXKBVU\2025-AI4SE-SE4AI-Final-Report-v2.1.pdf}
+}
+
+@misc{Traveller_Agile_Engineering_Agentic_Co_Modelers_2025,
+  title = {Agile Engineering Enabled by Agentic Co-Modelers},
+  author = {Traveller, Hart and Brechtel, Zeke and Massey, Steve},
+  year = 2025,
+  month = sep,
+  howpublished = {SysGit industry research presentation},
+  note = {Insights: Demonstrates that agentic co-modelers---AI systems tightly integrated with formal SysML v2 grammars, validation metrics, and simulation feedback---can dramatically accelerate model-based systems engineering while preserving physical and semantic correctness. \textbar\textbar{} TL;DR: This presentation shows how agentic AI pipelines can translate large volumes of technical documentation into validated SysML v2 models by combining LLMs with parsers, graph representations, and continuous correctness metrics. \textbar\textbar{} Contributions: - Defines a clear distinction between inventive vs. translative AI behavior, arguing that engineering AI should prioritize faithful information isomorphism over creative synthesis (pp. 30--35). - Introduces syntactic and semantic quality (SSQ) and validity (SSV) metrics to continuously score SysML model correctness (pp. 11--16). - Demonstrates an end-to-end pipeline converting historical MSR documentation into executable SysML models with rejection-and-repair loops driven by validation and simulation feedback (pp. 9--18). - Uses intermediary graph representations to support retrieval, mutation, traceability, and serialization back into SysML v2 (pp. 20--23). - Shows empirical improvements in syntax quality and validity when LLMs are guided by context, parsers, and formal grammars rather than free-form prompting (pp. 15--16). \textbar\textbar{} Challenges: - Physical realizability and quantitative validation remain significantly harder than syntactic correctness (p. 28). - Scaling human-in-the-loop review and traceability for agent decisions is still an open problem. - Managing inventiveness versus hallucination requires explicit constraints and evaluation criteria. - Integration into diverse enterprise MBSE toolchains requires governance and standardization.
+\par
+performing systems engineering with sysmlv2 and git. everything is in one repository with ci/cd included for val/ver.
+\par
+SysGit. Focuses on agentic AI systems for SysML v2 model generation, validation, and iterative refinement using formal syntax/semantic metrics},
+  file = {C:\Users\rabel\Zotero\storage\YZUP8WE9\Traveller et al. - 2025 - Agile engineering enabled by agentic co-modelers.pdf}
+}

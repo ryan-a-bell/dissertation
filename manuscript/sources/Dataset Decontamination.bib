@@ -1,0 +1,99 @@
+@article{Ahuja_2024_Multilingual_Benchmark_Contamination,
+  title = {Contamination Report for Multilingual Benchmarks},
+  author = {Ahuja, Sanchit and Gumma, Varun and Sitaram, Sunayana},
+  year = 2024,
+  doi = {10.48550/arxiv.2410.16186},
+  abstract = {This work studies contamination in multilingual benchmarks using a Black Box test across multiple LLMs and datasets.},
+  note = {Insights: The paper demonstrates that multilingual evaluation is especially vulnerable to contamination due to dataset reuse across languages. \textbar\textbar{} TL;DR: Nearly all tested multilingual benchmarks show contamination across popular LLMs. \textbar\textbar{} Contributions: - Large-scale contamination analysis of multilingual benchmarks. - Application of Black Box statistical tests. - Guidance for multilingual benchmark selection. \textbar\textbar{} Challenges: - Computational cost. - Binary contamination detection without severity estimation. \textbar\textbar{} Benchmarks Used: - PAWS-X - XCOPA - XNLI - XQUAD - XSTORYCLOZE \textbar\textbar{} Methods Used: - Black Box contamination testing. \textbar\textbar{} Contamination Topic: - Pretraining and post-training benchmark contamination.}
+}
+
+@article{Bordt_2024_Forgetting_Data_Contamination,
+  title = {How Much Can We Forget about {{Data Contamination}}?},
+  author = {Bordt, Sebastian and Srinivas, Suraj and Boreiko, Valentyn and {von Luxburg}, Ulrike},
+  year = 2024,
+  journal = {arXiv.org},
+  volume = {abs/2410.03249},
+  doi = {10.48550/arxiv.2410.03249},
+  abstract = {This paper studies whether benchmark contamination necessarily invalidates evaluation by analyzing forgetting dynamics under large-scale training.},
+  note = {Insights: The work provides a counterbalance to contamination pessimism by showing that sufficiently scaled training can erase memorized benchmarks. \textbar\textbar{} TL;DR: Moderate benchmark contamination can be forgotten in large-scale training regimes. \textbar\textbar{} Contributions: - Experimental scaling study of contamination effects. - Theory of example forgetting under AdamW. - Evidence that modern LLMs forget early contamination. \textbar\textbar{} Challenges: - Focus on exact contamination only. - Smaller-scale models than frontier LLMs. \textbar\textbar{} Benchmarks Used: - HellaSwag - ARC-Easy - MMLU \textbar\textbar{} Methods Used: - Controlled contamination experiments. - Theoretical weight decay analysis. \textbar\textbar{} Contamination Topic: - Benchmark leakage during pretraining.}
+}
+
+@article{Cheng_2024_Benchmark_Data_Contamination,
+  title = {Benchmark Data Contamination of Large Language Models: A Survey},
+  author = {Cheng, Xu and Guan, Shuhao and Greene, Derek and Kechadi, Tahar},
+  year = 2024,
+  doi = {10.48550/arxiv.2406.04244},
+  abstract = {The rapid development of Large Language Models (LLMs) like GPT-4, Claude-3, and Gemini has transformed the field of natural language processing. However, it has also resulted in a significant issue known as Benchmark Data Contamination (BDC). This occurs when language models inadvertently incorporate evaluation benchmark information from their training data, leading to inaccurate or unreliable performance during the evaluation phase of the process. This paper reviews the complex challenge of BDC in LLM evaluation and explores alternative assessment methods to mitigate the risks associated with traditional benchmarks. The paper also examines challenges and future directions in mitigating BDC risks, highlighting the complexity of the issue and the need for innovative solutions to ensure the reliability of LLM evaluation in real-world applications.},
+  note = {Insights: Benchmark Data Contamination (BDC) undermines the validity of LLM evaluation by inflating benchmark performance through training data leakage, calling into question widely reported results and motivating new evaluation paradigms. \textbar\textbar{} TL;DR: This survey analyzes how benchmark data contamination affects LLM evaluation reliability and reviews alternative assessment strategies to reduce leakage-driven performance inflation. \textbar\textbar{} Contributions: - Provides a comprehensive survey of Benchmark Data Contamination (BDC) in Large Language Model evaluation. - Systematically analyzes how benchmark leakage occurs during large-scale pretraining. - Reviews existing mitigation strategies and proposes alternative evaluation approaches beyond static benchmarks. - Identifies open research challenges and future directions for trustworthy LLM evaluation. \textbar\textbar{} Challenges: - Difficulty in detecting benchmark leakage in massive pretraining corpora. - Lack of standardized methods to measure contamination severity. - Trade-offs between benchmark reuse and evaluation reliability. - Limited availability of contamination-free evaluation datasets. \textbar\textbar{} Benchmarks Used: - No specific benchmarks are empirically evaluated; the paper focuses on conceptual and methodological analysis of benchmark contamination. \textbar\textbar{} Methods Used: - Literature survey of LLM evaluation practices. - Conceptual analysis of contamination mechanisms. - Comparative review of alternative assessment methodologies. \textbar\textbar{} Contamination Topic: - Benchmark Data Contamination (BDC), where evaluation benchmarks are inadvertently included in LLM training data, leading to misleading performance estimates.}
+}
+
+@misc{Dekoninck_2024_ConStat,
+  title = {{{ConStat}}: {{Performance-based}} Contamination Detection in Large Language Models},
+  author = {Dekoninck, Jasper and M{\"u}ller, Mark Niklas and Vechev, Martin},
+  year = 2024,
+  doi = {10.48550/arxiv.2405.16281},
+  abstract = {Public benchmarks play an essential role in the evaluation of large language models. However, data contamination can lead to inflated performance, rendering them unreliable for model comparison. We propose ConStat, a statistical method that detects and quantifies contamination by comparing performance between primary and reference benchmarks.},
+  note = {Insights: This paper reframes contamination as non-generalizing performance inflation rather than mere data overlap, enabling detection even without access to training data. \textbar\textbar{} TL;DR: ConStat statistically detects and quantifies benchmark contamination by measuring non-generalizing performance relative to reference models. \textbar\textbar{} Contributions: - Introduces a performance-based definition of contamination. - Proposes ConStat, a statistical contamination detection framework. - Detects contamination without requiring uncontaminated samples. - Identifies contamination in popular open LLMs and leaderboards. \textbar\textbar{} Challenges: - Reliance on potentially contaminated reference models. - Sensitivity to synthetic benchmark generation bias. - Limited absolute contamination quantification. \textbar\textbar{} Benchmarks Used: - GSM8k - GSM1k - SWE-bench \textbar\textbar{} Methods Used: - Statistical performance comparison across benchmarks. - Reference-model normalization. \textbar\textbar{} Contamination Topic: - Performance-based contamination manifesting as lack of generalization.}
+}
+
+@article{Deng_2023_Investigating_Data_Contamination,
+  title = {Investigating Data Contamination in Modern Benchmarks for Large Language Models},
+  author = {Deng, Chunyuan and Zhao, Yilun and Tang, Xiangru and Gerstein, Mark and Cohan, Arman},
+  year = 2023,
+  journal = {arXiv.org},
+  volume = {abs/2311.09783},
+  doi = {10.48550/arxiv.2311.09783},
+  abstract = {Recent observations have underscored a disparity between the inflated benchmark scores and the actual performance of LLMs, raising concerns about potential contamination of evaluation benchmarks. This issue is especially critical for closed-source models and certain open-source models where training data transparency is lacking. In this paper we study data contamination by proposing two methods tailored for both open-source and proprietary LLMs. We first introduce a retrieval-based system to explore potential overlaps between evaluation benchmarks and pretraining corpora. We further present a novel investigation protocol named Testset Slot Guessing (TS-Guessing), applicable to both open and proprietary models.},
+  note = {Insights: The paper provides concrete empirical tools to detect benchmark contamination in both open and closed LLMs, demonstrating that some models can directly guess benchmark answers, indicating leakage rather than reasoning. \textbar\textbar{} TL;DR: The authors introduce retrieval-based overlap detection and the TS-Guessing protocol to reveal benchmark contamination in modern LLM evaluations. \textbar\textbar{} Contributions: - Proposes a retrieval-based framework to identify benchmark overlap with pretraining data. - Introduces the Testset Slot Guessing (TS-Guessing) protocol applicable to black-box models. - Demonstrates contamination effects on TruthfulQA and MMLU. - Shows that benchmark metadata can significantly inflate performance. \textbar\textbar{} Challenges: - Limited training data transparency for closed-source models. - Difficulty in quantifying contamination severity. - Scalability constraints of contamination detection. \textbar\textbar{} Benchmarks Used: - TruthfulQA - MMLU \textbar\textbar{} Methods Used: - Retrieval-based overlap analysis. - Testset Slot Guessing (TS-Guessing). \textbar\textbar{} Contamination Topic: - Benchmark-level data contamination caused by overlap between evaluation sets and pretraining corpora.}
+}
+
+@misc{oren_black_box_contamination_2023,
+  title = {Proving {{Test Set Contamination}} in {{Black Box Language Models}}},
+  author = {Oren, Yonatan and Meister, Nicole and Chatterji, Niladri and Ladhak, Faisal and Hashimoto, Tatsunori B.},
+  year = 2023,
+  month = nov,
+  number = {arXiv:2310.17623},
+  eprint = {2310.17623},
+  primaryclass = {cs},
+  publisher = {arXiv},
+  doi = {10.48550/arXiv.2310.17623},
+  urldate = {2026-01-04},
+  abstract = {Large language models are trained on vast amounts of internet data, prompting concerns and speculation that they have memorized public benchmarks. Going from speculation to proof of contamination is challenging, as the pretraining data used by proprietary models are often not publicly accessible. We show that it is possible to provide provable guarantees of test set contamination in language models without access to pretraining data or model weights. Our approach leverages the fact that when there is no data contamination, all orderings of an exchangeable benchmark should be equally likely. In contrast, the tendency for language models to memorize example order means that a contaminated language model will find certain canonical orderings to be much more likely than others. Our test flags potential contamination whenever the likelihood of a canonically ordered benchmark dataset is significantly higher than the likelihood after shuffling the examples. We demonstrate that our procedure is sensitive enough to reliably prove test set contamination in challenging situations, including models as small as 1.4 billion parameters, on small test sets of only 1000 examples, and datasets that appear only a few times in the pretraining corpus. Using our test, we audit five popular publicly accessible language models for test set contamination and find little evidence for pervasive contamination.},
+  archiveprefix = {arXiv},
+  keywords = {Computer Science - Computation and Language,Computer Science - Machine Learning},
+  file = {C\:\\Users\\rabel\\Zotero\\storage\\3MJ7MU6Q\\Oren et al. - 2023 - Proving Test Set Contamination in Black Box Language Models.pdf;C\:\\Users\\rabel\\Zotero\\storage\\2C6ID7QJ\\2310.html}
+}
+
+@misc{Ponnuru_2024_Unveiling_Veil_Data_Contamination,
+  title = {Unveiling the Veil: A Comprehensive Analysis of Data Contamination in Leading Language Models},
+  author = {Ponnuru, Mahesh Datta Sai and Amasala, Likhitha and Garikipati, Guna Chaitanya},
+  year = 2024,
+  doi = {10.21203/rs.3.rs-3978251/v1},
+  abstract = {This work investigates whether strong benchmark performance in leading LLMs reflects genuine understanding or memorization caused by benchmark exposure during training.},
+  note = {Insights: The paper adopts probing-style evaluations to differentiate memorization from understanding. \textbar\textbar{} TL;DR: The study probes whether LLM benchmark performance arises from memorization due to training data contamination. \textbar\textbar{} Contributions: - Conceptual investigation of contamination versus understanding. - Probing methods using partial and quiz-like inputs. - Qualitative analysis of benchmark familiarity. \textbar\textbar{} Challenges: - Lack of quantitative contamination metrics. - Absence of controlled training data experiments. \textbar\textbar{} Methods Used: - Direct questioning. - Partial-input completion. - Quiz-style probing. \textbar\textbar{} Contamination Topic: - Training-data contamination from benchmark exposure.}
+}
+
+@misc{Qian_2024_VarBench,
+  title = {{{VarBench}}: {{Robust}} Language Model Benchmarking through Dynamic Variable Perturbation},
+  author = {Qian, Kun and Wan, Shang and Tang, C. H. and Wang, Youzhi and Duan, Zhaoyun and Chen, Maximillian and Zhang, Yu},
+  year = 2024,
+  doi = {10.48550/arxiv.2406.17681},
+  abstract = {As large language models achieve impressive scores on traditional benchmarks, concerns arise about benchmark leakage. We propose VarBench, a dynamic evaluation framework that perturbs variables in benchmark questions to mitigate contamination.},
+  note = {Insights: VarBench reframes benchmarks as stochastic generators rather than static datasets, making memorization ineffective. \textbar\textbar{} TL;DR: VarBench dynamically perturbs benchmark variables to produce fresh evaluations that reduce contamination effects. \textbar\textbar{} Contributions: - Proposes variable perturbation for dynamic benchmarking. - Demonstrates large performance drops on perturbed benchmarks. - Applies the method across reasoning and QA datasets. \textbar\textbar{} Challenges: - Manual verification overhead. - Sensitivity to annotation errors. - Limited task coverage. \textbar\textbar{} Benchmarks Used: - GSM8K - ARC - CommonsenseQA - TruthfulQA \textbar\textbar{} Methods Used: - Variable extraction and resampling. - Few-shot and chain-of-thought prompting. \textbar\textbar{} Contamination Topic: - Token-level and semantic benchmark contamination.}
+}
+
+@misc{yangRethinkingBenchmarkContamination2023,
+  title = {Rethinking {{Benchmark}} and {{Contamination}} for {{Language Models}} with {{Rephrased Samples}}},
+  author = {Yang, Shuo and Chiang, Wei-Lin and Zheng, Lianmin and Gonzalez, Joseph E. and Stoica, Ion},
+  year = 2023,
+  month = nov,
+  number = {arXiv:2311.04850},
+  eprint = {2311.04850},
+  primaryclass = {cs},
+  publisher = {arXiv},
+  urldate = {2024-03-15},
+  abstract = {Large language models are increasingly trained on all the data ever produced by humans. Many have raised concerns about the trustworthiness of public benchmarks due to potential contamination in pre-training or fine-tuning datasets. While most data decontamination efforts apply string matching (e.g., n-gram overlap) to remove benchmark data, we show that these methods are insufficient, and simple variations of test data (e.g., paraphrasing, translation) can easily bypass these decontamination measures. Furthermore, we demonstrate that if such variation of test data is not eliminated, a 13B model can easily overfit a test benchmark and achieve drastically high performance, on par with GPT-4. We validate such observations in widely used benchmarks such as MMLU, GSK8k, and HumanEval. To address this growing risk, we propose a stronger LLM-based decontamination method and apply it to widely used pre-training and fine-tuning datasets, revealing significant previously unknown test overlap. For example, in pre-training sets such as RedPajama-Data-1T and StarCoder-Data, we identified that 8-18\textbackslash\% of the HumanEval benchmark overlaps. Interestingly, we also find such contamination in synthetic dataset generated by GPT-3.5/4, suggesting a potential risk of unintentional contamination. We urge the community to adopt stronger decontamination approaches when using public benchmarks. Moreover, we call for the community to actively develop fresh one-time exams to evaluate models accurately. Our decontamination tool is publicly available at https://github.com/lm-sys/llm-decontaminator.},
+  archiveprefix = {arXiv},
+  keywords = {benchmark contamination,Computer Science - Artificial Intelligence,Computer Science - Computation and Language},
+  file = {C\:\\Users\\rabel\\Zotero\\storage\\QIJQU435\\Yang et al. - 2023 - Rethinking Benchmark and Contamination for Languag.pdf;C\:\\Users\\rabel\\Zotero\\storage\\9KIVJRU6\\2311.html}
+}
