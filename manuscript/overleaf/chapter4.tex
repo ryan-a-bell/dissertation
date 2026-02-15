@@ -2,6 +2,7 @@
 
 \section{Conversion Success of MCQ to OSQ}
 
+
 Figure \ref{fig:distribution-of-suitability} presents the distribution of suitability scores assigned during the MCQ-to-OSQ conversion process. Scores range from 1 to 10, and the figure distinguishes questions scoring below the suitability threshold ($<7$) from those meeting or exceeding the threshold ($\ge7$). A dashed vertical line marks the threshold between the rejected and accepted regions.
 
 The histogram shows the number of questions receiving each score, with the lower-scoring bins (1–6) displayed in red and higher-scoring bins (7–10) displayed in green. A total of 299 questions (26.1\%) fall below the suitability threshold, distributed across scores 1 through 6. The largest concentration within this group occurs at score 3, with 96 questions (8.4\%). In contrast, 845 questions (73.9\%) meet the inclusion criteria for OSQ conversion. The accepted group is primarily concentrated at scores 8 and 9, with 195 questions (17.0\%) scoring 8 and 496 questions (43.4\%) scoring 9.
@@ -26,9 +27,22 @@ A wide range of smaller categories is also present, many containing fewer than 1
     \label{fig:osq-conversion-category-distribution}
 \end{figure}
 
+Give some examples of conversion. It could look like this:
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.5\linewidth]{figs/mcq-to-osq-conversion-format-idea.png}
+    \caption{Enter Caption}
+    \label{fig:placeholder}
+\end{figure}
+
+
+
 % \newpage
 \clearpage
 \section{Performance on Multiple Choice Questions}\label{sec:performance_mcq}
+
+\paragraph{Per-Position Accuracy}
 
 Figure \ref{fig:mcq_position_heatmap} displays a heatmap of \ac{mcq} accuracy for each model across the four answer-key positions (A, B, C, and D). Models are listed on the vertical axis sorted in descending order of average per-position accuracy, while the horizontal axis corresponds to the correct answer position. The color scale reflects accuracy values between 0.70 and 1.00, with darker greens indicating higher accuracy and shades moving toward yellow or red representing lower accuracy.
 
@@ -48,51 +62,58 @@ add pareto curve like from the sysengbench journal. Have the variance bars for a
 
 Bootstrap confidence intervals work by repeatedly remixing the existing test data (sampling with replacement) to see how much the result—like accuracy—would change if one had gotten a slightly different test set. The spread of those results gives an estimate of how uncertain your measured accuracy is, shown as the little error bars in the chart.
 
-Figure \ref{fig:mcq_bootstrap_ci} presents \ac{mcq} accuracy for all evaluated models along with 95\% bootstrap confidence intervals. Models are ordered from lowest to highest accuracy along the horizontal axis, and the vertical axis shows accuracy on a scale from 0.50 to 1.00. Each point represents the mean accuracy estimate for a model, and the accompanying vertical error bars indicate the lower and upper bounds of the corresponding bootstrap interval.
-
-The bootstrap method used involves repeatedly resampling the evaluation set with replacement to generate many synthetic samples of equal size. Accuracy is computed on each resampled dataset, and the resulting distribution of values is used to derive the confidence interval. This provides an empirical estimate of uncertainty around each model’s accuracy without imposing assumptions about the underlying distribution of responses.
-
-Accuracy values span a range from approximately 0.69 to 0.95 across models. Lower-accuracy models show wider-spread error bars in the lower portion of the figure, while higher-accuracy models appear clustered near the upper portion with intervals that remain relatively narrow. The spacing between points indicates an increase in accuracy from left to right. The plot provides a summary of accuracy estimates together with the associated uncertainty for each model under the \ac{mcq} variation evaluation procedure.
-
-\begin{figure}[htbp]
-    \centering
-    \includegraphics[width=1\linewidth]{figs/ch4/4.2/mcq_bootstrap_ci.png}
-    \caption{MCQ Bootstrap Confidence Intervals}
-    \label{fig:mcq_bootstrap_ci}
-\end{figure}
 
 
 
-% \begin{table}[htbp]
-% \centering
-% \caption{Chi-Square Test Results for Position Bias}
-% \label{tab:chi_square_position}
-% \begin{tabular}{llrrrr}
-% \toprule
-%  & model & $\chi^2$ stat & $p$-value & Cram\'er's $V$ & significant \\
-% \midrule
-% 0 & \texttt{anthropic__claude-sonnet-4.5} & 19.6878 & 0.0006 & 0.0587 & Yes \\
-% 1 & \texttt{devstral__24b} & 27.4997 & 0.0000 & 0.0693 & Yes \\
-% 2 & \texttt{gemma3__12b} & 12.0941 & 0.0167 & 0.0460 & Yes \\
-% 3 & \texttt{gemma3__1b} & 167.3455 & 0.0000 & 0.1710 & Yes \\
-% 4 & \texttt{gemma3__27b} & 9.2407 & 0.0554 & 0.0402 & No \\
-% 5 & \texttt{gemma3__4b} & 16.1660 & 0.0028 & 0.0532 & Yes \\
-% 6 & \texttt{google__gemini-2.5-flash} & 1.1259 & 0.8901 & 0.0140 & No \\
-% 7 & \texttt{llama3.2__1b} & 262.7687 & 0.0000 & 0.2143 & Yes \\
-% 8 & \texttt{llama3.2__3b} & 224.0432 & 0.0000 & 0.1979 & Yes \\
-% 9 & \texttt{llama3.3__70b} & 10.5591 & 0.0320 & 0.0430 & Yes \\
-% 10 & \texttt{llama4__16x17b} & 8.8055 & 0.0661 & 0.0392 & No \\
-% 11 & \texttt{mistral-large__123b} & 21.7815 & 0.0002 & 0.0617 & Yes \\
-% 12 & \texttt{mistral-small3.2__24b} & 30.4726 & 0.0000 & 0.0730 & Yes \\
-% 13 & \texttt{mixtral__8x22b} & 7.1135 & 0.1300 & 0.0353 & No \\
-% 14 & \texttt{openai__gpt-4.1} & 6.7320 & 0.1507 & 0.0343 & No \\
-% 15 & \texttt{phi3.5__3.8b} & 13.9079 & 0.0076 & 0.0493 & Yes \\
-% 16 & \texttt{phi3__14b} & 11.4524 & 0.0219 & 0.0447 & Yes \\
-% 17 & \texttt{phi4-mini__3.8b} & 71.6395 & 0.0000 & 0.1119 & Yes \\
-% 18 & \texttt{phi4__14b} & 7.4316 & 0.1148 & 0.0360 & No \\
-% \bottomrule
-% \end{tabular}
-% \end{table}
+
+\clearpage
+\paragraph{Statistical Analysis For Chi Square and Cramer's of MCQ Robustness}
+
+
+\begin{table}[htbp]
+\centering
+\caption{Chi-Square Test Results for Position Bias (Grouped by Significance)}
+\label{tab:chi_square_position}
+\begin{tabular}{lrrrrl}
+\toprule
+Model & $\chi^2$ Statistic & $p$-Value & Cramér's $V$ & Significant \\
+\midrule
+\multicolumn{5}{l}{\textbf{Significant = Yes}} \\
+\midrule
+llama3.2\_\_1b                      & 262.7687 & 0.0000 & 0.2143 & Yes \\
+llama3.2\_\_3b                      & 224.0432 & 0.0000 & 0.1979 & Yes \\
+gemma3\_\_1b                        & 167.3455 & 0.0000 & 0.1710 & Yes \\
+phi4-mini\_\_3.8b                   & 71.6395  & 0.0000 & 0.1119 & Yes \\
+mistral-small3.2\_\_24b             & 30.4726  & 0.0000 & 0.0730 & Yes \\
+devstral\_\_24b                     & 27.4997  & 0.0000 & 0.0693 & Yes \\
+mistral-large\_\_123b               & 21.7815  & 0.0002 & 0.0617 & Yes \\
+anthropic\_\_claude-sonnet-4.5      & 19.6878  & 0.0006 & 0.0587 & Yes \\
+gemma3\_\_4b                        & 16.1660  & 0.0028 & 0.0532 & Yes \\
+phi3.5\_\_3.8b                      & 13.9079  & 0.0076 & 0.0493 & Yes \\
+gemma3\_\_12b                       & 12.0941  & 0.0167 & 0.0460 & Yes \\
+phi3\_\_14b                         & 11.4524  & 0.0219 & 0.0447 & Yes \\
+llama3.3\_\_70b                     & 10.5591  & 0.0320 & 0.0430 & Yes \\
+\midrule
+\multicolumn{5}{l}{\textbf{Significant = No}} \\
+\midrule
+gemma3\_\_27b                       & 9.2407   & 0.0554 & 0.0402 & No  \\
+llama4\_\_16x17b                    & 8.8055   & 0.0661 & 0.0392 & No  \\
+phi4\_\_14b                         & 7.4316   & 0.1148 & 0.0360 & No  \\
+mixtral\_\_8x22b                    & 7.1135   & 0.1300 & 0.0353 & No  \\
+openai\_\_gpt-4.1                   & 6.7320   & 0.1507 & 0.0343 & No  \\
+google\_\_gemini-2.5-flash          & 1.1259   & 0.8901 & 0.0140 & No  \\
+\midrule
+\multicolumn{5}{l}{\footnotesize \textit{Note: Significant indicates $p < 0.05$}} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+
+
+%%% ADD A DESCRIPTION OF THE TABLE ABOVE HERE.
+
+
+
 
 
 \begin{figure}[htbp]
@@ -108,12 +129,88 @@ Color coding and reference lines provide interpretive structure for these effect
  
 
 
+\paragraph{Friedman}
+
+\begin{table}
+\caption{Friedman Test Results for Position Bias}
+\label{tab:friedman_position}
+\begin{tabular}{lrrrr}
+\toprule
+ & model & friedman\_stat & p_value & kendalls\_w & significant \\
+\midrule
+0 & anthropic\_\_claude-sonnet-4.5 & 46.2384 & 0.0000 & 0.0135 & Yes \\
+1 & devstral\_\_24b & 58.1512 & 0.0000 & 0.0169 & Yes \\
+2 & gemma3\_\_12b & 30.7218 & 0.0000 & 0.0090 & Yes \\
+3 & gemma3\_\_1b & 285.0976 & 0.0000 & 0.0831 & Yes \\
+4 & gemma3\_\_27b & 22.7228 & 0.0000 & 0.0066 & Yes \\
+5 & gemma3\_\_4b & 38.8929 & 0.0000 & 0.0113 & Yes \\
+6 & google\_\_gemini-2.5-flash & 3.4766 & 0.3238 & 0.0010 & No \\
+7 & llama3.2\_\_1b & 446.6221 & 0.0000 & 0.1301 & Yes \\
+8 & llama3.2\_\_3b & 387.8993 & 0.0000 & 0.1130 & Yes \\
+9 & llama3.3\_\_70b & 27.9538 & 0.0000 & 0.0081 & Yes \\
+10 & llama4\_\_16x17b & 21.6355 & 0.0001 & 0.0063 & Yes \\
+11 & mistral-large\_\_123b & 43.7421 & 0.0000 & 0.0127 & Yes \\
+12 & mistral-small3.2\_\_24b & 58.8367 & 0.0000 & 0.0171 & Yes \\
+13 & mixtral\_\_8x22b & 17.2355 & 0.0006 & 0.0050 & Yes \\
+14 & openai\_\_gpt-4.1 & 20.4696 & 0.0001 & 0.0060 & Yes \\
+15 & phi3.5\_\_3.8b & 37.2309 & 0.0000 & 0.0108 & Yes \\
+16 & phi3\_\_14b & 23.1452 & 0.0000 & 0.0067 & Yes \\
+17 & phi4-mini\_\_3.8b & 149.7009 & 0.0000 & 0.0436 & Yes \\
+18 & phi4\_\_14b & 15.0000 & 0.0018 & 0.0044 & Yes \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+
+
+
+
+\paragraph{Positional Bias Statistical Results}
+
+According to Chapter 3 how to interpret. Full analysis in next chapter.
+
+\begin{table}
+\caption{Position Bias Interpretation Summary}
+\label{tab:position_interpretation}
+\begin{tabular}{lrrrr}
+\toprule
+ & model & category & cramers_v & chi2_p & friedman_p \\
+\midrule
+0 & anthropic\_\_claude-sonnet-4.5 & Mixed evidence & 0.0587 & 0.0006 & 0.0000 \\
+1 & devstral\_\_24b & Mixed evidence & 0.0693 & 0.0000 & 0.0000 \\
+2 & gemma3\_\_12b & Mixed evidence & 0.0460 & 0.0167 & 0.0000 \\
+3 & gemma3\_\_1b & Moderate bias & 0.1710 & 0.0000 & 0.0000 \\
+4 & gemma3\_\_27b & No bias & 0.0402 & 0.0554 & 0.0000 \\
+5 & gemma3\_\_4b & Mixed evidence & 0.0532 & 0.0028 & 0.0000 \\
+6 & google\_\_gemini-2.5-flash & No bias & 0.0140 & 0.8901 & 0.3238 \\
+7 & llama3.2\_\_1b & Moderate bias & 0.2143 & 0.0000 & 0.0000 \\
+8 & llama3.2\_\_3b & Moderate bias & 0.1979 & 0.0000 & 0.0000 \\
+9 & llama3.3\_\_70b & Mixed evidence & 0.0430 & 0.0320 & 0.0000 \\
+10 & llama4\_\_16x17b & No bias & 0.0392 & 0.0661 & 0.0001 \\
+11 & mistral-large\_\_123b & Mixed evidence & 0.0617 & 0.0002 & 0.0000 \\
+12 & mistral-small3.2\_\_24b & Mixed evidence & 0.0730 & 0.0000 & 0.0000 \\
+13 & mixtral\_\_8x22b & No bias & 0.0353 & 0.1300 & 0.0006 \\
+14 & openai\_\_gpt-4.1 & No bias & 0.0343 & 0.1507 & 0.0001 \\
+15 & phi3.5\_\_3.8b & Mixed evidence & 0.0493 & 0.0076 & 0.0000 \\
+16 & phi3\_\_14b & Mixed evidence & 0.0447 & 0.0219 & 0.0000 \\
+17 & phi4-mini\_\_3.8b & Moderate bias & 0.1119 & 0.0000 & 0.0000 \\
+18 & phi4\_\_14b & No bias & 0.0360 & 0.1148 & 0.0018 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+
+
+
 
 
 
 % \newpage
 \clearpage
 \section{Performance on Open Style Questions}\label{sec:performance_osq}
+
+
+\paragraph{Average Judge Score Distributions}
 
 Need to add:
 
@@ -126,8 +223,7 @@ Hash:
   b9902ba   |   Open on GitHub
 
 - add pareto curve for the grading like the sysengbnech froniter / pareto curve format
-
-- Investigate llm-sensitivity of llm-as-judge (e.g. gpt-5-mini vs gpt-5 vs gpt-oss?)to baseline judging results
+this could look like simply plotting all of the models on a plot in the order of their scores.
 
 - Show all charts of OSQ ratings (all 5 modalities) for all judges.
 
@@ -163,9 +259,51 @@ Across models, the density curves exhibit varied shapes, spreads, and peak locat
 
 
 
+\paragraph{Scoring By Judge}
+
+
+
+\paragraph{Score by Modality and Judge}
+
+
+
+
+\paragraph{Inter-Judge Agreement}
+Spearman Correlation...
+
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.75\linewidth]{figs/ch4/4.2/inter-judge-grading-histogram.png}
+    \caption{Inter-Judge Grading Histogram}
+    \label{fig:inter-judge-grading-histogram}
+\end{figure}
+
+\begin{table}[htbp]
+\centering
+\caption{Inter-Judge Agreement (Spearman Correlation)}
+\label{tab:interjudge_corr}
+\begin{tabular}{llrrr}
+\toprule
+Judge 1 & Judge 2 & Spearman $\rho$ & $p$-value & $n$ \\
+\midrule
+gpt-oss\_120b & openai\_gpt-5-mini & 0.9012 & 0.0000 & 16051 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+
+Interpretation: High reliability: OSQ scores robust to judge choice
+
+ADD MORE DESCRIPTION OF THIS, IF POSSIBLE.
+
+
 % \newpage
 \clearpage
-\section{Comparison Across MCQ and OSQ Evaluation Modalities}\label{sec:comparison_evalaution_modalities}
+\section{Comparison Across MCQ and OSQ Evaluation Modalities}\label{sec:comparison_evaluation_modalities}
+
+
+\paragraph{MCQ vs OSQ Judge Average Score}
 
 Figure \ref{fig:mcq-vs-osq-mean-score} presents a scatter plot comparing each model’s MCQ accuracy (horizontal axis) with its mean normalized OSQ score (vertical axis). Each point represents a single model, and labels are positioned adjacent to the corresponding markers. The red dotted line indicates the line of perfect agreement between MCQ and OSQ performance, representing locations where a model would achieve identical values under both modalities. A fitted linear regression line is shown in gray, accompanied by the model’s coefficient of determination (R² = 0.671) and associated p-value.
 
@@ -179,10 +317,155 @@ Across the distribution of points, MCQ accuracy values range approximately from 
     \label{fig:mcq-vs-osq-mean-score}
 \end{figure}
 
+
+
+\paragraph{MCQ vs OSQ by Individual Judges}
+
+\paragraph{MCQ vs OSQ Rubric Dimensions (Avg Judges)}
+
+
+% \begin{table}
+% \caption{MCQ vs OSQ Rubric-Dimension Correlation Statistics (Multi-Judge)}
+% \label{tab:mcq_osq_rubric_corr_mj}
+% \begin{tabular}{lrrrrr}
+% \toprule
+%  & Pearson R & R� & p-value & Slope & Intercept \\
+% Dimension &  &  &  &  &  \\
+% \midrule
+% Technical Accuracy & 0.7979 & 0.6367 & 0.0000 & 1.4738 & -0.5712 \\
+% Conceptual Understanding & 0.7632 & 0.5825 & 0.0000 & 1.3397 & -0.4671 \\
+% Completeness & 0.8072 & 0.6516 & 0.0000 & 1.5015 & -0.6352 \\
+% Clarity & Organization & 0.6330 & 0.4006 & 0.0000 & 0.7501 & 0.2159 \\
+% Professional Relevance & 0.7558 & 0.5712 & 0.0000 & 1.2094 & -0.3053 \\
+% \bottomrule
+% \end{tabular}
+% \end{table}
+
+\begin{table}[htbp]
+\centering
+\caption{MCQ vs.\ OSQ Rubric-Dimension Correlation Statistics (Multi-Judge)}
+\label{tab:mcq_osq_rubric_corr_mj}
+\begin{tabular}{lrrrrr}
+\toprule
+Dimension & Pearson $r$ & $R^2$ & $p$-value & Slope & Intercept \\
+\midrule
+Technical Accuracy          & 0.7979 & 0.6367 & 0.0000 & 1.4738 & -0.5712 \\
+Conceptual Understanding   & 0.7632 & 0.5825 & 0.0000 & 1.3397 & -0.4671 \\
+Completeness                & 0.8072 & 0.6516 & 0.0000 & 1.5015 & -0.6352 \\
+Clarity \& Organization     & 0.6330 & 0.4006 & 0.0000 & 0.7501 &  0.2159 \\
+Professional Relevance      & 0.7558 & 0.5712 & 0.0000 & 1.2094 & -0.3053 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+
+
+
+
+\paragraph{MCQ vs OSQ Correlations}
+Spearman... 
+
+% \begin{table}
+% \caption{MCQ vs OSQ Correlation Analysis}
+% \label{tab:mcq_osq_corr}
+% \begin{tabular}{lrrrrr}
+% \toprule
+%  & judge & pearson\_r & pearson\_p & spearman_r & spearman_p & n \\
+% \midrule
+% 0 & gpt-oss\_120b & 0.7976 & 0.0000 & 0.8000 & 0.0000 & 19 \\
+% 1 & openai\_gpt-5-mini & 0.8106 & 0.0000 & 0.8140 & 0.0000 & 19 \\
+% 2 & Average & 0.8045 & 0.0000 & 0.8070 & 0.0000 & 19 \\
+% \bottomrule
+% \end{tabular}
+% \end{table}
+
+\begin{table}[htbp]
+\centering
+\caption{MCQ vs.\ OSQ Correlation Analysis}
+\label{tab:mcq_osq_corr}
+\begin{tabular}{lrrrrr}
+\toprule
+Judge & Pearson $r$ & Pearson $p$ & Spearman $\rho$ & Spearman $p$ & $n$ \\
+\midrule
+gpt-oss\_120b          & 0.7976 & 0.0000 & 0.8000 & 0.0000 & 19 \\
+openai\_gpt-5-mini    & 0.8106 & 0.0000 & 0.8140 & 0.0000 & 19 \\
+Average               & 0.8045 & 0.0000 & 0.8070 & 0.0000 & 19 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+
+\paragraph{Wilcoxon Signed-Rank}
+
+% \begin{table}
+% \caption{Wilcoxon Signed-Rank Test Results}
+% \label{tab:wilcoxon}
+% \begin{tabular}{lrrrrr}
+% \toprule
+%  & judge & stat & p_value & median_diff & mean_diff & n \\
+% \midrule
+% 0 & gpt-oss\_120b & 0.0000 & 0.0000 & 0.1438 & 0.1602 & 19 \\
+% 1 & openai\_gpt-5-mini & 0.0000 & 0.0000 & 0.0760 & 0.0917 & 19 \\
+% 2 & Average & 0.0000 & 0.0000 & 0.1125 & 0.1260 & 19 \\
+% \bottomrule
+% \end{tabular}
+% \end{table}
+
+\begin{table}[htbp]
+\centering
+\caption{Wilcoxon Signed-Rank Test Results}
+\label{tab:wilcoxon}
+\begin{tabular}{lrrrrr}
+\toprule
+Judge & Test Statistic & $p$-value & Median Difference & Mean Difference & $n$ \\
+\midrule
+gpt-oss\_120b        & 0.0000 & 0.0000 & 0.1438 & 0.1602 & 19 \\
+openai\_gpt-5-mini  & 0.0000 & 0.0000 & 0.0760 & 0.0917 & 19 \\
+Average             & 0.0000 & 0.0000 & 0.1125 & 0.1260 & 19 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+
+\paragraph{Cohen's d for effect size, paired sample}
+
+% \begin{table}
+% \caption{Effect Sizes for Format Comparison}
+% \label{tab:effect_sizes}
+% \begin{tabular}{lrrr}
+% \toprule
+%  & judge & cohens\_d & interpretation & n \\
+% \midrule
+% 0 & gpt-oss\_120b & 2.3477 & Large & 19 \\
+% 1 & openai\_gpt-5-mini & 1.2987 & Large & 19 \\
+% 2 & Average & 1.8166 & Large & 19 \\
+% \bottomrule
+% \end{tabular}
+% \end{table}
+
+\begin{table}[htbp]
+\centering
+\caption{Effect Sizes for Format Comparison}
+\label{tab:effect_sizes}
+\begin{tabular}{lrrrl}
+\toprule
+Judge & Cohen's $d$ & Interpretation & $n$ \\
+\midrule
+gpt-oss\_120b        & 2.3477 & Large & 19 \\
+openai\_gpt-5-mini  & 1.2987 & Large & 19 \\
+Average             & 1.8166 & Large & 19 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+
+
+
 % \newpage
 \clearpage
 \section{Tokenomics and Cost}\label{sec:tok}
 
+\paragraph{Model Responses by Number of Tokens}
 The top panel of Figure \ref{fig:tokenomics_distribution} shows violin plots illustrating the distribution of response token counts for each evaluated model. Models are displayed along the horizontal axis, and response length in tokens is plotted on the vertical axis. Each violin represents a kernel density estimate of token usage for that model, with wider regions indicating more frequently occurring token counts. The embedded box plot within each violin highlights the median, inter-quartile range, and approximate overall spread.
 
 Across models, response token counts range from fewer than 20 tokens to more than 500 tokens. Several models display relatively compact distributions centered near shorter responses, while others show broader or more elongated violins indicative of greater variability in response length. A number of models include long upper tails reflecting occasional high-token responses. The prompt was limited to 500 tokens maximum, with recommendations for 1-2 sentence responses by default, with few question prompts for 3-4 sentence responses.
@@ -190,8 +473,47 @@ Across models, response token counts range from fewer than 20 tokens to more tha
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=1\linewidth]{figs/ch4/4.5/tokenomics_distribution.png}
-    \caption{tokenomics distribution}
+    \caption{Token Count Distributions by Model and by Quality Box Plots}
     \label{fig:tokenomics_distribution}
 \end{figure}
 
-Consider adding in the efficiency scatter plot but make the x-axis logarithmic
+
+\paragraph{Quality of Response and Response Token Length}
+
+Figure \ref{fig:tokenomics_length_vs_quality} presents a stacked bar chart illustrating the distribution of response quality tiers as a function of model and response token length bin. Models are shown along the horizontal axis, with each bar corresponding to a specific model–length pairing (e.g., short responses under 500 tokens, and medium responses where applicable). The vertical axis represents the percentage of responses falling into each quality tier, normalized such that each bar sums to 100%.
+
+Each bar is partitioned into three color-coded segments representing quality categories: Poor (scores below 70), Good (scores between 70 and 90), and Excellent (scores between 90 and 100). Percentage labels embedded within each segment indicate the proportion of responses in that tier for the corresponding model and length bin, enabling direct comparison across both models and response lengths.
+
+Across the set of short-response bars, the relative proportions of quality tiers differ by model. Some model–length combinations display a majority of responses in the Excellent tier, while others show larger shares of Good or Poor responses. The stacked format highlights variation in the internal composition of quality outcomes even when response length bins are held constant.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=1\linewidth]{figs/ch4/4.5/tokenomics_length_vs_quality.png}
+    \caption{Length of Token Response Versus Quality of Response}
+    \label{fig:tokenomics_length_vs_quality}
+\end{figure}
+
+
+
+\paragraph{Efficiency Frontier for Token Usage}
+Quality
+
+Figure \ref{fig:pareto_quality_vs_token_usage} presents a two-dimensional scatter plot showing the relationship between mean judge score and median total token usage for each evaluated model. The horizontal axis represents mean judge score, while the vertical axis represents median total tokens consumed per response. Each point corresponds to a single model and is labeled accordingly.
+
+Points are visually distinguished by color and marker style. A subset of models is highlighted as Pareto-optimal using a distinct color, while the remaining models are shown in a neutral color and identified as dominated. A dashed line traces the Pareto frontier across the plot, connecting the highlighted Pareto-optimal models in ascending order of mean judge score.
+
+The plotted points span a range of mean judge scores from approximately the mid-40s to the low-90s, and median token usage values from roughly the low-70s to above 110 tokens. Models appear distributed across the plot area, with multiple models sharing similar judge scores but differing in median token usage, and others sharing similar token usage levels but differing in judge scores.
+
+The figure includes an annotation indicating that the lower-right region corresponds to higher efficiency, as defined by higher quality scores and lower token usage. This annotation reflects the axis orientation and labeling shown in the plot. The scatter plot and overlaid frontier together display the relative positioning of models with respect to these two measured dimensions.
+
+
+\begin{figure}
+    \centering
+    \includegraphics[width=1\linewidth]{figs/ch4/4.5/pareto-quality-vs-token-usage.png}
+    \caption{Pareto Curve of Quality Versus Token Usage}
+    \label{fig:pareto_quality_vs_token_usage}
+\end{figure}
+
+
+
+

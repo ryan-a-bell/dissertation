@@ -4,10 +4,9 @@ This chapter situates the dissertation at the intersection of systems engineerin
 
 It first establishes the systems engineering context in which model qualification matters, emphasizing the role of complexity, lifecycle coupling, and system-of-systems characteristics that amplify consequence when errors propagate across artifacts and stakeholders. 
 
-Followed by the contrast of document-centric engineering with model-centric and repository-managed workflows, highlighting how the digital thread changes what it means to generate, inspect, and verify engineering work products. 
+Followed by the contrast of document-centric engineering with model-centric workflows, highlighting how the digital thread changes what it means to generate, inspect, and verify engineering work products. 
 
 The chapter then reviews LLMs capabilities and limitations for failure modes: hallucination, weak grounding, inconsistent reasoning under small perturbations, and sensitivity to context and prompting. These properties motivate why benchmark score alone cannot be treated as a single interchangeable proxy for deployable competence. 
-
 
 The second half of the chapter focuses on evaluation practice. It surveys the evolution of modern benchmarking, including known failure modes such as data leakage, contamination, and dataset lifecycle challenges. It then turns to evaluation modalities, comparing and contrasting multiple-choice and open-ended formats and how they measure different facets of capability and produce different kinds of evidence. 
 
@@ -36,28 +35,27 @@ This literature review therefore establishes the conceptual requirements for a b
 % - Do NOT include here: LLMs, benchmarking, MCQ/OSQ, cost.
 
 
-This section motivates why \ac{se} constitutes a domain-specific environment for evaluating \acp{llm}. Systems engineering outputs are artifact-based and lifecycle-coupled: work products must remain configuration-managed, traceable, and auditable across a digital thread. The goal is not to claim that transfer from general-purpose benchmarks is impossible, but to argue that general benchmark performance alone is insufficient qualification evidence for \ac{se} intended use \cite{incose_se_handbook_2023, iso_ieee_15288_2015, dod_digital_engineering_strategy_2018}.
+This section motivates why \ac{se} constitutes a domain-specific environment for evaluating \acp{llm}. Systems engineering outputs are artifact-based and lifecycle-coupled: work products must remain configuration-managed, traceable, and auditable across a digital thread. The goal is not to claim that transfer from general-purpose benchmarks is impossible, but to argue that general benchmark performance alone is insufficient qualification evidence for \ac{se} intended use \cite{walden_systems_engineering_handbook_2015, standard_ieee_15288_2023, deputyassistantsecretaryofdefense_DepartmentDefenseDigitalStrategy_2018}
 
 We develop this argument in three steps. First, we characterize the artifact network that \ac{se} produces and the evaluation implications of cross-artifact coherence. Next, we describe how digital engineering and \ac{mbse} shift \ac{se} toward model-/repository-centric baselines with larger failure surfaces for automated assistance on the digital thread. Finally, we discuss how scale and system-of-systems complexity amplify assurance demands, making cross-artifact failures more consequential than isolated textual errors.
 
 
-\subsection{Nature of systems engineering artifacts}
+\subsection{The Nature of Systems Engineering Artifacts}
 \label{subsec:ch2_se_artifacts}
 
-Systems engineering is commonly defined as a disciplined, integrative approach for designing, realizing, and operating complex systems across the full lifecycle. This definition emphasizes both technical integration and governance across time: \ac{se} coordinates diverse specialties into a coherent system that satisfies stakeholder needs within technical, cost, schedule, and risk constraints \cite{sebok_2024, maier_rechtin_2009, incose_se_handbook_2023}. \ac{se} is a socio-technical practice in which decisions must be explainable to stakeholders, defensible under review, and revisable under evolving constraints \cite{BuedeMiller_EngineeringDesignOfSystems_2016, grady_SystemSynthesisProduct_2010, Blanchard_Fabrycky_Systems_Engineering_and_Analysis_2011, blanchard_system_engineering_management_2008 , Langford_engineering_systems_integration_2012}.
+Systems engineering is commonly defined as a disciplined, integrative approach for designing, realizing, and operating complex systems across the full lifecycle. This definition emphasizes both technical integration and governance across time: \ac{se} coordinates diverse specialties into a coherent system that satisfies stakeholder needs within technical, cost, schedule, and risk constraints
+\cite{incose_GuideSystemsEngineering_2025, maier_ArtSystemsArchitecting_2002, walden_systems_engineering_handbook_2015}. \ac{se} is a socio-technical practice in which decisions must be explainable to stakeholders, defensible under review, and revisable under evolving constraints \cite{BuedeMiller_EngineeringDesignOfSystems_2016, grady_SystemSynthesisProduct_2010, Blanchard_Fabrycky_Systems_Engineering_and_Analysis_2011, blanchard_system_engineering_management_2008 , Langford_engineering_systems_integration_2012}.
 
-\ac{se} produces interdependent lifecycle work products including requirements, architectures, interface definitions, verification artifacts, trade studies, risk registers, and decision rationale whose quality is evaluated not only on a per-artifact basis, but also through cross-artifact consistency and traceability. Each work product is expected to link upstream intent to downstream verification and to evolve under change control \cite{iso_ieee_15288_2015, incose_se_handbook_2023}. In a digital-thread, these links are meant to support audit, impact analysis, and assurance arguments across the lifecycle \cite{dod_digital_engineering_strategy_2018}.
+\ac{se} produces interdependent lifecycle work products including requirements, architectures, interface definitions, verification artifacts, trade studies, risk registers, and decision rationale whose quality is evaluated not only on a per-artifact basis, but also through cross-artifact consistency and traceability. Each work product is expected to link upstream intent to downstream verification and to evolve under change control \cite{standard_ieee_15288_2023, walden_systems_engineering_handbook_2015}. In a digital-thread, these links are meant to support audit, impact analysis, and assurance arguments across the lifecycle \cite{deputyassistantsecretaryofdefense_DepartmentDefenseDigitalStrategy_2018, Ouzzif_Leveraging_AI_Manage_Technical_Debt_Test_Evaluation_2025, Helmerich_Transforming_Systems_Engineering_Agentic_AI_2025}.
 
 
-% It is responsible for coordinating diverse engineering specialties into a coherent whole that satisfies stakeholder needs within technical, cost, and schedule constraints. Modern systems rarely reside within a single domain; instead, they span technical, organizational, and operational boundaries, demanding a framework that can manage a trade space of complexity, uncertainty, and competing objectives. The foundational systems engineering literature emphasizes the system engineers' role as both a technical and socio-technical practice.
-
-When  \acp{llm} are inserted into \ac{se} workflows, the qualification question becomes whether the model can support drafting, extraction, transformation, and consistency-checking tasks without breaking this artifact network. In other words, the primary evaluation target is often not a single answer, but whether the model preserves or improves traceability, avoids introducing inconsistencies across artifacts, and produces outputs that remain verifiable within the digital thread \cite{nist_ai_rmf_2023, iso_iec_25010_2011}. 
-
+When \acp{llm} are inserted into \ac{se} workflows, the qualification question becomes whether the model can support drafting, extraction, transformation, and consistency-checking tasks without breaking this artifact network. In other words, the primary evaluation target is often not a single answer, but whether the model preserves or improves traceability, avoids introducing inconsistencies across artifacts, and produces outputs that remain verifiable within the digital thread \cite{nist_ai_rmf_2023, iso_iec_25010_2011, Traveller_Agile_Engineering_Agentic_Co_Modelers_2025, Ouzzif_Leveraging_AI_Manage_Technical_Debt_Test_Evaluation_2025}. 
 
 
 
-\section{Digital thread and the shift to model-/repository-centric SE}
-\label{sec:ch2_digital_thread}
+
+\section{The Digital Thread and the Shift to Model-Based Systems Engineering}
+\label{sec:ch2_digital_thread_and_mbse}
 
 % Job: define the operational context in which modern SE occurs.
 % - Digital thread (pragmatic): a network of linked, versioned, and governed lifecycle artifacts.
@@ -77,45 +75,52 @@ When  \acp{llm} are inserted into \ac{se} workflows, the qualification question 
 % - Explicitly excluded: evaluation methods, modality comparisons, cost.
 
 
-\subsubsection{From document-centric to model-/repository-centric baselines}
+\subsubsection{From Document-Centric to Model-Centric Baselines}
 \label{subsec:ch2_doc_to_model}
 
-Historically, systems engineering practice has been dominated by document-centric approaches in which the system definition is distributed across collections of narrative artifacts, including requirements specifications, interface control documents, design descriptions, and verification plans. These artifacts are typically maintained as human-readable files—PDFs, Word documents, spreadsheets, and slide decks—often stored in loosely coupled repositories. In such environments, traceability, consistency checking, and configuration control are largely enforced through manual processes: engineers update multiple documents by hand, maintain trace matrices explicitly, and rely on review discipline to detect contradictions and omissions. As system complexity increases, this mode of operation makes cross-artifact coherence increasingly difficult to sustain, and ambiguity regarding the authoritative system baseline becomes more likely \cite{systems_engineering_guidebook_2021}.
+Historically, systems engineering practice has been dominated by document-centric approaches in which the system definition is distributed across collections of narrative artifacts, including requirements specifications, interface control documents, design descriptions, and verification plans. These artifacts are typically maintained as human-readable files including but not limited to: PDFs, Word documents, spreadsheets, and slide decks often stored in loosely coupled repositories. In such environments, traceability, consistency checking, and configuration control are largely enforced through manual processes: engineers update multiple documents by hand, maintain trace matrices explicitly, and rely on review discipline to detect contradictions and omissions. As system complexity increases, this mode of operation makes cross-artifact coherence increasingly difficult to sustain, and ambiguity regarding the authoritative system baseline becomes more likely \cite{incose_GuideSystemsEngineering_2025}.
 
-Digital engineering and Model-Based Systems Engineering (\ac{mbse}) emerged in response to these limitations. \ac{mbse} is commonly defined as a paradigm that uses formalized representations of systems—models—to support the performance of systems engineering tasks throughout the system lifecycle, in contrast to legacy approaches \cite{systems_engineering_guidebook_2021}. The \ac{sebok} similarly defines \ac{mbse} as ``a paradigm that uses formalized representations of systems, known as models, to support and facilitate the performance of systems engineering tasks throughout a system’s life cycle'' \cite{incose_guide_2025}. Across these definitions, the central distinction is not simply the use of modeling tools, but the treatment of system definition as structured, governed data rather than as loosely synchronized artifacts.
+Digital engineering and Model-Based Systems Engineering (\ac{mbse}) emerged in response to these limitations. \ac{mbse} is commonly defined as a paradigm that uses formalized representations of systems—models—to support the performance of systems engineering tasks throughout the system lifecycle, in contrast to legacy approaches \cite{incose_GuideSystemsEngineering_2025}. The \ac{sebok} similarly defines \ac{mbse} as "a paradigm that uses formalized representations of systems, known as models, to support and facilitate the performance of systems engineering tasks throughout a system’s life cycle'' \cite{incose_GuideSystemsEngineering_2025}. The central distinction is not simply the use of modeling tools, but the treatment of system definition as structured, governed data rather than as loosely synchronized artifacts.
 
-In model- and repository-centric baselines, system elements are instantiated within a shared repository and rendered across multiple views depending on the framework \cite{noauthor_dodaf_2010, zachman_zachman_2003}, but typically include structure and behavior derived from a common underlying model. When attributes change, inter-related analyses and views can update as alternate projections of the same data, reducing fragmentation and the need for manual reconciliation. Reported benefits of this approach include improved traceability, automated consistency checking, and enhanced stakeholder communication, particularly when models function as a single, governed source of truth that can be queried and transformed across lifecycle activities \cite{hart_IntroductionModelBasedSystem_2015}. This shift re-frames the technical baseline from a collection of documents to an interconnected artifact network maintained under configuration control.
+In model- and repository-centric baselines, system elements are instantiated within a shared repository and rendered across multiple views depending on the framework \cite{OMG_UAF_1.3_2025, noauthor_dodaf_2010, zachman_zachman_2003}, but typically include structure and behavior derived from a common underlying model. When attributes change, inter-related analyses and views can update as alternate projections of the same data, reducing fragmentation and the need for manual reconciliation. Reported benefits of this approach include improved traceability, automated consistency checking, and enhanced stakeholder communication, particularly when models function as a single, governed source of truth that can be queried and transformed across lifecycle activities \cite{hart_IntroductionModelBasedSystem_2015}. This shift re-frames the technical baseline from a collection of documents to an interconnected artifact network maintained under configuration control.
+
+At the same time, the literature consistently cautions against viewing \ac{mbse} as a panacea, arguing that poorly implemented \ac{mbse} initiatives often mirror and amplify existing deficiencies in systems engineering practice rather than correcting them, effectively "bastardizing" document-based workflows within a modeling environment \cite{lerat_ThreeReasonsWhy_2010, madni_HandbookModelBasedSystems_2023}. 
+
+\vfill
+\begin{center}
+\itshape
+``Time must be set aside to build up an MBSE-friendly infrastructure; otherwise MBSE practices will also be considered a burden, because they are not well defined.''-- \cite{mcdermott_SystemsEngineeringModernization_2003}
+\end{center}
+\vfill
+
+Without disciplined governance, clear strategy, and sustained engineering rigor, model-centric approaches can reproduce the same coordination failures they are intended to mitigate. These observations reinforce that the transition to repository-centric baselines is not solely a tooling change, but a shift in how engineering knowledge is represented, controlled, and evolved.
 
 
-At the same time, the literature consistently cautions against viewing \ac{mbse} as a panacea. Lerat argues that poorly implemented \ac{mbse} initiatives often mirror and amplify existing deficiencies in systems engineering practice rather than correcting them, effectively ``bastardizing'' document-based workflows within a modeling environment \cite{lerat_552_2010}. Without disciplined governance, clear semantics, and sustained engineering rigor, model-centric approaches can reproduce the same coordination failures they are intended to mitigate. These observations reinforce that the transition to repository-centric baselines is not solely a tooling change, but a shift in how engineering knowledge is represented, controlled, and evolved.
 
-\subsubsection{Transition drivers and the hybrid reality}
+\subsubsection{Transition Drivers and the Hybrid Reality}
 \label{subsec:ch2_transition_drivers}
 
-The transition from document-centric to model- and repository-centric systems engineering is driven by a combination of technical, organizational, and strategic pressures. Increasing system complexity—particularly software intensity, interconnectedness, and long lifecycle spans—has made manual synchronization across heterogeneous artifacts increasingly untenable. At the same time, budget constraints and compressed delivery schedules have heightened the need for approaches that reduce rework, improve change impact analysis, and support earlier detection of integration issues.
+The transition from document-centric to model-centric \ac{se} is driven by a combination of technical, organizational, and strategic pressures. Increasing system complexity—particularly software intensity, interconnectedness, and long lifecycle spans—has made manual synchronization across heterogeneous artifacts increasingly untenable. At the same time, budget constraints and compressed delivery schedules have heightened the need for approaches that reduce rework, improve change impact analysis, and support earlier detection of integration issues.
 
 Institutional digital engineering initiatives reflect these pressures to operate under increasingly restrictive budgets and aggressive delivery timelines, noting that legacy approaches are too slow to keep pace with adversaries \cite{NAVWAR_DE_Strategy_2023}.
 
-Similar motivations underlie digital twin efforts in aerospace and defense, which emphasize the integration of physics-based models, operational data, and historical records to create authoritative digital representations of systems across their lifecycles. digital twin concepts that integrate high-fidelity simulation with health management and fleet data to improve safety and reliability \cite{glaessgen_digital_2012}, while Air Force is conducting efforts to develop a digital thread/digital twin analytical framework that merges modeling and experimental data to support lifecycle decision-making \cite{kraft_AirForceDigital_2016}.
+Similar motivations underlie digital twin efforts in aerospace and defense, which emphasize the integration of physics-based models, operational data, and historical records to create authoritative digital representations of systems across their lifecycles. digital twin concepts that integrate high-fidelity simulation with health management and fleet data to improve safety and reliability \cite{glaessgen_digital_2012}, while Air Force is conducting efforts to develop a digital thread and digital twin analytical framework that merges modeling and experimental data to support lifecycle decision-making \cite{kraft_AirForceDigital_2016}.
 
-Despite these strategic drivers, most organizations operate in a hybrid state rather than a fully model-centric one. Portions of the engineering baseline may reside in structured repositories with models, requirements databases, code, and configuration items, while other portions remain document-centric, including specifications, contractual deliverables, and slide-based decision artifacts. Adoption barriers such as training requirements for the relatively high barrier to entry for becoming proficient at model-based tooling, organizational inertia, tool cost, and legacy system integration frequently necessitate incremental transition strategies rather than wholesale replacement of document-based workflows \cite{systems_engineering_guidebook_2021, vaneman_mbse_demystified_2025}. The barrier to transition or entry to \ac{mbse} may be due to the number of frameworks, methods, and tools available \cite{noauthor_dodaf_2010, hart_IntroductionModelBasedSystem_2015}
+Despite these strategic drivers, most organizations operate in a hybrid state rather than a fully model-centric one. Portions of the engineering baseline may reside in structured repositories with models, requirements databases, code, and configuration items, while other portions remain document-centric, including specifications, contractual deliverables, and slide-based decision artifacts.
+
+The adoption of \ac{mbse} is frequently impeded by various barriers to entry, including training requirements, organizational inertia, tool cost, and difficulties integrating with legacy systems. As a result, organizations often pursue incremental transition strategies rather than wholesale replacement of document-based workflows \cite{systems_engineering_guidebook_2021, vaneman_mbse_demystified_2025}. One contributing factor to this high barrier to entry is the large number of competing frameworks, languages, methods, and tools, which increases the complexity of adoption and proficiency development \cite{OMG_UAF_1.3_2025,noauthor_dodaf_2010, zachman_ZachmanFrameworkEnterprise_2003, OMG_UML_2_5_1_2017, LML_Specification_2_0_2025, OMG_UPDM_2_1_2016, OMG_KerML_1_0_2025, OMG_BPMN_2_0_2_2014, Dassault_Cameo_Systems_Modeler_2025, Eclipse_Capella_Project_Capella_2026, Ansys_System_Architecture_Modeler_SAM_2026, IBM_Engineering_Rhapsody_2026, Spec_Innovations_Innoslate_2026, OpenMBEE_OpenMBEE_2026, PTC_PTC_Modeler_2026, MathWorks_System_Composer_2026}.
+
+This hybrid reality is further complicated by ongoing standards and tooling transitions. Guidance on transitioning from SysML v1 to SysML v2 highlights the planning, migration, and interoperability challenges organizations must manage as modeling languages and ecosystems evolve \cite{OUSDRE_SysMLV1SysML2_2024, friedenthal_MovingForwardSysMLV2_2024, zhang_MBSE20More_2025}.
 
 
-
-This hybrid reality is further complicated by ongoing standards and tooling transitions. Guidance on transitioning from SysML v1 to SysML v2 highlights the planning, migration, and interoperability challenges organizations must manage as modeling languages and ecosystems evolve \cite{OUSDRE_SysMLV1SysML2_2024, friedenthal_MovingForwardSysMLV2_2024}. In practice, such transitions create seams where meaning must be preserved across representations—for example, when narrative requirements are translated into structured constraints or when document-based interface descriptions must align with schema-governed models. These seams are often where inconsistencies arise and where configuration control must be most carefully enforced.
-
-
-\subsubsection{Tool augmentation in artifact networks}
-\label{subsec:ch2_tool_augmentation}
+\subsubsection{Tooling for the Digital Thread}
+\label{subsec:ch2_tool_for_digital_thread}
 
 As systems engineering baselines become more structured and repository-managed, the scope for tool augmentation expands beyond drafting isolated documents to operating directly on artifact networks. In digital-thread-enabled environments, tools may support querying, transforming, reconciling, and propagating changes across linked lifecycle artifacts rather than generating narrative content \cite{kumar_AIEnabledDigital_2023}. This shift reflects the underlying premise of the digital thread: value is created by maintaining coherence across the artifact network under change.
 
-Recent work has explored the use of knowledge graphs as a foundation for digital thread architectures, enabling explicit representation of relationships among requirements, design elements, verification activities, and operational data. Agentic-AI-enabled digital thread architectures have been proposed that leverage knowledge graphs, retrieval-augmented generation, and graph-based reasoning to deliver trusted, explainable lifecycle traceability across requirements, design, test, manufacturing, and operations \cite{kumar_AIEnabledDigital_2023, Jaskie_Agentic_AI_Lifecycle_Traceability_Digital_Thread_2025}. Related efforts demonstrate how agentic orchestration across engineering tools and data sources can generate connected and traceable engineering data products across the full systems engineering lifecycle when embedded within a unified data environment \cite{Helmerich_Transforming_Systems_Engineering_Agentic_AI_2025}. In test and evaluation contexts, digital transformation architectures similarly emphasize end-to-end linkage across requirements, planning, execution, and analysis to improve lifecycle visibility and decision support \cite{kumar_AIEnabledDigital_2023}.
+Recent work has explored the use of knowledge graphs as a foundation for digital thread architectures, enabling explicit representation of relationships among requirements, design elements, verification activities, and operational data. Agentic-AI-enabled digital thread architectures have been proposed that leverage knowledge graphs, retrieval-augmented generation, and graph-based reasoning to deliver trusted, explainable lifecycle traceability across requirements, design, test, manufacturing, and operations \cite{kumar_AIEnabledDigital_2023, Jaskie_Agentic_AI_Lifecycle_Traceability_Digital_Thread_2025, Lipizzi_LLM_Augmented_Pipelines_Validated_System_Model_Creation_2025, Helmerich_Transforming_Systems_Engineering_Agentic_AI_2025}. 
 
-While such approaches promise increased automation and lifecycle insight, they also expand the consequences of subtle errors. In repository-centric baselines, incomplete or inconsistent updates can propagate across linked artifacts and accumulate as technical debt within the digital thread, a phenomenon well documented in large-scale software and test environments \cite{Ouzzif_Leveraging_AI_Manage_Technical_Debt_Test_Evaluation_2025}. In hybrid environments, this risk is particularly acute at representation boundaries, where narrative artifacts, structured models, and derived analyses must remain aligned despite differing semantics and tooling.
-
-Taken together, these developments frame modern systems engineering practice as the continuous maintenance of a governed artifact network supported by increasingly capable tools. Understanding this operational context is essential for examining how language models, when introduced into such environments, interact with systems engineering artifacts and where their contributions may succeed or fail. Although recent surveys of U.S. systems engineering curricula suggest that AI coverage is increasingly common, AI is often taught silo-ed rather than being embedded into core, lifecycle workflows \cite{Zhang_AI_Systems_Engineering_Education_Curricula_Training_US_2025}. The following section therefore focuses on the interaction of language models with systems engineering artifacts in digital-thread-enabled workflows.
-
+Modern systems engineering practice will require the continuous maintenance of a governed artifact network supported by increasingly capable tools \cite{Adeyeye_AI_for_Systems_Engineering_2024}. Understanding this operational context is essential for examining how language models, when introduced into such environments, interact with systems engineering artifacts and where their contributions may succeed or fail. Although recent surveys of U.S. systems engineering curricula suggest that AI coverage is increasingly common, AI is often taught silo-ed rather than being embedded into core, lifecycle workflows \cite{Zhang_AI_Systems_Engineering_Education_Curricula_Training_US_2025}. The following section therefore focuses on the interaction of language models with systems engineering artifacts in digital-thread-enabled workflows.
 
 
 
@@ -141,38 +146,73 @@ Taken together, these developments frame modern systems engineering practice as 
 % - Handoff: these interaction patterns expose reliability challenges that generic LLM evaluation often fails to capture.
 % - Explicitly excluded: benchmarking theory, MCQ vs OSQ, cost.
 
-The previous section described how digital engineering and \ac{mbse} shift systems engineering toward structured, configuration-managed baselines in which value is created by maintaining coherence across an interconnected artifact network under change. This section examines how large language models (LLMs) are being positioned within those workflows: what forms of assistance are currently pursued, what types of artifacts and transformations are targeted, and why known model behaviors can threaten the same properties (e.g., traceability, consistency, and auditability) on which systems engineering relies.
+The previous section described how digital engineering and \ac{mbse} shift systems engineering toward structured, configuration-managed baselines in which value is created by maintaining coherence across a digital thread under change. This section examines how \acp{llm} are being positioned within those workflows: what forms of assistance are currently pursued, what types of artifacts and transformations are targeted, and why known model behaviors can threaten the same properties (e.g., traceability, consistency) on which \ac{se} relies.
 
-\subsection{LLM Background?} % keep or no? is this too basic?
+\subsection{AI Foundations}
+
+\subsubsection{The Field of AI and Where Generative AI Sits}
+
+\acp{llm} fit into the AI landscape as a specific modern approach within a broader stack: \ac{ai} is the umbrella for methods that enable machines to perform tasks associated with intelligence; \ac{ml} is a major subset of \ac{ai} in which systems learn from data rather than relying only on hand-crafted rules; and deep learning is a dominant family of \ac{ml} methods that learn layered representations from large datasets. Within deep learning, \ac{genai} refers to models that can produce new content like text, images, audio, code, and \acp{llm} are generative models specialized in language and often code, typically implemented as neural networks trained to predict and generate sequences of tokens. 
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.5\linewidth]{figs/microsoft-ai-to-genai.png}
+    \caption[Where Language Models and Generative AI Falls Within the AI Landscape]{Where Language Models and Generative AI Falls Within the AI Landscape, Adapted from \cite{microsoft_Generativeaiforbeginners_2026}}
+    \label{fig:placeholder}
+\end{figure}
+
+\acp{llm} are neural networks, typically transformers, trained to predict the next token in a sequence, essentially probabilistic sequence models \cite{vaswani_AttentionAllYou_2017}. They are first pre-trained on massive text corpora to learn general language patterns, then often fine-tuned with human feedback to better follow user intents \cite{commoncrawl_CommonCrawlOpen_2024, ouyang_TrainingLanguageModels_2022}. This two-stage training is the foundation to \ac{llm} generative abilities. Since \acp{llm} generate text by learned statistical associations rather than a grounded world model, they can produce outputs that sound fluent and confident while being incorrect or inconsistent; in other words, an \ac{llm} may "hallucinate" which is defines as generating plausible-sounding but factually false or nonsensical content \cite{kalai_WhyLanguageModelsHallucinate_2025}. Researchers have characterized \acp{llm} as “stochastic parrots,” adept at regurgitating patterns without true understanding \cite{bender_DangersStochasticParrots_2021}. As a result, consistency and groundedness are not guaranteed: an \ac{llm} might contradict itself or deviate from known facts if such outputs have high probability under its training distribution. These issues raise concerns when applying \acp{llm} in domains that require rigor and trustworthiness. 
+
+\subsubsection{Generative AI Foundations}
+\label{subsec:genai_foundations}
+
+\ac{genai} refers to \ac{ml} systems that model a data-generating process well enough to produce new samples that resemble the training distribution, rather than only assigning labels or scores to inputs. In practice, this means the model learns a probability distribution over sequences (for text/code) or over other structured domains (e.g., pixels, audio waveforms), enabling it to synthesize novel outputs conditioned on prompts, partial inputs, or other context. \acp{llm} are the language-specialized instantiation of this idea: they represent a conditional generative model over token sequences, producing continuations that are probable under learned patterns \cite{vaswani_AttentionAllYou_2017}.
+
+A useful distinction for engineering contexts is between training and inference. Training establishes the parameters that encode statistical regularities in the data, while inference is the deployment-time process of producing outputs from a fixed model given a prompt and context window. At inference time, an \ac{llm} does not retrieve a single deterministic "answer"; it samples (or approximately maximizes) from a learned distribution over possible next tokens. The specific decoding strategy (e.g., greedy decoding, beam search, temperature sampling, nucleus/top-$p$ sampling) directly affects determinism, diversity, and error modes. For systems engineering tasks, these decoding choices matter because they change how often a model will introduce novel phrasing, omit details, or drift from constraints when rewriting artifacts.
+
+Modern \acp{llm} are commonly trained and adapted in multiple stages. Self-supervised pretraining learns broad linguistic competence from large corpora by optimizing next-token (or masked-token) prediction objectives \cite{commoncrawl_CommonCrawlOpen_2024}. Supervised fine-tuning (SFT) then shapes the model toward task-following behavior using curated input--output examples (e.g., instruction--response pairs). Many production systems add preference-based alignment, where the model is optimized against human (or proxy) preference judgments to reduce harmful behavior and increase helpfulness and instruction adherence. While these stages typically improve usability, they also introduce an important measurement implication: the deployed model is no longer merely a next-token predictor trained on raw text; it is a model whose behavior reflects multiple objective functions and datasets, which can shift failure modes in ways that may not be visible in aggregate benchmark scores.
+
+\ac{genai} systems can also be augmented without modifying weights. Prompting and in-context learning condition the model via examples, formats, and constraints embedded in the input. \ac{rag} conditions outputs on external references fetched at runtime, reducing reliance on parametric memory and enabling citations to authoritative sources. Tool-using and agentic patterns extend this further by allowing the model to call external functions (e.g., search, simulation, model checking, requirements databases), then incorporate results into outputs. Discuss peompting/learning conditions in practice here like Claude Skills and tool calling mechanisms (MCP, cite the Linux foundation).
 
 
-% LM architecture: transformer-based models trained on massive text corpora
-% Core capabilities: natural language understanding, generation, reasoning, few-shot learning
-% Scale effects: emergent abilities appearing in larger models (e.g., chain-of-thought reasoning)
-% Training: Teaching a model how to perform a task using large amounts of data
+In systems engineering workflows, these augmentation mechanisms provide context, which has been proven to be more impactful than raw model size (cite a study here) because they determine whether the model’s outputs are grounded in the current baseline (requirements repositories, interface definitions, verification results) or merely plausible continuations of generic patterns.
 
-% \cite{varshneyCreatingSyntheticData2024}
-% pre-training/training
-% "Pretraining: This involves using an extremely large corpus of information to train the model on how the general structure of a language is organized. While for a generic LLM, this is typically done with Internet-scale data, for any domain-specific LLMs, we need to imbue the specifics on that domain (think LLM for geometry, LLM for radiology, and LLM for telco). This is called domain adaptive pretraining (DAPT)."
+These foundations motivate a key caution for artifact-centric engineering: local fluency is not equivalent to global validity. Because generative models optimize token-level likelihood under learned distributions, they can produce text that is coherent and confident while still violating domain constraints, misrepresenting traceability, or introducing subtle inconsistencies across linked artifacts. This is particularly problematic in repository-centered \ac{se}, where the value of the baseline depends on cross-artifact coherence (e.g., requirement-to-design-to-test consistency) rather than the plausibility of any single document fragment.
 
-% Inferencing: Model making inferences based on new inputs
 
-% Common LLMs (not an exhaustive list)
-% Proprietary: OpenAI ChatGPT, Google Gemini, Anthropic Claude
-% Open source: Llama, Falcon, Mistral
 
-% Model Characteristics 
-% Size is the number of parameters (e.g. 70B model = 70B parameters)
-% Quantization is a compression technique used to reduce memory and compute requirements. It converts weights to a lower precision data type (e.g. 32 bit floating point, 16float, 8 or 4 bit integer).
+\subsubsection{Operational Model Characteristics and Deployment Considerations}
+\label{subsec:llm_ops_characteristics}
 
-% << inisert ai and gen ai png?? >>
+Several operational characteristics affect how \acp{llm} behave in practice and how they can be integrated into engineering environments. Model size is typically reported as the number of parameters, which is a rough proxy for capacity but not a guarantee of domain performance. Context window length determines how much of an artifact network can be provided at once (e.g., a requirement, its rationale, upstream assumptions, interface definitions, and verification evidence), constraining the degree of holistic consistency the model can maintain in a single pass. 
+%% ADD MODELS W/ LARGE WINDOWS, ETC... 1M FOR SOME SEEMS GOOD NOW. SOME STILL SITTING SIGNIFICANTLY LESS.
+Inference configuration (temperature, top-$p$) controls the diversity--determinism trade and can influence whether edits remain conservative or introduce unintended changes.
+
+Deployment constraints frequently motivate quantization, which compresses model weights into lower-precision representations (e.g., 16-bit, 8-bit, 4-bit) to reduce memory footprint and increase throughput. Quantization can enable local or edge deployment and faster iteration, but it may also change numerical behavior and, in some settings, affect accuracy or reliability . Practically, engineers often interact with models through inference servers and local run times (e.g., GPU-optimized serving stacks for throughput, or lightweight local runners for offline use), which shapes the feasible workflow patterns.
+
+Finally, it is useful to distinguish between \emph{model capability} and \emph{system capability}. Many effective generative AI applications in engineering rely on the surrounding system: structured prompting, retrieval from authoritative baselines, tool calls to analysis engines, and validation steps that check outputs against schemas, constraints, or tests. 
+
+This framing aligns with the digital-thread perspective adopted in this chapter: the model is one component within a configuration-managed pipeline, and its outputs must be treated as proposed changes to artifacts that require integration, verification, and traceability control.
+
+%% add in MCP server, claude skills etc b/c linux foundation stadnards now...
+
+
+
 
 \subsection{LLM Capabilities Relevant to SE Tasks}
 \label{subsec:ch2_llm_capabilities}
 
-LLMs are primarily adopted in systems engineering as \emph{transformation tools} over engineering information: they extract structured elements from technical text, draft constrained artifacts (e.g., requirements or interface descriptions), summarize and synthesize across documents, and translate between representational forms. These capabilities are especially valuable when they support disciplined transformations that can be checked against engineering constraints, rather than producing ungrounded narrative. In practice, LLM use is increasingly coupled to retrieval and structured representations (e.g., repositories, models, knowledge graphs) so that outputs can be linked to the evolving technical baseline rather than treated as standalone prose.
 
-Recent literature and practitioner-oriented demonstrations describe a wide range of candidate use cases spanning the \ac{se} lifecycle. For example, systems engineering-focused AI surveys and case studies identify opportunities in requirements elicitation and generation, architecture creation and validation, trade-space exploration, automated testing support, fault detection, and operations and maintenance decision support \cite{gadewadikar_selma_2024}. More targeted work evaluates LLM assistance for specific artifact classes; LLM-assisted requirements generation using criteria grounded directly in \ac{incose} requirements-writing guidance, demonstrating that LLM-based tools can generate and cluster requirements with quality comparable to human engineers under \ac{incose}-aligned evaluation, while still emphasizing the need for human review \cite{Stein_Leveraging_LLMs_Requirements_Generation_SE_Guidelines_2025}. Such results support the view that LLMs can contribute meaningfully when performance is framed in terms of domain-specific artifact quality rather than generic NLP metrics.
+Recent literature and practitioner-oriented demonstrations describe a wide range of candidate use cases spanning the \ac{se} lifecycle. Active communities include the \ac{incose} International Symposium and the annual AI4SE \& SE4AI Workshop hosted by the \ac{serc}. \cite{incose_ProceedingsINCOSEInternational_2024, incose_ProceedingsINCOSEInternational_2025, serc_AI4SESE4AIWorkshop_2023, serc_AI4SESE4AIWorkshop_2024, serc_AI4SESE4AIWorkshop_2025}. Practitioner demonstrations to date include but are not limited to: extracting structured elements from technical text, drafting artifacts such as requirements or interface descriptions, and summarizing and synthesizing across documents.
+
+%%%% ADD MORE CITRATIONS AT THE END HERE.
+
+
+% COMBINE ABOVE SENTENCE AND BELOW SENTENCE?
+% ADD SOURCES FROM AI4SE
+For example, systems engineering-focused AI surveys and case studies identify opportunities in requirements elicitation and generation, architecture creation and validation, trade-space exploration, automated testing support, fault detection, and operations and maintenance decision support \cite{gadewadikar_selma_2024}. 
+
+More targeted work evaluates LLM assistance for specific artifact classes; LLM-assisted requirements generation using criteria grounded directly in \ac{incose} requirements-writing guidance, demonstrating that LLM-based tools can generate and cluster requirements with quality comparable to human engineers under \ac{incose}-aligned evaluation, while still emphasizing the need for human review \cite{Stein_Leveraging_LLMs_Requirements_Generation_SE_Guidelines_2025}. Such results support the view that LLMs can contribute meaningfully when performance is framed in terms of domain-specific artifact quality rather than generic NLP metrics.
 
 
 %%% COMMENTS -- I THINK WE NEED TO LEAD INTO THIS WITH JUST AI PERFORMING TASKS (AS ABOVE), THEN THE RISE OF AGENTIC TOOL CHAINS ACROSS DOMAINS (E.G. COMPUTER SCIENCE AND IT'S PROPAGATING TO SE)
@@ -183,14 +223,16 @@ In mission engineering contexts, LLMs are also being explored as an AI-enabled m
 These strands of work collectively suggest that LLMs are not being adopted solely for drafting narrative text; rather, they are increasingly used to (i) transform between representations (narrative $\leftrightarrow$ structured artifacts), (ii) synthesize across heterogeneous sources, and (iii) operate within repository- and model-centric environments where outputs are expected to integrate into the shared authoritative system baseline.
 
 
+\paragraph{Empirical Studies of AI-Assisted Systems Engineering}\label{par:ch2_empirical_ai_and_se}
+
+Recent empirical work demonstrates both the promise and limitations of LLM-based systems engineering assistance. Controlled experiments on prompt engineering for SE artifact generation reveal that oneshot, fewshot, and chain-of-thought techniques substantially improve quality over zeroshot prompting, though performance varies significantly with temperature and artifact type \cite{SmithCrabb_Jones_Bernard_Prompt_Technique_SE_Artifacts_2024}. When evaluated against INCOSE requirements-writing guidelines, LLM-generated requirements achieve precision of 0.897 and recall of 0.976 for text-based extraction, with quality on par with human SME outputs, though human-in-the-loop validation remains essential \cite{Stein_Leveraging_LLMs_Requirements_Generation_SE_Guidelines_2025}. Fine-tuned models with chain-of-thought prompting significantly outperform baseline approaches on SysMLv2 generation tasks when evaluated using syntax scores, logic scores, MAUVE, and BertScore, demonstrating measurable quality improvements \cite{Wach_LLMs_Accelerate_Complex_Systems_2024}.
+
+Systematic validation of AI-generated systems engineering artifacts requires moving beyond informal review. Syntactic and Semantic Quality (SSQ) and Validity (SSV) metrics enable continuous scoring of SysML model correctness through parser-based validation and simulation feedback, with empirical improvements observed when LLMs are guided by formal grammars rather than free-form prompting \cite{Traveller_Agile_Engineering_Agentic_Co_Modelers_2025}. Multimodal Retrieval-Augmented Generation (M-RAG) approaches that incorporate text, images, and tables outperform GPT-4-only and text-only RAG methods on design document evaluation scores, with structured multi-LLM scoring reducing subjectivity \cite{Guntupalli_Integrating_Generative_AI_Automation_System_Design_Processes_2024}. However, physical feasibility and downstream implementation risks remain incompletely validated, requiring domain-expert review.
+
+\paragraph{Agentic AI architectures for integrated SE workflows.}
+Agentic AI systems demonstrate dramatic productivity gains by orchestrating LLMs with engineering tools across the full SE lifecycle. The DaVinci platform reduces system model creation from 100 hours to 20 minutes and generates requirements, architecture, interfaces, behaviors, schedules, and risk matrices in minutes by integrating LLMs with CAD, simulation, and documentation tools \cite{Helmerich_Transforming_Systems_Engineering_Agentic_AI_2025}. Similarly, cognitive-agentic architectures that augment GenAI with verification, simulation, and optimization tools address standalone GenAI's limitations in reliability, explainability, and uncertainty awareness \cite{Lee_CastilloEffen_2024_Rapid_Intelligent_Systems_Engineering}. These approaches position AI not as a replacement for SE tools but as an orchestration layer providing natural-language interfaces to validated engineering capabilities.
 
 
-\subsection{Operating context: artifact networks and implicit engineering norms}
-\label{subsec:ch2_llm_operating_context}
-
-% The operational context in which LLMs are being applied in systems engineering differs substantially from common standalone language tasks. In a digital-thread-enabled environment, artifacts are governed by configuration control, linked by traceability relationships, and expected to remain mutually coherent under change. Engineering outputs are therefore evaluated not just by local plausibility, but by their compatibility with established constraints (e.g., requirements hierarchies, interface assumptions, verification criteria) and by their preservation of traceability and rationale.
-
-% Agentic and repository-centric demonstrations implicitly assume these norms by embedding LLM outputs within structured workflows: they translate stakeholder narratives into models, generate artifacts that must satisfy syntactic and semantic checks, and incorporate validation steps through parsers, metrics, or model-based constraints \cite{Traveller_Agile_Engineering_Agentic_Co_Modelers_2025, Wach_GenGroves_Bridge_Systems_Engineers_Domain_Experts_2025}. Even in document-focused applications, systems engineering-specific criteria and review expectations are often required to ensure that generated artifacts are usable within an engineering baseline rather than merely well-written \cite{Guntupalli_Integrating_Generative_AI_Automation_System_Design_Processes_2024, Stein_Leveraging_LLMs_Requirements_Generation_SE_Guidelines_2025}. This highlights a central point for the literature review: the relevant unit of success is not a single output, but a coherent update to an interdependent artifact set.
 
 
 
@@ -198,6 +240,7 @@ These strands of work collectively suggest that LLMs are not being adopted solel
 \label{subsec:ch2_llm_failure_modes}
 
 The same properties that make LLMs attractive for systems engineering—fluency, synthesis, and transformation across representations—also create distinctive risks when models are used to produce or modify lifecycle artifacts. Many failure modes that are already widely recognized in general-purpose LLM use become more consequential in \ac{se} because they can yield \emph{plausible-but-wrong} artifacts that appear coherent in isolation while degrading traceability, consistency, and auditability across the technical baseline.
+
 
 \paragraph{Hallucination and fabrication in lifecycle artifacts.}
 A foundational risk is hallucination: the generation of statements, constraints, references, or rationale that are not supported by stakeholder intent or authoritative sources. In document-centric settings, such errors may remain hidden because the output reads plausibly. In a digital-thread environment, hallucinations can be operationalized into the baseline: an LLM-generated requirement may introduce an invented constraint or misstate a performance threshold; if accepted without careful redlining and review, that error can propagate into architecture decisions, interface assumptions, verification criteria, and ultimately design commitments. Similar dynamics apply to risk artifacts: hallucinated hazards, mitigations, or evidence statements can distort the risk register and undermine risk-informed decision making. When retrieval is used, hallucination may present as \emph{mis-grounding}—outputs that cite retrieved material but apply it incorrectly, misattribute the source, or infer requirements not actually supported by the referenced text.
@@ -217,7 +260,7 @@ A second class of risks involves inconsistency across artifacts. In repository-c
 
 
 \paragraph{Omission and incompleteness in coupled lifecycle reasoning.}
-LLMs can also fail through omission: leaving out critical conditions, dependencies, exceptions, or downstream updates. In systems engineering, omissions (e.g., updating a requirement without updating the corresponding verification method and acceptance criteria) can be more damaging than explicit errors because they remain latent until integration or test. Agentic workflows that accelerate artifact production across the lifecycle highlight the potential for rapid propagation of changes—beneficial when correct, but potentially hazardous if dependencies are missed or if monitoring and validation are insufficient \cite{Helmerich_Transforming_Systems_Engineering_Agentic_AI_2025}. In hybrid environments, omissions commonly occur at seams, such as when narrative changes are not synchronized with structured repositories or model constraints.
+LLMs can also fail through omission: leaving out critical conditions, dependencies, exceptions, or downstream updates. In systems engineering, omissions (e.g., updating a requirement without updating the corresponding verification method and acceptance criteria) can be more damaging than explicit errors because they remain latent until integration or test. Agentic workflows that accelerate artifact production across the lifecycle highlight the potential for rapid propagation of changes where beneficial when correct, but potentially hazardous if dependencies are missed or if monitoring and validation are insufficient \cite{Helmerich_Transforming_Systems_Engineering_Agentic_AI_2025}. In hybrid environments, omissions commonly occur at seams, such as when narrative changes are not synchronized with structured repositories or model constraints.
 
 \paragraph{Instability, non-determinism, and configuration churn.}
 A further risk in artifact-centric workflows is instability: semantically different outputs for similar inputs or for repeated runs under slightly different contexts. In systems engineering settings, this can manifest as inconsistent requirement interpretations, shifting risk statements, or conflicting summaries of the same baseline, producing configuration churn and complicating audit and review. When LLMs are used repeatedly as part of ongoing change workflows, instability can degrade confidence in the reproducibility of decisions and rationale, even when each individual output appears plausible.
@@ -237,6 +280,10 @@ Finally, LLMs often produce fluent outputs without calibrated uncertainty, which
 
 
 
+
+% Add something on reasoning in context windows -- cannot reason over the entire digital thread. 
+% here is a source on LLm reasoning failures
+% \cite{song_LargeLanguageModel_2026}
 
 
 
@@ -286,35 +333,38 @@ Benchmarking is often treated as a way to rank models, but in domain practice it
 \subsection{Benchmarking in the LLM ecosystem}
 \label{subsec:benchmarking_llm_ecosystem}
 
-Large language models (LLMs) are transformer-based neural networks trained to predict and generate sequences of text, an approach popularized by the attention-based architecture that enabled scaling to large corpora and model sizes \cite{vaswani_AttentionAllYou_2017}. In contemporary machine learning practice, LLM \emph{benchmarking} typically refers to evaluating models on standardized datasets and tasks under a defined protocol to (i) compare models, (ii) track progress over time, and (iii) provide selection signals for downstream use (cite leaderboards here). Benchmarking is therefore widely treated as an ecosystem mechanism for establishing shared reference points across rapidly evolving model families.
+Large language models (LLMs) are transformer-based neural networks trained to predict and generate sequences of text, an approach popularized by the attention-based architecture that enabled scaling to large corpora and model sizes \cite{vaswani_AttentionAllYou_2017}. In contemporary machine learning practice, LLM \emph{benchmarking} typically refers to evaluating models on standardized datasets and tasks under a defined protocol to (i) compare models, (ii) track progress over time, and (iii) provide selection signals for downstream use \cite{huggingface_open_2024, myrzakhan_open-llm-leaderboard_2024}. Benchmarking is therefore widely treated as a mechanism for establishing shared reference points across rapidly evolving model families.
 
-However, as LLMs move from general demonstrations to professional and safety-relevant use, a central limitation emerges: general-purpose benchmark performance does not reliably translate into evidence of suitability within specialized domains. Domain settings impose their own definitions of correctness, acceptable uncertainty, required provenance, and workflow constraints. These requirements motivate the development of domain-specific benchmarks and evaluation suites in areas such as biomedicine, law, and finance, where task formulations, grading criteria, and failure costs differ materially from general NLP settings (( cite other of those benchmarks ehere )) . Evidence from specialized benchmarking efforts consistently suggests that strong performance on broad or generic evaluations does not guarantee robust performance on domain-constrained tasks, particularly when domain terminology, numerical reasoning, or domain workflows are central to correctness ( cite domain specific benchmarks here ).
+However, as LLMs move from general demonstrations to professional and safety-relevant use, a central limitation emerges: general-purpose benchmark performance does not reliably translate into evidence of suitability within specialized domains. Domain settings impose their own definitions of correctness, acceptable uncertainty, required provenance, and workflow constraints. These requirements motivate the development of domain-specific benchmarks and evaluation suites in areas such as biomedicine, engineering, law, and finance, where task formulations, grading criteria, and failure costs differ materially from general \ac{nlp} settings \cite{jin_pubmedqa_2019, Jin_Li_2024_Benchmarking_LLMs_EBM, doris_designqa_2024, syed_benchmarking_2024, li_eee-bench_2025, zhou_engibench_2025, fei_LawBenchBenchmarkingLegal_2023, guha_LegalbenchCollaborativelyBuilt_2023, chalkidis_LexGLUEBenchmarkDataset_2022,islam_financebench_2023}. Evidence from specialized benchmarking efforts suggests that strong performance on broad or generic evaluations does not guarantee robust performance on domain-specific tasks, particularly when domain terminology or domain workflows are central to correctness \cite{anjum_DomainSpecificBenchmarks_2025}.
 
-This dissertation adopts that same principle in the systems engineering (SE) domain. Rather than treating benchmark scores as portable measures of general capability, the goal is to treat evaluation results as \emph{qualification evidence} whose meaning depends on intended use, domain constraints, and the consequences of failure. The remainder of this section therefore reframes benchmarking in evidence-oriented terms and then specializes the argument to SE, where lifecycle coupling, traceability expectations, and artifact-network propagation make the adequacy of evidence particularly sensitive to evaluation design.
+This dissertation adopts that same principle in the systems engineering (SE) domain. Rather than treating benchmark scores as portable measures of general capability, the goal is to treat evaluation results as \emph{qualification evidence} whose meaning depends on intended use, domain constraints, and the consequences of failure. The remainder of this section therefore re-frames benchmarking in evidence-oriented terms and then specializes the argument to SE, where lifecycle coupling, traceability expectations, and artifact-network propagation make the adequacy of evidence particularly sensitive to evaluation design.
 
 % The core premise of this section is that evaluation must be grounded in the structure of SE work products and the assurance expectations that govern them. When an LLM is used to draft requirements, transform interface definitions, summarize verification results, or propose trade-offs, the dominant risk is not merely that the model occasionally makes mistakes, but that it makes mistakes that are difficult to detect and that propagate across a coupled artifact set. This motivates a literature review that is organized around (i) the nature of SE artifacts and lifecycle coupling, (ii) how LLM capabilities and failure modes interact with those artifacts, and (iii) why evaluation pipelines can distort evidence through dataset lifecycle hazards, reproducibility sensitivity, and modality-dependent measurement effects.
 
 
-\subsection{Benchmarks as measurement instruments, not end goals}
+\subsection{Benchmarks as Measurement Instruments}
 \label{subsec:benchmarks_as_instruments}
 
-A benchmark is a measurement instrument: it operationalizes constructs (e.g., domain knowledge, reasoning, instruction-following) through task design, dataset composition, and a scoring rule. The resulting score is not a deployment guarantee; it is a conditional measurement produced under a specific protocol. In other words, benchmark results are only as meaningful as the assumptions that connect the measured behavior to the intended use.
+A benchmark is a measurement instrument that formalizes domain knowledge, reasoning, and instruction-following through task design, dataset composition, and a scoring rule. The resulting score is not a deployment guarantee; it is a conditional measurement produced under a specific protocol. In other words, benchmark results are only as meaningful as the assumptions that connect the measured behavior to the intended use.
 
-This instrument view aligns with broader quality and risk perspectives in engineering: measurement must be interpreted in context, and higher-stakes applications require stronger justification that the measurement reflects the property of interest \cite{iso_iec_25010_2011, nist_ai_rmf_2023}. For SE, the central question is not "Which model ranks highest?" but "What claims about suitability for intended use does this evidence support, and what important failure modes might it miss?"
+This instrument view aligns with broader quality and risk perspectives in engineering: measurement must be interpreted in context, and higher-stakes applications require stronger justification that the measurement reflects the property of interest \cite{iso_iec_25010_2011, nist_ai_rmf_2023}. For \ac{se}, the central question is not "Which model ranks highest?" but "What claims about suitability for intended use does this evidence support, and what important failure modes might it miss?"
 
 \subsection{Benchmarking as qualification evidence in systems engineering}
 \label{subsec:benchmarking_as_qualification_evidence_se}
 
 In systems engineering, \emph{qualification evidence} refers to evidence sufficient to support bounded claims that a capability is suitable for a specified intended use under defined constraints and consequence expectations. This notion is familiar in SE assurance practice: confidence is built by aligning evidence to what must remain true of lifecycle work products and by demonstrating that the system (or capability) behaves acceptably under relevant conditions and uncertainties \cite{iso_ieee_15288_2015, incose_se_handbook_2023}.
 
-Benchmarking becomes qualification-relevant in SE because LLM outputs are rarely consumed in isolation. Instead, they are introduced into lifecycle workflows and technical baselines that include requirements, interfaces, design descriptions, trade studies, verification artifacts, rationale, and risk management products. In digital engineering and MBSE environments, these work products are increasingly linked through a digital thread, and their internal consistency and traceability are part of what makes the baseline auditable and governable \cite{dod_digital_engineering_strategy_2018, estefanSurveyModelBasedSystems2008}. Errors introduced upstream can therefore propagate downstream: an unclear or incorrect requirement can bias architecture decisions and verification planning; an omitted constraint can remain latent until integration; a mischaracterized risk can distort mitigation priorities. The consequence profile is not ``occasional wrong text'' but lifecycle drift that can become embedded in authoritative artifacts.
+Benchmarking becomes qualification-relevant in SE because LLM outputs are rarely consumed in isolation. Instead, they are introduced into lifecycle workflows and technical baselines that include requirements, interfaces, design descriptions, trade studies, verification artifacts, rationale, and risk management products. In digital engineering and \ac{mbse} environments, these work products are increasingly linked through a digital thread, and their internal consistency and traceability are part of what makes the baseline auditable and governable \cite{dod_digital_engineering_strategy_2018, estefanSurveyModelBasedSystems2008}. Errors introduced upstream can therefore propagate downstream: an unclear or incorrect requirement can bias architecture decisions and verification planning; an omitted constraint can remain latent until integration; a mischaracterized risk can distort mitigation priorities. The consequence profile is not occasional wrong text but lifecycle drift that can become embedded in authoritative artifacts.
 
 This shifts what benchmark evidence must do. The most consequential failures are often those that (i) appear plausible at the point of creation, (ii) evade detection during routine review, and (iii) influence downstream engineering decisions. In SE terms, these are \emph{latent and propagative} defects. They may not present as obviously incorrect prose; they may present as missing assumptions, incomplete updates across lifecycle products, or content that is locally coherent but globally misaligned with the evolving baseline. This is why qualification-oriented benchmarking emphasizes not only average correctness but also the ability of an evaluation to \emph{expose} the failure modes that matter for the intended use and consequence class \cite{amodeiConcreteProblemsAI2016, parker_automation_bias_2019}.
 
-Within this dissertation, the evidence-oriented view of benchmarking is operationalized through a systems-engineering-specific benchmark (SysEngBench). However, the argument in this section is broader: any evaluation regime intended to support SE adoption decisions must be interpreted as qualification evidence, meaning it must justify why the measured behavior supports claims about intended use in SE workflows rather than assuming that generic benchmark success transfers automatically.
+Within this dissertation, the evidence-oriented view of benchmarking is formalized through a systems-engineering-specific benchmark (SysEngBench) \cite{bell_IntroducingSysEngBenchNovel_2024, bell_rabellsysengbench_2024, Bell2025SysEngBench}. However, the argument in this section is broader: any evaluation regime intended to support SE adoption decisions must be interpreted as qualification evidence, meaning it must justify why the measured behavior supports claims about intended use in SE workflows rather than assuming that generic benchmark success transfers automatically.
 
+%% WHERE TO ADD THIS OTHER RELATED SYSTEMS ENGINEERING BENCHMARK FOCUSED ON RELIABILITY?
+\cite{hu_UseMisusePreTrained_2024}
+Reliability engineering benchmark
 
-\subsection{Governance as the forcing function for evidence}
+\subsection{Governance as the Forcing Function for Evidence}
 \label{subsec:governance_forcing_function}
 
 Governance frameworks make the ``benchmarking as qualification evidence'' framing non-optional. In federal and defense contexts, risk management and policy guidance increasingly require that AI systems be governed according to intended use, consequence, and lifecycle risk. The \ac{nist} AI Risk Management Framework (AI RMF) explicitly frames AI risk as socio-technical and lifecycle-spanning, emphasizing governance, contextual mapping, measurement, and ongoing management rather than one-time validation \cite{nist_ai_rmf_2023}. Policy instruments similarly push agencies toward inventorying AI uses, applying risk-based safeguards, and documenting evidence commensurate with impacts \cite{Office_of_Management_and_Budget_2024_M24-10_AI_Governance, Department_of_Homeland_Security_2023_AI_Acquisition_Use}.
@@ -341,209 +391,6 @@ Even when benchmarking is framed correctly as qualification evidence, the eviden
 
 
 
-\section{Evaluation Modalities as Evidence Types}
-\label{sec:ch2_modalities}
-
-% Job: classify what kinds of evidence different modalities provide.
-% - Modalities framing: treated as measurement instruments.
-% - MCQ:
-%   - scalable, objective, low cost
-%   - measures recognition under constraints
-%   - limited in assessing construction, rationale, traceability
-% - OSQ:
-%   - closer to SE work products
-%   - can expose reasoning, omissions, and structure
-%   - introduces grading cost and reliability challenges
-% - Emphasis: no single modality is sufficient for SE qualification.
-% - Evidence fusion: combining modalities to support stronger claims.
-% - Handoff: evidence richness comes with computational and economic cost.
-% - Explicitly excluded: token-level cost modeling details.
-
-
-
-Different evaluation modalities provide different kinds of evidence. This dissertation treats modality choice as an evidence-design decision: MCQ evidence is scalable but can be fragile to option structure; OSQ evidence is richer but noisier to grade; and LLM-as-judge methods enable scale but introduce new validity risks. A qualification argument therefore requires evidence fusion rather than a single modality.
-
-\subsection{Multiple-choice question (MCQ) evaluation}
-\label{subsec:ch2_mcq}
-
-MCQ evaluation provides bounded outputs and objective scoring, making it attractive for scale. However, as a measurement instrument, MCQs can be sensitive to distractor design, option order, and subtle artifacts that models exploit. This motivates robustness analysis as a core measurement concern rather than an implementation detail.
-
-% --- MAPPED CONTENT (MCQ evaluation) ---
-% MCQ variance / resilient MCQ sources
-% Making good MCQA benchamrks, protecting against adversarial distractors
-
-
-
-\cite{wang_fake_alignment_2024}
-Relevance
-The paper provides one of the clearest empirical arguments for MCQ-style safety evaluation as a complementary modality.
-
-Suggested Integration Paragraph Skeleton
-Through paired open-ended and multiple-choice safety evaluations, Wang et al. (2024) demonstrate that multiple-choice formats probe a distinct capability: value-consistent decision-making. Contrary to human expectations, many LLMs perform worse on MCQ safety tasks despite excelling in open-ended responses, revealing vulnerabilities invisible to generative-only benchmarks.
-
-
-\cite{yigit_adversarial_2025}
-focuses on the "designing MCQA systems that are resilient to adversarially constructed distractors."
-
-suggests that "However, the study suggests that evaluation frameworks should incorporate performance under adversarial conditions as well. By integrating adversarial distractor generation into model testing pipelines, researchers and practitioners can more thoroughly diagnose system vulnerabilities."
-
-\cite{wang_beyond_2024}
-"a key challenge that persists in evaluating LLMs is maintaining consistency in responses when confronted with variations in answer options, and discrepancies arise even when the same questions are reformulated into the others (Robinson \& Wingate, 2022; Wang et al., 2023; Zheng et al., 2023)."
-
-a model can look “correct” as long as the true answer is present among the options, but it becomes “wrong” when you replace that true answer with “None of the above”—even though a truly grounded reasoner should now pick “None of the above.”
-
-
-\cite{papineni_bleu_2002}
-Relevance:
-BLEU contrasts with MCQ-style evaluation by operating over free-form generation, highlighting early trade-offs between controllability and expressiveness.
-
-Suggested Integration Text:
-
-Unlike closed-form MCQ benchmarks, BLEU evaluates unconstrained text generation, foreshadowing later challenges in evaluating open-ended LLM outputs where exact matching is infeasible.
-
-
-
-
-
-
-
-\cite{zheng_large_2024}
-"This work studies the inherent selection bias of large language models (LLMs), which makes them vulnerable to option position changes in multiple choice question (MCQ) evaluation. Through extensive empirical analyses, we pinpoint that this behavioral bias stems primarily from token bias, where the model a priori assigns more probabilistic mass to specific option ID tokens when predicting answers from the option IDs, and partially from position bias, where the model favors options presented at specific ordering positions. In particular, token bias is a more salient intrinsic cause of selection bias, while position bias is less regular and depends on models and tasks. Our proposed debiasing method PriDe estimates the model’s prior bias for option IDs and separates it from the overall prediction distribution. It remarkably mitigates selection bias, with no need for sample labels and only negligible computational overhead."
-
-Selection bias:
-2.3 KEY OBSERVATIONS  We first conduct an extensive evaluation of LLMs on various benchmarks to gain a preliminary understanding of selection bias. We show partial results in Figure 3 for a brief presentation and put the full results in Appendix B. We draw the following main observations and insights:  Selection bias is prevalent across various LLMs and varies with model families and sizes. Intuitively, selection bias is likely to originate from LLMs’ training data, where some answers (e.g., C) may occur more frequently than others. However, we do not observe consistent patterns of selection bias within the same model family where the models are trained with the same training data (e.g., llama-7/13/30/65B, llama-2-7/13/70B). We speculate that selection bias arises as a product of complex interactions between training data composition and ordering, model capacity (number of parameters), and other factors like hyperparameters.  Selection bias within the same model displays a moderate similarity across different domains. For instance, under the 0-shot setting, llama-30B consistently prefers A/B on various benchmarks, while gpt-3.5-turbo favors C/B more. While the preference ranking may not strictly persist across tasks or domains, there is an overarching tendency for each model to lean towards certain option IDs (e.g., A and B) and away from others (e.g., C and D). It suggests that selection bias is an inherent behavioral bias of LLMs that is less impacted by tasks or domains.  In-context examples can reduce but may meanwhile alter selection bias. As exemplified in Figure 3, llama-30B disfavors C under the 0-shot setting but becomes biased towards it under the 5-shot setting. We find that this alteration still does not display noticeable patterns within the same model family. It indicates that in-context examples can introduce new biases that will be intertwined with the inherent selection bias, making the latter complex and less regular.
-
-They they go into causes of selection bias. That can be introduced here, if there is other supporting research to continue to elaborate. Section 2.4, page 4.
-
-
-\cite{yigit_adversarial_2025}
-This research emphasizes the need to evolve model evaluation practices. Traditionally, MCQA systems have been evaluated based only on their ability to select the correct answer. However, the study suggests that evaluation frameworks should incorporate performance under adversarial conditions as well. By integrating adversarial distractor generation into model testing pipelines, researchers and practitioners can more thoroughly diagnose system vulnerabilities.
-
-Similar to \cite{ghanem_DISTO_2023} -- how to create good distractors.
-
-Similar problems in Visual MCQs where choice selected without the model reading them \cite{zhang_mitigating_2025}
-
-\cite{TidorVlad_Pricope_2025_HardML_Benchmark}
-Discusses that MCQ correct answers can be guessed, referencing FrontierMath
-Having a question have more than one correct asnwer helps 
-"Constructing challenging multiple-choice questions is particularly difficultbecause adept humans or advanced AI models can employ elimination strate-gies to identify the correct answers. This means that even if the correct an-swers are difficult to determine, the benchmark’s effectiveness can collapse ifthe incorrect options are not qually challenging to dismiss "
-
-
-
-
-% Strengths/weaknesses, distractor sensitivity, position bias
-\acp{mcq} have long been a mainstay in educational and professional assessments due to their simplicity and objectivity. In the context of evaluating \acp{llm}, \acp{mcq} offer a straightforward testing mechanism: a model selects from a finite set of answers, making it easy to measure correctness. The \ac{mcq} format provides a quantifiable snapshot of a model’s baseline knowledge and pattern-recognition abilities.
-
-However, \acp{mcq} inherently conceal the complexity of the reasoning processes that can be assessed, meaning they offer little insight into how or why a model arrived at a particular choice. For systems engineering, the how or why is critical to evaluating competing trade-spaces and picking a solution that balances competing interests. 
-
-By constraining possible answers, \acp{mcq} may oversimplify complex topics. Systems engineering scenarios that require in-depth reasoning, synthesis of multiple concepts, or consideration of subtle trade-offs are not easily captured by a handful of fixed options. This lack of nuance means MCQs may not truly reflect the model’s capacity for deep understanding or its ability to articulate reasoning processes 
-\cite{zheng_large_2024, fu_mcq_reasoning_more_confident_when_wrong_2025}. In complex engineering environments, relying solely on MCQs risks obtaining an incomplete picture of the model’s actual capabilities. Recent research suggests that providing \acp{llm} with no correct \ac{mcq} can assist in measuring reasoning and critical thinking \cite{goral_when_all_options_are_wrong_2024}.
-
-Textual response formats challenge LLMs to generate answers in free form, demanding a richer comprehension of the underlying material. By forgoing multiple-choice constraints, these formats encourage models to articulate reasoning, structure their responses coherently, and demonstrate the ability to connect concepts holistically. For instance, a prompt might ask the LLM to explain how a particular subsystem interacts with other components or to propose a solution that balances performance and cost.
-
-The advantage of textual responses lies in their ability to reveal more about the model’s internal “thought process” as demonstrated by reasoning models like ChatGPT o1 or DeepSeek R1 \cite{IntroducingOpenAIO1_2024, deepseekai_deepseekR1-2025}. Evaluating free text answers can uncover subtle reasoning errors or expose areas where the model lacks conceptual depth. While more complex to assess automatically, textual response evaluation could be aided by sophisticated metrics or even human expert review.
-
-Despite their merits, textual responses pose significant practical challenges. Creating a dataset of open-ended questions is often more involved than formulating MCQs. It requires careful thought to ensure that prompts are unambiguous and representative of real-world tasks, while maintaining a relatively tightly bounded question. Since textual responses are not strictly right or wrong in the same way MCQ choices are, developing reliable evaluation metrics is complex. Traditional measures like accuracy scores do not directly apply. The model might produce grammatically correct but conceptually vacuous answers or resort to vague generalities that sound authoritative but lack technical rigor \cite{fu_mcq_reasoning_more_confident_when_wrong_2025,Sourav_Banerjee_2024_Vulnerability_LLM_Benchmarks}. Addressing these challenges will involve combining automated metrics with domain expert human evaluation.
-
-\subsection{Open-style questions (OSQ) and generative evaluation}
-\label{subsec:ch2_osq}
-
-Open-style evaluation better matches many SE tasks because it can elicit reasoning, synthesis, and justification. The central challenge is that OSQ grading often lacks a single golden answer, especially in technical domains where multiple solutions can be acceptable under different assumptions. This motivates bounding strategies (e.g., rubric-able outputs, constrained formats) and careful discussion of inter-rater reliability.
-
-% --- MAPPED CONTENT (OSQ portion; judge-related lines moved) ---
-\cite{zhou_engibench_2025}
-Used variants of open style questions for dataset construction to have each different variant meet different required capabilities.
-engineering problem-solving capability was broken down into four (4) items:
-- information extraction
-- domain-specific reasoning
-- multi-objective decision making
-- uncertainty handling
-
-\cite{mudur_feabench_2025}
-
-
-
-\cite{papineni_bleu_2002}
-Relevance:
-
-Suggested Integration Text:
-
-
-
-
-
-
-\cite{zhou_elecbench_2024}
-use LLM-scoring
-
-\cite{chen_diversity_2024}
-Good prompt templates in Appendix D
-
-\cite{li_when_2024}
-"Scoring Rules The scoring values are defined as {1, 2, 3, 4, 5}. The higher the score, the higher the quality of the model output."
-
-\cite{dubois_Length_Controlled_Alpaca_Eval_Simple_2025}
-
-
-
-\cite{laskar_systematic_2024}
-A.6.3 LLMs as Evaluators
-
-
-
-\begin{figure}
-    \centering
-    \label{fig:placeholder}
-\end{figure}
-
-
-\begin{figure}
-    \centering
-    \includegraphics[width=0.5\linewidth]{figs//ch2/llm-agreement-rate.png}
-    \label{fig:placeholder}
-\end{figure}
-
-% the website to cite this from
-https://sambanova.ai/blog/can-llama-405b-outperform-gpt4?
-
-\subsection{LLM-as-judge and validity risks}
-\label{subsec:ch2_llm_judge}
-
-LLM-as-judge methods offer a scalable approach to evaluating OSQ outputs when golden answers are infeasible. However, judges can introduce systematic biases (e.g., verbosity or style bias), preference drift across model versions, and sensitivity to judging prompts. For qualification, judge validity must therefore be explicitly argued and empirically calibrated.
-
-% --- MAPPED CONTENT (judge-related lines extracted heuristically) ---
-% Conceptual reasoning, rubric-based judging, human scoring, LLM-as-judge
-
-\cite{papineni_bleu_2002}
-Relevance:
-BLEU is a foundational example of a benchmark metric whose explicit goal is correlation with human judgment under practical constraints, rather than perfect fidelity at the instance level.
-
-Suggested Integration Text (Skeleton):
-
-Early work on automatic evaluation, such as BLEU, formalized benchmarking as a surrogate task: replacing costly human judgment with a scalable proxy that preserves system-level ranking. This framing—evaluation as correlation rather than explanation—continues to shape modern LLM benchmarks.
-
-
-BLEU is an early automated judge that replaces humans with a heuristic proxy.
-BLEU can be viewed as an early “automatic judge,” relying on heuristic overlap rather than reasoning. Its success—and limitations—anticipate modern LLM-as-a-judge approaches, where correlation with human judgment remains the primary validation criterion.
-% LLM as a judge
-Used gpt-4 to automate scoring with a rubric.
-We propose a simple method for mitigating the length bias of LLM-based automatic evaluations (e.g. LLM-as-a-judge), specifically, AlpacaEval. The procedure consists of fitting a generalized linear model to predict the auto-evaluators preferences, conditioned on the length of the models’ output. We then get the length-controlled preference by predicting what the auto-evaluator would have preferred if the model’s output and the baseline’s output had the same length. We show that the resulting length-controlled AlpacaEval, has higher correlations with humans, has much less length bias, and is robust (hard to game). 
-\cite{Tianle_Li_2024_BenchBuilder_ArenaHard_LLM_Benchmarking}
-5 EVALUATION WITH LLM-AS-A-JUDGE Evaluating models on challenging queries such as Arena-Hard-Auto requires expert-level judgment due to the depth of domain knowledge and problem-solving skills involved. Expert evaluation, while ideal, is both costly and time-consuming. To address this, we leverage the LLM-as-a-Judge framework (Zheng et al., 2023b; Dubois et al., 2023) as a scalable alternative to approximate human preferences. We evaluate a model on a given prompt using a pairwise comparison against a strong baseline model (e.g., GPT-4-0314). A judge model (e.g., GPT-4-Turbo or Gemini-1.5-Pro) then scores each output by rating its preference between the pair on a 5-point Likert scale (Likert, 1932) (1 indicates strong preference for model A, 5 indicates strong preference for model B). This scoring method penalizes models more heavily for large losses, effectively distinguishing performance across models. To ensure consistency, we utilize chain-of-thought (Wei et al., 2023) prompting, guiding the LLM judge to generate its own solution before issuing a judgment. Detailed prompt templates are provided in Section C. To avoid potential position bias, we adopt a two-game setup – per query we swap the models on the first and second position. We also study and propose solutions to mitigate potential stylistic biases, such as answer length, and self-bias in LLM-based evaluation in section 6. This results in 1000 judgments per model evaluation. Following Chatbot Arena, we adopt the Bradley \& Terry (1952) model to produce model’s the final model scores. We aggregate all pairwise comparisons to the baseline model for all models and bootstrapping the comparisons to retrieve a bootstrapped confidence interval of all models’ win-rate against the baseline, producing a ordered ranking of all models by their win-rates.  
-TONS of LLM-as-evaluator papers here.
-below is from page 5 of "LLMs-as-Judges: A Comprehensive Survey on LLM-based Evaluation Methods" by haitao li. Snag the diagram before this one too. It was good.
-    \includegraphics[width=1\linewidth]{figs/ch2/taxonomy-of-llm-as-judge-limitations.png}
-    \caption{Enter Caption add citation "LLMs-as-Judges: A Comprehensive Survey on LLM-based Evaluation Methods" by haitao li}
-    \caption{Agreement Rate between LLM Judges and Human Preferences by Domain from Chatbot Arena <cite the 9 and 9 from website below}
-https://huggingface.co/datasets/lmarena-ai/arena-human-preference-55k
-https://lmarena.ai/
-
-\subsection{Evidence fusion for risk-aware qualification (new synthesis)}
-\label{subsec:ch2_evidence_fusion}
-
-No single evaluation modality provides sufficient evidence for qualifying an LLM for SE use. MCQs can be treated as low-cost, high-coverage probes of recognition and constrained reasoning but require robustness checks to validate measurement stability. OSQs provide higher-fidelity evidence for synthesis and justification but require bounded formats, explicit rubrics, and repeatable judging protocols. LLM-as-judge methods can scale OSQ evaluation, but only when their validity is supported by calibration sets, multiple judges, and bias checks.
-
-In this dissertation, evidence fusion is treated as a practical strategy for risk-aware qualification: MCQ robustness analysis reduces the risk of overconfidence in brittle scores; OSQ evaluation provides richer evidence for tasks that resemble SE work; and judge calibration methods provide a path to scalable evaluation while preserving interpretability. Chapters~3--6 operationalize this by designing paired MCQ/OSQ items, testing robustness under distractor variation, and analyzing the cost and evidence trade-offs of modality selection.
 
 
 
@@ -624,6 +471,14 @@ Model characteristics such as parameter count and quantization (e.g., 16-bit, 8-
 While the broader foundation model ecosystem increasingly targets multimodal perception and spatial reasoning, this dissertation’s evaluation scope is \textbf{textual} tasks and artifact-centered textual work products. Recent industry framing describes "spatial intelligence" as a next frontier beyond language-only competence \cite{world-labs_manifesto_spatial_2025}. That trajectory motivates future SE evaluation expansion, but the present work focuses on text-based benchmarking evidence relevant to systems engineering artifacts and documentation.
 
 
+%%% DOES SYNTHETIC DATA FIT IN HERE?
+
+% \cite{varshneyCreatingSyntheticData2024}
+% pre-training/training
+% "Pretraining: This involves using an extremely large corpus of information to train the model on how the general structure of a language is organized. While for a generic LLM, this is typically done with Internet-scale data, for any domain-specific LLMs, we need to imbue the specifics on that domain (think LLM for geometry, LLM for radiology, and LLM for telco). This is called domain adaptive pretraining (DAPT)."
+
+
+
 % add in a discussion about  vision and spatial models (for spatial models reference, see the rundown ai email on gmail which references AI specalist DR> Fei-Fei and here new published essay on spatial intelligence. Make sure the reader understand the scope for this manuscript is textual only.
 
 % Add "Marble" model citation?
@@ -631,6 +486,175 @@ While the broader foundation model ecosystem increasingly targets multimodal per
 % add in a discussion/references on AGI here.
 
 
+\subsection{Evaluation Modalities as Evidence Types}
+\label{sec:ch2_modalities}
+
+% Job: classify what kinds of evidence different modalities provide.
+% - Modalities framing: treated as measurement instruments.
+% - MCQ:
+%   - scalable, objective, low cost
+%   - measures recognition under constraints
+%   - limited in assessing construction, rationale, traceability
+% - OSQ:
+%   - closer to SE work products
+%   - can expose reasoning, omissions, and structure
+%   - introduces grading cost and reliability challenges
+% - Emphasis: no single modality is sufficient for SE qualification.
+% - Evidence fusion: combining modalities to support stronger claims.
+% - Handoff: evidence richness comes with computational and economic cost.
+% - Explicitly excluded: token-level cost modeling details.
+
+
+
+Different evaluation modalities provide different kinds of evidence. This dissertation treats modality choice as an evidence-design decision: MCQ evidence is scalable but can be fragile to option structure; OSQ evidence is richer but noisier to grade; and LLM-as-judge methods enable scale but introduce new validity risks. A qualification argument therefore requires evidence fusion rather than a single modality.
+
+\subsubsection{Multiple-choice question (MCQ) Evaluation}
+\label{subsec:ch2_mcq}
+
+MCQ evaluation provides bounded outputs and objective scoring, making it attractive for scale. However, as a measurement instrument, MCQs can be sensitive to distractor design, option order, and subtle artifacts that models exploit. This motivates robustness analysis as a core measurement concern rather than an implementation detail.
+
+
+
+\cite{wang_fake_alignment_2024}
+Relevance
+The paper provides one of the clearest empirical arguments for MCQ-style safety evaluation as a complementary modality.
+
+Suggested Integration Paragraph Skeleton
+Through paired open-ended and multiple-choice safety evaluations, Wang et al. (2024) demonstrate that multiple-choice formats probe a distinct capability: value-consistent decision-making. Contrary to human expectations, many LLMs perform worse on MCQ safety tasks despite excelling in open-ended responses, revealing vulnerabilities invisible to generative-only benchmarks.
+
+
+\cite{yigit_adversarial_2025}
+focuses on the "designing MCQA systems that are resilient to adversarially constructed distractors."
+
+suggests that "However, the study suggests that evaluation frameworks should incorporate performance under adversarial conditions as well. By integrating adversarial distractor generation into model testing pipelines, researchers and practitioners can more thoroughly diagnose system vulnerabilities."
+
+\cite{wang_beyond_2024}
+"a key challenge that persists in evaluating LLMs is maintaining consistency in responses when confronted with variations in answer options, and discrepancies arise even when the same questions are reformulated into the others (Robinson \& Wingate, 2022; Wang et al., 2023; Zheng et al., 2023)."
+
+a model can look “correct” as long as the true answer is present among the options, but it becomes “wrong” when you replace that true answer with “None of the above”—even though a truly grounded reasoner should now pick “None of the above.”
+
+
+\cite{papineni_bleu_2002}
+Relevance:
+BLEU contrasts with MCQ-style evaluation by operating over free-form generation, highlighting early trade-offs between controllability and expressiveness.
+
+Suggested Integration Text:
+
+Unlike closed-form MCQ benchmarks, BLEU evaluates unconstrained text generation, foreshadowing later challenges in evaluating open-ended LLM outputs where exact matching is infeasible.
+
+
+
+
+
+
+
+\cite{zheng_large_2024}
+"This work studies the inherent selection bias of large language models (LLMs), which makes them vulnerable to option position changes in multiple choice question (MCQ) evaluation. Through extensive empirical analyses, we pinpoint that this behavioral bias stems primarily from token bias, where the model a priori assigns more probabilistic mass to specific option ID tokens when predicting answers from the option IDs, and partially from position bias, where the model favors options presented at specific ordering positions. In particular, token bias is a more salient intrinsic cause of selection bias, while position bias is less regular and depends on models and tasks. Our proposed debiasing method PriDe estimates the model’s prior bias for option IDs and separates it from the overall prediction distribution. It remarkably mitigates selection bias, with no need for sample labels and only negligible computational overhead."
+
+Selection bias:
+2.3 KEY OBSERVATIONS  We first conduct an extensive evaluation of LLMs on various benchmarks to gain a preliminary understanding of selection bias. We show partial results in Figure 3 for a brief presentation and put the full results in Appendix B. We draw the following main observations and insights:  Selection bias is prevalent across various LLMs and varies with model families and sizes. Intuitively, selection bias is likely to originate from LLMs’ training data, where some answers (e.g., C) may occur more frequently than others. However, we do not observe consistent patterns of selection bias within the same model family where the models are trained with the same training data (e.g., llama-7/13/30/65B, llama-2-7/13/70B). We speculate that selection bias arises as a product of complex interactions between training data composition and ordering, model capacity (number of parameters), and other factors like hyperparameters.  Selection bias within the same model displays a moderate similarity across different domains. For instance, under the 0-shot setting, llama-30B consistently prefers A/B on various benchmarks, while gpt-3.5-turbo favors C/B more. While the preference ranking may not strictly persist across tasks or domains, there is an overarching tendency for each model to lean towards certain option IDs (e.g., A and B) and away from others (e.g., C and D). It suggests that selection bias is an inherent behavioral bias of LLMs that is less impacted by tasks or domains.  In-context examples can reduce but may meanwhile alter selection bias. As exemplified in Figure 3, llama-30B disfavors C under the 0-shot setting but becomes biased towards it under the 5-shot setting. We find that this alteration still does not display noticeable patterns within the same model family. It indicates that in-context examples can introduce new biases that will be intertwined with the inherent selection bias, making the latter complex and less regular.
+
+They they go into causes of selection bias. That can be introduced here, if there is other supporting research to continue to elaborate. Section 2.4, page 4.
+
+
+\cite{yigit_adversarial_2025}
+This research emphasizes the need to evolve model evaluation practices. Traditionally, MCQA systems have been evaluated based only on their ability to select the correct answer. However, the study suggests that evaluation frameworks should incorporate performance under adversarial conditions as well. By integrating adversarial distractor generation into model testing pipelines, researchers and practitioners can more thoroughly diagnose system vulnerabilities.
+
+Similar to \cite{ghanem_DISTO_2023} -- how to create good distractors.
+
+Similar problems in Visual MCQs where choice selected without the model reading them \cite{zhang_mitigating_2025}
+
+\cite{TidorVlad_Pricope_2025_HardML_Benchmark}
+Discusses that MCQ correct answers can be guessed, referencing FrontierMath
+Having a question have more than one correct asnwer helps 
+"Constructing challenging multiple-choice questions is particularly difficultbecause adept humans or advanced AI models can employ elimination strate-gies to identify the correct answers. This means that even if the correct an-swers are difficult to determine, the benchmark’s effectiveness can collapse ifthe incorrect options are not qually challenging to dismiss "
+
+
+
+
+% Strengths/weaknesses, distractor sensitivity, position bias
+\acp{mcq} have long been a mainstay in educational and professional assessments due to their simplicity and objectivity. In the context of evaluating \acp{llm}, \acp{mcq} offer a straightforward testing mechanism: a model selects from a finite set of answers, making it easy to measure correctness. The \ac{mcq} format provides a quantifiable snapshot of a model’s baseline knowledge and pattern-recognition abilities.
+
+However, \acp{mcq} inherently conceal the complexity of the reasoning processes that can be assessed, meaning they offer little insight into how or why a model arrived at a particular choice. For systems engineering, the how or why is critical to evaluating competing trade-spaces and picking a solution that balances competing interests. 
+
+By constraining possible answers, \acp{mcq} may oversimplify complex topics. Systems engineering scenarios that require in-depth reasoning, synthesis of multiple concepts, or consideration of subtle trade-offs are not easily captured by a handful of fixed options. This lack of nuance means MCQs may not truly reflect the model’s capacity for deep understanding or its ability to articulate reasoning processes 
+\cite{zheng_large_2024, fu_mcq_reasoning_more_confident_when_wrong_2025}. In complex engineering environments, relying solely on MCQs risks obtaining an incomplete picture of the model’s actual capabilities. Recent research suggests that providing \acp{llm} with no correct \ac{mcq} can assist in measuring reasoning and critical thinking \cite{goral_when_all_options_are_wrong_2024}.
+
+Textual response formats challenge LLMs to generate answers in free form, demanding a richer comprehension of the underlying material. By forgoing multiple-choice constraints, these formats encourage models to articulate reasoning, structure their responses coherently, and demonstrate the ability to connect concepts holistically. For instance, a prompt might ask the LLM to explain how a particular subsystem interacts with other components or to propose a solution that balances performance and cost.
+
+The advantage of textual responses lies in their ability to reveal more about the model’s internal “thought process” as demonstrated by reasoning models like ChatGPT o1 or DeepSeek R1 \cite{IntroducingOpenAIO1_2024, deepseekai_deepseekR1-2025}. Evaluating free text answers can uncover subtle reasoning errors or expose areas where the model lacks conceptual depth. While more complex to assess automatically, textual response evaluation could be aided by sophisticated metrics or even human expert review.
+
+Despite their merits, textual responses pose significant practical challenges. Creating a dataset of open-ended questions is often more involved than formulating MCQs. It requires careful thought to ensure that prompts are unambiguous and representative of real-world tasks, while maintaining a relatively tightly bounded question. Since textual responses are not strictly right or wrong in the same way MCQ choices are, developing reliable evaluation metrics is complex. Traditional measures like accuracy scores do not directly apply. The model might produce grammatically correct but conceptually vacuous answers or resort to vague generalities that sound authoritative but lack technical rigor \cite{fu_mcq_reasoning_more_confident_when_wrong_2025,Sourav_Banerjee_2024_Vulnerability_LLM_Benchmarks}. Addressing these challenges will involve combining automated metrics with domain expert human evaluation.
+
+\subsubsection{Open-style question (OSQ) Evaluation}
+\label{subsec:ch2_osq}
+
+Open-style evaluation better matches many SE tasks because it can elicit reasoning, synthesis, and justification. The central challenge is that OSQ grading often lacks a single golden answer, especially in technical domains where multiple solutions can be acceptable under different assumptions. This motivates bounding strategies (e.g., rubric-able outputs, constrained formats) and careful discussion of inter-rater reliability.
+
+% --- MAPPED CONTENT (OSQ portion; judge-related lines moved) ---
+\cite{zhou_engibench_2025}
+Used variants of open style questions for dataset construction to have each different variant meet different required capabilities.
+engineering problem-solving capability was broken down into four (4) items:
+- information extraction
+- domain-specific reasoning
+- multi-objective decision making
+- uncertainty handling
+
+\cite{mudur_feabench_2025}
+
+
+
+\cite{papineni_bleu_2002}
+Relevance:
+
+Suggested Integration Text:
+
+
+
+
+
+
+\cite{zhou_elecbench_2024}
+use LLM-scoring
+
+\cite{chen_diversity_2024}
+Good prompt templates in Appendix D
+
+\cite{li_when_2024}
+"Scoring Rules The scoring values are defined as {1, 2, 3, 4, 5}. The higher the score, the higher the quality of the model output."
+
+\cite{dubois_Length_Controlled_Alpaca_Eval_Simple_2025}
+
+
+
+\cite{laskar_systematic_2024}
+A.6.3 LLMs as Evaluators
+
+
+
+\begin{figure}
+    \centering
+    \label{fig:placeholder}
+\end{figure}
+
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.5\linewidth]{figs//ch2/llm-agreement-rate.png}
+    \label{fig:placeholder}
+\end{figure}
+
+% the website to cite this from
+https://sambanova.ai/blog/can-llama-405b-outperform-gpt4?
+
+
+
+\subsubsection{Evidence fusion for risk-aware qualification (new synthesis)}
+\label{subsec:ch2_evidence_fusion}
+
+No single evaluation modality provides sufficient evidence for qualifying an LLM for SE use. MCQs can be treated as low-cost, high-coverage probes of recognition and constrained reasoning but require robustness checks to validate measurement stability. OSQs provide higher-fidelity evidence for synthesis and justification but require bounded formats, explicit rubrics, and repeatable judging protocols. LLM-as-judge methods can scale OSQ evaluation, but only when their validity is supported by calibration sets, multiple judges, and bias checks.
+
+In this dissertation, evidence fusion is treated as a practical strategy for risk-aware qualification: MCQ robustness analysis reduces the risk of overconfidence in brittle scores; OSQ evaluation provides richer evidence for tasks that resemble SE work; and judge calibration methods provide a path to scalable evaluation while preserving interpretability. Chapters~3--6 operationalize this by designing paired MCQ/OSQ items, testing robustness under distractor variation, and analyzing the cost and evidence trade-offs of modality selection.
 
 \subsection{Dataset lifecycle hazards}
 \label{subsec:ch2_dataset_lifecycle_hazards}
@@ -651,7 +675,7 @@ Benchmark construction methods include expert authoring, crowdsourcing, web mini
 
 
 \paragraph{Synthetic and semi-synthetic datasets.}
-Synthetic data is increasingly used both for training and for benchmark creation, offering scalability and controllability but introducing new risks (generator bias, template artifacts, silent leakage). Contemporary pipelines generate candidate items, filter for quality, produce variants (paraphrases, difficulty escalations), and incorporate human review \cite{varshneyCreatingSyntheticData2024, gunasekar_Textbooks_Are_All_2023, xu_Wizard_LMEmpoweringLarge2025, fuQGEvalBenchmarkingMultidimensional2024}. Diversity and generation choices (seeds, prompts, model, real/synthetic ratios) measurably affect downstream performance and robustness \cite{chen_diversity_2024}. Domain-specific evaluation sets may also use embedding-based clustering, semi-supervised labeling, and stratified sampling to retain diversity while improving quality \cite{Ravi_Raju_2024_Domain_Specific_Evaluation_Sets}.
+Synthetic data is increasingly used both for training and for benchmark creation, offering scalability and controllability considering experts estimate human-generated text datasets cannot be scaled any further \cite{villalobos_WillWeRun_2024, wiggers_ElonMuskAgrees_2025}. Contemporary pipelines generate candidate items, filter for quality, produce variants (paraphrases, difficulty escalations), and incorporate human review \cite{varshneyCreatingSyntheticData2024, gunasekar_Textbooks_Are_All_2023, xu_Wizard_LMEmpoweringLarge2025, fuQGEvalBenchmarkingMultidimensional2024}. Diversity and generation choices including seeds, prompts, model, real/synthetic ratios measurably affect downstream performance and robustness, with methods proposed to evaluate the synthetic data \cite{chen_diversity_2024}. Examples of synthetic datasets are plentiful and common practice \cite{thakurLeveragingLLMsSynthesizing2023, cifarelli_safurai-csharp_2023, huggingface_syntheticdatamoney_2024}
 
 % \cite{raschka_build_llm_2024}
 % preparing datasets for training, load pre-trained weights, fine-tuning
@@ -737,6 +761,42 @@ Pipeline-level bias can be introduced by:
 and (v) selective reporting (only best-performing protocol variants). For qualification, these must be treated as auditable configuration, not incidental details.
 
 
+
+%%% SUBSUBSECTION BELOW NEEDS TO BE INTEGRATED WITH ABOVE subsection
+\subsubsection{Generative Evaluation, LLM-as-judge,  and Validity Risks}
+\label{subsec:ch2_llm_judge}
+
+LLM-as-judge methods offer a scalable approach to evaluating OSQ outputs when golden answers are infeasible. However, judges can introduce systematic biases (e.g., verbosity or style bias), preference drift across model versions, and sensitivity to judging prompts. For qualification, judge validity must therefore be explicitly argued and empirically calibrated.
+
+% --- MAPPED CONTENT (judge-related lines extracted heuristically) ---
+% Conceptual reasoning, rubric-based judging, human scoring, LLM-as-judge
+
+\cite{papineni_bleu_2002}
+Relevance:
+BLEU is a foundational example of a benchmark metric whose explicit goal is correlation with human judgment under practical constraints, rather than perfect fidelity at the instance level.
+
+Suggested Integration Text (Skeleton):
+
+Early work on automatic evaluation, such as BLEU, formalized benchmarking as a surrogate task: replacing costly human judgment with a scalable proxy that preserves system-level ranking. This framing—evaluation as correlation rather than explanation—continues to shape modern LLM benchmarks.
+
+
+BLEU is an early automated judge that replaces humans with a heuristic proxy.
+BLEU can be viewed as an early “automatic judge,” relying on heuristic overlap rather than reasoning. Its success—and limitations—anticipate modern LLM-as-a-judge approaches, where correlation with human judgment remains the primary validation criterion.
+% LLM as a judge
+Used gpt-4 to automate scoring with a rubric.
+We propose a simple method for mitigating the length bias of LLM-based automatic evaluations (e.g. LLM-as-a-judge), specifically, AlpacaEval. The procedure consists of fitting a generalized linear model to predict the auto-evaluators preferences, conditioned on the length of the models’ output. We then get the length-controlled preference by predicting what the auto-evaluator would have preferred if the model’s output and the baseline’s output had the same length. We show that the resulting length-controlled AlpacaEval, has higher correlations with humans, has much less length bias, and is robust (hard to game). 
+\cite{Tianle_Li_2024_BenchBuilder_ArenaHard_LLM_Benchmarking}
+5 EVALUATION WITH LLM-AS-A-JUDGE Evaluating models on challenging queries such as Arena-Hard-Auto requires expert-level judgment due to the depth of domain knowledge and problem-solving skills involved. Expert evaluation, while ideal, is both costly and time-consuming. To address this, we leverage the LLM-as-a-Judge framework (Zheng et al., 2023b; Dubois et al., 2023) as a scalable alternative to approximate human preferences. We evaluate a model on a given prompt using a pairwise comparison against a strong baseline model (e.g., GPT-4-0314). A judge model (e.g., GPT-4-Turbo or Gemini-1.5-Pro) then scores each output by rating its preference between the pair on a 5-point Likert scale (Likert, 1932) (1 indicates strong preference for model A, 5 indicates strong preference for model B). This scoring method penalizes models more heavily for large losses, effectively distinguishing performance across models. To ensure consistency, we utilize chain-of-thought (Wei et al., 2023) prompting, guiding the LLM judge to generate its own solution before issuing a judgment. Detailed prompt templates are provided in Section C. To avoid potential position bias, we adopt a two-game setup – per query we swap the models on the first and second position. We also study and propose solutions to mitigate potential stylistic biases, such as answer length, and self-bias in LLM-based evaluation in section 6. This results in 1000 judgments per model evaluation. Following Chatbot Arena, we adopt the Bradley \& Terry (1952) model to produce model’s the final model scores. We aggregate all pairwise comparisons to the baseline model for all models and bootstrapping the comparisons to retrieve a bootstrapped confidence interval of all models’ win-rate against the baseline, producing a ordered ranking of all models by their win-rates.  
+TONS of LLM-as-evaluator papers here.
+% below is from page 5 of "LLMs-as-Judges: A Comprehensive Survey on LLM-based Evaluation Methods" by haitao li. Snag the diagram before this one too. It was good.
+%     \includegraphics[width=1\linewidth]{figs/ch2/taxonomy-of-llm-as-judge-limitations.png}
+%     \caption{Enter Caption add citation "LLMs-as-Judges: A Comprehensive Survey on LLM-based Evaluation Methods" by haitao li}
+%     \caption{Agreement Rate between LLM Judges and Human Preferences by Domain from Chatbot Arena <cite the 9 and 9 from website below}
+% https://huggingface.co/datasets/lmarena-ai/arena-human-preference-55k
+% https://lmarena.ai/
+
+
+
 \subsection{Takeaway.}
 Benchmark scores are useful signals, but qualification-oriented interpretation requires:
 (1) explicit measurement claims (what construct is measured),
@@ -748,9 +808,7 @@ Without these, benchmark performance can misrepresent intended-use readiness—e
 
 
 
-
-
-\section{Cost and Computational Constraints on Qualification}
+\section{Cost and Computational Constraints on Model Qualification}
 \label{sec:ch2_cost}
 
 % Job: show why feasibility matters.
@@ -775,24 +833,19 @@ Without these, benchmark performance can misrepresent intended-use readiness—e
 %   then explain evaluation cost decomposition and the practical trade-offs (incl. OSQ judging),
 %   and finally point to efficiency levers and what we report/compute in this work (RQ3 linkage).
 
-Qualification evidence is not free: evidence depth and reliability depend on the cost of running models, generating responses, and, in OSQ settings, judging outputs. These costs impose feasibility constraints on evaluation pipelines, shaping practical choices about sample size, replication, modality mix, response-length policy, and scoring strategy. In this dissertation, cost is treated primarily as a \emph{trade-space variable} and \emph{reporting dimension} that bounds what can be evaluated at scale, rather than as a direct pass/fail criterion for qualification decisions.
+Qualification evidence is not free: evidence depth and reliability depend on the cost of running models, generating responses, and, in \ac{osq} settings, judging outputs. These costs impose feasibility constraints on evaluation pipelines, shaping practical choices about sample size, replication, modality mix, response-length policy, and scoring strategy. In this dissertation, cost is treated primarily as a trade-space variable and reporting dimension that bounds what can be evaluated at scale, rather than as a direct pass/fail criterion for qualification decisions.
 
 
-\paragraph{Cost as an evaluation-design constraint (trade-space awareness).}
-Evaluation for intended use is often discussed in terms of validity and reliability, such as whether an instrument measures what it claims to measure and whether it does so consistently. In practice, evaluation is also constrained by feasibility: compute access, wall-clock time, and usage-based pricing determine how much evidence can be collected and how robustly it can be tested. These constraints are essential for LLM evaluation because costs scale with input context length, output length, and the number of repeated runs required for robustness (e.g., multiple random seeds, prompt variants, or controlled structural variations). For \acp{osq}, feasibility is further shaped by scoring overhead: the cost of human grading or the additional inference required for LLM-as-a-judge pipelines can dominate the cost budget. As a result, evaluation design becomes a trade-space problem in which breadth (more items, more topics) competes with depth (richer responses, artifact-proximal tasks) and reliability (replication and stability checks) competes with throughput.
+\paragraph{Cost as an Evaluation Design Constraint}
+% Trade-space awareness mostly
+Evaluation for intended use is often discussed in terms of validity and reliability, such as whether an instrument measures what it claims to measure and whether it does so consistently. In practice, evaluation is also constrained by feasibility: compute access, wall clock time, and usage based pricing determine how much evidence can be collected and how robustly it can be tested. These constraints are essential for LLM evaluation because costs scale with input context length, output length, and the number of repeated runs required for robustness (e.g. prompt variants) \cite{li_llms_as_judges_2024, lu2024bias}. For \acp{osq}, feasibility is further shaped by scoring overhead: the cost of human grading or the additional inference required for LLM-as-a-judge pipelines can dominate the cost budget that research is looking to curb \cite{huang_LLMasaJudgeScalableTest_2025, huang_LLMasaJudgeScalableTest_2025, tang_LearningEfficientMultiTurn_2026}. As a result, evaluation design becomes a trade-space problem in which breadth (more items, more topics) competes with depth (richer responses, artifact-proximal tasks) and reliability (replication and stability checks) competes with throughput.
 
-\paragraph{Systems engineering cost-modeling as conceptual grounding}
-% is a better title "systems engineering cost modeling foundations"?
-Cost trade-space reasoning is a familiar theme in systems engineering. Parametric models such as \ac{cocomo} estimate software development cost using drivers related to size, complexity, and personnel factors \cite{boehm_cocomo_1981}. Analogously, \ac{cosysmo} extends parametric estimation to systems engineering effort by accounting for system complexity, integration, and related drivers \cite{valerdi_cosysmo_2005}. More broadly, the systems engineering cost estimation ecosystem includes a range of approaches—such as SEER and PRICE tools and hybrid parametric--analogy models—that are used to support planning and decision-making under uncertainty \cite{madachy_systems_2024, madachy_cost_estimation_2014}. The relevance of these foundations in the present context is conceptual rather than one-to-one: LLM evaluation introduces different primitives (tokens, latency, and judge overhead), but the underlying logic is similar. When evidence must be collected under constraints, cost-aware trade-space reasoning is necessary to select feasible evaluation regimes and to interpret results in light of the evidence that could practically be gathered.
+\paragraph{Systems Engineering Cost Modeling as Conceptual Grounding}
+Cost trade-space reasoning is a familiar theme in systems engineering. Parametric models such as \ac{cocomo} estimate software development cost using drivers related to size, complexity, and personnel factors \cite{boehm_cocomo_1981}. Analogously, \ac{cosysmo} extends parametric estimation to systems engineering effort by accounting for system complexity, integration, and related drivers \cite{valerdi_cosysmo_2005}. More broadly, the systems engineering cost estimation ecosystem includes a range of approaches such as SEER and PRICE tools and hybrid parametric-analogy models that are used to support planning and decision-making under uncertainty \cite{madachy_systems_2024, madachy_cost_estimation_2014}. The relevance of these foundations in the present context is conceptual rather than one-to-one: LLM evaluation introduces different primitives (tokens, latency, and judge overhead), but the underlying logic is similar. When evidence must be collected under constraints, cost-aware trade-space reasoning is necessary to select feasible evaluation regimes and to interpret results in light of the evidence that could practically be gathered. Efforts have already begun to define the cost modeling factors necessary for \ac{ai} augmented efforts \cite{madachy_SystemsAcquisitionCost_2024, Madachy_CostModelingAI_2024, madachy_GenerativeAIdrivenSystems_2025}
 
-% TODO (optional): Add citation once BibTeX entry is created.
-% R. Madachy, R. Bell, and R. Longshore. A generative AI-driven systems engineering maturity and cost modeling framework.
-% In A. Madni, D. Verma, M. Sievers, M. Wheaton, E. Ordoukhanian, and S. Purohit (eds.),
-% \textit{Augmented Intelligence in Systems Engineering and Engineered Systems: Proceedings of the 2025 CSER}. Springer Nature, 2025.
-
-\paragraph{Tokenomics vocabulary for compute and serving constraints.}
-% Dong 2024 defines much of this. Seek other sources as well.
-In LLM settings, evaluation cost can be characterized using a tokenomics vocabulary that links computational effort to measurable service metrics. Dong et al.\ describe ``tokenomics'' in terms of throughput (tokens/second), cost (e.g., USD per million tokens), and quality-of-experience (QoE) measures that capture user-perceived responsiveness \cite{dong_large_2024}. Key definitions include (i) time to first token (TTFT), the delay from query submission to the first generated token, (ii) time per output token (TPOT), the incremental time to produce each subsequent token, (iii) latency as end-to-end response time, and (iv) throughput as sustained token generation rate \cite{dong_large_2024}. Although these measures are often introduced in deployment and service design contexts, they map directly to the feasibility of evaluation programs: throughput and latency determine wall-clock time for benchmark runs; TTFT and TPOT shape the practical cost of multi-sample procedures; and token-priced usage links directly to the marginal cost of expanding sample size, response length, and judge-based scoring.
+% \paragraph{Tokenomics Vocabulary and LLM Cost Model Primitives}
+% % Dong 2024 defines much of this. Seek other sources as well.
+% In LLM settings, evaluation cost can be characterized using a tokenomics vocabulary that links computational effort to measurable service metrics. Tokenomics in terms of throughput (tokens/second), cost (e.g., USD per million tokens), and quality-of-experience (QoE) measures that capture user-perceived responsiveness \cite{dong_large_2024}. Key definitions include (i) time to first token (TTFT), the delay from query submission to the first generated token, (ii) time per output token (TPOT), the incremental time to produce each subsequent token, (iii) latency as end-to-end response time, and (iv) throughput as sustained token generation rate \cite{dong_large_2024}. Although these measures are often introduced in deployment and service design contexts, they map directly to the feasibility of evaluation programs: throughput and latency determine wall-clock time for benchmark runs; TTFT and TPOT shape the practical cost of multi-sample procedures; and token-priced usage links directly to the marginal cost of expanding sample size, response length, and judge-based scoring.
 
 % Optional figure: include if you keep the image in your repo.
 % \begin{figure}
@@ -802,8 +855,10 @@ In LLM settings, evaluation cost can be characterized using a tokenomics vocabul
 %     \label{fig:dong_tokenomics_definitions}
 % \end{figure}
 
-\paragraph{Training costs and the economics of producing models.}
-The cost landscape for LLMs is often divided into training and inference costs. Training costs are largely incurred by model developers and are driven by the scale of compute required to optimize model parameters over large datasets, as well as the supporting infrastructure required for distributed training. These costs include GPU-hours (or accelerator-hours), storage and I/O, network and orchestration overhead, repeated training runs for experimentation, and the engineering effort required to operate at scale. Recent analyses document the rapid growth of frontier training budgets, underscoring why training efficiency has become a first-class research and engineering concern 
+
+\paragraph{Training Costs and the Economics of Producing Models}
+
+The cost landscape for \acp{llm} is often divided into training and inference costs. Training costs are largely incurred by model developers and are driven by the scale of compute required to optimize model parameters over large datasets, as well as the supporting infrastructure required for distributed training. These costs include GPU-hours (or accelerator-hours), storage and I/O, network and orchestration overhead, repeated training runs for experimentation, and the engineering effort required to operate at scale. Recent analyses document the rapid growth of frontier training budgets, underscoring why training efficiency has become a first-class research and engineering concern 
 % (TODO: add BibTeX key for Cottier et al.\ 2024, ``The rising costs of training frontier AI models''). 
 Training cost is also sensitive to systems-level decisions: parallelization strategy, pipeline scheduling, and hardware utilization can materially affect realized training efficiency, motivating simulation and planning tools such as vTrain for evaluating compute-optimal and cost-effective configurations prior to committing to expensive runs 
 % TODO: add NVIDIA hardware improvements citation
@@ -816,17 +871,26 @@ A large literature proposes training-time cost reduction strategies that trade p
 % Snag other sources from the quantization collection in Zotero
 While training cost is not the dominant expense for most evaluation studies, it shapes \emph{which} foundation models and their variants exist, how frequently models can be updated, and the extent to which specialized domain models are economically viable.
 
+%% ADD A SMALL LANGUAGE MODELS SECTION
+\cite{jovanovic_CompactingAISearch_2024}
+\cite{wang_comprehensive_2024}
+\cite{wangComprehensiveSurveySmall2024}
+
+
+
+
+%%% NEED TO ADD:
+\cite{cottier_rising_2024}
+
+
 \paragraph{Inference costs and the marginal cost of evidence collection.}
 In contrast to training, inference costs scale with usage and therefore often dominate total cost of ownership for widely deployed systems. For evaluation programs, inference cost is the primary driver of feasibility because it scales directly with the number of items, the number of models, and the number of repeated runs used for robustness. Inference cost is determined by (i) the number of tokens processed in the input context, (ii) the number of tokens generated in the output, and (iii) the serving characteristics of the system (e.g., batching efficiency, memory footprint, and key--value cache behavior). Tokenomics provides a vocabulary for these serving constraints through throughput (tokens/sec), cost (e.g., USD per million tokens), and quality-of-experience metrics such as time to first token (TTFT), time per output token (TPOT), and end-to-end latency \cite{dong_large_2024}. These measures translate to evaluation feasibility by determining how quickly and how expensively an experiment grid (items $\times$ conditions $\times$ replications) can be executed.
 
 Inference cost is also shaped by the evaluation protocol itself. Robustness checks (multiple seeds, prompt or format variants, controlled structural changes, or multiple samples) multiply inference calls. For OSQs, scoring can introduce an additional inference layer when LLM-as-a-judge pipelines are used: the judge prompt often includes the candidate response, rubric text, and sometimes reference answers; stability improvements may require multiple judge passes, further increasing marginal cost. This yields a practical asymmetry between modalities: MCQ evidence is typically inexpensive to score and therefore supports broad coverage, whereas OSQ evidence can be richer but is often gated by scoring overhead. These feasibility pressures motivate compute-aware comparisons; budget-aware evaluation work shows that methods can appear superior primarily because they expend more compute, and conclusions can change when compute is normalized \cite{Junlin_Wang_2024_Budget_Aware_Reasoning}. In applied settings, inference economics is further influenced by access mode: organizations frequently evaluate through LLM-as-a-Service offerings where pricing tiers, throughput constraints, and latency targets shape both marginal cost and scalability \cite{liagkou_cost_2024}. Finally, surveys of resource-efficient foundation models emphasize the importance of measuring efficiency alongside accuracy using metrics such as memory footprint, latency, throughput, energy, and cost per token \cite{xu_resource_efficient_2024, bai_beyond_efficiency_2024}, reinforcing that feasibility constraints can determine how much evaluation evidence can practically be collected even when cost is not itself used as a qualification decision rule.
 
 
-
-\paragraph{What this dissertation reports and why (link to RQ3).}
-Consistent with treating cost as a trade-space variable rather than a qualification criterion, this dissertation reports compute-relevant quantities to contextualize evaluation feasibility and to enable replication and comparison. In particular, the study tracks (i) token counts associated with prompts and responses, (ii) how response length policies (e.g., short vs.\ long outputs) change total token consumption, and (iii) when OSQ scoring involves judge-based evaluation, the additional call structure and token overhead implied by the judge pipeline. These quantities support the dissertation's analysis of modality- and length-dependent computational cost and token efficiency (RQ3) without asserting that lower cost implies higher qualification. Instead, cost-aware reporting clarifies the feasible evidence envelope under which robustness checks, replications, and OSQ scoring can be conducted, and it motivates evaluation designs that are transparent about the computational resources required to produce a given level of evidence.
-
-
+%%% NEED TO ADD
+\cite{Siddharth_Samsi_2023}
 
 
 
@@ -842,5 +906,5 @@ Consistent with treating cost as a trade-space variable rather than a qualificat
 
 This chapter reviewed prior work relevant to LLM evaluation in systems engineering and related domains. The literature indicates that SE work products form a coupled artifact network that must remain traceable, auditable, and consistent across lifecycle phases. Prior studies also show that while LLMs can assist with extraction, drafting, and transformation of SE artifacts, known failure modes can yield plausible-but-wrong outputs and cross-artifact inconsistencies that propagate downstream. In addition, evaluation results may be influenced by dataset lifecycle hazards and by sensitivity to tooling, prompting, and scoring procedures.
 
-These observations motivate the dissertation’s research questions and methodological choices. First, because MCQs are commonly used for scalable evaluation yet are sensitive to option structure, the dissertation examines MCQ robustness under distractor and structure variation as a measurement property mentioned in Research Question \ref{RQ1}. Second, because MCQ and OSQ modalities provide different forms of evidence, the dissertation investigates how paired MCQ/OSQ evaluations differ in the evidence they produce and how they can be combined for task-aligned, risk-aware qualification mentioned in Research Question \ref{RQ2}. Third, because evidence depth depends on computational and judging overhead, the dissertation analyzes how modality selection and response length affect computational cost and token efficiency mentioned in Research Question \ref{RQ3}. Chapter \ref{ch:materials_methods} operationalizes these questions through an experimental design and analysis pipeline, specifying task formulations, controlled variants, scoring procedures, and cost accounting approaches used in the remainder of the dissertation.
+These observations motivate the dissertation’s research questions and methodological choices. First, because MCQs are commonly used for scalable evaluation yet are sensitive to option structure, the dissertation examines MCQ robustness under distractor and structure variation as a measurement property mentioned in Research Question \ref{RQ1}. Second, because MCQ and OSQ modalities provide different forms of evidence, the dissertation investigates how paired MCQ/OSQ evaluations differ in the evidence they produce and how they can be combined for task-aligned, risk-aware qualification mentioned in Research Question \ref{RQ2}. Third, because evidence depth depends on computational and judging overhead, the dissertation analyzes how modality selection and response length affect computational cost and token efficiency mentioned in Research Question \ref{RQ3}. Chapter \ref{ch:materials_methods} formalizes these questions through an experimental design and analysis pipeline, specifying task formulations, controlled variants, scoring procedures, and cost accounting approaches used in the remainder of the dissertation.
 

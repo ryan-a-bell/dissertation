@@ -1,233 +1,241 @@
 \chapter{Introduction}\label{ch:introduction}
 
+\acp{llm} are increasingly used as tools for engineering work: drafting and refining technical text, summarizing references, supporting trade studies, and accelerating documentation across the digital thread \cite{deputyassistantsecretaryofdefense_DepartmentDefenseDigitalStrategy_2018, dod_digital_modernization_strategy_2019}. \ac{se} is a particularly attractive target for these capabilities because it is integrative across disciplines, heavily text-mediated, and sensitive to early work products that shape downstream commitments. However, adoption is advancing faster than the availability of defensible evidence for when an LLM should be trusted within \ac{se} workflows.
+
+The focus of this research is to investigate how \acp{llm} should be evaluated and qualified for use in \ac{se} tasks and contexts where errors can carry significant technical, operational, or safety consequences to complex systems. Rather than treating benchmarking as an end in itself, this work treats evaluation as a qualification problem: it examines how evaluation modality, robustness properties of measurement instruments, and cost constraints contribute to defensible model qualification decisions.
+
 \section{Motivation}\label{sec:motivation}
 
+\subsection{Systems Engineering as a High Consequence Decision Environment}\label{subsec:motivation_se_high_consequence}
+
+Systems engineering is a multidisciplinary approach concerned with the design, realization, and operation of complex systems over their life cycles \cite{incose_GuideSystemsEngineering_2025, Blanchard_Fabrycky_Systems_Engineering_and_Analysis_2011}. Its integrative role requires synthesizing across engineering domains and stakeholder objectives while balancing trade-offs among performance, cost, schedule, safety, and operational constraints \cite{Blanchard_Fabrycky_Systems_Engineering_and_Analysis_2011,boardman_systems_2008}. In such settings, small misunderstandings or inconsistencies can ripple through interconnected subsystems and stakeholder interfaces, affecting performance, cost, schedule, and safety \cite{AveKlutse_Kodzo_Paaku_Kludze_2004, Samuel_K_Son_2012}.
+
+The discipline is high-impact: empirical research suggests that \ac{se} effort is positively associated with program outcomes, with reported correlation factors as high as 80\% \cite{walden_systems_engineering_handbook_2015, elm_business_2012, honour_value_systems_engineering_2012}. A major reason is that defects and requirement misunderstandings are cheapest to correct early, but become substantially more expensive as they propagate into integration, test, and operations. Cost growth factors on the order of 10 to 100 times are commonly reported as issues escape early lifecycle phases \cite{walden_systems_engineering_handbook_2015, nasa_NASASystemsEngineering_2007, Tan2017EarlyLateDesign, kobren_dau_readiness_through_early_lcc_2019}. Figure~\ref{fig:lifecycle_cost_impacts} provides a representative illustration of this lifecycle cost amplification \cite{nasa_SEH25Cost_2019}. Defense acquisition guidance similarly emphasizes front-loading systems engineering and early life-cycle cost thinking to reduce downstream rework and program risk \cite{kobren_dau_readiness_through_early_lcc_2019, dau_ModelBasedSystemsEngineering_2019}.
 
 
-\subsection{The Importance and Complexity of Systems Engineering}
-
-Many have sought to define what Systems Engineering is: 
-- 1 def
-- 2 def
-- 3 def
-The field still hasn't come to a definitive solution, but what all of the definitions have in common is that: Systems Engineering is complex and has high-impact, and expensive.
-
-it is complex because it is Hard to capture all of the knowledge, the relationships, the inter-dependencies between systems, and the resulting interactions (known-knowns, known-unknowns, unknown-knowns, and unknown-unknowns).
-
-Systems engineering is high-impact because the discipline is responsible for ensuring the integration of systems that are already complex, in addition to mitigating emergent behavior between the systems, they must also try and meet performance, budget, and schedule constraints through a lifecycle. Empirical research show that the "\ac{se} effort has a significant, quantifiable effect on program success with correlation factors as high as 80\%" \cite{walden_systems_engineering_handbook_2015, elm_business_2012, honour_value_systems_engineering_2012}
-
-%% Shows cost accured across the lifecycle 
-\begin{figure}[h] 
+%% Shows cost accrued across the lifecycle
+\begin{figure}[htbp]
     \centering
     \includegraphics[width=0.8\linewidth]{figs/ch1/lifecycle-cost.png}
-    \caption{Life Cycle Cost Impacts \cite{nasa_seh_cost_effectiveness_2025}}
+    \caption[Life-Cycle Cost Impacts Across the System Lifecycle]
+    {Life-Cycle Cost Impacts Across the System Lifecycle.
+    Reproduced from \cite{nasa_SEH25Cost_2019} for scholarly use under fair use.}
     \label{fig:lifecycle_cost_impacts}
 \end{figure}
 
 
- 
+\ac{mbse} has emerged to help manage this complexity by increasing structure, traceability, and consistency of system representations \cite{dau_ModelBasedSystemsEngineering_2019, ramos_ModelBasedSystemsEngineering_2012, borky_EffectiveModelBasedSystems_2018, vaneman_mbse_demystified_2025, delligatti_SysMLDistilledBrief_2013}. However,  adoption introduces its own challenges, including tooling and standardization friction, transitions from document-centric to model-centric practices, and the coordination overhead of maintaining models across teams and suppliers. As the community moves toward more machine-readable and text-friendly modeling ecosystems (e.g., emerging SysML v2 efforts), the opportunity grows to integrate language models with the digital thread in ways that can reduce routine burdens while preserving engineering rigor \cite{friedenthal_MovingForwardSysMLV2_2024}.
 
+As programs expand in scope (e.g., distributed architectures, autonomous platforms, and digital twins), the cognitive load on systems engineers grows nonlinearly. Approaches such as \ac{mbse} can raise the ceiling of what is manageable by increasing structure, traceability, and consistency of system representations \cite{dau_ModelBasedSystemsEngineering_2019, ramos_ModelBasedSystemsEngineering_2012, borky_EffectiveModelBasedSystems_2018, vaneman_mbse_demystified_2025, delligatti_SysMLDistilledBrief_2013}. Even with \ac{mbse}, the cognitive limits of humans and the explosion of coordination paths in large, multi‑stakeholder system‑of‑systems programs often called "mega projects" remain bottlenecks \cite{McDermott_Generative_AI_Visualization_Managing_Megaprojects_2025}. This reality motivates the development of tools and organizational practices that offload routine burdens, preserve engineering rigor, and help teams detect unknown‑knowns despite the inherent complexity.
 
-<<cite the slide from my proposal ppt >>
+Because \ac{se} decisions shape downstream cost, schedule, and technical risk, even modest productivity improvements can have outsized program impact. Figure~\ref{fig:side_by_side} provides illustrative relationships between \ac{se} capability and program outcomes reported in the \ac{se} literature \cite{honour_value_systems_engineering_2012, walden_systems_engineering_handbook_2015, elm_business_2012}. This creates strong motivation to explore methods and tools that can reduce coordination overhead and documentation burden without degrading decision quality.
 
-20250713 Bell Dissertation Prop…
-
-. Poor SE effort increases lifecycle cost by factors of 10–100× when defects propagate downstream, while strong SE effort compresses cost, accelerates timelines, and reduces rework.
-
-As programs grow in scope between multi-domain kill chains, autonomous platforms, digital twins, and distributed architectures - the cognitive load on systems engineers increases nonlinearly. Capturing complex system of system interactions, emergent behaviors, and unknown–unknowns becomes increasingly difficult. Tools like MBSE have come forward to assist with amnaging the complexity, but with its own challenges like common language standards (sysmlv1.x to sysmlv2) and mind-set shifts from document-centric to model-centric. Human bandwidth, coordination overhead, and document burdens can start to become limiting factors, although MBSE helps raise the ceiling for what's possible.
-
-There has to be a better way to help capture and present the complexity in digestible formats to allow systems engineers to continue to make informed architectural decisions. One of those ways is with AI. AI can help cover more ground. But how can we ensure that it does it reliably? How can we trust its output, otherwise we might be worse off than we were without it. 
-
-%%% this should be the logical end of this section... grab the information from below and shove it up top here %%%%
-
-%%%%%%%%% begin some of the old text %%%%%%%%%%%%%%%
-Systems engineering is a multidisciplinary approach that focuses on the design, realization, and operation of complex systems over their entire life cycles \cite{incose_guide_2025, blanchard_systems_2010}. Rather than working in isolation, systems engineering integrates multiple engineering domains—such as mechanical, electrical, software, and human factors engineering—into a cohesive framework. The scope of systems engineering extends beyond traditional technical concerns, incorporating elements of project management, risk assessment, stakeholder requirements, and lifecycle considerations \cite{blanchard_systems_2010, boardman_systems_2008}. By emphasizing interdependencies among various subsystems, systems engineering ensures that the final product not only meets defined specifications but also aligns with broader organizational, regulatory, and user objectives.
-
-The holistic nature of systems engineering sets it apart from narrowly focused engineering disciplines. While individual specialists might concentrate on a single subsystem or technology, systems engineers synthesize these efforts, ensuring that the whole configuration operates harmoniously. This integrative perspective is crucial in contexts where small changes can ripple through the entire system, affecting performance, cost, schedule, and safety \cite{AveKlutse_Kodzo_Paaku_Kludze_2004, Samuel_K_Son_2012}. When designing and correcting errors, cost in particular can become a 10 to 100 times multiplier as you progress through the life cycle \cite{walden_systems_engineering_handbook_2015, nasa_nasa_2007, Tan2017EarlyLateDesign, kobren_dau_readiness_through_early_lcc_2019}.
-A systems engineer is more akin to a jack-of-all-trades instead of a subject matter expert in a singular discipline. In essence, systems engineering demands a comprehensive understanding of both technical components and human organizational structures, to successfully navigate nuanced decision-making that addresses the full breadth and depth of complex projects.
-
-
-
-The systems engineering process dictates one begins with thorough requirements analysis, a process that elicits, documents, and validates what stakeholders need the system to accomplish. Requirements analysis ensures alignment between envisioned system capabilities and stakeholder expectations, delineating both functional and non-functional parameters. This activity is followed by design synthesis, where engineers blend various technologies, subsystems, and design principles to create a holistic architecture. Such synthesis might involve selecting appropriate materials, defining data flows, and arranging subsystems to achieve an optimal balance of performance, reliability, and maintainability. There are several frameworks that can be leveraged for architecting solutions, including but not limited to DODAF, UAF, Zachman, MagicGrid) \cite{noauthor_dodaf_2010, object_management_group_unified_2025, zachman_zachman_2003, aiste_aleksandraviciene_magicgrid_2021}. Another aspect of the system engineer's role is program, project, or technical management that involves overseeing the execution of engineering projects, ensuring that resources, timelines, and objectives align with balancing trade-offs between cost, schedule, and performance while maintaining a system's overall integrity and adaptability to evolving requirements \cite{Langford2012, DoD_PMBOK_2003, IEEE_1220_1998}.
-
-
-Conceptual and abstract reasoning is common place in systems engineering as it allows practitioners to navigate complex problems before committing significant resources to detailed design and implementation, which yields the highest return \cite{blanchard_systems_2010, AveKlutse_Kodzo_Paaku_Kludze_2004}. Rather than proceeding through trial-and-error, systems engineers develop conceptual models to anticipate interactions, identify constraints, and recognize emergent behaviors. These mental constructs enable engineers to reason abstractly about the system's architecture, performance parameters, and operational environment, ensuring that decisions made early in the project lifecycle are sound and justifiable. Building upon these abstract models, \ac{mbse} introduces a formalized approach that enhances the visualization and validation of system architectures before physical implementation \cite{dau_model-based_2024, ramos_model-based_2012, borky_effective_2018, vaneman_webinar_2020}. \ac{mbse} provides a structured approach to developing and analyzing conceptual models through formal representations, such as SysML, enabling engineers to visualize, validate, and refine system architectures before physical implementation \cite{delligatti_sysml_2013}. By leveraging MBSE, practitioners can capture the complexity of large socio-technical systems into a lower dimensional views for comprehension that enhance traceability, improve consistency, and reduce ambiguity in system design, ultimately leading to more effective decision-making throughout the system lifecycle.
-
-As integrators of engineering disciplines, systems engineers balance competing constraints in trade-spaces, anticipate known, unknown emergent behaviors, and retain a holistic perspective to strive for a seamless convergence of technology, processes, and people to deliver valuable, resilient complex systems.
-
-
-\subsection{AI Productivity Potential and Cross-Domain Adoption Benefits}
-
-\subsubsection{Introduction to Large Language Models}
-
-
-
-
-\acp{llm} are advanced artificial intelligence systems trained on massive datasets of text to understand and generate text. These models leverage neural network architectures, particularly transformer-based architectures like \ac{gpt}, to capture syntactic structures, semantic nuances, and pragmatic contexts \cite{vaswani_attention_2017}. When trained on an extensive corpus of text, \acp{llm} have proven themselves capable of approaching average human performance \cite{lab42_about_2024}. When training on more tailored and pruned sources, \acp{slm} have also proven to be quite capable \cite{microsoft_phi_2025, meta_llama3.2_2024, myrzakhan_open_llm_leaderboard_2024}. 
-
-Such capability has effectively unlocked the potential for humans to shift their focus to more abstract, conceptual thought and leave tedious, automatable tasks to machines. The ability to quickly sort through mountains of data proves to be an indispensable tool for domains like systems engineering where legacy, document-centric processes are still heavily represented \cite{estefanSurveyModelBasedSystems2008, harvey_document_model_dont_model_document_2012}. The transformation from document-centric processes to model-centric processes will be heavily enabled through the usage of AI tools - leaving only a mindset shift to be required \cite{dod_digital_engineering_strategy_2018, dod_digital_modernization_strategy_2019, simms_adoption_of_de_within_dod_2022, jones_digital_systems_engineering_transformation_strategy_2020}
-
-
-Within systems engineering, \acp{llm} augment tasks such as requirement refinement, documentation generation, and systems modeling. For instance, \acp{llm} can analyze initial drafts of requirements or design outlines, clarify ambiguities, improve coherence, and ensure consistent terminology. These capabilities relieve engineers of tedious editing tasks, enabling them to focus on strategic decision-making \cite{brown2023engineering}
-
-Furthermore, \acp{llm} can support human conceptual reasoning by synthesizing large volumes of technical documents, identifying relevant design patterns, and suggesting potential architectural frameworks. While they do not replace human expertise, their ability to generate and structure large corpuses of information into digestible summaries significantly enhances productivity and coherence in complex engineering projects.
-
-Despite their impressive capabilities, \acp{llm} face limitations in handling complex, domain-specific challenges. A key issue is their reliance on pattern recognition rather than true understanding, which can lead to confidently asserted but incorrect outputs. In specialized contexts, \acp{llm} may struggle to incorporate nuanced domain knowledge and produce oversimplified or irrelevant suggestions known as hallucinations \cite{Sanu_LLM_Limitations_2024, Matarazzo2025_Survey_LLM_Capabilities_Limits, Johnson2025_Primer_LLM_Limitations}. Additionally, the “black-box” nature makes trace reasoning difficult, which is problematic for critical engineering tasks although new reasoning models may remedy this pitfall \cite{IntroducingOpenAIO1_2024, OpenAIO3mini_2025, deepseekai_deepseekR1-2025}.
-
-Modern LLMs combine pattern recognition, context synthesis, and rapid text generation. Improvements such as fine-tuning, RAG, quantization, and prompting strategies (zero-shot, few-shot) provide pathways to adapt these models to specialized domains with varying levels of computational cost
-
-\subsubsection{Productivity Potential and Cross-Domain Benefits}
-
-
-While systems engineering has not yet quantified domain-specific productivity gains from AI, other engineering sectors have already demonstrated substantial improvements. Controlled studies in software engineering, civil design, mechanical design, manufacturing, and enterprise IT report productivity boosts ranging from 10\% to 10× depending on task complexity and repetitiveness << cite from ppt >>
-
-<< add in another paragraph on benefits from supporting research/sources >>
-
-Can tie in to making the AI/LLM aware of the MBSE and how this might help provide context etc. Cite longshore's work, some SEW4AI 2023 and 2024 work. Cite Paul Wach's work.  This is why so many folks are working on the tooling aspect - the allure of compressed timelines is expansive.
-
-These results suggest that AI is capable of accelerating cognitive-load engineering domains by automating routine tasks, supporting conceptual exploration, and augmenting human reasoning. Yet, unlike software or design engineering, systems engineering lacks formal evidence showing how AI performs against its task types, reasoning structures, and lifecycle workflows
-
-Systems engineering ROI shows huge leverage potential : small improvements yield major outcomes - cite the plots I used in the proposal ppt 
-
-\begin{figure}[h]
+\begin{figure}[htbp]
     \centering
 
-    \subfloat[%
-        Cost and Schedule Overruns Correlated with SE
-        \cite{honour_value_systems_engineering_2012, walden_systems_engineering_handbook_2015}%
-    ]{%
-        \includegraphics[width=0.48\linewidth]{figs/ch1/cost-schedule-overruns-correlate-with-se.png}
-        \label{fig:cost_schedule_overruns_correlation_with_se}
+    \subfloat[Cost and schedule overruns correlated with SE]{%
+        \includegraphics[width=0.48\linewidth]{figs/ch1/cost-schedule-overruns-correlate-with-se.png}%
+        \label{fig:cost_schedule_overruns_correlation_with_se}%
+    }\hfill
+    \subfloat[Project performance versus SE capability]{%
+        \includegraphics[width=0.48\linewidth]{figs/ch1/program-performance-vs-se.png}%
+        \label{fig:program_performance_vs_se}%
     }
-    \hfill
-    \subfloat[%
-        Project Performance versus SE Capability
-        \cite{elm_business_2012, walden_systems_engineering_handbook_2015}%
-    ]{%
-        \includegraphics[width=0.48\linewidth]{figs/ch1/program-performance-vs-se.png}
-        \label{fig:other_figure}
-    }
+    \caption[
+    Illustrative Relationships Between Systems Engineering Capability and Program Outcomes]
+    {Illustrative Relationships Between Systems Engineering Capability and Program Outcomes.
+    (a) Reproduced from \cite{honour_value_systems_engineering_2012, walden_systems_engineering_handbook_2015}.
+    (b) Reproduced from \cite{elm_business_2012, walden_systems_engineering_handbook_2015}.}
 
-    \caption{Side-by-side comparison of related figures}
     \label{fig:side_by_side}
 \end{figure}
 
 
-\subsection{The Challenge of Trustworthy AI Usage}
-
-\subsubsection{Failure Modes of LLMs and their Consequences}
-
-discuss hallucinations, prompt injections, contamination, etc.
-
-Then give some safety critical applications of them for se etc. 
-have a paragraph here mentioning disconnected use cases, common in SE and DoD applications (e.g. shipboard or otherwise).
 
 
-Despite the promising benefits of applying AI to systems engineering, LLMs introduce critical risks: hallucinations, lack of grounding, prompt injection vulnerabilities, contamination from training data, and non-transparent reasoning paths. These challenges prevent the transition from human-in-the-loop to human-on-the-loop operation, which is essential for safe deployment of agentic SE assistants in real workflows << cite my ppt and other stuff >>
+\subsection{Why LLMs are Compelling for Systems Engineering workflows}\label{subsec:motivation_llms_compelling}
 
-Modern LLMs exhibit well-documented failure modes including hallucinations, training-data contamination, prompt injection, and non-transparent reasoning. These are manageable in low-risk civilian tasks but unacceptable in SE contexts where faulty logic may influence architecture decisions or system verification steps.
+\acp{llm} are advanced AI systems trained on large text corpora to model and generate natural language \cite{commoncrawl_CommonCrawlOpen_2024}. Modern \acp{llm} typically use transformer architectures \cite{vaswani_AttentionAllYou_2017}, and have demonstrated strong performance across a wide range of knowledge and reasoning-style benchmarks \cite{lab42_ARC_2024, TidorVlad_Pricope_2025_HardML_Benchmark, Y_Thomas_Hou_2024_CompoundQA}. For \ac{se}, these capabilities map naturally to text-intensive activities such as summarization of technical references, drafting and refinement of requirements and interface descriptions, synthesis of trade-space considerations, and assistance with communication across stakeholder groups.
 
-Traceability of logic and decisions is CRUCIAL to making intelligent architectural decisions within the bounded trade space that SEs continually manage.
+The appeal of LLM-enabled assistance is amplified by the ongoing shift toward digital engineering practices and the need to manage increasing volumes of engineering information across the lifecycle \cite{deputyassistantsecretaryofdefense_DepartmentDefenseDigitalStrategy_2018, dod_digital_modernization_strategy_2019, simms_adoption_of_de_within_dod_2022}. At the same time, well-documented limitations of \acp{llm}---including hallucination, susceptibility to prompt injection, training-data contamination, and non-transparent reasoning behaviors create a gap between apparent usefulness and defensible trust  \cite{Sanu_LLM_Limitations_2024, Matarazzo2025_Survey_LLM_Capabilities_Limits, Johnson2025_Primer_LLM_Limitations}. This gap motivates evaluation approaches that are aligned to \ac{se} task demands and that produce evidence suitable for model qualification decisions.
 
+From a digital engineering perspective, the goal is not merely faster writing, but improved continuity and traceability across the digital thread: connecting requirements, architectures, interfaces, verification artifacts, and program decisions across the lifecycle into a digital thread \cite{Feng_Guiding_LLMs_Engineering_Design_Process_Domain_Specific_Knowledge_2025, Jaskie_Agentic_AI_Lifecycle_Traceability_Digital_Thread_2025}. This intensifies the shift from document-centric artifacts toward model-centric representations (e.g., \ac{mbse}) and structured technical knowledge that can be queried, transformed, and audited \cite{estefanSurveyModelBasedSystems2008, harvey_document_model_dont_model_document_2012, jones_digital_systems_engineering_transformation_strategy_2020}. Furthermore, \ac{se} decisions often rely on structured expert judgment and consensus-building to reconcile trade-offs, suggesting a role for LLMs in organizing deliberation and rationale under human governance \cite{bell_AutomatingAIExpert_2025}. 
 
-\subsubsection{Benchmarking as a Prerequisite for Effective Usage} 
-combine this with security for injections... but let's focus on the technology problem.
+\subsection{The Qualification Evidence Gap for LLM Adoption in Systems Engineering}\label{subsec:motivation_qualification_gap}
 
-Benchmarking is the primary mechanism used across AI research to quantify model capability, compare systems, and build confidence in deployment. The evolution from early benchmarks (WordNet, MNIST, BLEU) to modern high-reasoning datasets (MMLU, ARC, HellaSWAG, BIG-Bench) illustrates how domains progress from simple pattern-matching to complex domain-specific evaluation
+Responsible adoption of \acp{llm} in systems engineering requires evidence that model outputs are reliable under the response constraints and failure modes that matter for \ac{se} workflows. In practice, the evaluation evidence typically available to practitioners is often misaligned with domain-specific \ac{se} work products. This misalignment is most visible in the widespread reliance on \ac{mcq} benchmarking as a primary indicator of readiness, despite the fact that many \ac{se} tasks require constructive, free-form responses: explanations, justifications, trade-space arguments, and traceable reasoning artifacts. 
 
-Benchmarking is a way to systematically stress-test LLM behavior under known tasks, vocabulary, and reasoning structures before integrating them into operational workflows.
-
-Benchmarking is essential for gauging how well \acp{llm} perform. Given the complexity and high stakes involved in designing and operating large-scale systems, it is crucial to quantitatively and qualitatively assess whether LLM outputs meet the desired standards of accuracy, reliability, and conceptual depth. By comparing \ac{llm} performance to established metrics, human experts, or other AI tools, benchmarking provides a structured mechanism to identify strengths and weaknesses in model capabilities \cite{Tianle_Li_2024_BenchBuilder_ArenaHard_LLM_Benchmarking, Jin_Li_2024_Benchmarking_LLMs_EBM, Muharrem_Unal_2023_HELM_Holistic_Eval_LLMs, Yue_Liu_2023_Reliability_LLMs_Program_Generation}.
-
-Beyond simple metrics, benchmarking also helps guide future \ac{ai} improvements. When engineers and researchers understand where an LLM falls short they can make informed decisions about model selection, tuning, or augmentation. Ultimately, systematic benchmarking ensures that the use of LLMs in systems engineering is grounded in evidence-based practices and aligned with industry and stakeholder needs.
-
-Creating domain-specific benchmarks for any domain is a challenging endeavor as it requires representative datasets, carefully crafted tasks, and contextually relevant metrics. Given that systems engineering contexts are inherently diverse: what matters for a satellite design project may differ dramatically from what is critical for a nuclear submarine’s maintenance schedule. Capturing this diversity in a single benchmark demands careful thought and collaboration among experts who understand the nuances of various engineering subfields. In some cases, a single benchmark may be acceptable while in others, tailored benchmarks for for different use cases may be required. 
-
-Furthermore, the complexity of systems engineering tasks can make isolating measurable performance indicators difficult. Tasks that rely heavily on conceptual reasoning, trade-off analysis, or multi-layered stakeholder requirements prove to be challenging endeavors to reduce to simplistic performance scores. The lack of publicly available, domain-specific corpora further complicates the benchmarking process. As a result, developing robust benchmarks often involves time-consuming data collection and expert annotation to ensure that test sets remain both challenging and accurately represents systems engineering tasks. Other fields have already begun creating domain-specific benchmarks, such as but not limited to the biomedical field \cite{jin_pubmedqa_2019}, medical and clinical field \cite{pal_medmcqa_2022}, legal field \cite{guha_legalbench_2023, chalkidis-etal-2022-lexglue}, and the financial field \cite{xue_famma_2024, islam_financebench_2023}.
-
-However, no equivalent benchmark existed for systems engineering until recently. Generic language benchmarks do not evaluate SE task types, SE vocabulary, MBSE reasoning, lifecycle analysis, or trade-space thinking.
-
-SysEngBench represents a pioneering effort to create a tailored benchmark for evaluating LLMs in systems engineering contexts \cite{bell_rabellsysengbench_2024, Bell2025SysEngBench}. By focusing specifically on the tasks, terminologies, and reasoning patterns intrinsic to the field, SysEngBench attempts to move beyond generic language benchmarks that fail to capture the complexity of systems engineering specific discourse. It seeks to provide a more dedicated measure of how well an \ac{llm} can handle domain-specific challenges.
-
-The nature of progress in AI technologies ensures that new paradigms, methodologies, and technologies will emerge over time, potentially rendering certain aspects of the benchmark more easily performed. The extensibility requirement of the benchmark comes to light as AI technology progresses and SysEngBench must evolve to push the evaluation envelope. Nonetheless, SysEngBench lays the groundwork for a more rigorous and representative approach to evaluating \ac{llm} performance for systems engineers.
-
-Systems engineering integrates tasks like requirements analysis, design synthesis, and risk management to address complex challenges. \acp{llm} can support these workflows by automating documentation and aiding decision-making, with a gamut of models performing well and others not so well with domain-specific tasks on tailored benchmarks such as SysEngBench that uses the \ac{mcq} evaluation modality \cite{Bell2025SysEngBench}. Techniques like quantization further enhance efficiency but require careful trade-offs to maintain accuracy in high-stakes systems engineering applications \cite{Bell2025LLMQuantization}.
+Recent work argues that traditional systems engineering \ac{t&e} practices, while necessary, become insufficient when engineered systems incorporate \ac{ai} components, motivating complementary approaches such as explainable AI (xAI) and counterfactual testing and evaluation \cite{raz_ExplainableAICounterfactuals_2023}. From a qualification standpoint, the objective is to produce auditable evidence that aligns to \ac{se} work products while tracking anticipated failure modes and consequence severity. This dissertation investigates this xAI gap within \ac{se} by (i) contrasting recognition-style evidence (MCQ) with constructive evidence (OSQ), (ii) measuring the robustness of MCQ-derived signals to semantics-preserving instrument variations like \acp{osq}, and (iii) incorporating cost and deployability constraints so that qualification protocols remain feasible.
 
 
-\section{The Problem}
+\subsubsection{Failure modes and consequence-aware evaluation}\label{subsubsec:motivation_failure_modes}
 
-The validation gap in AI adoption for SE. 
+Known \ac{llm} failure modes including hallucinations, prompt-injection vulnerabilities, contamination, and limited transparency become especially problematic when model outputs inform architectural decisions, requirements allocation, or risk assessments \cite{Sanu_LLM_Limitations_2024, Matarazzo2025_Survey_LLM_Capabilities_Limits, Johnson2025_Primer_LLM_Limitations}. Although newer reasoning-oriented models may improve the structure and traceability of generated explanations, systems engineering still requires evaluation to function as evidence for a decision: the appropriate form and strength of evidence must be selected based on task criticality, anticipated failure modes, and the degree of human oversight expected in use \cite{IntroducingOpenAIO1_2024, OpenAIO3mini_2025, deepseekai_deepseekR1-2025}. Evidence can also shift non-monotonically when models are adapted or transformed (e.g., fine-tuning improving some behaviors while degrading others), reinforcing that model variants should be treated as distinct artifacts that require task-aligned qualification rather than assumed transferability \cite{Wach_LLMTradeOffs_2025}.
 
-partially address with sysengbench. needs ot be extended. reference some of my future work sections in sysengbench, quantization and consensus methods papers.
+\subsubsection{Evaluation modality as a first-order design choice}\label{subsubsec:motivation_modality_first_order}
 
-Systems engineering stands to benefit significantly from AI-enabled reasoning assistance, but responsible adoption requires that we establish whether models can actually perform SE-relevant tasks. Slide 12 frames the core hypothesis: if AI can accelerate SE workflows, SE performance should improve measurably in cost, schedule, and technical outcomes. Yet no validated pathway exists to verify this claim.
+Evaluation modality is not a neutral presentation detail: different formats can probe different behaviors and produce different forms of evidence. MCQ evaluation is convenient and scalable, but it primarily measures recognition and selection among provided options. \acp{osq} instead require a model to construct an answer and explanation in free text, which more directly resembles many \ac{se} work products. Because most domain benchmarks and scoreboards are dominated by MCQ-style evaluation, modality choice can materially affect what is being measured and what kinds of errors are exposed \cite{Tianle_Li_2024_BenchBuilder_ArenaHard_LLM_Benchmarking, Jin_Li_2024_Benchmarking_LLMs_EBM, Muharrem_Unal_2023_HELM_Holistic_Eval_LLMs}.
 
-we also want to mention that we COULD leverage AI tools but they need to be human-in-the-loop for keeping it correct. In order to get to human-on-the-loop for truely agentic assistants in the field of SE, we need to "trust" the outputs and this is done via val/ver aka benchmarks and tests.
+\subsubsection{Robustness limits of MCQ-only evidence}\label{subsubsec:motivation_mcq_robustness}
+
+Even when MCQs are useful as screening instruments, MCQ-based evidence can be sensitive to question structure, option framing, and other evaluation artifacts \cite{fu_mcq_reasoning_more_confident_when_wrong_2025, zhang_mitigating_2025}. Such sensitivity creates a model qualification risk: a model may appear to pass or fail depending on design choices that are not tied to underlying \ac{se} knowledge. For defensible qualification, robustness should be treated as a property of the measurement instrument, motivating controlled MCQ variants and sensitivity analyses rather than relying on a single observed accuracy number \cite{Yue_Liu_2023_Reliability_LLMs_Program_Generation}. In particular, controlled option-rotation variants provide a semantics-preserving diagnostic that isolates artifact sensitivity from underlying domain knowledge, making robustness quantifiable and auditable within a qualification workflow.
+
+\subsubsection{Domain-specific benchmarks as qualification infrastructure}\label{subsubsec:motivation_domain_benchmarks}
+
+Constructing domain-specific benchmarks remains challenging because it requires representative datasets, carefully crafted tasks, and contextually relevant metrics. Other fields have already created domain-specific benchmarks, such as biomedical \cite{jin_pubmedqa_2019}, medical and clinical \cite{pal_medmcqa_2022}, legal \cite{guha_LegalBenchCollaborativelyBuilt_2023, chalkidis-etal-2022-lexglue}, and financial \cite{xue_famma_2024, islam_financebench_2023}. Until recently, no equivalent benchmark existed for systems engineering, and generic language benchmarks do not evaluate \ac{se} task types, \ac{se} vocabulary, \ac{mbse} reasoning, lifecycle analysis, or trade-space thinking.
+
+SysEngBench represents a benchmark tailored for evaluating \acp{llm} in systems engineering contexts \cite{bell_IntroducingSysEngBenchNovel_2024,bell_RabellSysEngBenchDatasets_2024}. The initial SysEngBench release uses the \ac{mcq} modality \cite{Bell2025SysEngBench} and subsequent analysis of varying quantization levels \cite{bell_BalancingAccuracyEfficiencyQuantization_2025}, motivating extensions that support paired OSQ items to provide complementary evidence of constructive capability when models must generate explanations and engineering rationale in free text.
 
 
+\subsubsection{Cost-aware qualification and deployability constraints}\label{subsubsec:motivation_cost_aware}
+
+Qualification decisions must also account for practical deployment constraints. Modern adaptation methods such as fine-tuning, \ac{rag}, quantization, and prompting strategies (e.g., zero-shot and few-shot) provide pathways to tailor \acp{llm} to specialized domains with different accuracy--cost trade-offs, reinforcing the need to treat efficiency as part of qualification evidence \cite{bell_BalancingAccuracyEfficiencyQuantization_2025, Wach_LLMTradeOffs_2025}. Evaluation modality and response length affect token usage, computation, and human review burden, shaping what forms of qualification evidence are feasible at scale. This dissertation therefore investigates cost differences between evaluation modalities and extends prior cost modeling work \cite{bell_BalancingAccuracyEfficiencyQuantization_2025}. These measurements also inform broader AI cost-modeling efforts and maturity frameworks for adoption in systems engineering settings 
+\cite{madachy_FactoringAIAssistance_2023, madachy_SystemsAcquisitionCost_2024, Madachy_CostModelingAI_2024, madachy_GenerativeAIdrivenSystems_2025,Madachy_Bell_Longshore_2025_Generative_AI_SE_Maturity_Cost_Framework}.
+
+
+\subsubsection{Guiding premises for this dissertation}\label{subsubsec:motivation_guiding_premises}
+
+This dissertation proceeds from the following premises that organize the problem and motivate the research design:
 \begin{itemize}
-    \item Systems engineering tasks demand advanced reasoning and conceptual understanding that can challenge current LLMs.
-    \item While SysEngBench provides a foundation for benchmarking with MCQs, it lacks mechanisms for evaluating textual responses.
-    \item A comparative study of MCQs and OSQs can address gaps in benchmarking methodologies.
-    \item Developing robust methodologies for generating high-quality textual datasets is critical to advancing benchmarking in this domain.
+    \item Evaluation modality is a first-order design choice; response format changes what is being measured and what kinds of errors are exposed.
+    \item MCQ-only evaluation is insufficient as qualification evidence for systems engineering work products, although it may be useful as a screening signal.
+    \item Domain specificity matters for interpreting model capability in systems engineering contexts; aggregate benchmark scores may not reliably translate to \ac{se} task performance.
+    \item Domain specificity is essential for interpreting model capability in systems engineering; general benchmark scores may not provide transferable qualification evidence for \ac{se} work products
+    \item Qualification is contextual, not universal: different \ac{se} task classes tolerate different failure modes and require different strength of evidence.
+    \item Cost and deployability constraints including response length, token usage, and efficiency under resource limits must be considered alongside measured quality.
 \end{itemize}
 
+These premises motivate a modality-aware, robustness-sensitive, and cost-aware approach to evaluation as a prerequisite for defensible model qualification in systems engineering workflows.
 
 
+\section{Statement of the Problem}
+The dissertation problem statement is as follows:
 
+\emph{Current LLM evaluation practice over-relies on MCQ benchmarking, which can overstate readiness for systems engineering tasks that require models to construct answers and explanations in free text, leaving practitioners without a robust, cost-aware basis for model qualification.}
 
-How do we assess and compare the performance of language models on Systems Engineering tasks in a rigorous, reproducible, and domain-specific manner, enabling the community at large to identify strengths, weaknesses, and applicability across SE processes?
+Language models should be qualified for \emph{systems engineering} based on evidence that they can reliably produce free form SE work products. The \ac{se} community stands to benefit from AI-enabled assistance, but responsible adoption depends on \ac{vandv} evidence that models perform reliably under the response constraints and failure modes that matter in SE workflows. Most benchmarking practice emphasizes recognition-style performance (e.g., MCQs), which is easy to score and scales well, yet may not reflect how a model behaves when asked to produce short engineering explanations, justify a choice, or articulate a trade-space argument in free text. \acp{osq} probe this constructive capability more directly, but they introduce practical challenges in dataset construction, scoring protocols like LLM-as-a-judge approaches, judge reliability, and computational cost.
 
-\section{Research Questions and Objectives}\label{sec:research_questions_objectives}
+As a result, practitioners lack a defensible and traceable basis for determining when MCQ evidence is adequate as a screening signal, when OSQ evidence is necessary to test explanatory quality under free-text constraints, and how to combine these evidence sources into qualification decisions that reflect task criticality, response requirements, and acceptable failure modes. Without a modality-aware and cost-aware qualification approach, organizations risk both over-deploying models based on optimistic proxy measures and under-utilizing efficient screening signals.
 
-The focus of this work is to explore, derive, and evaluate methodologies for benchmarking the performance of \acp{llm} in systems engineering. Specifically, this study investigates the comparative effectiveness of \acp{mcq} and textual response formats in evaluating LLMs' understanding and reasoning capabilities in domain-specific tasks. This research also addresses challenges associated with dataset creation, evaluation metrics, and cost considerations. The overarching research questions are as follows:
-
-\begin{itemize}
-    \item How do the evaluation modalities of MCQs and textual responses compare in effectively assessing the performance of LLMs in systems engineering?
-    \item What are the strengths and limitations of using MCQs as a benchmarking methodology in a specialized domain such as systems engineering?
-    \item How can textual response formats better capture the nuanced reasoning and conceptual understanding required for systems engineering tasks?
+Potential benefits of addressing this problem include the following:
+\begin{itemize} 
+    \item A benchmark structure that supports controlled comparison across evaluation modalities for the same underlying systems engineering knowledge targets,
+    \item More reliable interpretation of MCQ evidence by accounting for robustness and sensitivity to question structure, 
+    \item A principled basis for combining multiple modalities as complementary qualification evidence rather than treating any single modality as sufficient, 
+    \item Cost-aware qualification guidance that supports deployment under practical constraints (token usage and response length), 
+    \item Improved decision support for practitioners seeking trustworthy and efficient adoption of LLMs within systems engineering workflows. 
 \end{itemize}
 
-To address these questions, this work performed herein examines foundational challenges in benchmarking LLMs for systems engineering. The answers to the following specific questions will contribute to arriving to potential answers to the dissertation focus:
+ 
+\section{Research Questions}\label{sec:research_questions}
 
-\begin{itemize}
-    \item What is the current state of benchmarking methodologies for LLMs in systems engineering?
-    \item What is the role of textual response formats in capturing deeper conceptual understanding compared to MCQs?
-    \item How can a systematic approach be developed to convert MCQs into high-quality textual datasets while preserving semantic fidelity?
-    \item What evaluation metrics can effectively compare LLM-generated textual responses against reference solutions?
-    \item How can insights gained from the comparative evaluation of MCQs and textual responses inform the design of more effective benchmarks for LLMs in systems engineering?
-    \item How can existing systems engineering task or concept taxonomies, such as those from the INCOSE Handbook, be leveraged?
-\end{itemize}
+This section focuses on the \emph{unknowns} that must be resolved to treat benchmarking as a qualification problem for systems engineering.  The research questions identify what is not yet established, justify why the study is needed, and define the evidence the dissertation must produce to close the qualification gap. In this dissertation, the research questions are: 
 
-The goal of this research is to develop an evaluation framework to inform practicing systems engineers on the viability of MCQs and OSQs for the evaluation of LLMs in systems engineering tasks. The framework will evaluate the strengths and limitations of MCQ and OSQ formats as benchmarking modalities for systems engineering tasks. The research aims to quantify how well LLMs capture the unique demands of systems engineering, including the nuanced understanding, conceptual reasoning, and problem-solving capabilities required for the field. To ensure a meaningful and fair comparison, the study will employ methodologies to transform structured MCQs into high-quality textual datasets while preserving semantic fidelity, enabling "apples-to-apples" evaluations between the two modalities.
-
-Additionally, this research seeks to investigate the cost difference between the evaluation modalities. This involves continuing the cost modeling research done for MCQs and applying that to OSQs \cite{Bell2025LLMQuantization}. It would also assist in informing AI cost modeling efforts \cite{madachy_systems_2024, Madachy2024CostModelingAI, Madachy2025AIMaturityCost, Madachy_Bell_Longshore_2025_Generative_AI_SE_Maturity_Cost_Framework}. The ultimate objective is to contribute to the refinement of benchmarking methodologies for LLMs in systems engineering, providing actionable insights into their practical applications, while also addressing foundational gaps in evaluation and dataset creation. This work is expected to inform the systems engineering community on practical, cost effective usage of LLMs for systems engineering domain-specific tasks.
+\begin{enumerate}
+    \item How robust is MCQ-based evaluation to variations in distractor/option structure in the domain of systems engineering, and what risks does this pose when MCQ accuracy is used as primary qualification evidence? \label{RQ1}
+    \item How do MCQ and OSQ evaluation modalities differ in the type and strength of evidence they provide for qualifying LLMs in systems engineering, and how can evidence from multiple modalities be combined to support task-aligned, risk-aware qualification decisions for LLM use in systems engineering? \label{RQ2}
+    \item How do evaluation modality and response length influence the computational cost of qualification, and what trade-offs arise between judged quality and token efficiency? \label{RQ3}
+\end{enumerate}
 
 
-\section{Research Contributions and Benefits to the Body of Knowledge}\label{sec:research_contributions}
 
-This research contributes to the advancement of the evaluation of Large Language Models (LLMs) within the domain of systems engineering. It addresses key gaps in evaluation approaches, dataset creation, and the understanding of performance trade-offs for \acp{llm} in through the comparative analysis of various benchmarking methodologies for the field. The primary focus is on comparing the evaluation modalities of \acp{mcq} and \acp{osq}. Both accuracy and cost will be used in the comparison of the evaluation modalities.
+\section{Research Objectives}\label{sec:research_objectives}
 
-The following contributions align with the research questions identified in Section 1.2, providing insights into the development of more effective benchmarks and the practical applications of \acp{llm} for systems engineers. These contributions lay the groundwork for better understanding of \ac{llm} performance in systems engineering.
+This section defines the \emph{work performed} to answer the research questions. Objectives are intentional, completable actions and provide an auditable plan of execution that links methods to results. 
+
+\emph{The overarching objective of this research is to develop and empirically validate a modality-aware, robustness-aware, and cost-aware methodology for evaluating and qualifying LLMs for systems engineering tasks.}
+
+Collectively, the objectives provide an auditable plan to produces and analyze evaluation evidence across modalities, tests the robustness of MCQ-derived signals, and incorporates practical cost constraints into qualification reasoning.
+
+These research questions are investigated through the following objectives, executed via the six-phase empirical pipeline described in Chapter~\ref{ch:materials_methods}:
+
+\begin{enumerate}
+    \item Curate and version benchmark artifacts by acquiring SysEngBench and producing benchmark derivatives that support robustness analysis and cross-modality comparison.
+    \item Generate OSQ grading scaffolds by producing canonical expected answers and structured rubrics (e.g., full/partial/none) and annotating items with taxonomy labels where applicable to support repeatable OSQ evaluation.
+    \item Execute standardized and reproducible inference by evaluating a diverse set of models across all MCQ variants and OSQs using consistent task configurations, deterministic settings, and comprehensive logging of prompts and outputs.
+    \item Score OSQ responses using rubric-based judging by applying an LLM-as-a-judge protocol to assign rubric scores and retaining structured scoring artifacts for analysis, including judge stability checks.
+    \item Quantify robustness, cross-modality evidence patterns, and uncertainty by using statistical tests and effect sizes to characterize MCQ sensitivity and compare MCQ versus OSQ outcomes.
+    \item Evaluate token-efficiency and cost trade-offs by tracking token usage and response length, extending cost modeling to OSQ evaluation, and analyzing the quality–token trade space.
+    \item Synthesize qualification guidance by interpreting results as evidence and deriving modality-aware, task-aligned recommendations for practitioners. 
+\end{enumerate}
 
 
-\subsection{Task-Modality Alignment Framework for Systems Engineering Evaluation}\label{subsec:Contribution_one}
-This research introduces a structured framework that maps systems engineering task types to the evaluation modalities most appropriate for assessing them. For instance, the structured nature of \acp{mcq} provides ease of construction and objectivity, while \acp{osq} may capture deeper reasoning and conceptual understanding. The hypothesis is that there is need for hybrid benchmarks that integrate both modalities for the field of systems engineering to ensure comprehensive evaluation. The framework provides principled guidance for aligning evaluation strategy with systems engineering task-specific demands. Additionally, this research leverages an extensible benchmark design that adapts to evolving \ac{llm} capabilities.
+\section{Research Contributions to the Body of Knowledge}\label{sec:research_contributions}
 
-\subsection{Robustness Analysis of MCQ Evaluation Using Distractor Variation for Systems Engineering}\label{subsec:Contribution_two}
-Expanding upon prior MCQ-only benchmarking work, this work introduces a robustness testing methodology that systematically rotates the correct answer among multiple distractors \cite{zheng_large_2024}. By measuring performance consistency across these variants, the analysis reveals whether models are demonstrating conceptual understanding or guessing. Accuracy variance becomes a diagnostic metric for MCQ reliability across task types.
+This research advances the evaluation and qualification of \acp{llm} for \ac{se} applications through four primary contributions. Together, these contributions address limitations in existing evaluation practices by emphasizing evaluation modality, robustness, and cost-aware deployment considerations that are central to qualifying models for \ac{se} use. 
 
-\subsection{Extension of SysEngBench with Multi-Format Evaluation Questions} \label{subsec:Contribution_three}
-This work expands the SysEngBench dataset to include both Multiple-Choice Questions (MCQs) and Open-Style Questions (OSQs) for core INCOSE defined concepts. An LLM-in-the-loop pipeline converts MCQs into free-text prompts, creating parallel evaluation paths. This dual-format design enables controlled, apples-to-apples comparisons of how different modalities capture model understanding across the same underlying SE knowledge.
 
-\subsection{Comparative Effectiveness of MCQ and OSQ Evaluation Modalities} \label{subsec:Contribution_four}
-This research assesses the strengths and limitations of MCQ and OSQ formats for different SE task types. It also proposes hybrid strategies—such as combining a distractor-variant MCQ with consensus-scored OSQs to better understand evaluation accuracy. Results could identify modality preferences by task type, informing more effective domain specific benchmark design.
+\subsection{Contribution 1: Extension of SysEngBench with Multi-Format Evaluation Questions}\label{subsec:Contribution_one}
 
-\subsection{Comparative Tokenomics Cost Analysis Between Reasoning and Non-Reasoning Models for Systems Engineering Applications} \label{subsec:Contribution_five}
-This research investigates the computational and economic trade-offs of deploying reasoning-oriented versus standard (non-reasoning) \acp{llm} in systems engineering contexts. By measuring token usage and inference latency across equivalent SysEngBench tasks, the analysis quantifies how reasoning models differ in generation length, step-by-step deliberation, and downstream resource demands. Comparative results reveal how token efficiency and overall cost scale with model reasoning depth, providing evidence for selecting cost-effective evaluation and deployment strategies in systems engineering applications.
+The first contribution is an extension of the SysEngBench benchmark to support paired multiple-choice and open-style question formats. By structuring evaluation items to elicit both recognition-based (MCQ) and generative responses (OSQ) to the same underlying technical concepts, this contribution establishes the foundation for systematically studying how evaluation format influences measured model capability. The resulting benchmark design enables controlled, within-task comparisons across modalities while preserving domain fidelity. 
 
-\subsection{Evidence-Based Guidance for Practical LLM Integration in Systems Engineering Workflows} \label{subsec:Contribution_six}
-This research offers actionable recommendations for applying language models in real-world SE contexts. By identifying which evaluation formats best capture model competence for different types of SE tasks, the study supports reliable AI integration into systems engineering workflows for practicing systems engineers.
+
+\subsection{Contribution 2: Robustness Analysis of MCQ Evaluation Using Distractor Variation for Systems Engineering}\label{subsec:Contribution_two}
+
+The second contribution is the investigation of the robustness of multiple-choice question (MCQ) evaluation as a source of evidence for qualifying LLMs in systems engineering contexts. It seeks to motivate the need to examine how sensitive MCQ performance is to distractor design choices and whether observed accuracy reflects stable understanding. By framing robustness as a measurement property rather than an assumed characteristic of MCQ evaluation, this contribution highlights the potential risks of overconfidence when MCQ results are interpreted without considering their structural dependencies. 
+
+
+\subsection{Contribution 3: Evaluation Modality Fusion as a Basis for Model Qualification and Trustworthy Use in Systems Engineering}\label{subsec:Contribution_three}
+
+The third contribution develops a modality-aware basis for model qualification that aligns evaluation evidence with task characteristics and risk considerations in systems engineering practice. Rather than treating different evaluation formats as interchangeable, it motivates the use of multiple modalities—interpreted jointly—as complementary sources of evidence for assessing model capability.  This contribution frames model qualification as a systems engineering decision problem, in which task criticality, free-text response requirements, and acceptable failure modes inform how evaluation results should be combined to support trustworthy deployment within SE workflows. 
+
+
+\subsection{Contribution 4: Token-Efficient Qualification: Cost-Aware Response Length Trade-offs in High-Performing Models}\label{subsec:Contribution_four}
+
+The fourth contribution is the framing of model evaluation and qualification as a trade-space that extends beyond accuracy to include computational cost and response length. It motivates the need to distinguish between models that perform well in principle and those that do so more efficiently, with equivalent accuracy for less tokens. By introducing token efficiency as a qualification consideration, this contribution establishes cost-aware evaluation as a component of LLM adoption in systems engineering environments, particularly where resource constraints, cost, or scaling considerations are present. 
+
+
+% Traceability for:
+% Problem → Research Questions  →  Objectives  →  Contributions
+
+\begin{table}[htbp]
+\centering
+\caption{Mapping of Research Questions to Objectives and Contributions}
+\label{tab:rq_obj_contrib_mapping}
+
+\small
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.15}
+
+\begin{tabularx}{\linewidth}{p{3.2cm} Y Y p{3.3cm}}
+\toprule
+\textbf{Research Question (RQ)} &
+\textbf{Primary objective(s) that directly answer it} &
+\textbf{Supporting objective(s) (enablers / infrastructure)} &
+\textbf{Contribution(s) most directly produced} \\
+\midrule
+
+\textbf{RQ1:} How robust is MCQ-based evaluation to variations in distractor/option structure in systems engineering, and what risks does this pose when MCQ accuracy is used as primary qualification evidence? &
+(5) Quantify MCQ robustness/sensitivity via statistical tests and effect sizes &
+(1) Curate and version benchmark artifacts, including controlled MCQ variants suitable for robustness studies\newline
+(3) Execute standardized inference across variants\newline
+(7) Synthesize guidance framing robustness implications &
+C2 (Robustness analysis of MCQ evaluation using distractor/option variation) \\
+\midrule
+
+\textbf{RQ2:} How do MCQ and OSQ modalities differ in the type and strength of evidence they provide for qualifying LLMs in systems engineering, and how can evidence from multiple modalities be combined to support task-aligned, risk-aware qualification decisions? &
+(5) Quantify cross-modality evidence patterns and uncertainty\newline
+(7) Synthesize qualification guidance (task-/risk-aligned fusion) &
+(1) Curate and version benchmark artifacts, including paired MCQ/OSQ items suitable for cross-modality comparison\newline
+(2) Generate OSQ grading scaffolds\newline
+(3) Execute standardized inference\newline
+(4) Score OSQ via rubric-based judging and judge stability checks &
+C1 (Multi-format SysEngBench extension)\newline
+C3 (Evaluation modality fusion as qualification basis) \\
+\midrule
+
+\textbf{RQ3:} How do evaluation modality and response length influence the computational cost of qualification, and what trade-offs arise between judged quality and token efficiency? &
+(6) Evaluate token-efficiency and cost trade-offs; extend cost modeling to OSQ evaluation &
+(3) Standardized inference with token/length logging\newline
+(4) Rubric-based judging to produce quality signals &
+C4 (Token-efficient qualification: cost-aware response length trade-offs) \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+
+
+
 
 
 \section{Structure of the Dissertation}\label{sec:structure_dissertation}
@@ -235,12 +243,12 @@ The outline of this dissertation manuscript serves as a road-map of work to be s
 
 Chapter 1 establishes the motivation for the research, defines the problem, articulates the guiding research questions and objectives, outlines the contributions to the \ac{se} body of knowledge, and concludes with how the dissertation is organized.
 
-Chapter 2 surveys the existing literature on benchmarking large language models, describing the current evaluation landscape and methods. It highlights unique challenges in applying these methods to systems engineering, outlines cross-domain strategies, and discusses experimental design and measurement techniques.
+Chapter 2 reviews the literature at the intersection of systems engineering, \ac{mbse}, and \ac{llm} evaluation, reframing benchmarking as a qualification problem. It establishes evaluation modality, robustness, and cost as first-order considerations when LLM outputs inform systems engineering decisions, and identifies the absence of a multi-modality \ac{se} benchmark supporting free-text responses such as \acp{osq}. The chapter derives the conceptual requirements that motivate the empirical meta-evaluation methodology developed in subsequent chapters.
 
 Chapter 3 details the overall research framework, from dataset construction to evaluation procedures and computational methods. It specifies the analytical metrics and methods used to ensure rigorous and reproducible results.
 
-Chapter 4 reports the experimental findings, presenting model performance on both multiple-choice and open-style questions and comparing outcomes across modalities. Statistical analysis and a simple tokenomics analysis of the results is also shared.
+Chapter 4 reports the experimental findings, presenting model performance on both \acp{mcq} and \acp{osq} while comparing outcomes across modalities. Statistical analysis and a tokenomics analysis of the results is also shared.
 
-Chapter 5 interprets the results, drawing implications for benchmarking methodologies and practical applications in systems engineering and \ac{llm} deployment. It addresses the research’s limitations and outlines opportunities for future research.
+Chapter 5 interprets the results, drawing implications for benchmarking methodologies and practical applications in systems engineering and \ac{llm} qualification for practicing systems engineers. It addresses the research limitations and outlines opportunities for future research.
 
-Chapter 6 summarizes the key contributions of this dissertation manuscript and reflects on the broader impact to the Systems Engineering community as a whole. It closes with final thoughts and recommendations for subsequent investigations.
+Chapter 6 summarizes the key contributions of this dissertation manuscript and reflects on the broader impact to the Systems Engineering community. It closes with final thoughts and recommendations for subsequent investigations.
