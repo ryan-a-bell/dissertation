@@ -1,14 +1,53 @@
 \chapter{Conclusion}\label{ch:conclusion}
 
+This dissertation began with a gap in how \acp{llm} are evaluated for \ac{se} use: most evaluation practice relies heavily on multiple-choice benchmarking, which is scalable and easy to score but can overstate readiness for tasks that require models to generate free text formats. Open-style evaluation can probe the generative capability more directly, yet it introduces practical challenges in dataset construction, scoring protocols like LLM-as-a-judge, and computational cost.
+
+The research performed re-frames benchmarking as a qualification problem by treating \acp{mcq} and \acp{osq} as complementary sources of evidence rather functional equivalents. It extends SysEngBench into a paired, multi-format evaluation instrument and analyzes robustness under \ac{mcq} structural perturbations, cross-modality evidence patterns, and token-efficiency trade-offs through a reproducible pipeline spanning dataset engineering, standardized inference, rubric-based scoring, and statistical analysis.
+
+
 \section{Summary of Contributions}\label{sec:summary_contributions}
 
-Cosnider addressing ocntributions int he same order as those presented in Chapter 1 for contributions.
+Chapter~\ref{sec:research_contributions} defined four contributions. This chapter summarizes those contributions in the same order, emphasizing what was delivered and why each contribution matters.
 
-\section{Final Thoughts}\label{sec:final_thoughts}
+\subsection{Extension of SysEngBench with Multi-Format Evaluation Questions}\label{subsec:ch6_contrib1}
+
+This dissertation extended SysEngBench beyond a single-format MCQ benchmark by introducing both controlled MCQ variants and \acp{osq} derived from the same underlying systems engineering knowledge targets. Rather than treating each format as an independent dataset, the benchmark was structured to preserve semantic alignment across formats, enabling paired and comparative evaluation of model behavior under differing response constraints.
+
+The inclusion of \ac{mcq} variants supports robustness analysis by revealing sensitivity to golden answer perturbation and distractor structure to detect variability in model stability, while the addition of \acp{osq} enables evaluation of generative quality and depth. This multi-format design provides a more comprehensive evaluation instrument for different failure modes and has been explored in other domains \cite{lin_TruthfulQAMeasuringHow_2022, lin_SylinrlTruthfulQA_2026, agrawal_VQAVisualQuestion_2016, zhang_DevelopmentLargescaleMedical_2024}.
+
+\subsection{Robustness Analysis of MCQ Evaluation Using Distractor Variation for Systems Engineering}\label{subsec:ch6_contrib2}
+
+Building on the community, open source MCQ-only benchmarking foundations of SysEngBench \cite{bell_IntroducingSysEngBenchNovel_2024, Bell2025SysEngBench}, this work incorporated robustness-oriented diagnostics that treat MCQ reliability as a measurable property. By examining how outcomes behave under MCQ structural variation with distractor position variations, the benchmark can be used as an instrument capable of identifying evaluation artifacts that can mislead practitioners into overconfident employment of language models.
+
+\subsection{Evaluation Modality Fusion as a Basis for Model Qualification and Trustworthy Use in Systems Engineering}\label{subsec:ch6_contrib3}
+
+This dissertation introduced the concept of treating MCQ and OSQ as complementary sources of evaluation evidence for model qualification in systems engineering. Because the two modalities impose different response constraints, they do not measure identical capabilities: each can reveal limitations that the other can obscure, surfacing different limitations even when the questions are semantically aligned. Accordingly, the goal is not to declare one modality "better," but to interpret them jointly as evidence for model qualification.
+
+Empirically within this trade space, MCQ evaluation is well-suited to rapid, scalable screening and robustness-oriented diagnostics (e.g., sensitivity to distractor structure and answer-position perturbations) to stability/robustness diagnostics under structural perturbations, providing an efficient signal of broad coverage and response stability under constrained response selection. OSQ evaluation by contrast is systematically more challenging under the same underlying knowledge targets because it requires generating an adequate free-text response, which has been proven empirically and with statistical significance \ref{fig:mcq-vs-osq-mean-score}.  
+
+Practically, this supports a fused qualification approach: use MCQ as a fast, lower-cost by token count check for baseline knowledge and stability, and reserve OSQ as a longer, more demanding assessment when higher confidence in generative depth is required. Table~\ref{tab:task_modality_guidance} provides notional guidance for choosing and combining modalities by task context under this evidence-fusion perspective.
 
 
-\chapter*{Acknowledgments}\label{ch:execution_plan}
-\addcontentsline{toc}{chapter}{Acknowledgments}
+\subsection{Token-Efficient Qualification: Cost-Aware Response Length Trade-offs in High-Performing Models}\label{subsec:ch6_contrib4}
+
+This dissertation evaluated response length behavior as a cost factor and analyzed the quality--token trade space among models that achieved high OSQ performance under LLM-as-judge scoring. Across the evaluated models, response lengths varied substantially from fewer than 20 tokens to a design-limited 500 tokens, where more verbose responses did not consistently correspond to higher judged scores. This motivates a two-stage qualification perspective in which models are: 1) filtered first for acceptable OSQ performance (e.g., at or above a "Good" or "Pass" threshold), and then 2) compared on efficiency within that qualified set. 
+
+Under the assumption of comparable comparable mean judge score, the most cost-effective models are those that achieve the target quality level using fewer median tokens per response. This trade-off is explicitly visualized in \ref{fig:pareto_quality_vs_token_usage}, which highlights the efficient frontier between judged performance and token usage. Practically, this enables a cost-aware selection rule: \emph{select the lowest-token model among those meeting the required quality threshold}. Overall, the findings reinforce that verbosity is not equivalent to quality, and that benchmark-qualified deployment decisions should jointly consider judged performance and token efficiency. This cost-aware framing supports practical governance: it enables selecting "good copilots" for SE tasks that meet accuracy or quality requirements while minimizing avoidable cost and human review load.
+
+
+\section{Closing Thoughts}\label{sec:final_thoughts}
+
+This dissertation supports a central conclusion: MCQ and OSQ modalities should be used together to make defensible model qualification choices for systems engineering. A statistically significant difference was observed between the two modalities, indicating that MCQ and OSQ formats are not interchangeable when accounting for a cost-efficient trade space dimension, despite strong rank-order alignment. In other words, while relative model rankings can remain consistent across formats, absolute performance differs substantially, with OSQ imposing a meaningfully higher performance bar. Treating one modality as a substitute for the other risks either overestimating competence (e.g. when MCQ performance is taken as sufficient evidence) or under-utilizing efficient screening signals (e.g. when OSQ is treated as the only credible instrument). Mixed-modality evaluation provides the stronger basis for interpreting capability and anticipating failure modes that matter for SE work products.
+
+As SysML v2 enables \ac{mbse} models to become increasingly text-addressable and repository-managed, \ac{se} work is shifting toward an \ac{ide}-centered workflow in which architecture artifacts can be searched, diffed, tested, and refactored like other software-engineered assets. This shift preserves the foundations of systems thinking and trade-space reasoning, but elevates the importance of coding fluency, automation, and version-controlled engineering across the digital thread. The next-generation systems engineer therefore increasingly resembles a hybrid SE and software practitioner: combining architectural judgment with the tool chain competence required to scale change under configuration control.
+
+This transition is unfolding amid accelerating operational tempos and rising system-of-systems complexity. Under these conditions, the ability to iterate quickly by exploring alternatives, refactoring architectures, and validating consequences moves from a productivity advantage to an operational necessity. Agents and copilots can help compress iteration cycles and reduce friction in routine engineering work, but only when embedded in workflows that preserve systems engineering discipline and make verification and validation integral to the loop.
+
+Embedding AI tools such as language models into the digital thread and digital twin is therefore inherently a high-risk and high-reward proposition. When governed well, such integration can enable rapid iteration with richer context and the ability to traverse the digital thread with unprecedented efficiency.. When governed poorly, accessibility and speed without trustworthy oversight enables rapid corruption of the \ac{asot}. This dissertation was motivated by enabling the former outcome: empowering systems engineers to architect at the pace of relevancy by using benchmark-qualified copilots within workflows that emphasize governance and accountable human oversight.
+
+
+\chapter*{Disclosure}\label{ch:disclosure}
+\addcontentsline{toc}{chapter}{Disclosure}
 % \section*{Acknowledgments}\label{sec:acknowledgments}
 
-This work has benefited from the use of generative AI tools, including ChatGPT, Claude, and SciSpace, for brainstorming, writing assistance, and code development \cite{openai_openai_2025, anthropic_ai_anthropic_2025, scispace_scispace_2025}. These tools were employed to enhance conceptual clarity, improve code efficiency, and support literature synthesis. All AI-generated outputs were critically reviewed, refined, and validated to ensure accuracy and alignment with academic integrity. Their contributions were limited to supporting the research process, and final responsibility for the content, analysis, and conclusions remains with the author.
+This work has benefited from the use of generative AI tools, including ChatGPT, Claude, and SciSpace, for brainstorming, writing assistance, and code development \cite{openai_OpenAI_2025, anthropicai_AnthropicHome_2025, scispace_SciSpace_2025}. These tools were employed to enhance conceptual clarity, improve code efficiency, and support literature synthesis. All AI-generated outputs were critically reviewed, refined, and validated to ensure accuracy and alignment with academic integrity. Their contributions were limited to supporting the research process, and final responsibility for the content, analysis, and conclusions remains with the author.

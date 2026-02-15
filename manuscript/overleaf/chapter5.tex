@@ -1,78 +1,332 @@
 \chapter{Discussion}\label{ch:discussion}
 
+This chapter interprets the results presented in Chapter \ref{ch:results} through the lens established in Chapter \ref{ch:introduction}: the need for trustworthy and cost-aware use of \acp{llm} in \ac{se}, and the role of benchmarking as a prerequisite for reliable adoption. The discussion is organized into four parts. 
+
+First, it interprets the empirical findings across evaluation modalities and token usage behavior. Second, it translates those findings into implications for benchmarking methodology, including task-modality alignment and evaluation robustness. Third, it derives practical guidance for deploying LLMs in SE workflows. Finally, it identifies key limitations and outlines future directions for extending this work.
+
+
 \section{Interpretation of Findings}\label{sec:interpretation_findings}
 
-What this implies:
-- MCQ and OSQ measure related but not interchangeable capabilities
-- OSQ may impose systematic additional cognitive load
-- Scores may need calibration before being compared or mixed
-- Using MCQ as a proxy for OSQ may bias conclusions
+\subsection{Interpreting MCQ to OSQ Conversion Suitability and Filtering Outcomes}
 
-“A statistically significant and practically large difference was observed, indicating that MCQ and OSQ formats are not interchangeable, despite strong rank-order alignment.”
+A central enabling step of this research is the transformation of \acp{mcq} into \acp{osq} while preserving semantic intent and domain relevance. The suitability score distribution reported in Chapter \ref{ch:results} indicates that conversion feasibility is not uniform across the source dataset. The observed split---with a substantial majority of questions meeting the inclusion threshold for OSQ conversion (845 questions, 73.9\%) and a non-trivial minority rejected (299 questions, 26.1\%), shown in Figure \ref{fig:mcq-to-osq}.
 
-Executive summary version:
-“While model rankings are consistent across formats, absolute performance differs substantially, with OSQ imposing a significantly higher performance bar.”
+The acceptance rate suggests that domain-specific SE MCQs can be re-expressed in a textual-response form without fundamentally altering what is being tested. This supports the premise that existing benchmark assets can be expanded to richer modalities rather than rebuilt from scratch. Second, the rejected portion is not merely incidental noise; it represents structural boundaries of conversion. The rejected items include questions whose multiple-choice framing provides essential scaffolding (e.g., ambiguity resolved only by options, or questions whose discriminative power is primarily in the distractors).
+
+
+\subsection{Interpreting MCQ Positional Effects and Robustness Metrics}
+
+Position effects arise from an interaction between the model and the MCQ presentation, and can therefore be interpreted as (a) a measurement artifact, (b) a behavioral bias of the model, or (c) a combination of both.
+
+Accordingly, the MCQ results provide two complementary forms of evidence:
+\begin{enumerate}[label=(\roman*)]
+    \item Outcome performance signals reflected in accuracy differences across models.
+    \item Robustness signals reflected in sensitivity to controlled perturbations of the MCQ form (e.g., answer position and distractor configuration).
+\end{enumerate}
+
+The observed spread in MCQ accuracy across models (approximately 0.56 to 0.97) indicates that the dataset meaningfully separates capability levels under the evaluated prompt constraints. This supports the use of MCQs as an efficient instrument for broad capability stratification and regression testing.
+
+However, the positional analysis motivates a more careful interpretation of what MCQ accuracy measures. If performance varies systematically with answer position or option ordering, the evaluation may partially reflect sensitivity to presentation cues rather than only domain understanding. From a benchmarking perspective, this constitutes a threat to comparability unless controlled (e.g., by randomization and variance reporting). From a model-behavior perspective, it provides a diagnostic of brittleness: models that exhibit stronger position sensitivity may be more prone to superficial heuristics that can inflate confidence in settings where the answer is not anchored by deep reasoning. This concern aligns with the trustworthiness framing in Chapter \ref{ch:introduction}, where deployment risk is driven not only by average accuracy but also by failure modes and robustness under small input changes.
+
+Finally, \acp{mcq} trade expressiveness for efficiency. They can reward recognition and eliminate the need to articulate rationale, which is appropriate for certain SE knowledge checks (definitions, process relationships, categorical mappings). 
+
+\subsection{Interpreting OSQ Performance}
+
+The OSQ results introduce a different measurement regime: models must generate content, and scoring reflects rubric-based quality rather than discrete option selection. This shift inherently changes what "success" represents. A correct OSQ response can encode partial correctness, incomplete reasoning, or correct conclusions with weak justification, depending on rubric design and judging fidelity.
+
+One important interpretive point is that OSQ scoring captures dimensions of response quality that MCQs cannot: explanatory coherence, appropriate use of SE terminology, structured reasoning, and completeness. This aligns with the motivation in Chapter \ref{ch:introduction} that textual response formats can better capture nuanced conceptual understanding for SE tasks. The discussion value of OSQs is therefore not only in ranking models, but in revealing \emph{how} they fail: omissions, shallow explanations, misapplied concepts, or fluent but incorrect reasoning.
+
+At the same time, OSQs introduce measurement complexity. The use of kernel density estimates and the observed behavior of the density tails (an artifact of Gaussian kernels extending beyond the bounded scoring range) highlights a practical interpretive caution: OSQ score visualizations are summaries of bounded rubric outcomes, and the evaluation pipeline must ensure that interpretive claims remain grounded in the rubric domain. In other words, OSQ scoring is more expressive, but also more sensitive to judge calibration, rubric specificity, and the distributional properties of the scoring procedure.
+
+
+\subsection{Interpreting the Evaluation Modality Relationship Between MCQ and OSQ }
+
+agreement, divergence, and what it means
+
+The comparative analysis between MCQ accuracy and OSQ mean judge score provides evidence that the two modalities are related but not equivalent. The reported regression relationship (with $R^2 = 0.671$) indicates substantial shared variance, suggesting that models that perform well in MCQ tend to also perform well in OSQ, to a meaningful degree. This supports a practical interpretation: MCQ performance can serve as a coarse indicator of domain competence.
+
+However, the fact that the relationship is not near-deterministic is equally important. Divergence between MCQ and OSQ outcomes is expected given the different cognitive demands of selection versus generation. A model may select correct answers reliably yet provide weak explanations, or conversely generate high-quality reasoning while occasionally failing brittle multiple-choice traps. In SE applications, these differences map to distinct risks. Selection-style correctness is valuable for quick checks, but generation-style competence is critical for tasks like requirements rationale, trade-space explanation, and architectural justification.
+
+Therefore, the key interpretation is that MCQs and OSQs should be viewed as complementary instruments rather than interchangeable metrics. This directly motivates the multi-format benchmark direction laid out in Chapter \ref{ch:introduction}: a robust SE benchmark should intentionally combine modalities to measure distinct aspects of SE-relevant competence.
+
+
+\subsection{Interpreting Tokenomics Factors of Quality and Verbosity}
+
+The token distribution analysis shows that response lengths vary widely across models, from fewer than 20 tokens to more than 500 tokens for the same posed question. This provides a concrete interpretive anchor for cost-aware deployment: response verbosity is a resource consumption behavior that differs systematically across models.
+
+The length-versus-quality analysis suggests that longer responses do not guarantee higher quality, and that quality differences persist even when controlling response length bins. This supports a core deployment interpretation: operators cannot assume that ``more tokens'' is equivalent to ``more correctness'' or ``better reasoning.'' In SE contexts where outputs may feed downstream decisions, verbosity without accuracy can: (i) provide a false sense of confidence, (ii) increase review burden, and (iii) propagate into downstream artifacts all the while preserving - if not increasing - risk.
+
+The Pareto-style frontier visualization frames a the efficiency trade space: some models achieve relatively high judged quality at moderate token usage, while others consume more tokens for comparable or lower quality. This implies that benchmark results should not only rank models by quality, but characterize efficiency regimes that inform model selection under budget constraints.
+
+
 
 \section{Implications for Benchmarking Methodologies}\label{sec:implications_benchmarking}
 
+\subsection{Implications for Task–Modality Alignment and Systems Engineering Benchmarks}
+Form chapter 1 framing
+
+A primary methodological implication of this work is that benchmark validity depends on matching task type to response modality. Chapter \ref{ch:introduction} motivates this as a structured alignment problem: different SE tasks demand different evidence of competence. The Chapter \ref{ch:results} results reinforce that modality changes the measurement target. MCQs emphasize discriminative recognition, while OSQs emphasize generative reasoning and explanation quality inferred from the grading categories of technical accuracy, conceptual understanding, completeness, clarity and organization, and professional relevance.
+
+
+The implication is that Systems Engineers and benchmark designers should treat modality as a first-class design decision. For concepts where the intended competence is selection among alternatives (e.g., identifying correct process steps, definitions, or categorical mappings), MCQs remain appropriate and efficient. For tasks where competence is demonstrated through justification, decomposition, or trade reasoning, OSQs provide stronger validity. 
+
+
+In 15288 terms, MCQs are best aligned to measuring \textit{process literacy}—recognition of process intent, artifact mappings, and rule-based distinctions—because competence is naturally expressed as selection among alternatives and can be assessed with high reliability controls. OSQs are best aligned to measuring \textit{process execution competence}—requirements formulation, architecture and trade justification, risk rationale, and V\&V planning—because these outcomes require constructing artifacts and defensible reasoning in context. A mixed-modality benchmark therefore improves coverage across the 15288 process space by pairing efficient breadth assessment (MCQ) with high-validity depth assessment (OSQ), reducing the risk that evaluation overfits to a single response format and better represents the heterogeneous nature of SE work.
+
+
+\subsection{Implications for MCQ Robustness and Reliability Checks}
+
+( NEED TO ADD REFS/CITATIONS )
+The observed sensitivity patterns in MCQ evaluation motivate robustness practices that are uncommon in many benchmark reports. If performance varies with option ordering or distractor characteristics, then a single-form MCQ score may be an unstable and unreliable estimate of competence.
+
+A methodological implication is that MCQ benchmarks in specialized domains should incorporate reliability checks such as:
+(1) randomized answer position across evaluation runs,
+(2) controlled distractor variants that probe whether models rely on superficial cues,
+and (3) reporting of per-position performance rather than only aggregate accuracy.
+These practices reduce the risk that benchmark results overstate model capability due to format artifacts.
+
+
+\subsection{Implications for OSQ Evaluation and Judge Design  }
+
+OSQ evaluation requires methodological discipline to remain comparable and reproducible. Rubrics should be explicit about what dimensions of quality are being measured (technical correctness, completeness, justification quality, terminology, etc.).
+
+Because OSQ scoring often depends on automated judging, the benchmark methodology should treat the judge as part of the measurement instrument. This implies reporting judge configuration, rubric prompts, and any additional system or user prompts. Even while absolute judge reliability is imperfect, transparency allows the community to interpret scores appropriately and to compare results across studies.
+
+Mention the inter-rater scores for judge model selection.
+
+
+\subsection{Implications for Reporting Standards }
+
+A final methodological implication is that benchmarks intended to support trustworthy adoption should aim to include cross modality performance, robustness and resilience to question variance, and cost efficiency reporting rather than single modality accuracy-only comparisons on leader boards. In practice, this can be achieved by augmenting aggregate rankings with (i) modality-separated outcomes, (ii) a small robustness check where the format can introduce variants, and (iii) efficiency characterization through token distributions and quality--token trade-offs. The purpose of these additions is not to establish a new standard or replace leader boards, but to reduce ambiguity about what a score represents when results are used for procurement, workflow integration, or governance in SE contexts.
+
+
 \section{Practical Applications for Systems Engineering and Insights for LLM Deployment}\label{sec:practical_applications}
+
+\subsection{Model selection Guidance by Task Type and Risk Posture}
+
+From a practical standpoint, the results suggest that model selection should be guided not only by average benchmark performance, but by how well a model's measured strengths align with the target task's evidence requirements and acceptable risk posture.
+
+The table below distinguishes between (i) the \textit{recommended qualification modality}—the minimum evaluation evidence that should be satisfied before deploying a model for a task class—and (ii) \textit{modality fit}, which characterizes how well MCQ- or OSQ-style benchmarking captures the competence required for that task. Modality fit is expressed qualitatively to emphasize that benchmarking is not a binary choice: modalities provide overlapping but non-identical measurement coverage. 
+
+%%% BELOW DISCUSSES THE HIGH/MEDIUM/LOW SCORINGS. NEED TO ANCHOR THIS.
+Guidance is derived by identifying evaluation bundles appropriate to task criticality:
+
+\begin{itemize}
+    \item \textbf{Low-risk tasks:} MCQ-heavy screening plus targeted OSQ spot checks.
+    \item \textbf{Moderate-risk tasks:} paired MCQ and OSQ evaluation on aligned subsets, with OSQ emphasized for tasks requiring explanation and rationale.
+    \item \textbf{High-risk tasks:} OSQ-focused evaluation with explicit judge stability checks and robustness gating of any MCQ-derived signals.
+\end{itemize}
+%%%%%%%%%%%%%%%%
+
+
+This aligns with the Chapter 1 emphasis on trustworthy usage: deployment choices should be made with explicit awareness of failure modes and measurement limitations rather than relying on general-purpose claims about capability.
+
+
+\begin{table}[htbp]
+\centering
+\caption{Notional task classes and modality guidance for benchmark-informed deployment.}
+\label{tab:task_modality_guidance}
+\resizebox{\linewidth}{!}{%
+\begin{tabular}{p{0.7cm} p{4.0cm} p{2.2cm} p{4.2cm} p{1.5cm} p{1.5cm} p{5.6cm}}
+\toprule
+\textbf{\#} &
+\textbf{Task class (SE use)} &
+\textbf{Risk posture} &
+\textbf{Recommended qualification modality} &
+\textbf{MCQ fit} &
+\textbf{OSQ fit} &
+\textbf{Rationale / Guidance} \\
+\midrule
+
+1 &
+\makecell[l]{Ideation \& coverage expansion\\(e.g., brainstorm risks/hazards,\\mitigations, questions to ask)} &
+Low &
+\makecell[l]{MCQ sufficient\\(OSQ optional)} &
+High &
+Medium &
+Primary value is breadth and prompting human review. MCQ captures baseline domain recognition; OSQ can improve clarity and usefulness but is not required to qualify. \\
+
+\addlinespace
+2 &
+\makecell[l]{Compression \& translation\\(summaries, rewrites,\\structured briefings)} &
+Low--Medium &
+\makecell[l]{OSQ preferred\\(MCQ optional)} &
+Low &
+High &
+These tasks are inherently generative and fidelity-sensitive; OSQ better reflects coherence and completeness of the produced artifact. \\
+
+\addlinespace
+3 &
+\makecell[l]{Classification \& mapping\\(taxonomy mapping,\\requirement tagging,\\process-to-standard alignment)} &
+Medium &
+MCQ + OSQ &
+High &
+High &
+MCQ validates categorical recognition; OSQ validates rationale and reduces risk of ``lucky selection'' or shallow pattern matching. \\
+
+\addlinespace
+4 &
+\makecell[l]{Technical interpretation \& justification\\(requirements interpretation,\\constraints/edge cases,\\V\&V rationale)} &
+High &
+\makecell[l]{OSQ required\\(MCQ for spot checks)} &
+Medium &
+High &
+High-stakes reasoning requires explicit justification; OSQ surfaces reasoning quality. MCQ can be used as targeted robustness probes but should not be the qualifier alone. \\
+
+\addlinespace
+5 &
+\makecell[l]{Decision support under consequence\\(trade studies, architecture\\implications, safety/mission-\\critical recommendations)} &
+Very High &
+\makecell[l]{OSQ + robustness controls\\+ human review} &
+\makecell[c]{Low--\\Medium} &
+High &
+High-impact tasks require traceability and conservative governance. OSQ is necessary but remains insufficient without workflow controls and escalation rules. \\
+
+\bottomrule
+\end{tabular}
+}
+\vspace{0.5em}
+\footnotesize
+\textit{Notes.} \textbf{Recommended qualification modality} indicates the minimum evaluation evidence that should be satisfied before deploying a model for the task class. \textbf{Modality fit} is a qualitative indicator of how well MCQ- or OSQ-style benchmarking captures the competence required for the task (\textit{High} = direct measure, \textit{Medium} = partial proxy, \textit{Low} = weak proxy). In practice, high-risk uses should additionally employ workflow-level controls (e.g., human review, audit logging, escalation rules), regardless of benchmark performance.
+\end{table}
+
+\clearpage
+
+
+
+\subsection{Benchmark-Informed SE Workflow Integration}
+
+
+
+Benchmark results provide the evidence needed to confidently integrate LLM copilots into agentic workflows safely: models are assigned to tasks they are measured to perform well, outputs are constrained into reviewable changes, and automated validation gates reduce the likelihood that incorrect generation propagates into the model. 
+
+A practical implication of the results is that benchmark evidence can be used to design \emph{how} LLMs are integrated into systems engineering workflows, rather than treating an LLM as a general-purpose assistant with uniform reliability. This is especially relevant in \ac{mbse}. 
+
+Benchmark results do not merely rank models; they inform workflow roles, guardrails, and oversight practices that make copilot use auditable and dependable in an engineering context.
+
+
+Below needs to be about how we may use different models for different tasking or different models with augmentations (vector databases or fine tuning) to provide the necessary capability for the task at hand.
+
+The Chapter~\ref{ch:results} findings indicate that performance varies by evaluation modality and that response behavior (including verbosity and variability) differs across models. This motivates treating copilot selection as a role assignment problem. In practice, a benchmark-informed workflow assigns models to tasks aligned with demonstrated strengths. For example, models that perform consistently on structured selection-style evaluations can be used for fast conformance checks, taxonomy mapping, and structured validation prompts, while models that score strongly on open-response evaluation can be used for drafting rationale, explanations, and structured narrative artifacts. Conversely, models exhibiting unfavorable quality--token trade-offs or high variability may be restricted to low-risk tasks, short-form assistance, or preliminary drafts to reduce review burden and operational cost.
+
+This role assignment perspective supports the Chapter 1 motivation for evidence-based adoption: instead of asking whether a model is ``good'' in general, the workflow asks whether a model is suitable for a specific role under defined constraints and oversight.
+
+
+
+
+
+\subsection{Budgeting and Token Constraints}
+
+The tokenomics results translate directly into deployment policy. Since verbosity varies widely across models, organizations can manage cost and review burden by enforcing response budgets and adopting structured prompting patterns. Examples include:
+(i) requesting bounded-length responses with required sections,
+(ii) using iterative refinement (short first-pass, expanded only when needed),
+and (iii) separating reasoning generation from final answer formatting.
+
+Crucially, the length-versus-quality findings indicate that token limits do not automatically degrade quality if prompts are designed to elicit concise but complete reasoning. This supports the Chapter 1 motivation that cost-aware adoption is feasible when guided by evidence rather than assumption.
+
 
 
 \section{Limitations and Future Work}\label{sec:limits_and_future_work}
 
-Highlight the importance of conceptual reasoning and Bloom’s taxonomy for deeper LLM evaluation with the new reasoning models
+This section discusses the limitations of the research and outlines future research directions. Limitations are organized along the following dimensions: scope, dataset construction, execution constraints, model behavior, and evaluation reliability. Future work synthesizes research findings with limitations into a forward-looking, benchmark-informed systems engineering workflow.
 
-Filtered/Omitted Results
-add in a figure on how many were tossed and by which section. (e.g. the thinking models b/c of their responses... Can pull from the repo to show some outputs -- pick the deepseek ones, they show it easily!)
+\subsection{Scope and Temporal Constraints}
 
-Ones not included:
+This dissertation is scoped to evaluate \acp{llm} for systems engineering tasks through comparative \ac{mcq} and \ac{osq} benchmarking, including hybrid approaches and tokenomics analysis. The work is anchored in foundational systems engineering concepts drawn from the INCOSE Handbook and related activities such as requirements analysis, conceptual design, risk management, and \ac{mbse}. The overarching goal is to make SysEngBench a community-driven, extensible benchmarking resource for systems engineering, supplying a methodological template for both its ongoing development and for those creating private or derivative benchmarks.
+
+The research is deliberately bounded in both concept and method. It examines model performance and evaluation modalities with benchmark modalities are confined to \ac{mcq} and \ac{osq} formats and their hybrid combinations; multi-modal inputs and agentic workflows remain outside the present scope. From a data perspective, SysEngBench relies available systems engineering sources and does not incorporate proprietary industrial or government datasets. Temporally, the evaluation reflects the 2024 to late-2025 \ac{llm} landscape, recognizing that future models may shift absolute performance while leaving the analytical framework relevant.
+
+\subsection{Dataset and Taxonomy Limitations}
+
+Several dataset and taxonomy limitations motivate future extensions to SysEngBench and the evaluation of \ac{ai} models for Systems Engineers.
+
+\subsubsection{Lack of Difficulty and Cognitive Depth Annotation}
+
+SysEngBench lacks explicit annotations for question difficulty (e.g., easy, medium, hard) and for cognitive depth, such as Bloom's taxonomy \cite{blooms_taxonomy_1956}. This gap was partially addressed in the MCQ-to-OSQ conversion prompt (\ref{app:converter_prompt_template}) to preserve data for future work; however, this coverage applies only to converted items. MCQs that were not converted were neither labeled nor human reviewed.
+
+As a result, the benchmark cannot report performance conditioned on difficulty strata, nor can it isolate whether observed performance differences are driven by genuine capability variation or by uneven mixtures of question difficulty across categories. Without difficulty or cognitive depth labels, SysEngBench may under-characterize where models provide meaningful systems engineering value.
+
+Prior work has demonstrated the value of structuring evaluation benchmarks by Bloom levels for deeper model assessment \cite{Liangtai_Sun_2023_SciEval_Benchmark}. Extending SysEngBench to include Bloom-level labeling would enable more diagnostic analyses, such as distinguishing recognition-dominated MCQ performance from OSQ responses that reflect deeper reasoning and synthesis.
+
+\subsubsection{Category Imbalance and Coverage Skew}
+
+Category representation remains uneven across the benchmark. Some systems engineering concept categories contain substantially more items than others, which can bias aggregate conclusions toward heavily represented topics. This imbalance is particularly consequential when categories differ in inherent difficulty. Future SysEngBench releases should expand sparse categories and publish per-category performance summaries to reduce the risk of overgeneralization from aggregate results.
+
+\subsection{Evaluation and Execution Constraints}
+
+Several limitations arose from practical considerations during model execution rather than from the benchmark design itself.
+
+\subsubsection{Token Budget Constraints}
+
+The initial evaluation configuration enforced a maximum response length of 2000 tokens. Under this constraint, several thinking-oriented models frequently exhausted the token budget before producing a final response suitable for scoring. To distinguish truncation artifacts from genuinely non-terminating behavior, the maximum response budget was increased to 10,000 tokens for a targeted subset of models exhibiting repeated truncations or incomplete outputs.
+
+Despite this adjustment, some models continued to produce operationally unusable outputs, such as indefinite generation or prolonged internal reasoning without a terminal answer. Models that consistently provided these outputs were omitted from quantitative analyses to preserve comparability and to avoid scoring artifacts driven by incomplete responses rather than task competence.
+
+\subsubsection{Inference Timeouts and Service Reliability}
+
+A small number of evaluation responses within less than 4 runs experienced timeouts that were attributable to operational conditions rather than to specific model behaviors. These timeouts are attributed to high concurrency (multi-threaded execution with a large number of simultaneous requests) or due to inference-service-level effects in OpenRouter (e.g., transient throttling, queuing, or upstream routing latency) during peak load. Fewer than 27 such occurrences were observed across all models and they were clustered during high-parallelism intervals. Timeout responses were deterministically re-run with temperature set to zero and completed successfully, indicating that the failures were transient execution artifacts rather than systematic model limitations.
+
+\subsubsection{Idempotence and Deterministic Re-Execution}
+
+The evaluation pipeline and associated code were designed to be idempotent. Aside from transient networking failures, repeated executions under identical configurations yielded consistent results. This supports the reproducibility of reported findings and isolates observed variability to model behavior rather than to execution nondeterminism.
+
+\subsection{Model Behavior and Reasoning Control Limitations}
+
+\subsubsection{Thinking-Model Failure Modes}
+
+A subset of model runs were omitted due to response-format incompatibilities or pathological generation behaviors. Although the \ac{mcq} and \ac{osq} pipelines were designed to support broad model coverage, the empirical results reflect only those models whose outputs could be parsed and scored reliably under the study conditions. This introduces a selection effect favoring models that both produce responses within expected structural bounds and remain stable under the prompting and token limits used.
+
+For models that expose explicit reasoning traces, internal "thinking" content counted toward the response token budget. In cases where a model remained in a reasoning phase without emitting a final answer, no scorable output was produced, resulting in low or null scores. These behaviors were initially observed when running a test batch of fewer than 50 evaluation items per affected model, where reliability in producing bounded, terminal responses remained insufficient despite attempts at mitigation.
+
+\subsubsection{Incompatibilities with Reasoning Control Flags}
+
+Additional limitations arose from heterogeneous support for reasoning-control parameters across inference stacks, particularly when running models with Ollama. Attempts to suppress or hide reasoning traces varied across model choices, including Phi-4, including:
+
 \begin{itemize}
-    \item 4.1 was OK
-    \item 2.5 flash was OK
-    \item 5.1gpt  maybe -- wanted to think
-    \item gpt5 -- wanted to think
-    \item sonnet 4.5 OK
-    \item gpt-4o OK
-    \item gemini 2.5 pro -- wanted to think
+    \item \textbf{Standard settings:} models emitting reasoning prior to final answers broke naive MCQ parsing by introducing early option tokens during explanation.
+    \item \textbf{\texttt{think=false}:} some models continued to emit reasoning traces, indicating incomplete compatibility with inference controls.
+    \item \textbf{\texttt{hidethinking=true}:} suppressing reasoning traces sometimes resulted in empty-string outputs that were not scorable if response went over the token limit.
 \end{itemize}
 
-original was 2000 tokens. Hit limits on some thinking models so upped it to 10000 and only had the models that were in "indefinite loops" unable to respond.
 
-%%%% section was previously near the intro. Mold it into whatever i want it to be.
-This study was scoped to evaluate large language models (LLMs) for systems engineering tasks through comparative \ac{mcq} and \ac{osq} benchmarking, including hybrid approaches and tokenomics analysis. The work is anchored in foundational systems engineering concepts drawn from the INCOSE Handbook and related activities such as requirements analysis, conceptual design, risk management, and model-based systems engineering. The overarching goal is to make SysEngBench the definitive benchmarking resource for systems engineering, supplying a methodological template for both its ongoing development and for those creating private or derivative benchmarks, and to guide LLM integration into SE workflows.
+\subsubsection{Selection Effects Introduced by Model Filtering}
 
-The research is deliberately bounded in both concept and method. It examines model performance and evaluation modalities rather than downstream system builds, hardware prototyping, or full lifecycle automation. The analysis focuses on frontier and small LLMs. Benchmarks are confined to MCQ and OSQ formats and their hybrid combinations; interactive dialogues, multimodal, or agentic inputs remain outside the present scope. From a data and temporal perspective, the study relies on SysEngBench content drawn from publicly available systems engineering sources and does not incorporate proprietary industrial datasets. The technology snapshot reflects the 2024 – late-2025 LLM landscape, recognizing that future models may shift absolute performance while leaving the analytical framework relevant.
+The decision was made to exclude open-source thinking models hosted in environments where reasoning could not be reliably controlled or parsed. The focus of this dissertation is meta-evaluation methodology for systems engineering benchmarks rather than benchmarking reasoning trace behavior itself.
 
-Several limitations qualify the findings. Automated scoring of \acp{osq} combines algorithmic metrics with language model as a judge, introducing some subjectivity. Tokenomics analysis focuses on token counts and inference latency to highlight cost-modeling trade-offs, rather than offering a full economic forecast such as dollars per million tokens, especially as inference costs continue to compress with large-scale adoption. In terms of generalizability, the conclusions are most applicable to systems engineering and may not fully extend to highly specialized engineering subfields or non-engineering disciplines. Finally, SysEngBench is designed for extensibility, and thus this dissertation documents only its initial large-scale iteration; subsequent updates will be needed to capture future advances in \ac{llm} capabilities.
+Reasoning-capable proprietary API models (e.g., GPT-5) typically withhold raw chain-of-thought by default, exposing only final answers and, optionally, reasoning summaries \cite{openai_ReasoningModels_2025}. This reduces exposure to leakage-style failure modes (e.g., revealing unsafe intermediate deliberation) and encouraged treating deliberation as non-observable across evaluated systems.
 
-\subsubsection{Non-thinking Models}
 
-\begin{itemize}
-    \item Running models in Ollama with
-    \begin{itemize}
-        \item Standard model settings
-        \begin{itemize}
-            \item Thinking models can think; other models that do not require thinking do not think.
-            \item Outputs were either:
-            \begin{itemize}
-                \item Standard REGEX parsing snags the first ``A/B/C/D'', which is usually ``A'' when the model repeats the question during thinking. This would require manually re-parsing all of the files.
-                \item Thinking models frequently exceeded the typical token expectations. Token limits were increased to 10{,}000 to investigate the behavior. The behavior exhibited a form of ``crashing'' or convergence on a single word. In the example below, the repeated word was ``Wait'', generated until the token limit was reached.
-                
-                \item \texttt{\textless{}\textless{} add the ``Wait'' example here\textgreater{}\textgreater{}}
-            \end{itemize}
-        \end{itemize}
+\subsection{Scoring, Parsing, and Judge Reliability}
 
-        \item \texttt{think=false}
-        \begin{itemize}
-            \item Models such as Phi-4 continued to output their thinking process, as they are not currently compatible with Ollama's configuration for no-thinking.
-        \end{itemize}
+\subsubsection{MCQ Parsing Fragility}
 
-        \item \texttt{hidethinking=true}
-        \begin{itemize}
-            \item Models still reached the token limit even when thinking traces were hidden, which resulted in an empty string (``'') output.
-        \end{itemize}
+In MCQ settings, explicit reasoning traces occasionally caused incorrect answer extraction when models enumerated options during explanation. Naive regular-expression approaches could capture an early option token rather than the final selection. Correcting this would require more robust parsing strategies (e.g., explicit final-answer anchoring) or manual intervention, both of which were deemed outside the scope of the framework used in this study.
 
-        \item Ultimately, the decision was made that the focal point of the research is not thinking models, but rather the evaluation of the evaluation method (commonly called meta-evaluation). Proprietary models such as GPT-5 hide their thinking by default when accessed through the API. For this reason, open-source thinking models that would be hosted on Ollama are excluded from this research.
-    \end{itemize}
-\end{itemize}
+\subsubsection{OSQ Non-Termination and Empty Outputs}
+
+During OSQ evaluation runs, some models failed to produce judge-able responses due to indefinite generation, token exhaustion, or suppressed outputs yielding empty strings. These behaviors prevented reliable scoring and motivated model exclusion of affected outputs from aggregate analyses.
+
+\subsubsection{Implications for Automated Benchmarking Pipelines}
+
+These parsing and termination issues highlight limitations in current automated benchmarking pipelines when applied to heterogeneous model behaviors. They reinforce the importance of explicit output contracts (e.g. JSON), termination guarantees, and parsing robustness in future benchmark designs.
+
+
+\subsection{Future Directions}
+
+This dissertation establishes a foundation for qualification-oriented evaluation of large language models in systems engineering and the long-term trajectory extends toward a systematic qualification approach for AI usage within SE.
+
+\paragraph{Cognitive-Difficulty as a Structural Benchmark Dimension.}
+Future versions of SysEngBench should incorporate mandatory cognitive-depth labeling (e.g., Bloom-level or an equivalent engineering reasoning taxonomy) and report performance conditioned on difficulty rather than aggregate accuracy alone. Difficulty-aware reporting would enable qualification decisions aligned to task complexity and help identify capability cliffs that remain obscured in overall averages.
+
+\paragraph{Multi-modal Artifact Integration.}
+Systems engineering artifacts are not purely textual, and future benchmarking should include diagram interpretation, text–model alignment, and cross-artifact consistency tasks reflective of the multi-modal nature of \ac{se}. Evaluating vision-language models and multi-modal pipelines on these representations would provide increased qualification evidence more directly aligned to model-based engineering workflows.
+
+\paragraph{Human–AI Performance Comparison.}
+Future research could systematically compare strengths, limitations, and failure modes of humans and LLMs across representative engineering tasks, establishing empirically grounded competency metrics for LLMs relative to that of human, systems engineering experts. Such studies, likely requiring Institutional Review Board oversight, would support mapping safe operating envelopes and defining regions where human oversight remains essential.
+
+\paragraph{Structured Multi-Agent.}
+There are many circumstances within \ac{se} that could leverage multi-agent deliberation mechanisms similar to that of domain subject matter experts adjudication. Systematically studying consensus formation, ensemble disagreement, and adversarial critique could provide additional information for systems engineers to make informed trade space decisions.
+
+\paragraph{Cost-Aware AI Qualification.}
+Building on the token-efficiency analysis presented in this dissertation, future research should formalize economic models that capture inference cost, robustness replication overhead, and scoring expenses. Such models would support trade studies that determine how much evaluation evidence is sufficient for a given risk posture and budget constraint.
 
