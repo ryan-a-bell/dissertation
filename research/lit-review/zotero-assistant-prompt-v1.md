@@ -52,7 +52,7 @@ If additional columns or metadata fields are present (e.g., Benchmarks Used, Met
   - Use underscores between words
 
 Example:
-  extra = {Citation Key: Bruce_G_Barker_2003_SE_Effectiveness_Complexity_Point}
+  extra = {Citation Key: Bruce_G_Barker_SE_Effectiveness_Complexity_Point_2003}
 
 ---
 
@@ -60,7 +60,7 @@ Example:
 
 Use citation keys in the form:
 
-  FirstAuthor_FamilyName_Year[_ShortTitleWords]
+  FirstAuthor_FamilyName[_ShortTitleWords]_Year
 
 ---
 
@@ -75,7 +75,7 @@ Use citation keys in the form:
 
 🏗 Output Example (BibTeX-Compliant)
 
-@article{Erin_Sanu_2024_LLM_Limitations,
+@article{Erin_Sanu_LLM_Limitations_2024,
   abstract = {...},
   annote = {
     Insights: Large Language Models (LLMs) are vulnerable to hallucinations, biases, and domain-specific gaps.
@@ -94,5 +94,5 @@ Use citation keys in the form:
   title = {Limitations of Large Language Models},
   year = {2024},
   doi = {...},
-  extra = {Citation Key: Erin_Sanu_2024_LLM_Limitations}
+  extra = {Citation Key: Erin_Sanu_LLM_Limitations_2024}
 }
