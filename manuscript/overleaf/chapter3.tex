@@ -1,40 +1,17 @@
 \chapter{Materials and Methods}\label{ch:materials_methods}
 
-This chapter outlines the methodological foundation that supports the design, execution, and analysis of the research found in this manuscript. Its purpose is to establish how the research questions introduced in Section~\ref{sec:research_questions_objectives} are translated into an empirical workflow that spans dataset construction, model inferencing, and model assessment via statistical analysis.
-
-Section~\ref{sec:research_framework} introduces the research framework. It describes the conceptual structure of the six-phase pipeline, explains how artifacts produced at each stage feed forward into subsequent phases, and shows how this architecture aligns to the contributions, effectively bridging the gap between the research objectives and the empirical procedures implemented in the remainder of the chapter.
-
-Section \ref{sec:infrastructure} details the computational and software infrastructure required to perform the research. It covers hardware and software requirements required to have reproducible experimentation, as well as external services leveraged that provide dataset hosting and model access.
-
-Section \ref{sec:dataset_construction} describes the workflow transforming the SysEngBench dataset. It covers the generation of position-rotated variants, and the pipeline used to convert questions from \acp{mcq} to \acp{osq}.
-
-Section \ref{sec:evaluation_procedures} explains how the datasets are used to evaluate language models. It documents the task configurations of evaluation harness for all question formats. It also describes the LLM-as-a-Judge process used to evaluate \acp{osq}.
-
-Section \ref{sec:analytical_approach} outlines the statistical techniques used to interpret the results. It introduces the three analytic pillars — position bias analysis, format comparison between \ac{mcq} and \ac{osq} modalities, and token-cost efficiency. 
-
-
-
-
 \section{Methodological Framing and Traceability to Research Objectives}
 \label{sec:ch3_framing}
 
-Chapter~\ref{ch:introduction} defined a set of Research Objectives in Section \ref{sec:research_objectives} that constitute the intentional, completable actions required to answer the research questions in Section \ref{sec:research_questions}. This research was executed through an empirical pipeline that is organized primarily around the Research Objectives to preserve traceability between declared intent and implemented methodology.
+Chapter~\ref{ch:introduction} defined a set of Research Objectives in Section~\ref{sec:research_objectives} that constitute the intentional, executable actions required to answer the research questions in Section~\ref{sec:research_questions}. This research was executed through an empirical pipeline that is organized explicitly around those Research Objectives to preserve traceability between declared intent and implemented methodology.
 
-The pipeline describes the chronological sequencing of work (e.g., dataset derivation, inference execution, scoring, and analysis). However, chronological sequencing alone does not make explicit how each step contributes to the production of qualification-relevant evidence. Because this dissertation frames model evaluation as a qualification problem that requires modality-aware, robustness-aware, and cost-aware evidence, Chapter~\ref{ch:materials_methods} is structured around the objectives themselves. Each objective defines the work performed, the artifacts produced, and the evidence generated. 
+The pipeline describes the chronological sequencing of work. However, chronological sequencing alone does not make explicit how each step contributes to the production of qualification-relevant evidence. Because this dissertation frames model evaluation as a qualification problem that requires modality-aware, robustness-aware, and cost-aware evidence, Chapter~\ref{ch:materials_methods} is structured around the objectives themselves. Each objective defines the work performed, the artifacts produced, and the evidence generated. 
 
-The only objective not included in this chapter is Objective 7, which is met with Chapter 5 (synthesis).
+Objective~7 is not addressed in this chapter, as it concerns synthesis and integration of findings and is therefore fulfilled in Chapter~5. All other objectives are executed through the pipeline described below, with the execution environment and reproducibility controls presented first as are cross-cutting across all objectives. Subsequent sections correspond directly to the Research Objectives listed in Section~\ref{sec:research_objectives}. 
 
-The execution environment and reproducibility controls that underlie all objectives are described first. Subsequent sections correspond directly to the Research Objectives listed in Section~\ref{sec:research_objectives}. 
+The methodological framework connects the research questions posed in Chapter~\ref{ch:introduction} to inference execution, scoring, and analysis. It transforms the base SysEngBench dataset~\cite{bell_RabellSysEngBenchDatasets_2024} through deterministic dataset derivation procedures, evaluates \acp{llm} across both \ac{mcq} and \ac{osq} formats under standardized inference controls, applies rubric-based LLM-as-a-Judge scoring for open responses, and performs statistical analyses tailored to each objective.
 
-
-
-
-\subsection{Pipeline as Execution Backbone}
-\label{subsec:ch3_pipeline_backbone}
-
-This section presents the overall methodological framework that connects the research questions posed in Chapter~\ref{ch:introduction} to the data collection, evaluation, and analysis procedures described in subsequent sections. The framework follows a pipeline that transforms the base SysEngBench \cite{bell_rabellsysengbench_2024} dataset through multiple processing stages, evaluates \acp{llm} across both \ac{mcq} and \ac{osq} question formats, and performs comprehensive statistical analysis of the results.
-
-Figure \ref{fig:modality_eval_pipeline} presents the high-level data flow through the pipeline. Each step produces well-defined artifacts, including datasets, model responses, judging scores, or analysis outputs that serve as inputs to subsequent steps. 
+Figure~\ref{fig:modality_eval_pipeline} illustrates the high-level data flow through this pipeline. Each stage produces well-defined artifacts, including datasets, model responses, scoring outputs, and statistical results that serve as inputs to subsequent stages. These artifacts are retained and versioned to preserve traceability from final claims back to originating data and configuration settings. The pipeline functions not merely as an execution sequence, but as a traceable thread aligned directly to the declared Research Objectives.
 
 \begin{figure}[htbp]
     \centering
@@ -48,15 +25,29 @@ Figure \ref{fig:modality_eval_pipeline} presents the high-level data flow throug
 \section{Execution Environment and Reproducibility Controls}
 \label{sec:ch3_infrastructure}
 
-This section details the software stack and computational infrastructure used throughout the research pipeline. It functions as the shared substrate for all objectives: dataset derivation, standardized inference, OSQ scoring via LLM-as-a-judge, and token/cost accounting were performed within a controlled and logged environment to support traceability and reproducibility.
+This section details the software stack and computational infrastructure used throughout the research pipeline. It functions as the shared layer for all objectives: dataset derivation, standardized inference, OSQ scoring via LLM-as-a-judge, and token accounting were performed within a controlled and logged environment to support traceability and reproducibility.
 
-\subsection{Software Stack}\label{subsec:ch3_software_stack}
+% ---------------------------------------------------------
+\subsection{Tooling and Evaluation Orchestration}
+\label{subsec:ch3_tooling_orchestration}
 
-The complete software stack is summarized in Table \ref{tab:software_stack}. The full list python packages used are included in the `requirements.txt` in the dissertation repository hosted on GitHub at \texttt{ryan-a-bell/dissertation}.
+All code, notebooks, task configurations, and analysis scripts were version-controlled using Git and hosted in the dissertation repository on GitHub at \texttt{ryan-a-bell/dissertation}. Python package dependencies are captured in \texttt{requirements.txt}, enabling reconstruction of the software environment used to produce the reported artifacts.
+
+Model evaluation and orchestration were implemented using the Language Model Evaluation Harness (\texttt{lm-eval})~\cite{gao_LanguageModelEvaluation_2024, eleutherai_EleutherAILmevaluationharness_2024, biderman_LessonsTrenchesReproducible_2024}, an open-source framework that standardizes task definitions, prompt formatting, inference invocation, and result aggregation across model backends. The harness provides:
+\begin{itemize}
+    \item Consistent prompt formatting and task execution across models,
+    \item Automatic metric computation for MCQ tasks (e.g., accuracy ),
+    \item Structured outputs (JSON aggregate results and JSONL per-item sample logs), and
+    \item Support for custom tasks and configurations via YAML.
+\end{itemize}
+
+Scripts were used for dataset processing, rubric generation, and post-hoc analysis. All tooling was integrated within a repository-managed workflow to ensure that dataset versions, prompts, and evaluation configurations remain synchronized with the reported results.
+
+The complete software stack is summarized in Table~\ref{tab:software_stack}. The full list of Python packages used is included in \texttt{requirements.txt} in the dissertation repository.
 
 \begin{table}[h!]
     \centering
-    \caption{{Software Stack Components and Their Roles in the Research Pipeline}}
+    \caption{{Software Stack Components and Their Roles}}
     \label{tab:software_stack}
     \rowcolors{0}{}{} % Turn off row colors
     \resizebox{\columnwidth}{!}{%
@@ -82,34 +73,36 @@ The complete software stack is summarized in Table \ref{tab:software_stack}. The
 \end{table}
 
 
-\subsection{Compute Environment}
-\label{subsec:ch3_compute_environment}
 
-%%% ADD GPUaaS somewhere
+% ---------------------------------------------------------
+\subsection{Compute Environment and Inference Backends}
+\label{subsec:ch3_compute_backends}
 
+Model inference required GPU resources due to the number of models evaluated and the size of certain models, including models exceeding 272B parameters. \ac{gpu} compute was provisioned through RunPod, a cloud \ac{gpuaas} platform offering on-demand access to multiple NVIDIA GPU classes (e.g., A40, A100, H200). This enabled rapid iteration on evaluation configurations, consistent environment setup, and the ability to evaluate large models that were impractical to host locally although the framework is \ac{gpuaas} agnostic.
 
-Model inference required GPU resources due to the large number of models evaluated and the size of some models that were over 272B parameters. GPU compute was provisioned through RunPod\footnote{\url{https://www.runpod.io/}}, a cloud GPU platform offering on-demand access to NVIDIA A40, A100, H200 SXM, among other \acp{gpu}. This enabled rapid iteration on evaluation configurations, consistent environment setup, and the ability to evaluate large models that were impractical to host locally.
-
-GPU selection was driven primarily by each model’s memory requirements. Larger models were placed on the highest-capacity, highest-performance GPUs available, ensuring sufficient VRAM headroom for inference overhead and optimized execution. Smaller models were scheduled onto appropriately sized GPU instances to maintain efficient resource utilization.
-
-
-
-
+GPU selection was driven primarily by each model's memory requirements. Larger models were placed on the highest-capacity \acp{gpu} available to ensure sufficient \ac{vram} headroom for inference overhead and optimized execution. Smaller models were scheduled onto appropriately sized instances to maintain efficient resource utilization.
 
 Each RunPod instance was configured with:
 \begin{itemize}
-    \item PyTorch container template (CUDA 12.1, PyTorch 2.1+)
-    \item Exposed port 11434 for Ollama API access
-    \item Persistent volume storage for model weights
-    \item SSH access for command-line operations
-    \item JupyterLab interface for interactive notebook for debugging
+    \item PyTorch container template (CUDA 12.1, PyTorch 2.1+),
+    \item Exposed port 11434 for Ollama API access,
+    \item Persistent volume storage for model weights and run artifacts,
+    \item SSH access for command-line operations, and
+    \item Optional JupyterLab interface for interactive debugging.
 \end{itemize}
 
- Ollama\footnote{\url{https://ollama.ai/}} served as the \ac{llm} inferencing service, providing an OpenAI-compatible API endpoint at \texttt{http://localhost:11434/v1/chat/completions}. Ollama handles model loading, memory management, and efficient batched inference. Models were pulled systematically from the Ollama registry using \texttt{ollama pull <model\_name>} and verified with \texttt{ollama list}.
 
-Primary development occurred on a local workstation running Windows 11 with Python 3.12.4. Jupyter notebooks were used for exploratory analysis and prototyping, while production evaluation scripts were executed on RunPod GPU instances. 
+%%% mention here there are several inference providers. I selected Ollama.
+% tools to employ -- include tools like vllm, ollama, lm studio, llama.cpp etc
 
-The Figure \ref{fig:icd-scalable-workers} illustrates a scalable GPU-based inference and computation workflow built on top of RunPod, although the framework is GPU provider agnostic. At the top, a user interacts through a Jupyter Notebook running in a local execution environment. This environment spawns multiple subprocesses — each acting as a “RunPod Runner” — which communicate with remote GPU pods. These subprocesses form the client-side layer that initiates tasks, sends workloads to the cloud, and receives results. Their interaction with the notebook is bidirectional, enabling parallel job submission and coordination from a single interactive workspace.
+
+For local open-weight inference, Ollama served as the inferencing service, providing an OpenAI-compatible API endpoint at \texttt{http://localhost:11434/v1/chat/completions}. Ollama handled model loading, memory management, and efficient inference. Models were pulled systematically from the Ollama registry using \texttt{ollama pull <model\_name>} and verified with \texttt{ollama list}.
+
+Primary development occurred on a local workstation running Windows 11 with Python 3.12.4. Jupyter notebooks were used for exploratory analysis and prototyping, while production evaluation scripts were executed on RunPod GPU instances.
+
+To reduce sources of uncontrolled variance, inference was performed with deterministic decoding settings where supported (see Section~\ref{subsec:ch3_run_controls}). In addition, model and infrastructure heterogeneity (local inference vs.\ hosted APIs) was treated as an explicit experimental reality; the workflow retains sufficient run metadata to reconstruct which provider, model identifier, and configuration produced each output.
+
+The Figure \ref{fig:icd-scalable-workers} illustrates a scalable GPU-based inference and computation workflow built on top of RunPod, although the framework is GPU provider agnostic. At the top, a user interacts through a Jupyter Notebook running in a local execution environment. This environment spawns multiple subprocesses, each acting as a runner, which communicate with remote GPU pods. These subprocesses form the client-side layer that initiates tasks, sends workloads to the cloud, and receives results. Their interaction with the notebook is bidirectional, enabling parallel job submission and coordination from a single interactive workspace.
 
 Beneath the local layer is the RunPod cloud infrastructure, which hosts an orchestrator and a pool of GPU-backed pods. The orchestrator manages communication channels, routing tasks from local subprocesses to the appropriate pods via dedicated DirectChannel links. Each pod contains a GPU Runner responsible for executing the assigned workload. The architecture supports multiple pods (1 through N), enabling horizontal scaling as demand grows.
 
@@ -120,125 +113,74 @@ Beneath the local layer is the RunPod cloud infrastructure, which hosts an orche
     \label{fig:icd-scalable-workers}
 \end{figure}
 
-To reduce sources of uncontrolled variance, inference was performed with deterministic decoding settings where supported (see Section~\ref{subsec:ch3_determinism}). In addition, model and infrastructure heterogeneity (local inference vs. hosted APIs) was treated as an explicit experimental reality rather than hidden complexity; the workflow retains sufficient run metadata to reconstruct which provider, model identifier, and configuration produced each output.
+
+% ---------------------------------------------------------
+\subsection{Dataset Versioning and Artifact Management}
+\label{subsec:ch3_artifacts}
+
+SysEngBench and all derived datasets were managed as versioned artifacts to support traceability between dataset construction and evaluation outcomes. The base dataset was retrieved from Hugging Face (\texttt{rabell/SysEngBench}) via API access and is publicly hosted for reproducibility~\cite{bell_RabellSysEngBenchDatasets_2024}. Derived datasets (OSQ-converted sets and MCQ positional variants) were constructed deterministically from the base dataset and stored with explicit identifiers (e.g., \texttt{-A}, \texttt{-B}, \texttt{-C}, \texttt{-D}, \texttt{-OSQ}); these derivative datasets are also publicly hosted for reproducibility \cite{bell_RabellSysEngBenchADatasets_2025, bell_RabellSysEngBenchBDatasets_2025, bell_RabellSysEngBenchCDatasets_2025, bell_RabellSysEngBenchDDatasets_2025, bell_RabellSysEngBenchOSQ_2026}
 
 
-
-
-\subsection{External Services and APIs}
-
-Two external services were used to support this research:
-
-\paragraph{HuggingFace} The SysEngBench dataset is hosted on HuggingFace Hub at \texttt{rabell/SysEngBench} \cite{bell_rabellsysengbench_2024} and accessed via the \texttt{datasets} library with an authentication token. The other variants of SysEngBench, including the MCQ variants SysEngBench-A, SysEngBench-B, SysEngBench-C, SysEngBench-D, as well as converted OSQ dataset SysEngBench-OSQ may be found on HuggingFace for reproducibility.
-
-\paragraph{OpenRouter} OpenRouter\footnote{\url{https://openrouter.ai/}} provided unified API access to proprietary models (e.g. GPT-5, Claude, Gemini) and larger open-source models not suitable for local execution. This service enabled easy model switching via a single API endpoint while maintaining usage tracking and cost monitoring. All API calls use temperature as 0.0 for deterministic outputs.
-
+Versioning discipline is essential for traceability: even minor modifications to prompt templates, item filtering criteria, or answer-option rotation can affect measured performance. To support repeatability and retrospective auditing, artifacts were retained at each stage of the pipeline:
 \begin{itemize}
-    \item \textbf{Hugging Face} was used to retrieve and version benchmark artifacts (datasets), enabling stable dataset identifiers and reproducible access patterns.
-    \item \textbf{OpenRouter} was used to access proprietary foundation models through a single API endpoint. This simplified evaluation orchestration across multiple providers while preserving consistent logging and configuration capture.
+    \item Dataset artifacts: dataset versions, item identifiers, conversion outputs, and rotation maps.
+    \item Inference artifacts: prompts, raw model responses, and response metadata such as model id, backend/provider, inference parameters.
+    \item Scoring artifacts: judge prompts, judge outputs, structured rubric scores, and stability-check outputs where applicable.
+    \item Analysis artifacts: aggregated result tables and statistical test outputs used to generate reported figures and claims.
 \end{itemize}
 
-OpenRouter exposes a common parameter interface (e.g., temperature) and routes requests to provider endpoints. Temperature was set to \texttt{0.0} to remove output variance across repeated runs. Parameter defaults and supported options vary across providers, so model-specific capability constraints were handled explicitly in the run configuration rather than assumed.\footnote{\url{https://openrouter.ai/docs/api/reference/parameters}}
+Sensitive credentials (e.g., Hugging Face tokens or OpenRouter API keys) were stored in a local \texttt{.env} file excluded from version control; a template (\texttt{.env.template}) is provided for reproducible setup.
 
 
-
-\subsection{Evaluation Harness and Tooling}
-\label{subsec:ch3_harness}
-
-% tools to employ -- include tools like vllm, ollama, lm studio, llama.cpp etc
-
-Model evaluation was implemented using the Language Model Evaluation Harness (\texttt{lm-eval}), an open-source framework that standardizes task definitions, prompt formatting, inference orchestration, and result aggregation across model backends.\footnote{\url{https://github.com/EleutherAI/lm-evaluation-harness}} The harness provides a consistent interface for evaluating both local models and API-accessed models, supporting reproducible comparisons across heterogeneous systems.
-
-% Recommended citation (add to BibTeX):
-% - Biderman et al. "lm-evaluation-harness" (arXiv:2405.14782) for a citable reference to lm-eval.
-
-For local inference, models were hosted using \texttt{Ollama} where applicable, enabling consistent invocation across multiple open-weight model families. For API-accessed models, requests were issued through a unified gateway (Section~\ref{subsec:ch3_external_services}) to standardize request formatting and logging. Auxiliary scripts were used for dataset processing, rubric generation, and post-hoc analysis. All tooling was integrated within a repository-managed workflow to ensure that dataset versions, prompts, and evaluation configurations remain synchronized with the reported results.
-
-
-All MCQ and OSQ evaluations, as well as the judge scoring evaluations used lm-evaluation-harness \cite{eleutherai_eleutherailm-evaluation-harness_2024}, a standardized framework for \ac{llm} benchmarking. This framework provides:
-\begin{itemize}
-    \item Consistent prompt formatting across models
-    \item Automatic metric calculation (accuracy, per-category accuracy)
-    \item Structured output (JSON results, JSONL sample logs)
-    \item Support for custom tasks via YAML configuration
-\end{itemize}
-
-
-
-\subsection{Dataset Hosting, Versioning, and Artifact Management}
-\label{subsec:ch3_dataset_versioning}
-
-SysEngBench and all derived datasets were managed as versioned artifacts to support traceability between dataset construction and evaluation outcomes. The base dataset was retrieved from Hugging Face (\texttt{rabell/SysEngBench}) via API access. Derived datasets (OSQ-converted sets and MCQ positional variants) were constructed deterministically from the base dataset and stored with explicit version identifiers (e.g. -A, -B, -C, -D, -OSQ).
-
-Versioning discipline is essential for traceability, even minor modifications to prompt templates, item filtering criteria, or answer-option rotation rules can affect measured performance. Accordingly, dataset derivation scripts were tracked under version control, and dataset releases were associated with immutable references (e.g., commit hashes and dataset tags) in the dissertation repository.
-
-% Recommended citation (add to BibTeX) for dataset tooling:
-% - Lhoest et al. 2021, "Datasets: A Community Library for Natural Language Processing" (EMNLP demo / arXiv:2109.02846)
-
-\paragraph{Version Control and Tracking} All code, notebooks, and analysis scripts were version-controlled using Git and hosted on GitHub at \texttt{ryan-a-bell/dissertation}. 
-
-\subsection{Data Management and Reproducibility}
-
-To ensure reproducibility:
-\begin{itemize}
-    \item All datasets are versioned and publicly accessible on HuggingFace \cite{bell_rabellsysengbench_2024}
-    \item Model inference used temperature=0.0 for deterministic generation
-    \item Complete evaluation logs with timestamps were retained
-    \item Environment specifications captured in \texttt{requirements.txt}
-    \item All code and notebooks publicly available in the GitHub repository at \texttt{ryan-a-bell/dissertation}
-\end{itemize}
-
-Sensitive credentials such as personal HuggingFace tokens or OpenRouter API keys were stored in a \texttt{.env} file excluded from version control, but a template for use has been provided in \texttt{.env.template}.
-
-
-\subsection{Determinism Controls and Run Standardization}
-\label{subsec:ch3_determinism}
+% ---------------------------------------------------------
+\subsection{Run Standardization: Determinism, Retries, and Token Accounting}
+\label{subsec:ch3_run_controls}
 
 Across all inference runs, settings were standardized to reduce avoidable variance and improve comparability:
 
 \begin{itemize}
-    \item \textbf{Decoding determinism:} temperature set to 0.0, with consistent max token limits and stop sequences.
-    \item \textbf{Prompt standardization:} task templates and instruction framing were held fixed within each evaluation condition.
-    \item \textbf{Retry policy:} transient API failures or invalid outputs were retried under a controlled policy, and failures were logged as artifacts. 
-    \item %%% retry policy -- it was re-ran. the process is idempotent so results w/o the transient api failures etc were removed when replaced with the correct results.
+    \item Deterministic runs: temperature set to \texttt{0.0}, with consistent maximum token limits and stop sequences when applicable.
+    \item Prompt standardization: task templates and instruction framing were held fixed within each evaluation condition.
+    \item Controlled retry policy: transient API failures or invalid outputs were retried under a documented policy; retries and failures were retained as artifacts to preserve auditability.
 \end{itemize}
 
-These controls support the dissertation’s framing of evaluation as qualification evidence: uncontrolled procedural variance weakens the interpretability of observed differences and can produce misleading deltas across models and modalities.
-
-
-\subsection{Logging, Artifact Retention, and Auditability}
-\label{subsec:ch3_logging}
-To support repeatability and retrospective auditing, the following artifacts were retained:
-
+Two external services were used to support dataset access and API-based inference:
 \begin{itemize}
-    \item \textbf{Dataset artifacts:} dataset versions, item identifiers, conversion outputs, and rotation maps.
-    \item \textbf{Inference artifacts:} prompts, raw model responses, response metadata (model id, backend/provider, decoding parameters).
-    \item \textbf{Scoring artifacts:} judge prompts, judge outputs, structured rubric scores, and stability check outputs (where applicable).
-    \item \textbf{Analysis artifacts:} aggregated result tables and statistical test outputs used to generate reported figures and claims.
+    \item Hugging Face was used to retrieve and version benchmark artifacts (datasets), enabling stable dataset identifiers and reproducible access patterns.
+    \item OpenRouter was used to access proprietary foundation models through a single API endpoint. This simplified evaluation orchestration across providers while preserving consistent logging and configuration capture.
 \end{itemize}
 
-This design enables downstream validation and supports the claim that results can be reproduced given the same model versions and evaluation configurations.
+OpenRouter exposes a common parameter interface (e.g., temperature) and routes requests to provider endpoints. Parameter defaults and supported options vary across providers, so model-specific capability constraints were handled explicitly in the run configuration rather than assumed.\footnote{\url{https://openrouter.ai/docs/api/reference/parameters}}
 
-
-\subsection{Token Accounting and Cost Instrumentation}
-\label{subsec:ch3_token_tracking}
-
-Token usage and response length were measured as first-class quantities for Objective 6. For each inference call, input and output token counts were recorded when supported by the backend. For API-accessed models, provider usage fields were captured when available; for local inference, token counts were computed using the model’s tokenizer or proxy estimation procedures consistent across the evaluated set.
-%%% USED LM-EVAL'S LIMIT FOR TOKENS. ADD THAT CITATION HERE.
-
-The total cost of OSQ evaluation includes both \emph{generation cost} (model answering) and \emph{scoring cost} (judge inference). This “two-pass” structure is central to cost-aware qualification reasoning: OSQ evaluation is not only higher-variance in output form, but also higher-cost due to rubric-based scoring overhead.
-%% REWORD ABOVE. LIKELY TO REMOVE MOST BUT KEEP THAT WE CAN COMPUTE THE SCORING COST TOO (FOCUSED ON GENERATION COST, NOT THE CSOT OF JUDGING)
+Token usage and response length are to be measured to support Objective~6. For each inference call, input and output token counts were recorded. Token counts were computed using a consistent tokenizer-based accounting policy. Token accounting distinguishes between OSQ model responses and OSQ judge scoring as separate passes. Token counts are recorded as the primary, price-agnostic resource metric and intentionally excludes monetary pricing due to volatile provider schedules.
 
 
 
+%%% SHOULD WE ADD IN THE IDEMPOTENT NATURE OF THE EVAL AND THE TABLE FOR RE-RUNNING HERE?
+
+% \textbf{Retry policy:} transient API failures or invalid outputs were retried under a controlled policy, and failures were logged as artifacts. 
+%     \item %%% retry policy -- it was re-ran. the process is idempotent so results w/o the transient api failures etc were removed when replaced with the correct results.
 
 
+During task evaluation and judging, responses may fail to produce valid scores due to API errors, empty model responses, or malformed judge output. Table~\ref{tab:parse_status} describes the four status categories used to handle these cases.
 
-
-
-
-
-
+\begin{table}[htbp]
+    \centering
+    \caption{Task and Judging Statuses: Success and Error Types}
+    \label{tab:parse_status}
+    \rowcolors{0}{}{} % Turn off row colors
+    \footnotesize
+    \begin{tabular}{l p{0.35\textwidth} p{0.30\textwidth}}
+    \hline
+    \textbf{Status} & \textbf{Description} & \textbf{Score Treatment} \\
+    \hline
+    \texttt{success}      & All 5 dimension scores extracted  & Total = sum of dimensions \\
+    \texttt{model\_error}  & Model produced empty response     & Total = 0 \\
+    \texttt{judge\_error}  & Judge failed to return valid JSON & Excluded from analysis \\
+    \texttt{api\_error}    & API timeout or connection failure & Excluded from analysis \\
+    \hline
+    \end{tabular}
+\end{table}
 
 
 
@@ -266,13 +208,13 @@ Each question record includes the following fields:
 
 These fields provide the minimum metadata required to support both robustness analysis in the MCQ setting and conversion to OSQ variants with canonical expected answers and rubrics (Objective 2).
 
-An extensive analysis of the benchmark was conducted in \cite{Bell2025SysEngBench}, still under review with Wiley that includes sub-categories with distributions visualized using bar charts, pie charts, and stacked visualizations to express the coverage of the benchmark across the systems engineering domain.
+An extensive analysis of the benchmark was conducted in \cite{Bell2025SysEngBench} that includes sub-categories with distributions visualized using bar charts, pie charts, and stacked visualizations to express the coverage of the benchmark across the systems engineering domain.
 
 
 \subsection{Construction of MCQ Robustness Variants}
 \label{subsec:ch3_obj1_mcq_variants}
 
-To detect position bias in model responses to \acp{mcq}, as demonstrated in \cite{zheng_large_2024}, four variants of the SysEngBench dataset were generated with correct answers systematically rotated to positions A, B, C, and D. This approach enables statistical testing for underlying preference for answer positions.
+To detect position bias in model responses to \acp{mcq}, as demonstrated in \cite{zhengLargeLanguageModels2024}, four variants of the SysEngBench dataset were generated with correct answers systematically rotated to positions A, B, C, and D. This approach enables statistical testing for underlying preference for answer positions.
 
 The rotation procedure preserves question content and choice semantics while permuting answer-option ordering. For each base item, a rotation map is computed such that each of the four variants places the correct answer in a different position while maintaining a consistent permutation structure over the four options. This produces four aligned datasets:
 
@@ -285,13 +227,13 @@ The rotation procedure preserves question content and choice semantics while per
 
 Because each variant contains the same questions under systematic reordering, differences in accuracy across variants can be attributed to positional sensitivity rather than content differences.
 
-Figure~\ref{fig:phase3_rotation} illustrates the rotation process.
+Figure~\ref{fig:mcq_rotation} illustrates the rotation process.
 
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=0.9\textwidth]{figs/ch3/mcq-distractor-datasets.png}
     \caption{MCQ Position Variant Generation}
-    \label{fig:phase3_rotation}
+    \label{fig:mcq_rotation}
 \end{figure}
 
 
@@ -488,7 +430,7 @@ Several quality control mechanisms ensured conversion fidelity:
 % -------------------------
 % Example 1 (QI 2): Risk
 % -------------------------
-\multirow[t]{3}{*}{\textbf{QI2}} &
+\multirow[t]{3}{*}{\textbf{2}} &
 \textbf{Question:} How is risk defined in systems engineering? &
 \textbf{Question:} Define "risk" precisely (1--2 sentences), stating what it represents and how it is quantified. \\[4pt]
 
@@ -509,7 +451,7 @@ Several quality control mechanisms ensured conversion fidelity:
 % -----------------------------------------------
 % Example 4 (QI 107): Verification vs Validation
 % -----------------------------------------------
-\multirow[t]{3}{*}{\textbf{QI107}} &
+\multirow[t]{3}{*}{\textbf{107}} &
 \textbf{Question:} What best describes the distinction between model verification and validation in the context of systems engineering? &
 \textbf{Question:} In systems engineering V\&V, what does model verification ensure? Answer in 1 sentence. \\[4pt]
 
@@ -527,7 +469,7 @@ Several quality control mechanisms ensured conversion fidelity:
 
 \specialrule{0.9pt}{0pt}{0pt}
 \end{tabularx}
-\caption{Paired MCQ and OSQ examples (SysEngBench-OSQ; QI2 and QI107).}
+\caption{Paired MCQ and OSQ examples (SysEngBench-OSQ; 2 and 107).}
 \end{table}
 
 
@@ -547,11 +489,24 @@ The final dataset as an output of this process is found on HuggingFace as  \text
 \subsection{Prompt, Rubric Design and Scoring Schema}
 \label{subsec:ch3_obj2_rubric}
 
-The full prompt may be found \ref{app:llm-as-a-judge-prompt}
-
-%%% NEED TO FIND SOME SOURCES TO CITE HOW THEY MADE SIMILAR PROMPTS. there should be some examples in the vscode repo and sources to cite there,
+Three academic approaches are considere for performing LLM-as-a-Judge grading, including 1) multi-dimensional reference-based \cite{lin_LLMEvalUnifiedMultiDimensionalAutomatic_2023}, 2) chain-of-thought reference-guided \cite{zheng_JudgingLLMasaJudgeMTBench_2023, liu_GEvalNLGEvaluationUsing_2023}, and 3) pairwise comparative evaluations \cite{zheng_JudgingLLMasaJudgeMTBench_2023, dubois_Length_Controlled_Alpaca_Eval_Simple_2025}. The first was chosen for its comprehensive assessment of single responses approach and rubric grading, and tailored to the \ac{se} domain in Figure \ref{lst:osq-grading-prompt}. The full prompt may be found Appendix \ref{app:llm-as-a-judge-prompt}
 
 
+\begin{figure}[htbp]
+\centering
+\begin{scriptsize}
+\begin{lstlisting}[
+    language=json,
+    basicstyle=\ttfamily\fontsize{7}{8}\selectfont,
+    frame=single,
+    numbers=left,
+    breaklines=true,
+    breakatwhitespace=false,
+    columns=fullflexible,
+    keepspaces=true,
+    showstringspaces=false
+]
+{
 You are an expert systems engineering (SE) educator evaluating student responses to open-ended questions.
 
 EVALUATION SCHEMA (each 0-20, total 100):
@@ -560,11 +515,15 @@ EVALUATION SCHEMA (each 0-20, total 100):
 3. COMPLETENESS - coverage of key elements expected in the answer
 4. CLARITY & ORGANIZATION - logical structure and clear communication
 5. PROFESSIONAL RELEVANCE - connection to real-world SE practice and standards
+}
+\end{lstlisting}
+\end{scriptsize}
+\caption{OSQ Grading Prompt}
+\label{lst:osq-grading-prompt}
+\end{figure}
 
-%%% NEED TO FINISH THIS... EXPLAIN WHY I CHOSE WHAT I DID.
 
-
-Judged samples are stored in JSONL format, with each record containing the original Phase 4 response and the judge's evaluation:
+Judged samples are stored in *.JSONL format, with each record containing the model under evaluation's response in addition to the judge's evaluation response. The formatting for file outputs is shown in Figure \ref{lst:osq-eval-json}.
 
 \begin{figure}[htbp]
 \centering
@@ -605,7 +564,7 @@ Judged samples are stored in JSONL format, with each record containing the origi
 }
 \end{lstlisting}
 \end{scriptsize}
-\caption{Structure of the OSQ evaluation record}
+\caption{Structure of the OSQ Evaluation Record}
 \label{lst:osq-eval-json}
 \end{figure}
 % Make sure all Evaluation Procedure figures are dumped here if they're floating
@@ -624,10 +583,10 @@ Where applicable, OSQ items retain SysEngBench category and subcategory labels, 
 Quality control steps were applied to ensure that OSQ conversions and rubrics remained faithful to the MCQ construct and were scorable:
 
 \begin{itemize}
-    \item \textbf{Construct preservation check:} verify the OSQ requires the same underlying knowledge as the MCQ’s correct option.
-    \item \textbf{Ambiguity screening:} flag OSQs that admit multiple equally plausible answers without additional constraints.
-    \item \textbf{Rubric scorable-ness:} ensure rubric criteria can be applied consistently and yield full/partial/none outcomes.
-    \item \textbf{Formatting validation:} enforce consistent field presence and output schema for judge consumption.
+    \item Construct preservation check: verify the OSQ requires the same underlying knowledge as the MCQ’s correct option.
+    \item Ambiguity screening: flag OSQs that admit multiple equally plausible answers without additional constraints.
+    \item Rubric scorable-ness: ensure rubric criteria can be applied consistently and yield full/partial/none outcomes.
+    \item Formatting validation: enforce consistent field presence and output schema for judge consumption.
 \end{itemize}
 
 Items failing these checks were either revised or excluded from the OSQ subset to protect the interpretability of cross-modality comparisons.
@@ -642,31 +601,62 @@ Items failing these checks were either revised or excluded from the OSQ subset t
 \subsection{Model Selection and Inclusion Criteria}
 \label{subsec:ch3_obj3_models}
 
-Models were selected to represent diverse architectural families, parameter scales, and licensing types:
+The intent of this selection is not to exhaustively sample the model landscape, but to create a sufficiently diverse set to observe modality effects, robustness sensitivity, and token/cost tradeoffs across a realistic spread of available models.
 
-\begin{itemize}
-    \item \textbf{Open-source models} (via Ollama): Llama 3.2 (3B, 7B, 70B), Qwen 2.5 (7B, 14B, 32B, 72B), Mistral (7B), DeepSeek-R1 (7B, reasoning-extended), and others
-    \item \textbf{Proprietary models} (via OpenRouter): GPT-4o, GPT-4o-mini, Claude 3.5 Sonnet, Gemini 1.5 Pro
+Models were selected to represent diverse architectural families, parameter scales, and licensing types. Table~\ref{tab:model_inventory} lists all 19 models evaluated, spanning open-weight model families served locally via Ollama and commercial models accessed through OpenRouter.
 
-The intent of this selection is not to exhaustively sample the model landscape, but to create a sufficiently diverse set to observe modality effects, robustness sensitivity, and token/cost tradeoffs across a realistic spread of systems.
+\begin{table}[htbp]
+    \centering
+    \caption{Complete Inventory of the 19 Models Evaluated Across All Tasks.}
+    \label{tab:model_inventory}
+    \rowcolors{0}{}{} % Turn off row colors
+    \footnotesize
+    \begin{tabular}{llrl}
+    \hline
+    \textbf{Model} & \textbf{Family} & \textbf{Parameters} & \textbf{Access} \\
+    \hline
+    \multicolumn{4}{l}{\textit{Open-weight models (served via Ollama)}} \\
+    \addlinespace[0.3em]
+    Phi-3.5        & Microsoft Phi   & 3.8B         & Ollama \\
+    Phi-3          & Microsoft Phi   & 14B          & Ollama \\
+    Phi-4          & Microsoft Phi   & 14B          & Ollama \\
+    Phi-4-mini     & Microsoft Phi   & 3.8B         & Ollama \\
+    Llama 3.2      & Meta Llama      & 1B           & Ollama \\
+    Llama 3.2      & Meta Llama      & 3B           & Ollama \\
+    Llama 3.3      & Meta Llama      & 70B          & Ollama \\
+    Llama 4        & Meta Llama      & 16$\times$17B (MoE) & Ollama \\
+    Mistral Large  & Mistral AI      & 123B         & Ollama \\
+    Mistral Small 3.2 & Mistral AI   & 24B          & Ollama \\
+    Mixtral        & Mistral AI      & 8$\times$22B (MoE) & Ollama \\
+    Devstral       & Mistral AI      & 24B          & Ollama \\
+    Gemma 3        & Google Gemma    & 1B           & Ollama \\
+    Gemma 3        & Google Gemma    & 4B           & Ollama \\
+    Gemma 3        & Google Gemma    & 12B          & Ollama \\
+    Gemma 3        & Google Gemma    & 27B          & Ollama \\
+    \addlinespace[0.3em]
+    \multicolumn{4}{l}{\textit{Commercial models (accessed via OpenRouter)}} \\
+    \addlinespace[0.3em]
+    GPT-4.1        & OpenAI          & ---          & OpenRouter \\
+    Claude Sonnet 4.5 & Anthropic    & ---          & OpenRouter \\
+    Gemini 2.5 Flash & Google        & ---          & OpenRouter \\
+    \hline
+    \end{tabular}
+\end{table}
+
+
 
 
 \subsection{MCQ Task Configuration}
 \label{subsec:ch3_obj3_mcq_config}
 
-
-\end{itemize}
-
-All MCQ evaluations used consistent prompting and decoding settings to isolate differences due to model capability and dataset variant structure. Prompts included the question stem and all answer options labeled A--D, with instructions to output the selected letter (and optionally a short justification where configured). For positional-variant experiments, the prompt structure was held constant across variants.
-
-Each task configured with a YAML specification can be referenced in Appendix \ref{appendix-b}.
+All MCQ evaluations used consistent prompting and decoding settings to isolate differences due to model capability and dataset variant structure. Prompts included the question stem and all answer options labeled A, B, C, or D, with instructions to output the selected letter. For positional-variant experiments, the prompt structure was held constant across variants. Each task is configured with a YAML specification can be referenced in Appendix \ref{appendix-b}.
 
 Key configuration choices:
 \begin{itemize}
-    \item \textbf{Temperature=0.0}: Ensures deterministic, reproducible generation
-    \item \textbf{Max tokens=10 or 500}: Single letter answer MCQ tasks received 10 tokens, while the OSQ tasks receive 500 token limits
-    \item \textbf{Regex filter}: Extracts first occurrence of A, B, C, or D for MCQ tasks
-    \item \textbf{Exact match metric}: Binary correct/incorrect at question level for MCQ tasks
+    \item Temperature=0.0: Ensures deterministic, reproducible generation
+    \item Max tokens=10: Single letter answer MCQ tasks received a 10 token limit
+    \item Regex filter: Extracts first occurrence of A, B, C, or D
+    \item Exact match metric: Binary correct/incorrect for regex parsing match
 \end{itemize}
 
 
@@ -674,17 +664,45 @@ Key configuration choices:
 \subsection{OSQ Task Configuration}
 \label{subsec:ch3_obj3_osq_config}
 
-OSQ evaluation used the \texttt{sysengbench-osq} task with configuration shown in \ref{app:tasks_osq}
+OSQ evaluation used the \texttt{sysengbench-osq} task with configuration shown in Appendix \ref{appendix-b}.
 
 Key differences from \ac{mcq} configuration:
 \begin{itemize}
-    \item \textbf{Higher max\_tokens}: 10000 depending on model, allowing for detailed explanations
+    \item \textbf{Higher max\_tokens}: 2000-10000, allowing for detailed explanations
     \item \textbf{No REGEX filtering}: Full response text retained
-    \item \textbf{No automatic metrics}: Accuracy cannot be computed via string matching; responses are passed to Phase 5 for LLM-as-a-judge evaluation
+    \item \textbf{No automatic metrics}: Accuracy cannot be computed via string matching; responses are passed to  LLM-as-a-judge evaluation
 \end{itemize}
 
+%%% consider moving this to limitations and things that changed in ch5
+An original output amount of 10,000 tokens was used. Upon inspection of the JSONL sample outputs, the max tokens was reduced to 2000 as the distribution of token outputs encompassed nearly all responses, except for those that reached a "thinking loop" or otherwise.
 
-perhaps we just show an example of the output and say that's what we pass on to the grader. The output is simply a long string. Snag an example from a jsonl file for an example if desired.
+
+Listing~\ref{lst:osq_response_example} shows an example OSQ response. The free-text output is the primary artifact passed to rubric-based scoring.
+
+\begin{lstlisting}[
+    basicstyle=\ttfamily\footnotesize,
+    caption={OSQ model response for Question~ID~1 (Claude Sonnet 4.5). This free-text response is passed directly to judge for evaluation.},
+    label={lst:osq_response_example},
+    breaklines=true,
+    frame=single,
+    framerule=0.4pt,
+    framesep=4pt
+]
+Prompt:   "Define 'uncertainty' in systems engineering.
+           Answer in 1-2 sentences."
+
+Response: "Uncertainty in systems engineering refers to the lack
+           of complete knowledge or predictability about system
+           parameters, behaviors, environmental conditions, or
+           future states that affect design decisions and
+           performance outcomes. It encompasses both aleatory
+           uncertainty (inherent randomness or variability) and
+           epistemic uncertainty (lack of knowledge that could
+           theoretically be reduced through additional information
+           or analysis)."
+\end{lstlisting}
+
+% perhaps we just show an example of the output and say that's what we pass on to the grader. The output is simply a long string. Snag an example from a jsonl file for an example if desired.
 
 
 \subsection{Run Management, Batch Processes, and Output Capture}
@@ -721,10 +739,11 @@ lm_eval --model local-chat-completions \
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=0.6\textwidth]{figs/ch3/3.3/model-inference-pipeline.png}
-    \caption{Phase 4 batch inference workflow with error handling. The process iterates through all models, checks server health, executes lm-evaluation-harness, and logs success/failure with automatic retry on server errors.}
-    \label{fig:phase4_inference}
+    \caption{Batch Inference Workflow}
+    \label{fig:inference}
 \end{figure}
 
+The process iterates through all models, checks server health, executes lm-evaluation-harness, and logs success/failure with automatic retry on server errors.
 
 %%% EXPLAIN THE OUTPUT in JSONL. Samples vs results JSON files.
 
@@ -737,51 +756,55 @@ lm_eval --model local-chat-completions \
 \section{Objective 4: Rubric-Based OSQ Scoring Using LLM-as-a-Judge}
 \label{sec:ch3_obj4}
 
-\subsection{Judge Model Selection and Protocol}
+Objective 4 defines and validates the scoring instrument used for \ac{osq} evaluation. Because \ac{osq} responses cannot be assessed via simple string matching, a rubric-based LLM-as-a-Judge framework is employed to assign structured, multi-dimensional scores. This objective formalizes judge selection, scoring protocol, and judge reliability validation to ensure that OSQ scores function as a defensible measurement instrument.
+
+
+%%% where does this fit best?
+% \subsubsection*{Evidence Requirements}
+
+% We require:
+% \begin{enumerate}[nosep]
+%     \item A clear description of OSQ score distributions (central tendency and variability).
+%     \item Evidence that different judges assign similar scores to the same models or responses.
+%     \item Robust estimates of mean performance that do not rely on normality assumptions.
+
+
+\subsection{Judge Model Selection and Scoring Protocol}
 \label{subsec:ch3_obj4_judge_model}
 
-Scoring open-ended responses requires deeper understanding rather than simple string matching. This research employs LLM-as-a-judge~cite, a methodology where a frontier language model evaluates responses based on rubrics and expected answers.
-
 %%% ADD CITATIONS FOR LLM-AS--A-JUDGE- STUDIES. UPDATE GPT3.5, 4 AS CITATIONS DICTATE.
-Most published alignment studies focus on GPT-3.5 and GPT-4 ( cite here ). We therefore treat GPT-4-class results as a lower bound on the judge capability of the more recent ChatGPT models used in this work, while qualitatively validating judge reliability manually on a subset of questions.
-
-All judge models were accessed via OpenRouter with temperature=0.0 for deterministic scoring. Each model response was independently evaluated by multiple judges, enabling inter-judge agreement analysis
-
-The judge is treated as a second measurement instrument layered on top of the evaluated model outputs. Therefore, judge prompts, output schemas, and stability checks are retained as artifacts to support traceability.
-
-List my judge selections here. gpt-oss-120b, gpt-5-mini
-
 % Recommended citation (add to BibTeX):
 % - Zheng et al. 2023, "Judging LLM-as-a-Judge with MT-Bench and Chatbot Arena" (NeurIPS Datasets & Benchmarks / arXiv:2306.05685)
+Open-ended responses were evaluated using an LLM-as-a-Judge methodology in which a language model scores responses against predefined rubrics and expected answers \cite{zheng_JudgingLLMasaJudgeMTBench_2023}. Most published alignment studies focus on GPT-3.5 and GPT-4 as judges~\cite{zheng_JudgingLLMasaJudgeMTBench_2023}. We therefore treat GPT-4-class results as a lower bound on the judge capability of the more recent models used in this work.
+
+Two judge models were employed to enable inter-judge reliability analysis:
+
+\begin{enumerate}
+    \item \textbf{GPT-5-mini} (\texttt{openai/gpt-5-mini}) --- lightweight commercial variant
+    \item \textbf{GPT-OSS 120B} (\texttt{gpt-oss:120b}) --- open-source 120B model served via Ollama
+\end{enumerate}
+% If i end up using GPT-5 as well % \textbf{GPT-5} (\texttt{openai/gpt-5}) --- frontier commercial model 
+
+All judge models were accessed via OpenRouter with temperature set to 0.0 for deterministic scoring. Each evaluated response was independently scored by multiple judges to support agreement analysis.
+
+Judge prompts, rubric definitions, and structured JSON output schemas were retained as artifacts to ensure traceability and reproducibility (Appendix~\ref{app:judge_prompts}). The judge is therefore treated as a second measurement instrument layered atop the evaluated model outputs.
 
 
-\paragraph{Judging Approaches}
-
-I only ended up doing the rubric-based judging for now. Did not use multiple rubrics. Cite another paper that did similar here from Zotero.
-
-\paragraph{Rubric-Based Judging}
-
-To assess judge consistency and reduce single-model bias, multiple judge models were employed and use the grading rubric generated in Phase 2 (Section~\ref{sec:phase2}). The LLM-as-a-judge assigns:
+%%% to assist in anchoring...
+To assess judge consistency and reduce single-model bias, multiple judge models were employed and use the grading rubric (Section~\ref{sec:ch3_obj2}). The LLM-as-a-judge assigns:
 \begin{itemize}
     \item \textbf{Full credit} (1.0): Response meets full credit criteria
     \item \textbf{Partial credit} (0.5): Response meets partial credit criteria
     \item \textbf{No credit} (0.0): Response meets no credit criteria
 \end{itemize}
 
-Prompt structure (abridged; full prompt in Appendix~\ref{app:judge_prompts}):
-<< consider adding a prompt snipet here... >> 
+
+%% integrate with above.
+\noindent\textit{Scope constraints.}
+LLM-as-a-Judge introduces a secondary model into the evaluation pipeline. While deterministic decoding reduces stochastic variation, judge outputs remain model-dependent. Reliability and stability analyses are therefore required to validate the scoring instrument.
 
 
-\paragraph{Multi-Dimensional Scoring}
-The judging approach employs multi-dimensional scoring adapted from Lin \& Chen (2023)~\cite{lin2023multidim}. Each response is evaluated across five dimensions on a 0--20 scale:
 
-\begin{enumerate}
-    \item \textbf{Technical Accuracy}: Correctness of facts, principles, terminology
-    \item \textbf{Conceptual Understanding}: Depth of systems thinking demonstrated
-    \item \textbf{Completeness}: Coverage of required answer elements
-    \item \textbf{Clarity}: Communication quality and organization
-    \item \textbf{Professional Relevance}: Real-world applicability
-\end{enumerate}
 
 Figure~\ref{fig:llm-as-judge-process} illustrates the judging workflow.
 
@@ -796,255 +819,207 @@ The dimension scores are summed to produce a total score out of 100. Figure~\ref
 
 
 
-\subsection{Inferencing? Include the yaml reference here?}
 
 
+% ---------------------------------------------------------
+\subsection{Rubric Structure and Multi-Dimensional Scoring}
+\label{subsec:ch3_obj4_rubric}
 
-\subsection{Judge Stability and Consistency Checks}
-\label{subsec:ch3_obj4_stability}
+OSQ responses were evaluated using a rubric-based grading framework derived from the rubric generation process Objective 2 in \ref{sec:ch3_obj2}. Each response was scored across five dimensions adapted from multi-dimensional evaluation frameworks~\cite{lin2023multidim}:
 
-Stability checks were performed to evaluate whether judge scores were sensitive to repeat runs under nominally identical settings. Where instability was observed, the analysis treats resulting uncertainty as part of the measurement process rather than as noise to be ignored.
-
-%%% ADD IN INTER-JUDGE CORRELATION HERE
-
-
-
-\subsection{(OLD, ADAPT TO NEW) OSQ-Specific Analysis}\label{sec:osq_analysis}
-
-\subsubsection*{Analytical Question}
-
-We characterize model performance on \acp{osq} and assess the consistency of LLM-based judges scoring responses with a multi-dimensional rubric.
-
-\subsubsection*{Threat to Validity}
-
-If OSQ scores are unstable or judge-specific, then model rankings and conclusions about higher-order reasoning may depend more on the choice of judge than on true model capability. This would weaken the validity of OSQ as a complementary evaluation to MCQ.
-
-\subsubsection*{Evidence Requirements}
-
-We require:
-\begin{enumerate}[nosep]
-    \item A clear description of OSQ score distributions (central tendency and variability).
-    \item Evidence that different judges assign similar scores to the same models or responses.
-    \item Robust estimates of mean performance that do not rely on normality assumptions.
+\begin{enumerate}
+    \item \textbf{Technical Accuracy}: Correctness of facts, principles, terminology
+    \item \textbf{Conceptual Understanding}: Depth of systems thinking demonstrated
+    \item \textbf{Completeness}: Coverage of required answer elements
+    \item \textbf{Clarity}: Communication quality and organization
+    \item \textbf{Professional Relevance}: Real-world applicability
 \end{enumerate}
 
-\subsubsection*{Visual Diagnostics}
+Each dimension was scored on a 0 to 20 scale. Dimension scores were summed to produce a total score in the range 0 to 100.
 
-We first inspect OSQ performance visually:
-\begin{itemize}[nosep]
-    \item \textbf{Score distribution plots}: for each model, histograms with kernel density estimates (KDE) show the shape, skewness, and spread of OSQ scores.
-    \item \textbf{Judge-level box or violin plots}: for each judge model, we plot the distribution of assigned scores across all responses. Differences in medians or spread reveal relative leniency, strictness, or variability.
-    \item \textbf{Rubric dimension bar charts}: mean scores for each rubric dimension (e.g., technical accuracy, completeness) are plotted per model, highlighting dimension-specific strengths and weaknesses.
-\end{itemize}
-Descriptive statistics (mean, median, standard deviation, interquartile range) are reported alongside these plots for clarity.
-
-\subsubsection*{Statistical Tests and Assumptions}
-
-We quantify judge consistency and uncertainty as follows:
-
-\paragraph{Inter-judge agreement.}
-For responses scored by multiple judges, we compute correlations between judges' total scores (e.g., Spearman's rank correlation). High correlation indicates that judges agree on relative performance across models or responses.
-
-\paragraph{Bootstrap confidence intervals.}
-For each model, we estimate the mean OSQ score and its uncertainty using bootstrap resampling. We draw $B$ resamples with replacement from the observed scores and compute the mean for each resample. The 2.5th and 97.5th percentiles of the bootstrap distribution form a 95\% confidence interval. This approach avoids normality assumptions and is robust to skewed or heavy-tailed score distributions.
-
-\subsubsection*{Interpretation}
-
-OSQ scoring reliability is  interpreted using the following decision logic:
-
-\begin{enumerate}[nosep]
-    \item \textbf{Inspect score distributions and variability.}
-    \begin{itemize}[nosep]
-        \item If histograms/KDE plots show roughly unimodal, well-behaved distributions with moderate spread, proceed to judge agreement.
-        \item If distributions are highly skewed or multimodal, emphasize bootstrap confidence intervals and avoid parametric assumptions.
-    \end{itemize}
-
-    \item \textbf{Evaluate inter-judge agreement (correlation).}
-    Let $\rho$ denote the chosen inter-judge correlation (e.g., Spearman).
-    \begin{enumerate}[nosep]
-        \item If $\rho \geq 0.80$: judges are strongly consistent; OSQ scores and model rankings are robust to judge choice.
-        \item If $0.50 \leq \rho < 0.80$: judges show moderate agreement; OSQ results are usable but judge-specific effects should be acknowledged.
-        \item If $\rho < 0.50$: judge agreement is low; treat OSQ-based conclusions with caution and highlight this as a limitation.
-    \end{enumerate}
-
-    \item \textbf{Assess uncertainty with bootstrap confidence intervals.}
-    \begin{enumerate}[nosep]
-        \item If bootstrap 95\% CIs for mean scores are \emph{narrow} and non-overlapping between models of interest:\\
-        Mean OSQ performance differences are stable and interpretable.
-        \item If CIs are \emph{wide} or heavily overlapping:\\
-        Model rankings may be unreliable; report that OSQ performance differences are uncertain and may not be statistically meaningful.
-    \end{enumerate}
-
-    \item \textbf{Final interpretation.}
-    \begin{itemize}[nosep]
-        \item \emph{High reliability:} $\rho \geq 0.80$ and narrow CIs. OSQ results provide a trustworthy view of model performance and higher-order reasoning.
-        \item \emph{Moderate reliability:} $0.50 \leq \rho < 0.80$ and/or mixed CI widths. OSQ results are informative but should be interpreted alongside MCQ results and with judge effects in mind.
-        \item \emph{Low reliability:} $\rho < 0.50$ and wide CIs. OSQ results primarily illustrate trends rather than precise rankings and should be framed as exploratory.
-    \end{itemize}
-\end{enumerate}
-
-
-
-
-
-\subsection{Error Handling and Adjudication Rules}
-\label{subsec:ch3_obj4_error_handling}
-
-re-running if certain errors etc, pull from chapter 5 limitations section
-
+Structured JSON output was required from judges to ensure machine-parseable scoring. Responses that failed schema validation were handled according to predefined parsing rules described in Section~\ref{sec:environment}.
 %%%%%
-I think we should move all of this up to the environment section, since it's indempotent and did this for every section.
+% I think we should move all of this up to the environment section, since it's indempotent and did this for every section.
 %%%%%
+
+%%%% add these two apragraphs with above
+\noindent\textit{Scope constraints.}
+Multi-dimensional scoring assumes that rubric dimensions are conceptually separable and additive. While summation provides a convenient scalar score, dimension-level analysis is retained to prevent masking of asymmetric strengths or weaknesses.
+
+
+%%% example table for scoring. SHOULD WE GO AHEAD AND REMOVE CHATGPT-5?
+
+Table~\ref{tab:judge_scoring_example} shows the scores returned by all three judges for the same response (Claude Sonnet 4.5, Question~ID~1), illustrating inter-judge variation.
+
+\begin{table}[htbp]
+    \centering
+    \caption{Judge scores for Question~ID~1 (Claude Sonnet 4.5 response). Each dimension is scored 0--20; overall score is the sum (0--100).}
+    \label{tab:judge_scoring_example}
+    \rowcolors{0}{}{} % Turn off row colors
+    \footnotesize
+    \begin{tabular}{l c c c}
+    \hline
+    \textbf{Dimension (0--20)} & \textbf{GPT-5} & \textbf{GPT-5-mini} & \textbf{OSS 120B} \\
+    \hline
+    Technical Accuracy       & 20 & 20 & 18 \\
+    Conceptual Understanding & 19 & 20 & 19 \\
+    Completeness             & 20 & 20 & 20 \\
+    Clarity \& Organization  & 19 & 20 & 18 \\
+    Professional Relevance   & 20 & 20 & 18 \\
+    \hline
+    \textbf{Overall (0--100)} & \textbf{98} & \textbf{100} & \textbf{93} \\
+    \hline
+    \end{tabular}
+\end{table}
+
+
 
 
 
 % ---------------------------------------------------------
-\section{Objective 5: Robustness, Cross-Modality Evidence, and Uncertainty Quantification}
-\label{sec:ch3_obj5}
+\subsection{Inter-Judge Reliability and Stability Analysis}
+\label{subsec:ch3_obj4_reliability}
 
-\subsection{Operational Definition of MCQ Robustness}
-\label{subsec:ch3_obj5_robustness}
+To validate OSQ scoring as a measurement instrument, both inter-judge agreement and score stability were evaluated. For responses scored by multiple judges, agreement was quantified using Spearman's rank correlation between judges' total scores. High correlation indicates that judges produce consistent relative orderings of responses and models. Judge scoring was conducted under identical conditions and is idempotent with a temperature of 0 to assess run-to-run stability. 
 
-\subsection{MCQ Position Bias Analysis (MERGE WITH ABOVE)}\label{sec:position_bias_analysis}
 
-Position bias refers to systematic preference for particular answer positions (A, B, C, D) independent of question content. Such bias can inflate or deflate apparent model accuracy depending on the distribution of correct answers in the benchmark.
+\paragraph{Predefined Reliability Classification Criteria}
+To preserve separation between results in Chapter \ref{ch:results} and discussion and interpretation in Chapter \ref{ch:discussion}, reliability levels are classified using predefined thresholds applied systematically to observed results.
 
-\subsubsection*{Analytical Question}
+Reliability is evaluated using the following procedure:
 
-We test whether a model's multiple-choice accuracy depends on the position of the correct option (A--D), independent of question content, using the four position-rotated variants generated in \ref{sec:phase3}.
-
-\subsubsection*{Threat to Validity}
-
-If a model favors particular answer positions (e.g., over-selects option C), its accuracy can be artificially inflated or deflated depending on the benchmark's answer-position distribution. In that case, reported MCQ accuracy may reflect positional heuristics rather than genuine understanding, and cross-model comparisons become unfair.
-
-\subsubsection*{Evidence Requirements}
-
-We require evidence that:
 \begin{enumerate}[nosep]
-    \item Accuracy differs across positions (global position effects).
-    \item Correctness for the \emph{same} questions changes across rotated variants (within-item effects).
-    \item The magnitude of any position effects is quantified, not just their statistical significance.
+    \item Score Distribution Diagnostics: For each model--judge combination, score distributions are examined to assess whether the scoring instrument produces structured and differentiable outputs. The following properties are recorded:
+    \begin{itemize}[nosep]
+        \item \textit{Modality:} uni-modal versus multi-modal distributions
+        \item \textit{Spread:} dispersion measured via standard deviation and interquartile range
+        \item \textit{Compression effects:} floor or ceiling clustering
+        \item \textit{Skewness:} asymmetric score allocation patterns
+    \end{itemize}
+    
+Highly compressed or extreme clustering distributions indicate limited discriminative resolution, while multi-modal or irregular shapes may suggest heterogeneous rubric application across response types. These properties characterize the measurement behavior of the scoring instrument but do not in themselves determine adequacy.
+
+    \item Inter-judge agreement: Correlation quantifies consistency in relative ordering rather than absolute calibration. These thresholds are used to categorize scoring stability across judges under identical rubric conditions.
+
+    Let $\rho$ denote Spearman's rank correlation:
+    \begin{itemize}[nosep]
+        \item $\rho \geq 0.80$ — High agreement
+        \item $0.50 \leq \rho < 0.80$ — Moderate agreement
+        \item $\rho < 0.50$ — Low agreement
+    \end{itemize}
+    
+
 \end{enumerate}
 
-\subsubsection*{Visual Diagnostics}
+These criteria determine whether the rubric-based judge framework satisfies minimum reliability requirements as a measurement instrument. Substantive implications for model capability and modality trade-offs are reserved for Chapter~5.
 
-Position bias is first assessed visually using per-position accuracy metrics. For each model, accuracy is calculated separately for each position variant:
+
+
+% ---------------------------------------------------------
+\section{Objective 5: Robustness and Cross-Modality Evidence Uncertainty Quantification}
+\label{sec:ch3_obj5}
+
+Objective 5 strengthens the interpretability of benchmark outcomes by (i) testing the robustness of MCQ results to answer-position artifacts using position-rotated variants and (ii) establishing a cross-modality comparison framework between MCQ and OSQ formats on one-to-one matched questions. Together, these analyses support defensible model comparisons  by clarifying when different evaluation modalities provide convergent versus complementary evidence.
+
+% ---------------------------------------------------------
+\subsection{MCQ Robustness via Answer-Position Rotations}
+\label{subsec:ch3_obj5_mcq_robustness}
+
+With construction of the datasets was discussed in Section \ref{subsec:ch3_obj1_mcq_variants}, this section focuses on the quantification of the results for MCQ robustness.
+
+
+\paragraph{Position bias as a robustness failure mode.}
+Position bias refers to systematic preference for particular answer positions (A, B, C, D) independent of question content. If present, such bias can inflate or deflate apparent model accuracy depending on the distribution of correct answers in the benchmark, confounding cross-model comparisons.
+
+To test robustness to this failure mode, each MCQ item is evaluated under four position-rotated variants in which the correct option appears once in each position (A, B, C, D) while preserving the underlying question and distractor content. Let $\text{Acc}_p$ denote accuracy when the correct answer appears in position $p \in \{A,B,C,D\}$:
 \begin{align}
-\text{Acc}_A &= \frac{\text{\# correct on variant A}}{1144} \\
-\text{Acc}_B &= \frac{\text{\# correct on variant B}}{1144} \\
-\text{Acc}_C &= \frac{\text{\# correct on variant C}}{1144} \\
-\text{Acc}_D &= \frac{\text{\# correct on variant D}}{1144}
+\text{Acc}_A &= \frac{\#\text{ correct on variant A}}{N} \\
+\text{Acc}_B &= \frac{\#\text{ correct on variant B}}{N} \\
+\text{Acc}_C &= \frac{\#\text{ correct on variant C}}{N} \\
+\text{Acc}_D &= \frac{\#\text{ correct on variant D}}{N},
 \end{align}
+where $N$ is the number of MCQ items evaluated per variant. Under the null hypothesis of no position bias, $\text{Acc}_A=\text{Acc}_B=\text{Acc}_C=\text{Acc}_D$.
 
-Under the null hypothesis of no position bias, $\text{Acc}_A = \text{Acc}_B = \text{Acc}_C = \text{Acc}_D$.
-Deviation from the expected uniform distribution is quantified as:
-\begin{equation}
-\Delta_p = \text{Acc}_p - \frac{1}{4}\sum_{i \in \{A,B,C,D\}} \text{Acc}_i.
-\end{equation}
+Robustness is supported when (i) accuracy does not differ meaningfully across positions with global invariance, (ii) within-item correctness is stable across rotations with item-level invariance, and (iii) any detected differences are negligible in magnitude as quantified by standardized effect sizes.
 
-We then construct the following diagnostics:
-\begin{itemize}[nosep]
-    \item \textbf{Accuracy-by-position bar charts}: for each model, we plot accuracy when the correct answer appears in positions A, B, C, and D. Large differences between bars indicate potential position bias.
-    \item \textbf{Deviation-from-uniform plots}: for each model and position $p \in \{A,B,C,D\}$, we display $\Delta_p$ as a bar chart or heatmap. Positive values indicate preference for a position; negative values indicate avoidance.
-\end{itemize}
-
-These plots provide an immediate qualitative indication of positional preferences before formal hypothesis testing.
-
-\subsubsection*{Statistical Tests and Assumptions}
-
-To assess answer-position bias in MCQ evaluation, we use two complementary nonparametric hypothesis tests, each paired with a standardized effect size. Together, these tests distinguish between global position dependence and within-item position sensitivity.
-We then apply the following tests:
-
-\paragraph{Chi-square test of independence.}
-For each model, we construct a $2 \times 4$ contingency table of correctness (correct/incorrect) by answer position and apply a chi-square test of independence. This tests whether correctness is independent of answer position at the aggregate level.
-
-\paragraph{Friedman test.}
-Because the four position variants share the same underlying questions, correctness across positions forms a repeated-measures design. We apply the Friedman test to test whether per-question correctness differs systematically across positions.
-
-\paragraph{Effect size (Cramér's V).}
-For the chi-square result, we compute Cramér's $V$ as
-\[
-    V = \sqrt{\frac{\chi^2}{N \cdot \min(r-1, c-1)}},
-\]
-where $N$ is the total number of observations and $r$ and $c$ are the numbers of rows and columns. This quantifies the strength of association between position and correctness.
-
-\paragraph{KENDALLS}
-
-
-
-
+\paragraph{Statistical tests and effect sizes.}
+Two complementary nonparametric tests are applied for each model to distinguish between global position dependence and within-item sensitivity:
 
 \begin{itemize}[leftmargin=*, itemsep=0.5em]
-
 \item \textbf{Chi-square test of independence} ($\chi^2$) with \textbf{Cram\'{e}r's $V$}:
   \begin{itemize}[leftmargin=*, itemsep=0.25em]
-    \item \emph{Data / design:} Nominal categorical counts in a contingency table, with correctness ($\in\{\text{correct},\text{incorrect}\}$) cross-tabulated by answer position ($\in\{A,B,C,D\}$).
-    \item \emph{What it tests:} Whether aggregate correctness is independent of answer position across all items.
-    \item \emph{Interpretation:} A significant result indicates global position dependence, meaning some answer positions are associated with higher or lower correctness rates than expected by chance.
-    \item \emph{Effect size:} Cram\'{e}r's $V$ quantifies the practical magnitude of this association, mitigating the tendency for large sample sizes to render trivial effects statistically significant.
+    \item \emph{Design:} correctness ($\in\{\text{correct},\text{incorrect}\}$) cross-tabulated by answer position ($\in\{A,B,C,D\}$).
+    \item \emph{Test:} whether aggregate correctness is independent of answer position (global dependence).
+    \item \emph{Effect size:} Cram\'{e}r's $V$ quantifies the magnitude of association, reducing reliance on p-values alone.
   \end{itemize}
 
-\item \textbf{Friedman test} (repeated measures) ($\chi^2_F$) with \textbf{Kendall's $W$}:
+\item \textbf{Friedman test} (repeated measures) with \textbf{Kendall's $W$}:
   \begin{itemize}[leftmargin=*, itemsep=0.25em]
-    \item \emph{Data / design:} Repeated-measures design using matched items, where the same questions are evaluated across multiple rotated answer-position variants.
-    \item \emph{What it tests:} Whether per-item correctness differs systematically across answer positions.
-    \item \emph{Interpretation:} A significant result indicates within-item position sensitivity, meaning identical questions are more or less likely to be answered correctly depending on where the correct option appears.
-    \item \emph{Effect size:} Kendall's $W$ summarizes the strength of systematic agreement across positions, with larger values indicating stronger and more consistent position effects.
+    \item \emph{Design:} repeated measures across the same underlying items evaluated under position-rotated variants.
+    \item \emph{Test:} whether per-item correctness differs systematically across positions (within-item sensitivity).
+    \item \emph{Effect size:} Kendall's $W$ quantifies the consistency and strength of position effects across items.
   \end{itemize}
-
 \end{itemize}
 
 
-\subsubsection*{Interpretation}
+\subsubsection*{Predefined Robustness Classification Criteria}
+\label{subsubsec:ch3_obj5_mcq_robustness_criteria}
 
-The position bias results are interpreted using the following decision logic:
+To preserve separation between results in Chapter \ref{ch:results} and discussion and interpretation in Chapter \ref{ch:discussion}, this section defines the criteria by which answer-position robustness will be classified. These criteria are applied systematically to the observed results.
+
+
+% We employed non-parametric inferential statistical tests to evaluate both statistical significance and effect magnitude. Specifically, the Chi-Square test of independence ($\chi^2$) was used to assess categorical associations, with Cram\'{e}r's~$V$ reported as the corresponding effect size. 
+% For repeated-measures analyses, the Friedman test ($Q$) was applied, and Kendall's~$W$ was reported to quantify effect magnitude.
+
+
+For each model, robustness to answer-position artifacts is evaluated using joint evidence from two complementary statistical perspectives and their combination: 
+(i) global (aggregate-level) position dependence,  
+(ii) within-item (repeated-measures) position sensitivity, and 
+(iii) classification of the evidence
+
+\begin{enumerate}[nosep]
+
+    \item \textbf{Global position dependence (aggregate-level robustness).}
+
+    We first assess whether overall correctness rates differ depending on the answer position in which the correct option appears. 
+    For each model, responses are summarized in a $2 \times 4$ contingency table that cross-tabulates:
+
+    \begin{itemize}[nosep]
+        \item \textbf{Correctness} $\in \{\text{correct}, \text{incorrect}\}$, and
+        \item \textbf{Answer position} $\in \{A, B, C, D\}$.
+    \end{itemize}
+
+    Concretely, the table contains counts of correct and incorrect responses when the correct answer is placed in each position (A, B, C, or D). 
+    If robustness holds at the aggregate level, the proportion of correct responses should be approximately equal across all four positions.
+    We apply a chi-square test of independence to evaluate whether correctness is statistically independent of answer position. 
+    Because large sample sizes can render trivial differences statistically significant, we report Cram\'{e}r's $V$ as a standardized effect size to quantify the practical magnitude of any detected association. 
+    This test captures \emph{aggregate} distortions in measured accuracy due to answer placement.
+
+    \item \textbf{Within-item position sensitivity (repeated-measures robustness).}
+
+    Aggregate stability does not guarantee item-level stability. 
+    Even if overall accuracy appears similar across positions, individual questions may flip between correct and incorrect when the correct option is rotated.
+    Because each of the four rotated variants contains the same underlying items and only the option order differs, correctness across positions forms a repeated-measures design at the item level. 
+    Each question is effectively evaluated four times per model, once with the correct answer in each position.
+    To assess whether correctness for the same items changes systematically across rotated positions, we apply the Friedman test, a nonparametric test for repeated measures. 
+    We report Kendall's $W$ as the corresponding repeated-measures effect size, which quantifies the strength and consistency of within-item position effects.
+
+
+    \item \textbf{Classification.}
+    Models are classified with the decision tree found in Figure \ref{fig:mcq-robustness-decision-tree} and all permutations summarized in Table~\ref{tab:position_bias_rubric}. Effect sizes ($V$, $W$) are treated as primary indicators of practical relevance, while p-values are used to determine whether observed effects are distinguishable from noise under the available sample size.
+
+\end{enumerate}
+
+The procedural outputs of this robustness analysis (test statistics, p-values, and effect sizes) are reported in Chapter~\ref{ch:results}. Substantive implications for benchmark validity, model comparison, and qualification evidence are discussed in Chapter~\ref{ch:discussion}.
+
 
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=0.9\textwidth]{figs/ch3/3.5/mcq-bias-decision-tree.png}
-    \caption{MCQ Statistical Interpretation Decision Tree}
-    \label{fig:mcq-statistical-interp-decision-treee}
+    \caption{Predefined Analysis Workflow for MCQ Answer-Position Robustness Classification.}
+    \label{fig:mcq-robustness-decision-tree}
 \end{figure}
 
-\begin{enumerate}[nosep]
-    \item \textbf{Check global position dependence (chi-square).}
-    \begin{enumerate}[nosep]
-        \item If the chi-square test is \emph{not significant} ($p \geq 0.05$):\\
-        Conclude that there is no evidence of global position bias for this model. Proceed to Step~2 to verify that any residual effects are negligible.
-        \item If the chi-square test is \emph{significant} ($p < 0.05$):\\
-        Conclude that correctness depends on answer position at the aggregate level. Continue with effect size and within-question analysis.
-    \end{enumerate}
-
-    \item \textbf{Assess magnitude of global bias (Cramér's $V$).}
-    \begin{enumerate}[nosep]
-        \item If $V < 0.10$: global position effects are negligible in practice, even if statistically significant.
-        \item If $0.10 \leq V < 0.30$: position bias is moderate and should be reported as a potential source of distortion.
-        \item If $V \geq 0.30$: position bias is strong and substantially affects measured accuracy; MCQ results for this model should be interpreted with caution.
-    \end{enumerate}
-
-    \item \textbf{Check within-question effects (Friedman test).}
-    \begin{enumerate}[nosep]
-        \item If the Friedman test is \emph{not significant} ($p \geq 0.05$):\\
-        Correctness for individual questions does not change systematically across rotated positions. Any bias is mainly global and small if $V$ is small.
-        \item If the Friedman test is \emph{significant} ($p < 0.05$):\\
-        Per-question correctness is sensitive to position. This indicates structural position bias beyond random fluctuations and reinforces any global effects seen in Steps~1--2.
-    \end{enumerate}
-
-    %%% UPDATE BELOW FOR KENADALL'S FOR MAGNITUDE
-    \item \textbf{Check within-question effects (Friedman test).}
-    \begin{enumerate}[nosep]
-        \item If the Friedman test is \emph{not significant} ($p \geq 0.05$):\\
-        Correctness for individual questions does not change systematically across rotated positions. Any bias is mainly global and small if $V$ is small.
-        \item If the Friedman test is \emph{significant} ($p < 0.05$):\\
-        Per-question correctness is sensitive to position. This indicates structural position bias beyond random fluctuations and reinforces any global effects seen in Steps~1--2.
-    \end{enumerate}
-
-\end{enumerate}
-
-
-
-We employed non-parametric inferential statistical tests to evaluate both statistical significance and effect magnitude. Specifically, the Chi-Square test of independence ($\chi^2$) was used to assess categorical associations, with Cram\'{e}r's~$V$ reported as the corresponding effect size. 
-For repeated-measures analyses, the Friedman test ($Q$) was applied, and Kendall's~$W$ was reported to quantify effect magnitude.
 
 
 
@@ -1119,94 +1094,156 @@ Both effect sizes quantify practical magnitude independent of sample size.
 
 
 
+% ---------------------------------------------------------
+
 \subsection{Cross-Modality Comparison Framework}
 \label{subsec:ch3_obj5_modality_comparison}
 
-\subsubsection*{Analytical Question}
+This subsection evaluates whether MCQ and OSQ formats yield convergent assessments of model capability on matched questions, or whether they capture systematically different aspects of performance. If MCQ and OSQ diverge, scores from the two formats should not be treated as interchangeable evidence.
 
-We test whether multiple-choice (MCQ) and open short-answer (OSQ) formats produce consistent assessments of model capability on the same underlying questions, or whether they capture different aspects of performance.
+To preserve separation between results in Chapter \ref{ch:results} and discussion and interpretation in Chapter \ref{ch:discussion}, this subsection defines criteria used to classify whether MCQ and OSQ provide convergent evidence on the matched question subset. The criteria below are applied systematically to the observed results.
 
-\subsubsection*{Threat to Validity}
-
-If MCQ and OSQ results diverge, it is not valid to treat scores from the two formats as interchangeable. A model that performs well on MCQ may not perform equally well on OSQ, and overall conclusions about model capability will depend on format choice.
-
-\subsubsection*{Evidence Requirements}
-
-We require:
 \begin{enumerate}[nosep]
-    \item A measure of association between MCQ accuracy and OSQ scores across models.
-    \item A paired comparison of per-model performance across formats on the matched question subset.
-    \item A standardized effect size describing any systematic difference between formats.
-\end{enumerate}
+    \item \textbf{Visual consistency diagnostic.}
+    A scatter plot is constructed with MCQ accuracy on the $x$-axis and normalized mean OSQ score on the $y$-axis, one point per model. The diagonal reference line $y=x$ is used as a qualitative guide for agreement. Systematic displacement above/below the diagonal is recorded as a diagnostic of directional separation between formats.
 
-\subsubsection*{Visual Diagnostics}
+    \item \textbf{Association and ranking agreement.}
+    Pearson's correlation ($r$) is computed to quantify linear association and Spearman's rank correlation ($\rho_s$) to quantify agreement in model ordering.
 
-We first compare formats visually using a scatter plot:
-\begin{itemize}[nosep]
-    \item \textbf{MCQ--OSQ scatter plot}: each point represents a model, with MCQ accuracy (on the matched subset) on the $x$-axis and mean OSQ score (normalized to $[0,1]$ if desired) on the $y$-axis. We overlay a least-squares regression line and a diagonal reference line $y=x$.
-\end{itemize}
-Points close to the diagonal indicate similar performance across formats; systematic deviations above or below the diagonal indicate models that perform better in one format than the other.
+    Association levels are classified as:
+    \begin{itemize}[nosep]
+        \item \textbf{High association:} $r \ge 0.80$ \emph{and} $\rho_s \ge 0.80$, MCQ and OSQ largely agree on model ordering; they measure closely related constructs.
+        \item \textbf{Moderate association:} $0.50 \le r < 0.80$ \emph{or} $0.50 \le \rho_s < 0.80$, Formats are moderately aligned but capture partially distinct capabilities.
+        \item \textbf{Low association:} $r < 0.50$ \emph{or} $\rho_s < 0.50$, Formats diverge; MCQ and OSQ should be treated as measuring different aspects of performance.
+    \end{itemize}
 
-\subsubsection*{Statistical Tests and Assumptions}
+    We compute Pearson's correlation to assess linear association between MCQ accuracy and mean OSQ score across models, and Spearman's rank correlation to assess whether the two formats induce similar model orderings. High correlation would suggest convergent evidence; lower correlation would suggest that formats capture partially distinct capabilities.
 
-We then quantify the relationship between formats:
-
-\paragraph{Correlation between formats.}
-We compute Pearson's correlation coefficient to measure linear association between MCQ accuracy and OSQ mean scores, and Spearman's rank correlation to measure agreement in model ranking. High correlation indicates that models that perform well on MCQ also tend to perform well on OSQ.
-
-\paragraph{Paired difference test.}
-For each model, we compute the difference between MCQ accuracy and normalized OSQ mean score, $\Delta_i = \text{Acc}_{\text{MCQ},i} - \bar{S}_{\text{OSQ},i}'$. We apply the Wilcoxon signed-rank test to the set of differences $\{\Delta_i\}$ to test whether the median difference is zero. This non-parametric test does not assume normally distributed differences.
-
-\paragraph{Effect size.}
-We compute Cohen's $d$ for paired samples to quantify the magnitude of the format difference:
+    \item \textbf{Paired difference test.}
+    For each model $i$, we compute the difference between MCQ accuracy and normalized OSQ mean score on the matched subset,
 \[
-    d = \frac{\bar{\Delta}}{s_{\Delta}},
+\Delta_i = \text{Acc}_{\text{MCQ},i} - \bar{S}'_{\text{OSQ},i}.
+\]
+We apply the Wilcoxon signed-rank test to $\{\Delta_i\}$ to test whether the median difference is zero without assuming normally distributed differences. Practical magnitude is summarized using a paired-sample standardized effect size:
+\[
+d = \frac{\bar{\Delta}}{s_{\Delta}},
 \]
 where $\bar{\Delta}$ is the mean of the per-model differences and $s_{\Delta}$ is their standard deviation.
 
-\subsubsection*{Interpretation}
 
-The relationship between MCQ and OSQ formats is interpreted using the following decision logic:
-
-\begin{enumerate}[nosep]
-    \item \textbf{Inspect the MCQ--OSQ scatter plot.}
+    Effect magnitude levels are classified as:
     \begin{itemize}[nosep]
-        \item Points close to the diagonal $y=x$ suggest similar performance across formats.
-        \item Systematic deviations above or below the diagonal suggest models that are relatively stronger in one format.
+        \item \textbf{Negligible:} $|d| < 0.20$
+        \begin{itemize}
+            \item Neglibile format difference
+        \end{itemize}
+        \item \textbf{Small:} $0.20 \le |d| < 0.50$
+        \begin{itemize}
+            \item Format matters somewhat
+        \end{itemize}
+        \item \textbf{Medium:} $0.50 \le |d| < 0.80$
+        \begin{itemize}
+            \item Format choice has clear practical impact
+        \end{itemize}
+        \item \textbf{Large:} $|d| \ge 0.80$
+        \begin{itemize}
+            \item MCQ and OSQ should be treated as distinct evaluations
+        \end{itemize}
     \end{itemize}
 
-    \item \textbf{Quantify association (Pearson and Spearman correlations).}
-    \begin{enumerate}[nosep]
-        \item If both correlations are $\geq 0.80$:\\
-        MCQ and OSQ largely agree on model ordering; they measure closely related constructs.
-        \item If correlations are in $[0.50, 0.80)$:\\
-        Formats are moderately aligned but capture partially distinct capabilities.
-        \item If either correlation is $< 0.50$:\\
-        Formats diverge; MCQ and OSQ should be treated as measuring different aspects of performance.
-    \end{enumerate}
-
-    \item \textbf{Test for systematic differences (Wilcoxon signed-rank).}
-    Let $\Delta_i = \text{Acc}_{\text{MCQ},i} - \bar{S}'_{\text{OSQ},i}$ be the per-model differences.
-    \begin{enumerate}[nosep]
+    %%% does this go here?
+    \item 
         \item If the Wilcoxon test is \emph{not significant} ($p \geq 0.05$):\\
         There is no evidence that one format systematically yields higher scores across models.
         \item If the Wilcoxon test is \emph{significant} ($p < 0.05$):\\
         One format consistently gives higher scores (direction indicated by the sign of $\bar{\Delta}$).
-    \end{enumerate}
 
-    \item \textbf{Assess practical importance (Cohen's $d$ for paired differences).}
-    \begin{enumerate}[nosep]
-        \item $|d| < 0.20$: negligible format difference.
-        \item $0.20 \leq |d| < 0.50$: small difference; format matters somewhat.
-        \item $0.50 \leq |d| < 0.80$: medium difference; format choice has clear practical impact.
-        \item $|d| \geq 0.80$: large difference; MCQ and OSQ should be treated as distinct evaluations.
-    \end{enumerate}
 
-    \item \textbf{Final interpretation.}
+    \item \textbf{Cross-modality consistency classification.}
+    Based on the association and separation signals above, the MCQ--OSQ relationship is classified into one of the following evidence categories:
     \begin{itemize}[nosep]
-        \item \emph{Formats largely equivalent:} high correlations, non-significant Wilcoxon result, and $|d| < 0.20$.
-        \item \emph{Formats partially overlapping:} moderate correlations and small-to-medium $|d|$; MCQ and OSQ both contribute complementary information.
-        \item \emph{Formats clearly distinct:} low correlations and medium-to-large $|d|$; conclusions should distinguish between MCQ-style and OSQ-style capability.
+        \item \textbf{Convergent evidence:} High association and negligible-to-small separation ($|d|<0.50$), with Wilcoxon not significant or directionally weak.
+        \item \textbf{Partially convergent evidence:} Moderate association and/or small-to-medium separation ($0.20 \le |d| < 0.80$), indicating partial agreement with measurable format sensitivity.
+        \item \textbf{Divergent evidence:} Low association and/or medium-to-large separation ($|d|\ge 0.50$), indicating that the two formats yield systematically different measurement signals on the matched subset.
+    \end{itemize}
+\end{enumerate}
+
+These predefined criteria establish how cross-modality agreement will be assessed in Chapter~\ref{ch:results}. Broader implications for evidence fusion, qualification strength, or modality selection are discussed in Chapter~\ref{ch:discussion}.
+
+
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.75\linewidth]{figs/ch3/3.3/mcq_vs_osq_tests.png}
+    \caption{Predefined Analysis Workflow for MCQ vs OSQ Classification.}
+    \label{fig:mcq-vs-osq-decision-tree}
+\end{figure}
+
+
+
+% Column helpers (preamble)
+\newcolumntype{L}[1]{>{\RaggedRight\arraybackslash}p{#1}}
+\newcolumntype{Y}{>{\RaggedRight\arraybackslash}X}
+
+\begin{table}[htbp]
+\centering
+\caption{Decision rubric for MCQ vs OSQ cross-modality Significance classification}
+\label{tab:cross_modality_rubric}
+
+\small
+\setlength{\tabcolsep}{4pt}        % tighter horizontal padding
+\renewcommand{\arraystretch}{1.15} % more vertical breathing room
+
+\begin{tabularx}{\linewidth}{L{3.1cm} L{3.0cm} L{2.8cm} L{1.9cm} Y}
+\toprule
+\textbf{Classification} &
+\textbf{Association} &
+\makecell{\textbf{Effect size}\\\textbf{($|d|$)}} &
+\makecell{\textbf{$p_{\text{Wilcoxon}}$}} &
+\textbf{Interpretation / Action} \\
+\midrule
+
+Convergent evidence &
+\makecell[l]{High:\\ $r \ge 0.80$\\ $\rho_s \ge 0.80$} &
+\makecell[l]{Negligible--Small:\\ $|d| < 0.50$} &
+$\ge 0.05$ &
+MCQ and OSQ produce consistent measurement signals on matched items. Cross-modality agreement supports combining results; report as mutually reinforcing evidence. \\
+\addlinespace
+
+Mixed evidence &
+\multicolumn{3}{L{7.7cm}}{\makecell[l]{Signals disagree; exactly one of:\\[2pt]
+(a) High association but $|d| \ge 0.50$ \\[2pt]
+(b) $|d| < 0.50$ but moderate/low association \\[2pt]
+(c) High association and $|d| < 0.50$ but $p_{\text{Wilcoxon}} < 0.05$}} &
+Evidence is internally inconsistent---one diagnostic suggests convergence while another suggests divergence. Report all diagnostics; avoid strong convergence or divergence claims. \\
+\addlinespace
+
+Partially convergent evidence &
+\makecell[l]{Moderate:\\ $0.50 \le r < 0.80$\\ or\\ $0.50 \le \rho_s < 0.80$} &
+\makecell[l]{Small--Medium:\\ $0.20 \le |d| < 0.80$} &
+(any) &
+Formats partially agree but measurable format sensitivity exists. Report modality-specific results separately; interpret cross-modality comparisons with stated caveats. \\
+\addlinespace
+
+Divergent evidence &
+\makecell[l]{Low:\\ $r < 0.50$\\ or $\rho_s < 0.50$} &
+\makecell[l]{Medium--Large:\\ $|d| \ge 0.50$} &
+$< 0.05$ &
+Formats yield systematically different measurement signals. Treat MCQ and OSQ results as measuring distinct constructs or exhibiting strong format confounds. Do not combine scores. \\
+\bottomrule
+\end{tabularx}
+
+\vspace{0.5em}
+\footnotesize
+\textit{Notes.}
+$r$ denotes Pearson's correlation, measuring linear association between MCQ accuracy and normalized OSQ score across models.
+$\rho_s$ denotes Spearman's rank correlation, measuring agreement in model ordering across formats.
+$d = \bar{\Delta}/s_{\Delta}$ is the paired standardized effect size, where $\Delta_i = \text{Acc}_{\text{MCQ},i} - \bar{S}'_{\text{OSQ},i}$.
+The Wilcoxon signed-rank test evaluates whether the median paired difference is zero at $\alpha = 0.05$.
+Effect-size thresholds follow Cohen's conventions: negligible ($|d|<0.20$), small ($0.20 \le |d| < 0.50$), medium ($0.50 \le |d| < 0.80$), large ($|d| \ge 0.80$).
+The \textit{mixed evidence} row is evaluated first as a catch-all for internally inconsistent diagnostic patterns; remaining cases are classified by the primary association--separation pattern.
+Substantive implications for evidence fusion and modality selection are reserved for Chapter~5.
+\end{table}
 
 
 
@@ -1215,125 +1252,63 @@ The relationship between MCQ and OSQ formats is interpreted using the following 
 \section{Objective 6: Token-Efficiency and Cost Trade-Space Analysis}
 \label{sec:ch3_obj6}
 
-\subsection{Token Measurement Methodology}
-\label{subsec:ch3_obj6_token_method}
-
-Token usage was measured for each evaluation condition as the sum of prompt tokens and completion tokens. For OSQ evaluation, total token usage ONLY includes both model generation, not judge scoring passes. Token logs were retained per item and per run configuration to enable granular analysis of cost drivers.
+Objective 6 quantifies the computational resources required to produce open-style question (OSQ) evaluation evidence and constructs a token-normalized trade space between quality and generative effort. Consistent with Research Question \ref{RQ3}, this objective treats token usage as a stable, price-agnostic proxy for computational cost. Because provider pricing and inference architectures evolve rapidly, monetary pricing is intentionally excluded. Instead, this dissertation reports token counts as the primary resource metric, enabling temporally robust comparison and reproducibility. This objective treats resource consumption as a quality--token trade space within which defensible qualification decisions must operate.
 
 
+\subsection{Token Measurement and Response Policies}
+\label{subsec:ch3_obj6_measurement}
 
+Token usage was measured for each evaluation condition as the sum of prompt tokens and completion tokens:
 
-\subsection{Response Length Regimes and Constraints}
-\label{subsec:ch3_obj6_length_regimes}
+\[
+T_{\text{total}} = T_{\text{input}} + T_{\text{output}}
+\]
 
-To evaluate the quality--token trade space, response length regimes were implemented by constraining OSQ answers to a maximum of 500 tokens.
+where $T_{\text{input}}$ denotes prompt tokens and $T_{\text{output}}$ denotes generated completion tokens.
 
-\subsection{Cost Modeling Assumptions}
-\label{subsec:ch3_obj6_cost_model}
+Token counts are computed using \texttt{tiktoken} with the appropriate model-specific tokenizer \cite{openai_Tiktoken_2026}. Per-item token statistics are logged via \texttt{lm-eval} JSONL outputs, enabling aggregation by model, modality, and configuration.
 
-%%% IF I END UP ACTUALLY DOING A COST PER INFERENCE SECTION. i THINK WE SHOULD STAY AWAY FROM THIS FOR NOW AND STAY FOCUSED ON THE AMOUNT OF TOKENS, WHICH IS TEMPORALLY AGNOSTIC
-Costs were computed by mapping token usage to published per-token pricing for API-accessed models and to compute proxies for local inference where appropriate. Because pricing schedules can change over time and differ across providers, the dissertation reports token counts as the primary stable quantity and treats cost estimates as contextualized calculations rather than immutable facts.
+For OSQ evaluation, token accounting includes only model generation (prompt + completion). Judge-scoring passes are excluded from primary token metrics in order to isolate generative resource requirements from evaluation overhead. This separation ensures that reported values reflect model production cost rather than downstream scoring infrastructure.
 
+To standardize response length and enable controlled trade-space analysis, OSQ answers were constrained using a maximum token amount of 500 tokens, which is approximately four paragraphs. No early stopping criteria were imposed. This policy ensures that token consumption reflects full response generation under a fixed upper bound. Together, these instrumentation policies define a consistent and reproducible token measurement framework. Together, these instrumentation policies define a consistent and reproducible token measurement framework. As tokenization is model-specific, token counts should be interpreted as a consistent within-model resource measure under the given tokenizer rather than a strictly universal text-length measure across all providers \cite{openai_Tiktoken_2026, huggingface_SummaryTokenizers_2026,sennrich_NeuralMachineTranslation_2016, mielke_WordsCharactersBrief_2021, kudo_SentencePieceSimpleLanguage_2018, kudo_SubwordRegularizationImproving_2018}. 
 
-\subsection{Quality--Token Trade-Space Analysis}
+\subsection{Token-Efficiency Metrics and Trade-Space Construction}
 \label{subsec:ch3_obj6_trade_space}
 
+Using the recorded token statistics, a quality--token trade space can be constructed to evaluate generative efficiency.
 
+For each model, the following quantities are computed:
 
-\subsection{Tokenomics and Cost-Effectiveness Analysis (MERGE WITH ABOVE}\label{sec:tokenomics}
-
-%%% CONSIDER ADDING THIS PARAGRAPH HERE TO TIE CH3 BACK TO CH2.
-% \paragraph{What this dissertation reports and why (link to RQ3).}
-% Consistent with treating cost as a trade-space variable rather than a qualification criterion, this dissertation reports compute-relevant quantities to contextualize evaluation feasibility and to enable replication and comparison. In particular, the study tracks (i) token counts associated with prompts and responses, (ii) how response length policies (e.g., short vs.\ long outputs) change total token consumption, and (iii) when OSQ scoring involves judge-based evaluation, the additional call structure and token overhead implied by the judge pipeline. These quantities support the dissertation's analysis of modality- and length-dependent computational cost and token efficiency (RQ3) without asserting that lower cost implies higher qualification. Instead, cost-aware reporting clarifies the feasible evidence envelope under which robustness checks, replications, and OSQ scoring can be conducted, and it motivates evaluation designs that are transparent about the computational resources required to produce a given level of evidence.
-
-
-
-\subsubsection*{Analytical Question}
-
-We evaluate how models trade off quality and cost by quantifying token usage, monetary cost, and efficiency, and by identifying models that are Pareto-optimal in terms of cost-effectiveness.
-
-\subsubsection*{Threat to Validity}
-
-Reporting accuracy or OSQ scores alone may favor models that are prohibitively expensive to deploy at scale. Without incorporating cost, conclusions about ``best'' models may be impractical for real-world use, especially in large-scale evaluation or operational settings.
-
-\subsubsection*{Evidence Requirements}
-
-We require:
-\begin{enumerate}[nosep]
-    \item Token counts per response (prompt and completion) for each model.
-    \item Per-model cost estimates based on provider pricing.
-    \item At least one scalar efficiency metric linking cost or tokens to quality.
-    \item A way to identify models that are not dominated by cheaper or better alternatives.
-\end{enumerate}
-
-\subsubsection*{Visual Diagnostics}
-
-We summarize cost–quality trade-offs visually:
 \begin{itemize}[nosep]
-    \item \textbf{Pareto frontier plot}: models are plotted with cost per response (or per 1{,}000 questions) on the $x$-axis and mean OSQ quality on the $y$-axis. Models on the upper-left boundary form the Pareto frontier.
-    \item \textbf{Cost-quality chart}: a bubble or bar chart shows cost per 1{,}000 evaluated questions alongside mean OSQ score, making high-cost versus high-value models easy to distinguish.
+    \item Mean prompt tokens per OSQ response, $\overline{T}_{\text{input}}$.
+    \item Mean completion tokens per OSQ response, $\overline{T}_{\text{output}}$.
+    \item Mean total tokens per OSQ response.
+    \[
+        \overline{T}_{\text{total}} = \overline{T}_{\text{input}} + \overline{T}_{\text{output}}
+    \]
+
 \end{itemize}
 
-\subsubsection*{Cost and Efficiency Metrics}
+To link resource consumption to performance, a scalar efficiency metric is defined:
 
-For each model, we compute token and cost statistics:
-\begin{itemize}[nosep]
-    \item \textbf{Token counts}: average prompt tokens $T_{\text{input}}$, completion tokens $T_{\text{output}}$, and total tokens $T_{\text{total}} = T_{\text{input}} + T_{\text{output}}$ per OSQ response.
-    \item \textbf{Monetary cost}: given input and output prices $P_{\text{input}}$ and $P_{\text{output}}$ (USD per million tokens), the expected cost per response is
-    \[
-        \text{Cost}_{\text{response}} = T_{\text{input}} \cdot \frac{P_{\text{input}}}{10^6} + T_{\text{output}} \cdot \frac{P_{\text{output}}}{10^6}.
-    \]
-    This can be scaled to cost per 1{,}000 questions.
-    \item \textbf{Efficiency metric}: we report a single scalar metric such as cost per score point,
-    \[
-        \text{Cost-per-score} = \frac{\text{Cost}_{\text{response}}}{\bar{S}_{\text{OSQ}}},
-    \]
-    where $\bar{S}_{\text{OSQ}}$ is the mean OSQ score. Lower values indicate better cost-effectiveness.
-\end{itemize}
+\[
+\text{Tokens-per-score} =
+\frac{\overline{T}_{\text{total}}}{\overline{S}_{\text{OSQ}}}
+\]
 
-% \begin{itemize}
-%     \item \textbf{Cost vs. Accuracy scatter}: Models plotted by cost/sample (x-axis) and accuracy (y-axis)
-%     \item \textbf{Efficiency frontier}: Convex hull of models representing Pareto-optimal cost-accuracy tradeoffs
-%     \item \textbf{ROI curves}: ROI as function of benchmark scale for different model pairs
-%     \item \textbf{Token distribution histograms}: Distribution of tokens/sample for thinking vs. standard models
-%     \item \textbf{Break-even plots}: Break-even point visualized as intersection of cost curves
-% \end{itemize}
+where $\overline{S}_{\text{OSQ}}$ denotes the mean OSQ score for the model under the given configuration. Lower values indicate greater generative efficiency (fewer tokens required per unit of evaluated quality).
 
-
-\subsubsection*{Interpretation}
-
-% Models on the Pareto frontier achieve the best available trade-offs between cost and quality: no other model is both cheaper and more accurate. Models inside the frontier are dominated by at least one alternative that is strictly better in cost, quality, or both. The efficiency metric (e.g., cost per score point) provides a simple rank ordering of models by cost-effectiveness and enables practical recommendations such as ``cheaper models that achieve near-top performance'' versus ``premium models whose quality gains justify their cost.'' This analysis grounds benchmark results in realistic resource constraints.
-
-
-Cost-effectiveness and token usage are  interpreted using the following decision logic:
+The quality--token trade space is constructed by plotting mean OSQ score against mean total tokens per response. A Pareto frontier is then identified. A model lies on the frontier if no alternative model achieves both:
 
 \begin{enumerate}[nosep]
-    \item \textbf{Examine the Pareto frontier plot.}
-    \begin{enumerate}[nosep]
-        \item Identify models on the upper-left boundary (high quality, low cost): these form the Pareto frontier.
-        \item Models that lie strictly below and to the right of the frontier are dominated by at least one alternative and are less attractive.
-    \end{enumerate}
-
-    \item \textbf{Compare cost per 1{,}000 questions.}
-    \begin{itemize}[nosep]
-        \item If two models have similar quality but one has substantially lower cost, the cheaper model is preferred for large-scale deployment.
-        \item If a more expensive model has noticeably higher quality, the trade-off depends on available budget and required performance.
-    \end{itemize}
-
-    \item \textbf{Evaluate the efficiency metric (e.g., cost-per-score).}
-    \begin{enumerate}[nosep]
-        \item Rank models by cost-per-score; lower values indicate better efficiency.
-        \item Check whether highly efficient models also meet minimum quality thresholds (e.g., a target mean OSQ score).
-    \end{enumerate}
-
-    \item \textbf{Final interpretation.}
-    \begin{itemize}[nosep]
-        \item \emph{Operationally optimal models:} models on the Pareto frontier with low cost-per-score and acceptable quality; these are primary candidates for deployment.
-        \item \emph{Premium models:} models with the highest quality but also much higher cost; preferable only when maximal performance is required and budget allows.
-        \item \emph{Dominated models:} models that are simultaneously more expensive and less accurate than at least one alternative; these can be deprioritized.
-    \end{itemize}
+    \item Equal or higher mean OSQ score, and
+    \item Equal or lower mean token consumption.
 \end{enumerate}
-    
+
+Models strictly below and to the right of the frontier are dominated and represent less efficient trade-offs. Frontier models represent resource-efficient candidates under token-constrained evaluation regimes.
+
+This construction does not assert that lower token usage implies higher qualification. Rather, it clarifies the computational envelope within which robustness checks, replications, and OSQ scoring can be conducted. Token counts are used here as a stable proxy for generative effort; they do not directly measure wall-clock latency, memory consumption, or hardware utilization. In addition, reasoning-oriented models may consume more completion tokens under identical caps, shifting their position in the trade space without implying inferior capability. These scope constraints ensure that quality--token comparisons are interpreted strictly within the boundaries of generation-based resource accounting.
+
 
 
 
@@ -1343,28 +1318,7 @@ Cost-effectiveness and token usage are  interpreted using the following decision
 
 This chapter defined an objective-centered methodology for producing modality-aware, robustness-aware, and cost-aware evaluation evidence. It described the shared execution environment and reproducibility controls, then specified the procedures used to (i) curate and derive benchmark artifacts, (ii) generate OSQ grading scaffolds, (iii) execute standardized inference across MCQ and OSQ, (iv) score OSQ outputs via rubric-based judging, (v) quantify robustness and cross-modality evidence patterns under uncertainty, and (vi) evaluate token-efficiency tradeoffs into qualification guidance.
 
-
-%%%%
-ADD A BLURB IN HERE HOW ALL OBJECTIVES ARE ADDRESSED, EXCEPT #7! THAT WILL BE ADDRESS IN CHAPTER 5 AS A WHOLE (SYNTHESIZE QUALIFICATION GUIDANCE), IN PARTICULAR, THE GUIDANCE TABLE.
-%%%%
-
-
-%%% integrate below with above.
 The following chapters present results (Chapter~\ref{ch:results}), discuss implications (Chapter~\ref{ch:discussion}), and conclude with recommendations for practice and future research (Chapter~\ref{ch:conclusion}).
-
-
-
-
-%%%% CONSIDER INCLUSION. TAXONOMY CAN BE INFERRED FROM THE DOCUMENT STRUCTURE, MAY BE UNNECESSARY.
-%  This section describes the metrics, statistical tests, and visualization approaches for each analysis dimension. A taxonomy of the analyses performed are in Figure \ref{fig:analysis-taxonomy}.
-
-% \begin{figure}[htbp]
-%     \centering
-%     \includegraphics[width=1\textwidth]{figs/ch3/3.5/analysis-taxonomy.png}
-%     \caption{Analysis Taxonomy}
-%     \label{fig:analysis-taxonomy}
-% \end{figure}
-
 
 \clearpage
 

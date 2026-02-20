@@ -47,6 +47,15 @@ The comparative analysis between MCQ accuracy and OSQ mean judge score provides 
 
 However, the fact that the relationship is not near-deterministic is equally important. Divergence between MCQ and OSQ outcomes is expected given the different cognitive demands of selection versus generation. A model may select correct answers reliably yet provide weak explanations, or conversely generate high-quality reasoning while occasionally failing brittle multiple-choice traps. In SE applications, these differences map to distinct risks. Selection-style correctness is valuable for quick checks, but generation-style competence is critical for tasks like requirements rationale, trade-space explanation, and architectural justification.
 
+
+    % \item \textbf{Evaluate inter-judge agreement (correlation).}
+    % Let $\rho$ denote the chosen inter-judge correlation (e.g., Spearman).
+    % \begin{enumerate}[nosep]
+    %     \item If $\rho \geq 0.80$: judges are strongly consistent; OSQ scores and model rankings are robust to judge choice.
+    %     \item If $0.50 \leq \rho < 0.80$: judges show moderate agreement; OSQ results are usable but judge-specific effects should be acknowledged.
+    %     \item If $\rho < 0.50$: judge agreement is low; treat OSQ-based conclusions with caution and highlight this as a limitation.
+
+
 Therefore, the key interpretation is that MCQs and OSQs should be viewed as complementary instruments rather than interchangeable metrics. This directly motivates the multi-format benchmark direction laid out in Chapter \ref{ch:introduction}: a robust SE benchmark should intentionally combine modalities to measure distinct aspects of SE-relevant competence.
 
 
@@ -59,8 +68,47 @@ The length-versus-quality analysis suggests that longer responses do not guarant
 The Pareto-style frontier visualization frames a the efficiency trade space: some models achieve relatively high judged quality at moderate token usage, while others consume more tokens for comparable or lower quality. This implies that benchmark results should not only rank models by quality, but characterize efficiency regimes that inform model selection under budget constraints.
 
 
+%%% Include some of this verbage for interpreation?
 
-\section{Implications for Benchmarking Methodologies}\label{sec:implications_benchmarking}
+\subsubsection*{Interpretation}
+
+% Models on the Pareto frontier achieve the best available trade-offs between cost and quality: no other model is both cheaper and more accurate. Models inside the frontier are dominated by at least one alternative that is strictly better in cost, quality, or both. The efficiency metric (e.g., cost per score point) provides a simple rank ordering of models by cost-effectiveness and enables practical recommendations such as ``cheaper models that achieve near-top performance'' versus ``premium models whose quality gains justify their cost.'' This analysis grounds benchmark results in realistic resource constraints.
+
+
+Cost-effectiveness and token usage are  interpreted using the following decision logic:
+
+\begin{enumerate}[nosep]
+    \item \textbf{Examine the Pareto frontier plot.}
+    \begin{enumerate}[nosep]
+        \item Identify models on the upper-left boundary (high quality, low cost): these form the Pareto frontier.
+        \item Models that lie strictly below and to the right of the frontier are dominated by at least one alternative and are less attractive.
+    \end{enumerate}
+
+    \item \textbf{Compare cost per 1{,}000 questions.}
+    \begin{itemize}[nosep]
+        \item If two models have similar quality but one has substantially lower cost, the cheaper model is preferred for large-scale deployment.
+        \item If a more expensive model has noticeably higher quality, the trade-off depends on available budget and required performance.
+    \end{itemize}
+
+    \item \textbf{Evaluate the efficiency metric (e.g., cost-per-score).}
+    \begin{enumerate}[nosep]
+        \item Rank models by cost-per-score; lower values indicate better efficiency.
+        \item Check whether highly efficient models also meet minimum quality thresholds (e.g., a target mean OSQ score).
+    \end{enumerate}
+
+    \item \textbf{Final interpretation.}
+    \begin{itemize}[nosep]
+        \item \emph{Operationally optimal models:} models on the Pareto frontier with low cost-per-score and acceptable quality; these are primary candidates for deployment.
+        \item \emph{Premium models:} models with the highest quality but also much higher cost; preferable only when maximal performance is required and budget allows.
+        \item \emph{Dominated models:} models that are simultaneously more expensive and less accurate than at least one alternative; these can be deprioritized.
+    \end{itemize}
+\end{enumerate}
+    
+
+
+
+
+\section{Implications for SE Benchmarking Methodologies}\label{sec:implications_benchmarking}
 
 \subsection{Implications for Task–Modality Alignment and Systems Engineering Benchmarks}
 Form chapter 1 framing
