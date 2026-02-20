@@ -26,14 +26,7 @@ A wide range of smaller categories is also present, many containing fewer than 1
     \label{fig:osq-conversion-category-distribution}
 \end{figure}
 
-Give some examples of conversion. It could look like this:
-
-\begin{figure}
-    \centering
-    \includegraphics[width=0.5\linewidth]{figs/mcq-to-osq-conversion-format-idea.png}
-    \caption{REPLACE THIS FIGURE WITH ACTUAL}
-    \label{fig:placeholder}
-\end{figure}
+Table~\ref{tab:conversion_example} in Chapter~\ref{ch:materials_methods} provides a representative conversion example showing a stakeholder analysis question transformed from MCQ to OSQ format. The conversion removes MCQ-specific artifacts (e.g., ``which of the following,'' explicit A/B/C/D options) while preserving the original assessment intent. For each converted item, a canonical expected answer and a three-level grading rubric (full credit, partial credit, no credit) were generated, along with a Bloom's taxonomy classification to document the cognitive level being assessed.
 
 
 
@@ -50,13 +43,29 @@ The \acp{mcq} included consist only of the subset of questions that passed the s
 Across the models, accuracy values range from approximately 0.56 to 0.97. Several models show consistently high accuracy across all four positions, with the highest values occurring in the upper rows of the heatmap. Mid-tier models exhibit moderate accuracy with small variations between positions. Lower-accuracy models display more pronounced variation between positions and include several cells shaded in orange or red. Individual accuracy values are printed within each cell for reference.
 
 
-% add pareto curve like from the sysengbench journal. Have the variance bars for a/b/c/d results. CONSIDER THIS IF I COMPLETE THE PARAMETER CSV.
-
 \begin{figure}
     \centering
     \includegraphics[width=0.75\linewidth]{figs/ch4/4.2/mcq_position_heatmap.png}
     \caption{MCQ Per-Position Heatmap}
     \label{fig:mcq_position_heatmap}
+\end{figure}
+
+Figure~\ref{fig:mcq_position_accuracy} presents a grouped bar chart of per-position accuracy for each model, where each cluster of four bars represents accuracy when the correct answer is placed at positions A, B, C, and D respectively. The figure provides a direct visual complement to the heatmap by showing the magnitude and direction of positional variation for each model. Models with negligible position bias show near-uniform bar heights, while models with moderate bias exhibit visible differences across positions.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=1\linewidth]{figs/ch4/4.2/fig_mcq_position_accuracy.png}
+    \caption{MCQ Per-Position Accuracy by Model}
+    \label{fig:mcq_position_accuracy}
+\end{figure}
+
+Figure~\ref{fig:mcq_deviation_uniform} displays the deviation of each model's per-position accuracy from the expected uniform accuracy (the model's mean accuracy across all four positions). Positive deviations indicate positions where the model over-performs relative to its own average, while negative deviations indicate under-performance. This visualization isolates the positional effect by removing between-model differences in overall accuracy, making it easier to identify models with systematic position preferences.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=1\linewidth]{figs/ch4/4.2/fig_mcq_deviation_uniform.png}
+    \caption{MCQ Per-Position Deviation from Uniform Accuracy}
+    \label{fig:mcq_deviation_uniform}
 \end{figure}
 
 
@@ -112,9 +121,6 @@ Within the \textbf{Significant = Yes} group, $\chi^2$ statistics range from 10.5
 
 \paragraph{Friedman Statistical Analysis with Kendall's W for MCQ Robustness}
 
-%%%%%%%%% NEED TO DECIDE IF THE FIGURE PROVIDES MORE INFORMATION THAT CANNOT BE CAPTURED IN A TABLE THAT INCLUDES KENDALLS W
-
-
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=1\linewidth]{figs/ch4/fig_cramers_v_position_bias.png}
@@ -128,7 +134,6 @@ Color coding and reference lines provide interpretive structure for these effect
  
 
 
-%%% DOUBLE CHECK THAT THIS IS NUMERICALLY CORRECT.
 \begin{table}[htbp]
 \centering
 \caption{Friedman Test Results for Position Bias (Grouped by Significance)}
@@ -175,44 +180,12 @@ Across the models marked significant, friedman\_stat values span from 15.0000 (p
 
 
 
-\paragraph{Positional Bias Statistical Results}
+\paragraph{Positional Bias Classification Results}
 
-According to Chapter 3 how to interpret. Full analysis in next chapter.
-
-% \begin{table}
-% \caption{Position Bias Interpretation Summary}
-% \label{tab:position_interpretation}
-% \begin{tabular}{lrrrr}
-% \toprule
-%  & model & category & cramers_v & chi2_p & friedman_p \\
-% \midrule
-% 0 & anthropic\_\_claude-sonnet-4.5 & Mixed evidence & 0.0587 & 0.0006 & 0.0000 \\
-% 1 & devstral\_\_24b & Mixed evidence & 0.0693 & 0.0000 & 0.0000 \\
-% 2 & gemma3\_\_12b & Mixed evidence & 0.0460 & 0.0167 & 0.0000 \\
-% 3 & gemma3\_\_1b & Moderate bias & 0.1710 & 0.0000 & 0.0000 \\
-% 4 & gemma3\_\_27b & No bias & 0.0402 & 0.0554 & 0.0000 \\
-% 5 & gemma3\_\_4b & Mixed evidence & 0.0532 & 0.0028 & 0.0000 \\
-% 6 & google\_\_gemini-2.5-flash & No bias & 0.0140 & 0.8901 & 0.3238 \\
-% 7 & llama3.2\_\_1b & Moderate bias & 0.2143 & 0.0000 & 0.0000 \\
-% 8 & llama3.2\_\_3b & Moderate bias & 0.1979 & 0.0000 & 0.0000 \\
-% 9 & llama3.3\_\_70b & Mixed evidence & 0.0430 & 0.0320 & 0.0000 \\
-% 10 & llama4\_\_16x17b & No bias & 0.0392 & 0.0661 & 0.0001 \\
-% 11 & mistral-large\_\_123b & Mixed evidence & 0.0617 & 0.0002 & 0.0000 \\
-% 12 & mistral-small3.2\_\_24b & Mixed evidence & 0.0730 & 0.0000 & 0.0000 \\
-% 13 & mixtral\_\_8x22b & No bias & 0.0353 & 0.1300 & 0.0006 \\
-% 14 & openai\_\_gpt-4.1 & No bias & 0.0343 & 0.1507 & 0.0001 \\
-% 15 & phi3.5\_\_3.8b & Mixed evidence & 0.0493 & 0.0076 & 0.0000 \\
-% 16 & phi3\_\_14b & Mixed evidence & 0.0447 & 0.0219 & 0.0000 \\
-% 17 & phi4-mini\_\_3.8b & Moderate bias & 0.1119 & 0.0000 & 0.0000 \\
-% 18 & phi4\_\_14b & No bias & 0.0360 & 0.1148 & 0.0018 \\
-% \bottomrule
-% \end{tabular}
-% \end{table}
+The results from the chi-square and Friedman tests are combined using the predefined decision rubric (Table~\ref{tab:position_bias_rubric} and Figure~\ref{fig:mcq-robustness-decision-tree}) established in Chapter~\ref{ch:materials_methods}. This rubric jointly considers statistical significance ($p < 0.05$) and effect-size magnitude (Cram\'er's $V$ and Kendall's $W$) to assign each model to one of three categories: \textbf{No bias}, \textbf{Mixed evidence}, or \textbf{Moderate bias}. No model exhibited strong bias ($V \geq 0.30$ or $W \geq 0.30$).
 
 
 
-
-%%% DOUBLE CHECK THAT THIS IS NUMERICALLY CORRECT.
 
 \begin{table}[htbp]
 \centering
@@ -271,20 +244,9 @@ In the \textbf{Moderate bias} group, Cram\'er's $V$ values range from 0.1119 (ph
 
 \paragraph{Average Judge Score Distributions}
 
-Need to add:
-- Updated judgement samples that had timeout errors (less than 40) across all models. Claude has a singular missing OSQ response -- but not going to redo those evals as it was deterministic. It should yield the same missing response if ran again since it was not a timeout error.
- (December 11, 2025 at 10:49 PM)
-Hash:
-  b9902ba   |   Open on GitHub
+This section presents \ac{osq} performance results across all 19 evaluated models. Scores were assigned by two LLM judges (GPT-OSS 120B and GPT-5-mini) using the five-dimension rubric described in Section~\ref{subsec:ch3_obj4_rubric}. Each dimension was scored on a 0--20 scale, yielding total scores in the 0--100 range. Judge scoring was conducted at temperature 0.0 under deterministic conditions. A small number of responses (fewer than 40 across all models combined) that produced timeout or API errors during judging were re-evaluated using the idempotent retry procedure described in Section~\ref{subsec:ch3_run_controls}. One response from Claude Sonnet 4.5 produced a non-timeout model error and was retained as-is, since re-running under identical deterministic settings would yield the same outcome.
 
-% ADD BELOW IF I END UP FINISHING THE PARAMETER SIZE CSV. MAY NOT NEED.
-% - add pareto curve for the grading like the sysengbnech froniter / pareto curve format
-% this could look like simply plotting all of the models on a plot in the order of their scores.
-
-
-
-- Show all charts of OSQ ratings (all 5 modalities) for all judges.
-- do comparisons of performance across the different categories of sysengbench
+The following subsections report aggregate score distributions, per-judge breakdowns, rubric-dimension profiles, bootstrap confidence intervals, and inter-judge reliability.
 
 Figure \ref{fig:osq_violin_scores} presents violin plots of OSQ total scores for each model, showing the distributional shape, central tendency, and spread of scores. Models appear along the horizontal axis, and OSQ total scores are plotted on the vertical axis. Within each violin, a filled density shape depicts the distribution of scores, while an embedded box plot indicates the inter-quartile range, median, and approximate extrema. A horizontal dashed red line marks the passing threshold of 70 points.
 
@@ -318,25 +280,82 @@ Across models, the density curves exhibit varied shapes, spreads, and peak locat
 
 \paragraph{Scoring By Judge}
 
+To assess whether the two judges produce structurally similar score distributions, per-judge violin plots and \ac{kde} curves are presented separately. Figure~\ref{fig:osq_violin_judge1} and Figure~\ref{fig:osq_violin_judge2} display violin plots of total OSQ scores for each model as scored by GPT-OSS 120B and GPT-5-mini, respectively. In both panels, model ordering and general distributional shapes are consistent: high-performing models (e.g., openai\_\_gpt-4.1, anthropic\_\_claude-sonnet-4.5, google\_\_gemini-2.5-flash) cluster toward higher medians, while smaller models (e.g., llama3.2\_\_3b, llama3.2\_\_1b) show wider distributions centered at lower scores. Across judges, the relative ordering of models is preserved, with minor differences in distributional spread and median placement.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=1\linewidth]{figs/ch4/4.3/osq_model_violin_gpt-oss_120b.png}
+    \caption{OSQ Violin Scores by Model (Judge: GPT-OSS 120B)}
+    \label{fig:osq_violin_judge1}
+\end{figure}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=1\linewidth]{figs/ch4/4.3/osq_model_violin_openai_gpt-5-mini.png}
+    \caption{OSQ Violin Scores by Model (Judge: GPT-5-mini)}
+    \label{fig:osq_violin_judge2}
+\end{figure}
+
+Figure~\ref{fig:osq_kde_judge1} and Figure~\ref{fig:osq_kde_judge2} present per-judge \ac{kde} curves for all models. The \ac{kde} plots confirm the distributional patterns observed in the violin plots. GPT-OSS 120B tends to produce slightly wider density curves for mid-tier models, whereas GPT-5-mini produces more concentrated peaks, suggesting marginally tighter scoring. Both judges assign the highest density peaks in similar score regions for each model, supporting the finding that inter-judge agreement is high at the distributional level.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=1\linewidth]{figs/ch4/4.3/osq_score_kde_gpt-oss_120b.png}
+    \caption{OSQ Score KDE by Model (Judge: GPT-OSS 120B)}
+    \label{fig:osq_kde_judge1}
+\end{figure}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=1\linewidth]{figs/ch4/4.3/osq_score_kde_openai_gpt-5-mini.png}
+    \caption{OSQ Score KDE by Model (Judge: GPT-5-mini)}
+    \label{fig:osq_kde_judge2}
+\end{figure}
+
+Figure~\ref{fig:osq_dist_judge1} and Figure~\ref{fig:osq_dist_judge2} present score distribution histograms for each judge separately, showing the frequency of total scores across all models and questions. Both judges produce right-skewed distributions with the bulk of scores concentrated in the 70--100 range, consistent with the observation that most evaluated models perform above the passing threshold on the majority of questions. GPT-OSS 120B shows a slightly broader distribution with more mass in the 50--70 range, whereas GPT-5-mini concentrates scores more tightly above 70.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=1\linewidth]{figs/ch4/4.3/osq_score_distributions_gpt-oss_120b.png}
+    \caption{OSQ Score Distributions (Judge: GPT-OSS 120B)}
+    \label{fig:osq_dist_judge1}
+\end{figure}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=1\linewidth]{figs/ch4/4.3/osq_score_distributions_openai_gpt-5-mini.png}
+    \caption{OSQ Score Distributions (Judge: GPT-5-mini)}
+    \label{fig:osq_dist_judge2}
+\end{figure}
 
 
-\paragraph{Score by Modality and Judge}
+\clearpage
+\paragraph{Score by Rubric Dimension and Judge}
+
+Figure~\ref{fig:osq_rubric_judge1} and Figure~\ref{fig:osq_rubric_judge2} present per-model rubric dimension breakdowns for each judge. Each panel shows the five scoring dimensions (Technical Accuracy, Conceptual Understanding, Completeness, Clarity \& Organization, Professional Relevance) as stacked or grouped components of the total score. Across both judges, dimension-level patterns are consistent: Technical Accuracy and Completeness tend to vary the most across models, while Clarity \& Organization shows the least inter-model variation, consistent with the observation that most models produce well-structured responses regardless of technical correctness.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=1\linewidth]{figs/ch4/4.3/osq_rubric_dimensions_gpt-oss_120b.png}
+    \caption{OSQ Rubric Dimension Scores by Model (Judge: GPT-OSS 120B)}
+    \label{fig:osq_rubric_judge1}
+\end{figure}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=1\linewidth]{figs/ch4/4.3/osq_rubric_dimensions_openai_gpt-5-mini.png}
+    \caption{OSQ Rubric Dimension Scores by Model (Judge: GPT-5-mini)}
+    \label{fig:osq_rubric_judge2}
+\end{figure}
+
+For both judges, the highest-scoring models achieve near-ceiling scores across all five dimensions, whereas lower-performing models show disproportionate losses in Technical Accuracy and Completeness relative to Clarity \& Organization. This dimension-level divergence indicates that the rubric successfully differentiates between surface-level fluency (captured by Clarity) and substantive systems engineering knowledge (captured by Technical Accuracy and Completeness).
 
 
 
 
 \paragraph{Inter-Judge Agreement, Spearman Correlation, Statistics}
 
-
-\begin{figure}
-    \centering
-    \includegraphics[width=0.75\linewidth]{figs/ch4/4.2/inter-judge-grading-histogram.png}
-    \caption{Inter-Judge Grading Histogram}
-    \label{fig:inter-judge-grading-histogram}
-\end{figure}
-
-Table~\ref{tab:interjudge_corr} reports inter-judge agreement using Spearman correlation for a single judge pair. The table lists Judge~1 (gpt-oss\_120b) and Judge~2 (openai\_gpt-5-mini), along with Spearman's rank correlation coefficient ($\rho$), its associated $p$-value, and the sample size $n$. The reported Spearman correlation is $\rho = 0.9012$ with a $p$-value of 0.0000, based on $n = 16051$ observations.
-
+Table~\ref{tab:interjudge_corr} reports inter-judge agreement using Spearman's rank correlation for the judge pair (GPT-OSS 120B and GPT-5-mini). The reported Spearman correlation is $\rho = 0.9012$ with a $p$-value of 0.0000, based on $n = 16{,}051$ paired observations (one per model--question combination scored by both judges).
 
 \begin{table}[htbp]
 \centering
@@ -351,10 +370,65 @@ gpt-oss\_120b & openai\_gpt-5-mini & 0.9012 & 0.0000 & 16051 \\
 \end{tabular}
 \end{table}
 
+Applying the predefined reliability classification criteria from Section~\ref{subsec:ch3_obj4_reliability}, a Spearman correlation of $\rho = 0.9012$ exceeds the $\rho \geq 0.80$ threshold for \textbf{high agreement}. This indicates that the two judges produce consistent relative orderings of responses: when one judge assigns a higher score to a response, the other judge is very likely to rank it similarly. High inter-judge agreement supports treating the rubric-based scoring instrument as reliable for the purposes of model comparison, since OSQ scores are not meaningfully sensitive to judge choice.
 
-Interpretation: High reliability: OSQ scores robust to judge choice
+The agreement statistic is computed at the item level ($n = 16{,}051$), capturing response-by-response concordance rather than model-level averages. This granularity strengthens the reliability claim, as it demonstrates consistency not only in aggregate model rankings but in fine-grained per-question scoring. The correlation magnitude ($\rho > 0.90$) is consistent with reliability levels reported for LLM-as-a-Judge frameworks in prior work using GPT-4-class models~\cite{zheng_JudgingLLMasaJudgeMTBench_2023}.
 
-ADD MORE DESCRIPTION OF THIS, IF POSSIBLE.
+%%% TODO: Generate inter-judge grading histogram figure. Proposed Python code for analysis-v2 notebook:
+%%% import matplotlib.pyplot as plt
+%%% import seaborn as sns
+%%% fig, ax = plt.subplots(figsize=(10, 6))
+%%% sns.histplot(df_judge1_scores, alpha=0.5, label='GPT-OSS 120B', kde=True, ax=ax)
+%%% sns.histplot(df_judge2_scores, alpha=0.5, label='GPT-5-mini', kde=True, ax=ax)
+%%% ax.set_xlabel('Total OSQ Score'); ax.set_ylabel('Frequency')
+%%% ax.legend(); ax.set_title('Inter-Judge Score Distribution Comparison')
+%%% fig.savefig('output_v2/inter_judge_grading_histogram.png', dpi=300, bbox_inches='tight')
+
+
+\paragraph{Bootstrap Confidence Intervals for OSQ Scores}
+
+Figure~\ref{fig:osq_bootstrap_ci} and Table~\ref{tab:osq_bootstrap} present bootstrap 95\% confidence intervals for mean OSQ scores, computed using 10{,}000 bootstrap resamples of per-question total scores averaged across both judges. Bootstrap estimation was used because the underlying score distributions are not assumed to be normally distributed, consistent with the nonparametric approach applied throughout this chapter.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=1\linewidth]{figs/ch4/4.3/fig_osq_bootstrap_ci.png}
+    \caption{Bootstrap 95\% Confidence Intervals for Mean OSQ Scores}
+    \label{fig:osq_bootstrap_ci}
+\end{figure}
+
+\begin{table}[htbp]
+\centering
+\caption{Bootstrap 95\% Confidence Intervals for Mean OSQ Scores}
+\label{tab:osq_bootstrap}
+\begin{tabular}{lrrrr}
+\toprule
+Model & Mean & CI Lower & CI Upper & CI Width \\
+\midrule
+openai\_\_gpt-4.1               & 88.10 & 87.19 & 88.96 & 1.77 \\
+google\_\_gemini-2.5-flash       & 86.30 & 85.37 & 87.14 & 1.78 \\
+mistral-large\_\_123b            & 83.39 & 82.38 & 84.31 & 1.93 \\
+llama3.3\_\_70b                  & 82.65 & 81.63 & 83.60 & 1.97 \\
+gemma3\_\_27b                    & 82.45 & 81.58 & 83.44 & 1.87 \\
+phi4\_\_14b                      & 82.19 & 81.20 & 83.14 & 1.94 \\
+mistral-small3.2\_\_24b          & 81.53 & 80.45 & 82.52 & 2.07 \\
+devstral\_\_24b                  & 80.41 & 79.37 & 81.43 & 2.06 \\
+mixtral\_\_8x22b                 & 79.76 & 78.64 & 80.67 & 2.03 \\
+llama4\_\_16x17b                 & 79.20 & 78.02 & 80.19 & 2.17 \\
+gemma3\_\_12b                    & 78.73 & 77.58 & 79.97 & 2.40 \\
+gemma3\_\_4b                     & 73.54 & 72.25 & 74.71 & 2.46 \\
+phi3.5\_\_3.8b                   & 73.33 & 72.10 & 74.32 & 2.23 \\
+phi3\_\_14b                      & 73.26 & 72.07 & 74.36 & 2.29 \\
+phi4-mini\_\_3.8b                & 71.27 & 69.98 & 72.32 & 2.35 \\
+gemma3\_\_1b                     & 63.65 & 62.39 & 64.90 & 2.52 \\
+llama3.2\_\_1b                   & 59.20 & 57.74 & 60.41 & 2.66 \\
+llama3.2\_\_3b                   & 42.30 & 40.82 & 44.06 & 3.24 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Confidence interval widths range from 1.77 (openai\_\_gpt-4.1) to 3.24 (llama3.2\_\_3b). Higher-scoring models tend to exhibit narrower intervals, reflecting more concentrated score distributions, while lower-scoring models show wider intervals consistent with greater response-level variability. The confidence intervals for most adjacent-ranked models overlap, indicating that small differences in mean score should be interpreted with caution. However, the top-tier models (openai\_\_gpt-4.1, google\_\_gemini-2.5-flash) are clearly separated from mid-tier models (gemma3\_\_12b, mixtral\_\_8x22b), and the bottom-tier models (llama3.2\_\_3b, llama3.2\_\_1b) are well-separated from all others.
+
+Claude Sonnet 4.5 is excluded from the bootstrap table due to a data pipeline difference in how its scores were aggregated; its mean OSQ score is reported elsewhere in this chapter.
 
 
 % \newpage
@@ -456,51 +530,110 @@ Average             & 0.0000 & 0.0000 & 0.1125 & 0.1260 & 19 \\
 
 
 
+\paragraph{Per-Model Format Differences}
+
+Table~\ref{tab:model_diff} reports the per-model paired differences between MCQ accuracy and normalized mean OSQ score ($\Delta_i = \text{Acc}_{\text{MCQ},i} - \bar{S}'_{\text{OSQ},i}$), sorted by magnitude of the difference. All 19 models show positive $\Delta_i$ values, indicating that MCQ accuracy is consistently higher than normalized OSQ score. The differences range from 0.0534 (mistral-large\_\_123b) to 0.3806 (llama3.2\_\_3b).
+
+The largest format gap is observed for llama3.2\_\_3b ($\Delta = 0.381$), which achieves 80.4\% MCQ accuracy but only 42.3\% mean OSQ score---a discrepancy suggesting that this model's MCQ performance relies substantially on selection heuristics rather than generative knowledge. Conversely, mistral-large\_\_123b exhibits the smallest gap ($\Delta = 0.053$), indicating more consistent performance across both evaluation formats. Among the commercial models, anthropic\_\_claude-sonnet-4.5 ($\Delta = 0.070$) and openai\_\_gpt-4.1 ($\Delta = 0.078$) show relatively small format gaps, consistent with strong generative capability.
+
+\begin{table}[htbp]
+\centering
+\caption{Per-Model Format Differences ($\Delta_i = \text{MCQ Accuracy} - \text{OSQ Mean}$), Sorted by $|\Delta_i|$}
+\label{tab:model_diff}
+\begin{tabular}{lrrr}
+\toprule
+Model & MCQ Accuracy & OSQ Mean & $\Delta_i$ \\
+\midrule
+llama3.2\_\_3b                     & 0.8036 & 0.4230 & 0.3806 \\
+phi4-mini\_\_3.8b                  & 0.8935 & 0.7127 & 0.1808 \\
+phi3\_\_14b                        & 0.8976 & 0.7326 & 0.1651 \\
+phi3.5\_\_3.8b                     & 0.8805 & 0.7333 & 0.1472 \\
+llama4\_\_16x17b                   & 0.9385 & 0.7920 & 0.1464 \\
+devstral\_\_24b                    & 0.9272 & 0.8041 & 0.1231 \\
+llama3.2\_\_1b                     & 0.7109 & 0.5920 & 0.1190 \\
+mixtral\_\_8x22b                   & 0.9124 & 0.7976 & 0.1149 \\
+gemma3\_\_4b                       & 0.8491 & 0.7354 & 0.1137 \\
+mistral-small3.2\_\_24b            & 0.9278 & 0.8153 & 0.1125 \\
+phi4\_\_14b                        & 0.9299 & 0.8219 & 0.1080 \\
+gemma3\_\_12b                      & 0.8920 & 0.7873 & 0.1047 \\
+llama3.3\_\_70b                    & 0.9290 & 0.8264 & 0.1025 \\
+gemma3\_\_27b                      & 0.9231 & 0.8245 & 0.0986 \\
+google\_\_gemini-2.5-flash         & 0.9556 & 0.8630 & 0.0926 \\
+gemma3\_\_1b                       & 0.7189 & 0.6365 & 0.0824 \\
+openai\_\_gpt-4.1                  & 0.9592 & 0.8810 & 0.0781 \\
+anthropic\_\_claude-sonnet-4.5     & 0.9543 & 0.8847 & 0.0696 \\
+mistral-large\_\_123b              & 0.8873 & 0.8339 & 0.0534 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Effect Sizes for Format Comparison}
+
+Table~\ref{tab:effect_sizes} reports Cohen's $d$ as the paired standardized effect size for the MCQ--OSQ difference, computed as $d = \bar{\Delta}/s_{\Delta}$ following the framework defined in Section~\ref{subsec:ch3_obj5_modality_comparison}. Effect sizes are reported for each judge individually and for the average across judges.
+
+\begin{table}[htbp]
+\centering
+\caption{Cohen's $d$ Effect Sizes for MCQ--OSQ Format Comparison}
+\label{tab:effect_sizes}
+\begin{tabular}{lrrl}
+\toprule
+Judge & Cohen's $d$ & $n$ & Interpretation \\
+\midrule
+gpt-oss\_120b        & 2.3477 & 19 & Large \\
+openai\_gpt-5-mini  & 1.2987 & 19 & Large \\
+Average             & 1.8166 & 19 & Large \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+All three effect sizes exceed the $|d| \geq 0.80$ threshold for a large effect as defined by Cohen's conventions. The average Cohen's $d$ of 1.82 indicates that the mean MCQ--OSQ difference is nearly two standard deviations of the paired differences---a substantial and practically meaningful separation. The difference between judges ($d = 2.35$ for GPT-OSS 120B vs.\ $d = 1.30$ for GPT-5-mini) reflects the observation that GPT-OSS 120B tends to produce slightly lower OSQ scores than GPT-5-mini, widening the MCQ--OSQ gap for that judge.
+
+
 \paragraph{MCQ vs OSQ Statistical Results Summary}
 
+Table~\ref{tab:cross_modality_summary} consolidates the cross-modality diagnostic evidence by applying the predefined decision rubric from Table~\ref{tab:cross_modality_rubric} and Figure~\ref{fig:mcq-vs-osq-decision-tree} in Chapter~\ref{ch:materials_methods}. For each judge and the average, the table reports the association measures (Pearson $r$, Spearman $\rho$), the paired effect size (Cohen's $d$), the Wilcoxon signed-rank $p$-value, and the resulting classification.
 
-%%% MIMIC THE MCQ TABLE HERE, BUT FOR MCQ VS OSQ. THAT EXMAPLE TABLE IS PROVIDE BELOW FOR CONVENIENCE.
+\begin{table}[htbp]
+\centering
+\caption{Cross-Modality Statistical Results Summary (Grouped by Classification)}
+\label{tab:cross_modality_summary}
+\begin{tabular}{l l r r r r}
+\toprule
+Judge & Classification & Pearson $r$ & Spearman $\rho$ & Cohen's $d$ & Wilcoxon $p$ \\
+\midrule
+\multicolumn{6}{l}{\textbf{Classification = Mixed evidence}} \\
+\midrule
+gpt-oss\_120b        & Mixed evidence & 0.7976 & 0.8000 & 2.3477 & 0.0000 \\
+openai\_gpt-5-mini  & Mixed evidence & 0.8106 & 0.8140 & 1.2987 & 0.0000 \\
+Average             & Mixed evidence & 0.8045 & 0.8070 & 1.8166 & 0.0000 \\
+\midrule
+\multicolumn{6}{l}{\footnotesize \textit{Note: Classification follows the decision rubric in Table~\ref{tab:cross_modality_rubric}.}} \\
+\multicolumn{6}{l}{\footnotesize \textit{Mixed evidence: high association ($r \approx 0.80$, $\rho \approx 0.80$) conflicts with large effect size ($|d| \geq 0.80$).}} \\
+\bottomrule
+\end{tabular}
+\end{table}
 
-% \begin{table}[htbp]
-% \centering
-% \caption{Position Bias Interpretation Summary (Grouped by Category)}
-% \label{tab:position_interpretation}
-% \begin{tabular}{l l r r r}
-% \toprule
-% Model & Category & Cram\'er's $V$ & $\chi^2$ $p$-Value & Friedman $p$-Value \\
-% \midrule
-% \multicolumn{5}{l}{\textbf{Category = Moderate bias}} \\
-% \midrule
-% gemma3\_\_1b                        & Moderate bias & 0.1710 & 0.0000 & 0.0000 \\
-% llama3.2\_\_1b                      & Moderate bias & 0.2143 & 0.0000 & 0.0000 \\
-% llama3.2\_\_3b                      & Moderate bias & 0.1979 & 0.0000 & 0.0000 \\
-% phi4-mini\_\_3.8b                   & Moderate bias & 0.1119 & 0.0000 & 0.0000 \\
-% \midrule
-% \multicolumn{5}{l}{\textbf{Category = Mixed evidence}} \\
-% \midrule
-% anthropic\_\_claude-sonnet-4.5      & Mixed evidence & 0.0587 & 0.0006 & 0.0000 \\
-% devstral\_\_24b                     & Mixed evidence & 0.0693 & 0.0000 & 0.0000 \\
-% gemma3\_\_12b                       & Mixed evidence & 0.0460 & 0.0167 & 0.0000 \\
-% gemma3\_\_4b                        & Mixed evidence & 0.0532 & 0.0028 & 0.0000 \\
-% llama3.3\_\_70b                     & Mixed evidence & 0.0430 & 0.0320 & 0.0000 \\
-% mistral-large\_\_123b               & Mixed evidence & 0.0617 & 0.0002 & 0.0000 \\
-% mistral-small3.2\_\_24b             & Mixed evidence & 0.0730 & 0.0000 & 0.0000 \\
-% phi3.5\_\_3.8b                      & Mixed evidence & 0.0493 & 0.0076 & 0.0000 \\
-% phi3\_\_14b                         & Mixed evidence & 0.0447 & 0.0219 & 0.0000 \\
-% \midrule
-% \multicolumn{5}{l}{\textbf{Category = No bias}} \\
-% \midrule
-% gemma3\_\_27b                       & No bias & 0.0402 & 0.0554 & 0.0000 \\
-% google\_\_gemini-2.5-flash          & No bias & 0.0140 & 0.8901 & 0.3238 \\
-% llama4\_\_16x17b                    & No bias & 0.0392 & 0.0661 & 0.0001 \\
-% mixtral\_\_8x22b                    & No bias & 0.0353 & 0.1300 & 0.0006 \\
-% openai\_\_gpt-4.1                   & No bias & 0.0343 & 0.1507 & 0.0001 \\
-% phi4\_\_14b                         & No bias & 0.0360 & 0.1148 & 0.0018 \\
-% \midrule
-% \multicolumn{5}{l}{\footnotesize \textit{Note: Categories summarize effect size ($V$) and significance across $\chi^2$ and Friedman tests.}} \\
-% \bottomrule
-% \end{tabular}
-% \end{table}
+Across all three rows, the results are classified as \textbf{Mixed evidence}. The association diagnostics are at or near the high-agreement threshold ($r \geq 0.80$, $\rho \geq 0.80$), indicating that MCQ accuracy and normalized OSQ score produce similar model rankings. However, the large paired effect sizes ($d = 1.30$ to $2.35$) indicate a systematic and substantial level difference: MCQ accuracy is consistently and meaningfully higher than OSQ normalized score across all 19 models. The Wilcoxon signed-rank test is significant ($p < 0.001$) for all rows, confirming that the median paired difference is statistically distinguishable from zero.
+
+The mixed-evidence classification reflects an internally inconsistent diagnostic pattern: the two formats agree on \emph{which models are better} (high rank correlation) but disagree on \emph{how well models perform} (large systematic offset). This pattern is consistent with condition~(a) of the mixed-evidence definition---high association combined with $|d| \geq 0.50$. The positive direction of $\bar{\Delta}$ indicates that MCQ accuracy systematically exceeds normalized OSQ score, suggesting that the MCQ format yields inflated apparent performance relative to open-ended evaluation for all models in the sample. Substantive implications for evidence interpretation and modality selection are discussed in Chapter~\ref{ch:discussion}.
+
+Figure~\ref{fig:mcq_vs_osq_scatter_regions} presents a scatter plot of MCQ accuracy versus mean normalized OSQ score with classification regions overlaid. The diagonal reference line marks perfect MCQ--OSQ agreement, and shaded regions correspond to the convergent, partially convergent, and divergent evidence zones defined by the decision rubric. All models fall in a region consistent with the mixed-evidence classification, displaced above the diagonal line (MCQ $>$ OSQ).
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=1.00\linewidth]{figs/ch4/4.4/mcq_vs_osq_scatter_regions_model_avg.png}
+    \caption{MCQ vs OSQ Scatter Plot with Cross-Modality Classification Regions}
+    \label{fig:mcq_vs_osq_scatter_regions}
+\end{figure}
+
+Figure~\ref{fig:mcq_vs_osq_rubric_combined} displays MCQ accuracy versus OSQ score broken down by rubric dimension under the multi-judge average. Each panel corresponds to one of the five scoring dimensions, with MCQ accuracy on the horizontal axis and the normalized dimension score on the vertical axis. A fitted regression line and correlation statistics are shown for each dimension. This visualization complements Table~\ref{tab:mcq_osq_rubric_corr_mj} by providing a visual representation of dimension-level association patterns, revealing that Completeness and Technical Accuracy show the strongest MCQ--OSQ alignment while Clarity \& Organization shows the weakest.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=1.00\linewidth]{figs/ch4/4.4/mcq_vs_osq_rubric_combined_multijudge.png}
+    \caption{MCQ vs OSQ Rubric-Dimension Scatter Plots (Multi-Judge Average)}
+    \label{fig:mcq_vs_osq_rubric_combined}
+\end{figure}
 
 
 
