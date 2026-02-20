@@ -1,0 +1,279 @@
+% ============================================================
+% STATISTICAL METHODS REVIEW — Summary Table and Figure
+% Insert into Chapter 3 or use as reference appendix material
+% ============================================================
+
+% ============================================================
+% OPTION A: SUMMARY TABLE
+% ============================================================
+\begin{table}[htbp]
+\centering
+\caption{Summary of Statistical Methods, Appropriateness, and Identified Issues}
+\label{tab:stat_methods_review}
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\renewcommand{\arraystretch}{1.25}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{p{2.0cm} p{2.2cm} p{2.2cm} p{1.5cm} p{1.5cm} p{2.0cm} p{3.0cm} p{3.0cm}}
+\toprule
+\textbf{Test / Metric} &
+\textbf{Purpose} &
+\textbf{Design} &
+\textbf{Effect Size} &
+\textbf{$n$} &
+\textbf{Key Assumptions} &
+\textbf{Verdict} &
+\textbf{Issues / Recommendations} \\
+\midrule
+
+% --- MCQ Robustness ---
+\multicolumn{8}{l}{\textit{\textbf{MCQ Robustness (Objective 5a)}}} \\
+\addlinespace[0.3em]
+
+Chi-square test of independence &
+Global: aggregate correctness $\times$ position &
+$k \times 2$ contingency table; $k$ = number of variants &
+Cram\'{e}r's $V$ &
+5{,}720 per model\textsuperscript{a} &
+Expected cell counts $\geq 5$; independent observations &
+\textbf{Appropriate with caveat}\textsuperscript{b} &
+(1)~Methods say 4 variants but code uses 5 (includes baseline). (2)~Items appear across variants $\rightarrow$ observations not strictly independent; mitigated by Friedman complement. (3)~$\text{dof}=4$ confirms 5-level factor. \\
+\addlinespace
+
+Friedman test &
+Within-item: repeated-measures correctness across rotated positions &
+$N$ items $\times$ $k{=}4$ conditions; binary outcomes &
+Kendall's $W$ &
+$N{=}1{,}144$ items, $k{=}4$ &
+Same items measured under all conditions; ordinal/binary outcomes &
+\textbf{Appropriate} (equivalent to Cochran's $Q$ for binary data) &
+(1)~Could be labeled Cochran's $Q$ for precision. (2)~Uses full 1{,}144 items (not 845 matched subset). (3)~$W$ computed correctly: $W = Q / [N(k{-}1)]$ verified numerically. \\
+\addlinespace
+
+% --- Effect size thresholds ---
+$V$ and $W$ thresholds ($< 0.10$, $0.10$--$0.30$, $\geq 0.30$) &
+Classify practical magnitude &
+Predefined decision rubric &
+--- &
+--- &
+Thresholds are domain-appropriate &
+\textbf{Defensible} &
+(1)~Aligned with Cohen's small/medium/large for $\phi$ / $w$. (2)~No CIs on $V$ or $W$ reported; recommend bootstrap CIs. \\
+\addlinespace
+
+% --- Multiple comparisons ---
+Multiple testing (19 models $\times$ 2 tests) &
+Family-wise error control &
+38 total tests at $\alpha = 0.05$ &
+--- &
+--- &
+Tests are independent across models &
+\textbf{Needs attention} &
+(1)~Expected $\sim$2 false positives under $H_0$. (2)~Borderline $p$-values (e.g., $p{=}0.032$) could flip under Holm correction. (3)~Recommend Holm--Bonferroni or BH/FDR, or justify per-model testing as separate confirmatory analyses. \\
+
+\midrule
+
+% --- Inter-Judge Reliability ---
+\multicolumn{8}{l}{\textit{\textbf{Inter-Judge Reliability (Objective 4)}}} \\
+\addlinespace[0.3em]
+
+Spearman $\rho$ &
+Rank-order agreement between 2 judges &
+Pairwise correlation of total scores &
+--- &
+$n{=}16{,}051$\textsuperscript{c} &
+Ordinal or continuous data; monotonic relationship &
+\textbf{Appropriate but incomplete} &
+(1)~$n{=}16{,}051$ makes $p$-value vacuous (any $\rho > 0$ is ``significant''). (2)~$\rho$ measures rank agreement, not absolute calibration. (3)~Recommend adding ICC(2,1) for absolute agreement and reporting CIs. \\
+\addlinespace
+
+Score distribution diagnostics &
+Assess instrument discrimination &
+Modality, spread, compression, skewness per model-judge &
+--- &
+--- &
+--- &
+\textbf{Described in Methods but missing from Results} &
+(1)~Methods (Sec.~3.6) promise these diagnostics; Chapter~4 does not report them systematically. (2)~Add or remove from Methods. \\
+
+\midrule
+
+% --- Cross-Modality Comparison ---
+\multicolumn{8}{l}{\textit{\textbf{Cross-Modality Comparison (Objective 5b)}}} \\
+\addlinespace[0.3em]
+
+Pearson $r$ &
+Linear association: MCQ accuracy vs.\ normalized OSQ score &
+Model-level aggregates &
+--- &
+$n{=}19$ &
+Bivariate normality; interval data &
+\textbf{Appropriate but low power} &
+(1)~95\% CI for $r{=}0.80$ at $n{=}19$: $\approx (0.54, 0.92)$. (2)~No CIs reported. (3)~Power to detect $r{=}0.50$: $\approx$60\%. \\
+\addlinespace
+
+Spearman $\rho_s$ &
+Rank agreement in model ordering &
+Model-level ranks &
+--- &
+$n{=}19$ &
+Monotonic relationship &
+\textbf{Appropriate; same power concern} &
+Consistent with Pearson analysis. \\
+\addlinespace
+
+Wilcoxon signed-rank &
+Paired format difference: MCQ vs.\ OSQ per model &
+$\Delta_i = \text{Acc}_{\text{MCQ},i} - \bar{S}'_{\text{OSQ},i}$ &
+$d = \bar{\Delta}/s_{\Delta}$ (defined) &
+$n{=}19$ &
+Symmetric difference distribution; $\geq$10 non-zero pairs &
+\textbf{Appropriate; notable finding} &
+(1)~Test stat $= 0.0$ means \textit{all} 19 $\Delta_i > 0$ (MCQ always $>$ OSQ). (2)~Effect size $d$ is defined in Methods but \textbf{not reported in Ch.~4}. (3)~At $n{=}19$, minimum detectable $|d|$ at 80\% power $\approx 0.68$. \\
+\addlinespace
+
+$R^2$ (OLS) &
+Variance explained: MCQ $\rightarrow$ OSQ &
+Simple linear regression &
+--- &
+$n{=}19$ &
+Linear relationship; normal residuals &
+\textbf{Descriptive; acceptable} &
+Reported as $R^2{=}0.671$ with $p$-value; no issues. \\
+\addlinespace
+
+Cross-modality classification rubric &
+Categorize convergent / partially convergent / divergent &
+Joint assessment of $r$, $\rho_s$, $|d|$, and Wilcoxon $p$ &
+--- &
+--- &
+--- &
+\textbf{Well-designed but not yet applied} &
+Table~3.7 defines the rubric; Chapter~4 does not apply it to produce the final classification. \\
+
+\midrule
+
+% --- Token Efficiency ---
+\multicolumn{8}{l}{\textit{\textbf{Token Efficiency (Objective 6)}}} \\
+\addlinespace[0.3em]
+
+Tokens-per-score &
+Scalar efficiency metric &
+$\overline{T}_{\text{total}} / \overline{S}_{\text{OSQ}}$ &
+--- &
+19 models &
+Meaningful OSQ score denominator &
+\textbf{Defined but not computed in Ch.~4} &
+Recommend reporting or removing from Methods. \\
+\addlinespace
+
+Pareto frontier &
+Identify non-dominated models in quality--token space &
+Decision-analytic construct &
+--- &
+19 models &
+--- &
+\textbf{Appropriate} &
+Not a statistical test; correctly used as a decision tool. \\
+
+\bottomrule
+\end{tabular}
+}
+
+\vspace{0.5em}
+\footnotesize
+\textit{Notes.}
+\textsuperscript{a}~$n{=}5{,}720{=}5 \times 1{,}144$: code includes the original (baseline) dataset plus four rotated variants, yielding 5 conditions. Methods text describes only 4.
+\textsuperscript{b}~The chi-square assumption of independent observations is technically violated because the same items appear across variants. The Friedman test (repeated-measures complement) addresses this, but the pairing should be acknowledged.
+\textsuperscript{c}~$n{=}16{,}051 \approx 19 \times 845 - 4$: total item--model pairs scored by both judges, with 4 exclusions due to model/judge errors.
+\end{table}
+
+
+% ============================================================
+% OPTION B: SUMMARY FIGURE (Statistical Analysis Pipeline)
+% ============================================================
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[
+    node distance=0.8cm and 1.0cm,
+    every node/.style={font=\footnotesize},
+    phase/.style={rectangle, draw=black!70, fill=blue!8, text width=3.8cm, minimum height=1.0cm, align=center, rounded corners=3pt},
+    test/.style={rectangle, draw=black!50, fill=green!8, text width=3.0cm, minimum height=0.8cm, align=center, rounded corners=2pt},
+    effect/.style={rectangle, draw=black!50, fill=orange!8, text width=2.5cm, minimum height=0.7cm, align=center, rounded corners=2pt},
+    issue/.style={rectangle, draw=red!60, fill=red!5, text width=3.0cm, minimum height=0.7cm, align=center, rounded corners=2pt, font=\footnotesize\itshape},
+    arrow/.style={->, >=stealth, thick, black!60},
+    label/.style={font=\footnotesize\bfseries, text=black!70},
+]
+
+% === Phase labels ===
+\node[label] (lbl1) at (-5.5, 0) {MCQ Robustness};
+\node[label] (lbl2) at (-5.5, -4.5) {Inter-Judge};
+\node[label] (lbl3) at (-5.5, -7.0) {Cross-Modality};
+\node[label] (lbl4) at (-5.5, -10.5) {Token Efficiency};
+
+% === MCQ Robustness ===
+\node[phase] (mcq_data) at (0, 0) {MCQ Position Variants\\(A, B, C, D + baseline)\\$N{=}1{,}144$ items};
+
+\node[test] (chi2) at (-2.5, -1.5) {Chi-square test\\$n{=}5{,}720$};
+\node[test] (friedman) at (2.5, -1.5) {Friedman test\\$N{=}1{,}144$, $k{=}4$};
+
+\node[effect] (cramv) at (-2.5, -2.8) {Cram\'{e}r's $V$};
+\node[effect] (kendw) at (2.5, -2.8) {Kendall's $W$};
+
+\node[phase] (classify1) at (0, -3.8) {Classification Rubric\\(No bias / Mixed / Moderate / Strong)};
+
+\draw[arrow] (mcq_data) -- (chi2);
+\draw[arrow] (mcq_data) -- (friedman);
+\draw[arrow] (chi2) -- (cramv);
+\draw[arrow] (friedman) -- (kendw);
+\draw[arrow] (cramv) -- (classify1);
+\draw[arrow] (kendw) -- (classify1);
+
+% Issue flags
+\node[issue] (iss1) at (5.5, -0.5) {5 variants in code\\vs.\ 4 in Methods};
+\node[issue] (iss2) at (5.5, -2.0) {No multiple-comparison\\correction (38 tests)};
+\node[issue] (iss3) at (5.5, -3.3) {No CIs on $V$, $W$};
+
+% === Inter-Judge ===
+\node[phase] (judge_data) at (0, -5.0) {OSQ Judge Scores\\$n{=}16{,}051$ item-model pairs\\2 judges};
+
+\node[test] (spearman_j) at (0, -6.2) {Spearman $\rho$\\$\rho{=}0.90$, $p{<}0.001$};
+
+\node[issue] (iss4) at (5.5, -5.5) {Consider adding ICC\\for absolute agreement};
+
+\draw[arrow] (judge_data) -- (spearman_j);
+
+% === Cross-Modality ===
+\node[phase] (xmod_data) at (0, -7.5) {MCQ Accuracy vs.\ OSQ Score\\$n{=}19$ models (matched subset)};
+
+\node[test] (pearson) at (-3.0, -8.8) {Pearson $r$\\$r{=}0.80$};
+\node[test] (spearman_x) at (0, -8.8) {Spearman $\rho_s$\\$\rho_s{=}0.81$};
+\node[test] (wilcox) at (3.0, -8.8) {Wilcoxon signed-rank\\$p{<}0.001$};
+
+\node[phase] (classify2) at (0, -10.0) {Cross-Modality Classification\\(Convergent / Partial / Divergent)};
+
+\draw[arrow] (xmod_data) -- (pearson);
+\draw[arrow] (xmod_data) -- (spearman_x);
+\draw[arrow] (xmod_data) -- (wilcox);
+\draw[arrow] (pearson) -- (classify2);
+\draw[arrow] (spearman_x) -- (classify2);
+\draw[arrow] (wilcox) -- (classify2);
+
+\node[issue] (iss5) at (5.5, -8.0) {$n{=}19$: wide CIs\\(none reported)};
+\node[issue] (iss6) at (5.5, -9.3) {Effect size $d$ defined\\but not reported in Ch.~4};
+
+% === Token Efficiency ===
+\node[phase] (tok_data) at (0, -11.2) {Token Counts per Response\\$\overline{T}_{\text{input}} + \overline{T}_{\text{output}}$};
+
+\node[test] (pareto) at (-1.5, -12.3) {Pareto Frontier};
+\node[test] (tps) at (1.5, -12.3) {Tokens-per-score};
+
+\draw[arrow] (tok_data) -- (pareto);
+\draw[arrow] (tok_data) -- (tps);
+
+\node[issue] (iss7) at (5.5, -11.5) {Tokens-per-score defined\\but not computed};
+
+\end{tikzpicture}
+\caption{Statistical Analysis Pipeline with Identified Issues. Green boxes: statistical tests. Orange boxes: effect sizes. Red boxes: issues requiring resolution. The pipeline flows from data (blue) through tests and effect sizes to classification rubrics.}
+\label{fig:stat_analysis_pipeline_review}
+\end{figure}
