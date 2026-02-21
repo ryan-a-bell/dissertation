@@ -262,6 +262,63 @@ Table~\ref{tab:position_interpretation} summarizes position-bias outcomes for 19
 In the \textbf{Moderate bias} group, Cram\'er's $V$ values range from 0.1119 (phi4-mini\_\_3.8b) to 0.2143 (llama3.2\_\_1b), and all entries show $\chi^2$ $p$-values of 0.0000 and Friedman $p$-values of 0.0000. In the \textbf{Mixed evidence} group, Cram\'er's $V$ values range from 0.0430 (llama3.3\_\_70b) to 0.0730 (mistral-small3.2\_\_24b), with $\chi^2$ $p$-values spanning 0.0000 to 0.0320 and Friedman $p$-values reported as 0.0000 for all listed models. In the \textbf{No bias} group, Cram\'er's $V$ values range from 0.0140 (google\_\_gemini-2.5-flash) to 0.0402 (gemma3\_\_27b), with $\chi^2$ $p$-values ranging from 0.0554 to 0.8901 and Friedman $p$-values ranging from 0.0000 to 0.3238.
 
 
+\paragraph{Multiple-Comparison Correction (Holm--Bonferroni)}
+
+The preceding analyses evaluated 38 individual hypothesis tests (19 models $\times$ 2 tests each: one $\chi^2$ and one Friedman per model). When many tests are conducted simultaneously, the probability of obtaining at least one spurious significant result increases; at $\alpha = 0.05$ across 38 independent tests, approximately two false positives would be expected by chance alone. The Holm--Bonferroni correction \cite{Holm1979} addresses this family-wise error rate by adjusting each $p$-value according to its rank among all tests. Specifically, raw $p$-values are sorted in ascending order, and each $p$-value is multiplied by the number of remaining tests at that rank (i.e., $p_{\text{adj}} = p \times (m - k + 1)$, where $m=38$ and $k$ is the rank). A test is declared significant only if its adjusted $p$-value remains below $\alpha$.
+
+Table~\ref{tab:holm_correction} reports both raw and Holm-adjusted $p$-values for all 38 tests. Of the 31 tests that were significant at the raw $\alpha = 0.05$ threshold, 27 survive the Holm correction. The four tests that lose significance are all $\chi^2$ tests for models with borderline raw $p$-values:
+
+\begin{itemize}[nosep]
+    \item phi3.5\_\_3.8b ($p_{\text{raw}} = 0.0076 \rightarrow p_{\text{adj}} = 0.084$; $V = 0.049$)
+    \item gemma3\_\_12b ($p_{\text{raw}} = 0.0167 \rightarrow p_{\text{adj}} = 0.167$; $V = 0.046$)
+    \item phi3\_\_14b ($p_{\text{raw}} = 0.0219 \rightarrow p_{\text{adj}} = 0.197$; $V = 0.045$)
+    \item llama3.3\_\_70b ($p_{\text{raw}} = 0.0320 \rightarrow p_{\text{adj}} = 0.256$; $V = 0.043$)
+\end{itemize}
+
+All four models have Cram\'er's $V < 0.05$, well below the conventional small-effect threshold of $V = 0.10$. Their classification in Table~\ref{tab:position_interpretation} is driven by effect-size thresholds rather than $p$-values alone; accordingly, the Holm correction does not change any model's bias classification. All 18 Friedman tests that were significant at the raw threshold survive the correction, as do 9 of the 13 originally significant $\chi^2$ tests. The correction therefore confirms that the position-bias findings are robust to multiple-comparison adjustment.
+
+
+
+\begin{table}[htbp]
+\centering
+\caption{Holm--Bonferroni multiple-comparison correction for position-bias tests ($m = 38$ tests, $\alpha = 0.05$).}
+\label{tab:holm_correction}
+\footnotesize
+\begin{tabular}{l r r r r}
+\toprule
+\textbf{Model} &
+\makecell{\textbf{$\chi^2$}\\$p_{\text{raw}}$} &
+\makecell{\textbf{$\chi^2$}\\$p_{\text{adj}}$} &
+\makecell{\textbf{Friedman}\\$p_{\text{raw}}$} &
+\makecell{\textbf{Friedman}\\$p_{\text{adj}}$} \\
+\midrule
+anthropic\_\_claude-sonnet-4.5 & $0.0006$ & $0.0086$ & ${<}0.001$ & ${<}0.001$ \\
+devstral\_\_24b & ${<}0.001$ & $0.0003$ & ${<}0.001$ & ${<}0.001$ \\
+gemma3\_\_1b & ${<}0.001$ & ${<}0.001$ & ${<}0.001$ & ${<}0.001$ \\
+gemma3\_\_4b & $0.0028$ & $0.0337$ & ${<}0.001$ & ${<}0.001$ \\
+gemma3\_\_12b$^{\dagger}$ & $0.0167$ & $0.1667$ & ${<}0.001$ & ${<}0.001$ \\
+gemma3\_\_27b & $0.0554$ & $0.3875$ & ${<}0.001$ & $0.0009$ \\
+google\_\_gemini-2.5-flash & $0.8901$ & $0.8901$ & $0.3238$ & $0.6476$ \\
+llama3.2\_\_1b & ${<}0.001$ & ${<}0.001$ & ${<}0.001$ & ${<}0.001$ \\
+llama3.2\_\_3b & ${<}0.001$ & ${<}0.001$ & ${<}0.001$ & ${<}0.001$ \\
+llama3.3\_\_70b$^{\dagger}$ & $0.0320$ & $0.2559$ & ${<}0.001$ & ${<}0.001$ \\
+llama4\_\_16x17b & $0.0661$ & $0.3969$ & ${<}0.001$ & $0.0014$ \\
+mistral-large\_\_123b & $0.0002$ & $0.0035$ & ${<}0.001$ & ${<}0.001$ \\
+mistral-small3.2\_\_24b & ${<}0.001$ & ${<}0.001$ & ${<}0.001$ & ${<}0.001$ \\
+mixtral\_\_8x22b & $0.1300$ & $0.5738$ & $0.0006$ & $0.0088$ \\
+openai\_\_gpt-4.1 & $0.1507$ & $0.5738$ & $0.0001$ & $0.0023$ \\
+phi3\_\_14b$^{\dagger}$ & $0.0219$ & $0.1973$ & ${<}0.001$ & $0.0008$ \\
+phi3.5\_\_3.8b$^{\dagger}$ & $0.0076$ & $0.0835$ & ${<}0.001$ & ${<}0.001$ \\
+phi4-mini\_\_3.8b & ${<}0.001$ & ${<}0.001$ & ${<}0.001$ & ${<}0.001$ \\
+phi4\_\_14b & $0.1148$ & $0.5738$ & $0.0018$ & $0.0236$ \\
+\midrule
+\multicolumn{5}{l}{\footnotesize $^{\dagger}$~$\chi^2$ result significant at raw $\alpha = 0.05$ but non-significant after Holm correction.} \\
+\multicolumn{5}{l}{\footnotesize All four affected models have Cram\'er's $V < 0.05$; bias classifications are unchanged.} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+
 
 
 % \newpage
