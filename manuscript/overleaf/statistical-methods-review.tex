@@ -190,37 +190,38 @@ Not a statistical test; correctly used as a decision tool. \\
 
 
 % ============================================================
-% OPTION B: SUMMARY FIGURE (Statistical Analysis Pipeline)
+% OPTION B: SUMMARY FIGURE (Statistical Analysis Pipeline — 2×2 Quadrant)
 % ============================================================
 \begin{figure}[htbp]
 \centering
 \begin{tikzpicture}[
-    node distance=0.8cm and 1.0cm,
     every node/.style={font=\footnotesize},
-    phase/.style={rectangle, draw=black!70, fill=blue!8, text width=3.8cm, minimum height=1.0cm, align=center, rounded corners=3pt},
-    test/.style={rectangle, draw=black!50, fill=green!8, text width=3.0cm, minimum height=0.8cm, align=center, rounded corners=2pt},
-    effect/.style={rectangle, draw=black!50, fill=orange!8, text width=2.5cm, minimum height=0.7cm, align=center, rounded corners=2pt},
-    issue/.style={rectangle, draw=red!60, fill=red!5, text width=3.0cm, minimum height=0.7cm, align=center, rounded corners=2pt, font=\footnotesize\itshape},
-    arrow/.style={->, >=stealth, thick, black!60},
-    label/.style={font=\footnotesize\bfseries, text=black!70},
+    data/.style={rectangle, draw=black!70, fill=blue!8, text width=3.4cm, minimum height=0.85cm, align=center, rounded corners=3pt},
+    test/.style={rectangle, draw=black!50, fill=green!8, text width=2.4cm, minimum height=0.7cm, align=center, rounded corners=2pt},
+    effect/.style={rectangle, draw=black!50, fill=orange!8, text width=2.2cm, minimum height=0.6cm, align=center, rounded corners=2pt},
+    outcome/.style={rectangle, draw=black!70, fill=blue!15, text width=3.6cm, minimum height=0.85cm, align=center, rounded corners=3pt, font=\footnotesize\bfseries},
+    quadlabel/.style={font=\small\bfseries, text=black!80},
+    arrow/.style={->, >=stealth, thick, black!55},
 ]
 
-% === Phase labels ===
-\node[label] (lbl1) at (-5.5, 0) {MCQ Robustness};
-\node[label] (lbl2) at (-5.5, -4.5) {Inter-Judge};
-\node[label] (lbl3) at (-5.5, -7.0) {Cross-Modality};
-\node[label] (lbl4) at (-5.5, -10.5) {Token Efficiency};
+% ── Quadrant frame ──
+\draw[black!30, thick] (-7.6, 0.15) -- (7.6, 0.15);    % horizontal divider
+\draw[black!30, thick] (0, 5.6) -- (0, -5.5);           % vertical divider
 
-% === MCQ Robustness ===
-\node[phase] (mcq_data) at (0, 0) {MCQ Position Variants\\(A, B, C, D + baseline)\\$N{=}1{,}144$ items};
+% ===================================================================
+% TOP LEFT — MCQ Robustness
+% ===================================================================
+\node[quadlabel] at (-3.8, 5.25) {MCQ Position Robustness};
 
-\node[test] (chi2) at (-2.5, -1.5) {Chi-square test\\$n{=}5{,}720$};
-\node[test] (friedman) at (2.5, -1.5) {Friedman test\\$N{=}1{,}144$, $k{=}4$};
+\node[data] (mcq_data) at (-3.8, 4.2) {MCQ Position Variants\\(5 rotations per item)\\$N{=}1{,}144$ items};
 
-\node[effect] (cramv) at (-2.5, -2.8) {Cram\'{e}r's $V$};
-\node[effect] (kendw) at (2.5, -2.8) {Kendall's $W$};
+\node[test] (chi2) at (-5.6, 2.9) {$\chi^2$ test\\($n{=}5{,}720$)};
+\node[test] (friedman) at (-2.0, 2.9) {Friedman test\\($N{=}1{,}144$, $k{=}4$)};
 
-\node[phase] (classify1) at (0, -3.8) {Classification Rubric\\(No bias / Mixed / Moderate / Strong)};
+\node[effect] (cramv) at (-5.6, 1.8) {Cram\'{e}r's $V$};
+\node[effect] (kendw) at (-2.0, 1.8) {Kendall's $W$};
+
+\node[outcome] (classify1) at (-3.8, 0.7) {Bias Classification\\{\footnotesize No / Mild / Moderate / Strong}};
 
 \draw[arrow] (mcq_data) -- (chi2);
 \draw[arrow] (mcq_data) -- (friedman);
@@ -229,51 +230,75 @@ Not a statistical test; correctly used as a decision tool. \\
 \draw[arrow] (cramv) -- (classify1);
 \draw[arrow] (kendw) -- (classify1);
 
-% Issue flags
-\node[issue] (iss1) at (5.5, -0.5) {5 variants in code\\vs.\ 4 in Methods};
-\node[issue] (iss2) at (5.5, -2.0) {No multiple-comparison\\correction (38 tests)};
-\node[issue] (iss3) at (5.5, -3.3) {No CIs on $V$, $W$};
+% ===================================================================
+% TOP RIGHT — Inter-Judge Reliability
+% ===================================================================
+\node[quadlabel] at (3.8, 5.25) {Inter-Judge Reliability};
 
-% === Inter-Judge ===
-\node[phase] (judge_data) at (0, -5.0) {OSQ Judge Scores\\$n{=}16{,}051$ item-model pairs\\2 judges};
+\node[data] (judge_data) at (3.8, 4.2) {OSQ Scores\\$n{=}16{,}051$ item--model pairs\\2 LLM judges};
 
-\node[test] (spearman_j) at (0, -6.2) {Spearman $\rho$\\$\rho{=}0.90$, $p{<}0.001$};
+\node[test] (spearman_j) at (3.8, 2.9) {Spearman $\rho$};
 
-\node[issue] (iss4) at (5.5, -5.5) {Consider adding ICC\\for absolute agreement};
+\node[effect] (rho_val) at (3.8, 1.8) {$\rho = 0.90$\\$p < 0.001$};
+
+\node[outcome] (judge_out) at (3.8, 0.7) {Strong rank agreement\\{\footnotesize Judges order models consistently}};
 
 \draw[arrow] (judge_data) -- (spearman_j);
+\draw[arrow] (spearman_j) -- (rho_val);
+\draw[arrow] (rho_val) -- (judge_out);
 
-% === Cross-Modality ===
-\node[phase] (xmod_data) at (0, -7.5) {MCQ Accuracy vs.\ OSQ Score\\$n{=}19$ models (matched subset)};
+% ===================================================================
+% BOTTOM LEFT — Cross-Modality Comparison
+% ===================================================================
+\node[quadlabel] at (-3.8, -0.35) {Cross-Modality (MCQ vs.\ OSQ)};
 
-\node[test] (pearson) at (-3.0, -8.8) {Pearson $r$\\$r{=}0.80$};
-\node[test] (spearman_x) at (0, -8.8) {Spearman $\rho_s$\\$\rho_s{=}0.81$};
-\node[test] (wilcox) at (3.0, -8.8) {Wilcoxon signed-rank\\$p{<}0.001$};
+\node[data] (xmod_data) at (-3.8, -1.3) {MCQ Accuracy vs.\ OSQ Score\\$n{=}19$ models (matched items)};
 
-\node[phase] (classify2) at (0, -10.0) {Cross-Modality Classification\\(Convergent / Partial / Divergent)};
+\node[test] (pearson) at (-6.2, -2.6) {Pearson $r$};
+\node[test] (spearman_x) at (-3.8, -2.6) {Spearman $\rho_s$};
+\node[test] (wilcox) at (-1.4, -2.6) {Wilcoxon\\signed-rank};
+
+\node[effect] (xmod_es) at (-3.8, -3.7) {$r{=}0.80$,\; $\rho_s{=}0.81$,\; $d{=}1.82$};
+
+\node[outcome] (classify2) at (-3.8, -4.8) {Correlated, Non-Interchangeable\\{\footnotesize Same ranking, different levels}};
 
 \draw[arrow] (xmod_data) -- (pearson);
 \draw[arrow] (xmod_data) -- (spearman_x);
 \draw[arrow] (xmod_data) -- (wilcox);
-\draw[arrow] (pearson) -- (classify2);
-\draw[arrow] (spearman_x) -- (classify2);
-\draw[arrow] (wilcox) -- (classify2);
+\draw[arrow] (pearson) -- (xmod_es);
+\draw[arrow] (spearman_x) -- (xmod_es);
+\draw[arrow] (wilcox) -- (xmod_es);
+\draw[arrow] (xmod_es) -- (classify2);
 
-\node[issue] (iss5) at (5.5, -8.0) {$n{=}19$: wide CIs\\(none reported)};
-\node[issue] (iss6) at (5.5, -9.3) {Effect size $d$ defined\\but not reported in Ch.~4};
+% ===================================================================
+% BOTTOM RIGHT — Token Efficiency / Cost
+% ===================================================================
+\node[quadlabel] at (3.8, -0.35) {Token Efficiency \& Cost};
 
-% === Token Efficiency ===
-\node[phase] (tok_data) at (0, -11.2) {Token Counts per Response\\$\overline{T}_{\text{input}} + \overline{T}_{\text{output}}$};
+\node[data] (tok_data) at (3.8, -1.3) {Token Counts per Response\\$\overline{T}_{\text{input}} + \overline{T}_{\text{output}}$\\19 models};
 
-\node[test] (pareto) at (-1.5, -12.3) {Pareto Frontier};
-\node[test] (tps) at (1.5, -12.3) {Tokens-per-score};
+\node[test] (pareto) at (2.3, -2.7) {Pareto\\Frontier};
+\node[test] (tps) at (5.3, -2.7) {Cost per\\1{,}000 questions};
+
+\node[effect] (tok_es) at (2.3, -3.8) {Quality--cost\\trade-off};
+\node[effect] (tok_es2) at (5.3, -3.8) {Tokens-per-\\score ratio};
+
+\node[outcome] (tok_out) at (3.8, -4.8) {Efficiency Classification\\{\footnotesize Optimal / Premium / Dominated}};
 
 \draw[arrow] (tok_data) -- (pareto);
 \draw[arrow] (tok_data) -- (tps);
+\draw[arrow] (pareto) -- (tok_es);
+\draw[arrow] (tps) -- (tok_es2);
+\draw[arrow] (tok_es) -- (tok_out);
+\draw[arrow] (tok_es2) -- (tok_out);
 
-\node[issue] (iss7) at (5.5, -11.5) {Tokens-per-score defined\\but not computed};
+% ── Legend ──
+\node[data, text width=1.2cm, minimum height=0.4cm] at (-5.8, -5.3) {\scriptsize Data};
+\node[test, text width=1.2cm, minimum height=0.4cm] at (-3.8, -5.3) {\scriptsize Test};
+\node[effect, text width=1.2cm, minimum height=0.4cm] at (-1.8, -5.3) {\scriptsize Effect Size};
+\node[outcome, text width=1.2cm, minimum height=0.4cm, font=\scriptsize\bfseries] at (0.5, -5.3) {\scriptsize Outcome};
 
 \end{tikzpicture}
-\caption{Statistical Analysis Pipeline with Identified Issues. Green boxes: statistical tests. Orange boxes: effect sizes. Red boxes: issues requiring resolution. The pipeline flows from data (blue) through tests and effect sizes to classification rubrics.}
+\caption{Statistical analysis pipeline. Each quadrant represents one analytical objective, flowing from data (blue) through statistical tests (green) and effect sizes (orange) to classification outcomes (dark blue). Top row: within-modality analyses. Bottom row: between-modality and efficiency analyses.}
 \label{fig:stat_analysis_pipeline_review}
 \end{figure}
