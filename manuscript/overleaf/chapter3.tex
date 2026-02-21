@@ -1162,9 +1162,10 @@ where $\bar{\Delta}$ is the mean of the per-model differences and $s_{\Delta}$ i
     \item \textbf{Cross-modality consistency classification.}
     Based on the association and separation signals above, the MCQ--OSQ relationship is classified into one of the following evidence categories:
     \begin{itemize}[nosep]
-        \item \textbf{Convergent evidence:} High association and negligible-to-small separation ($|d|<0.50$), with Wilcoxon not significant or directionally weak.
-        \item \textbf{Partially convergent evidence:} Moderate association and/or small-to-medium separation ($0.20 \le |d| < 0.80$), indicating partial agreement with measurable format sensitivity.
-        \item \textbf{Divergent evidence:} Low association and/or medium-to-large separation ($|d|\ge 0.50$), indicating that the two formats yield systematically different measurement signals on the matched subset.
+        \item \textbf{Interchangeable:} High association and negligible-to-small separation ($|d|<0.50$), with Wilcoxon not significant or directionally weak. The two formats can be treated as equivalent evidence.
+        \item \textbf{Correlated but non-interchangeable:} High association (formats rank models similarly) but medium-to-large separation ($|d| \ge 0.50$) and/or significant Wilcoxon test, indicating that one format systematically yields higher scores. The formats measure related constructs but cannot substitute for one another.
+        \item \textbf{Partially correlated:} Moderate association and/or small-to-medium separation ($0.20 \le |d| < 0.80$), indicating partial agreement with measurable format sensitivity.
+        \item \textbf{Divergent:} Low association and/or medium-to-large separation ($|d|\ge 0.50$), indicating that the two formats yield systematically different measurement signals on the matched subset.
     \end{itemize}
 \end{enumerate}
 
@@ -1203,29 +1204,28 @@ These predefined criteria establish how cross-modality agreement will be assesse
 \textbf{Interpretation / Action} \\
 \midrule
 
-Convergent evidence &
+Interchangeable &
 \makecell[l]{High:\\ $r \ge 0.80$\\ $\rho_s \ge 0.80$} &
 \makecell[l]{Negligible--Small:\\ $|d| < 0.50$} &
 $\ge 0.05$ &
-MCQ and OSQ produce consistent measurement signals on matched items. Cross-modality agreement supports combining results; report as mutually reinforcing evidence. \\
+MCQ and OSQ produce consistent measurement signals on matched items. Formats can be treated as equivalent evidence; results may be combined. \\
 \addlinespace
 
-Mixed evidence &
-\multicolumn{3}{L{7.7cm}}{\makecell[l]{Signals disagree; exactly one of:\\[2pt]
-(a) High association but $|d| \ge 0.50$ \\[2pt]
-(b) $|d| < 0.50$ but moderate/low association \\[2pt]
-(c) High association and $|d| < 0.50$ but $p_{\text{Wilcoxon}} < 0.05$}} &
-Evidence is internally inconsistent---one diagnostic suggests convergence while another suggests divergence. Report all diagnostics; avoid strong convergence or divergence claims. \\
+Correlated but non-interchangeable &
+\makecell[l]{High:\\ $r \ge 0.80$\\ $\rho_s \ge 0.80$} &
+\makecell[l]{Medium--Large:\\ $|d| \ge 0.50$} &
+$< 0.05$ &
+Formats rank models similarly but one systematically yields higher scores. They measure related constructs but cannot substitute for one another. Report both modalities separately. \\
 \addlinespace
 
-Partially convergent evidence &
+Partially correlated &
 \makecell[l]{Moderate:\\ $0.50 \le r < 0.80$\\ or\\ $0.50 \le \rho_s < 0.80$} &
 \makecell[l]{Small--Medium:\\ $0.20 \le |d| < 0.80$} &
 (any) &
 Formats partially agree but measurable format sensitivity exists. Report modality-specific results separately; interpret cross-modality comparisons with stated caveats. \\
 \addlinespace
 
-Divergent evidence &
+Divergent &
 \makecell[l]{Low:\\ $r < 0.50$\\ or $\rho_s < 0.50$} &
 \makecell[l]{Medium--Large:\\ $|d| \ge 0.50$} &
 $< 0.05$ &
@@ -1241,7 +1241,7 @@ $\rho_s$ denotes Spearman's rank correlation, measuring agreement in model order
 $d = \bar{\Delta}/s_{\Delta}$ is the paired standardized effect size, where $\Delta_i = \text{Acc}_{\text{MCQ},i} - \bar{S}'_{\text{OSQ},i}$.
 The Wilcoxon signed-rank test evaluates whether the median paired difference is zero at $\alpha = 0.05$.
 Effect-size thresholds follow Cohen's conventions: negligible ($|d|<0.20$), small ($0.20 \le |d| < 0.50$), medium ($0.50 \le |d| < 0.80$), large ($|d| \ge 0.80$).
-The \textit{mixed evidence} row is evaluated first as a catch-all for internally inconsistent diagnostic patterns; remaining cases are classified by the primary association--separation pattern.
+The \textit{correlated but non-interchangeable} category captures the case where formats agree on model ordering but differ systematically in absolute scores; remaining cases are classified by the primary association--separation pattern.
 Substantive implications for evidence fusion and modality selection are reserved for Chapter~5.
 \end{table}
 

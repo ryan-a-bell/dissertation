@@ -56,7 +56,9 @@ However, the fact that the relationship is not near-deterministic is equally imp
     %     \item If $\rho < 0.50$: judge agreement is low; treat OSQ-based conclusions with caution and highlight this as a limitation.
 
 
-Therefore, the key interpretation is that MCQs and OSQs should be viewed as complementary instruments rather than interchangeable metrics. This directly motivates the multi-format benchmark direction laid out in Chapter \ref{ch:introduction}: a robust SE benchmark should intentionally combine modalities to measure distinct aspects of SE-relevant competence.
+The cross-modality classification rubric defined in Chapter~\ref{ch:materials_methods} and applied in Chapter~\ref{ch:results} classifies the MCQ--OSQ relationship as \textit{correlated but non-interchangeable}. This designation encodes two complementary findings. First, the formats produce highly correlated model rankings ($r \approx 0.80$, $\rho \approx 0.81$): a model that performs well on MCQ tends to perform well on OSQ, and vice versa. Second, MCQ systematically yields higher absolute scores than OSQ for every model evaluated (Wilcoxon $W = 0.0$, $p < 0.001$, $d = 1.82$), with a mean MCQ advantage of 12.6 percentage points. The effect is universal --- all 19 models scored higher on MCQ --- and large, ranging from 5.3 percentage points (mistral-large) to 38.1 percentage points (llama3.2\_\_3b).
+
+The practical implication is direct: \textbf{MCQ and OSQ provide complementary but non-interchangeable evidence. MCQ captures the same relative model ordering but at a systematically inflated absolute level. OSQ reveals capability gaps that MCQ conceals.} An evaluation regime that relies solely on MCQ will overestimate model readiness for tasks requiring generative reasoning, while one that relies solely on OSQ will miss the efficient screening value that MCQ provides. This directly motivates the multi-format benchmark direction laid out in Chapter~\ref{ch:introduction}: a robust SE benchmark should intentionally combine modalities to measure distinct aspects of SE-relevant competence.
 
 
 \subsection{Interpreting Tokenomics Factors of Quality and Verbosity}

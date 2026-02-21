@@ -503,15 +503,15 @@ Applying the cross-modality classification rubric defined in Table~\ref{tab:cros
 \toprule
 Judge & Pearson $r$ & Spearman $\rho$ & Cohen's $d$ & Wilcoxon $p$ & Classification \\
 \midrule
-gpt-oss\_120b        & 0.7976 & 0.8000 & 2.35 & ${<}0.001$ & Mixed evidence \\
-openai\_gpt-5-mini  & 0.8106 & 0.8140 & 1.30 & ${<}0.001$ & Mixed evidence \\
-Average             & 0.8045 & 0.8070 & 1.82 & ${<}0.001$ & Mixed evidence \\
+gpt-oss\_120b        & 0.7976 & 0.8000 & 2.35 & ${<}0.001$ & Correlated, non-interchangeable \\
+openai\_gpt-5-mini  & 0.8106 & 0.8140 & 1.30 & ${<}0.001$ & Correlated, non-interchangeable \\
+Average             & 0.8045 & 0.8070 & 1.82 & ${<}0.001$ & Correlated, non-interchangeable \\
 \bottomrule
 \end{tabular}
 
 \vspace{0.5em}
 \footnotesize
-\textit{Notes.} All three judge conditions classify as \textbf{Mixed evidence}: high association ($r \approx 0.80$, $\rho \approx 0.81$) indicates that MCQ and OSQ rank models similarly, but large effect size ($d = 1.30$--$2.35$) and significant Wilcoxon test ($p < 0.001$) indicate that MCQ systematically yields higher scores. This corresponds to rubric condition~(a): ``High association but $|d| \geq 0.50$.'' MCQ and OSQ measure related constructs but are not interchangeable as evidence.
+\textit{Notes.} All three judge conditions classify as \textbf{Correlated but non-interchangeable}: high association ($r \approx 0.80$, $\rho \approx 0.81$) indicates that MCQ and OSQ rank models similarly, but large effect size ($d = 1.30$--$2.35$) and significant Wilcoxon test ($p < 0.001$) indicate that MCQ systematically yields higher scores. The two formats measure related constructs but cannot substitute for one another as qualification evidence.
 \end{table}
 
 
