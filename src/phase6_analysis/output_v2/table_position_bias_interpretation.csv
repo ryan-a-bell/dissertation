@@ -1,6 +1,6 @@
 model,category,description,chi2_p,cramers_v,friedman_p
 anthropic__claude-sonnet-4.5,Mixed evidence,Inconsistent evidence across tests,0.0005754815202265517,0.0586679251901473,5.046594408472201e-10
-devstral__24b,Mixed evidence,Inconsistent evidence across tests,1.5750662366401e-05,0.0693371762148544,1.4592258344005886e-12
+devstral__24b,Mixed evidence,Inconsistent evidence across tests,1.5750662366401e-05,0.0693371762148544,1.4592258344005884e-12
 gemma3__12b,Mixed evidence,Inconsistent evidence across tests,0.01666509552410024,0.04598208674309815,9.727726844179051e-07
 gemma3__1b,Moderate bias,Position should be considered in interpretation,3.88258799219351e-35,0.17104447790066463,1.6702610000216755e-61
 gemma3__27b,No bias,MCQ accuracy is position-invariant,0.055355942468238654,0.04019345045456655,4.6128516442339986e-05
@@ -13,7 +13,7 @@ llama4__16x17b,No bias,MCQ accuracy is position-invariant,0.06614914469404766,0.
 mistral-large__123b,Mixed evidence,Inconsistent evidence across tests,0.00022152592132140982,0.06170856968898172,1.7120980415257362e-09
 mistral-small3.2__24b,Mixed evidence,Inconsistent evidence across tests,3.921464768583551e-06,0.07298887366706885,1.0416732159661172e-12
 mixtral__8x22b,No bias,MCQ accuracy is position-invariant,0.1300087454089064,0.0352650648371038,0.000632122759380036
-openai__gpt-4.1,No bias,MCQ accuracy is position-invariant,0.1507463728169369,0.03430633736518878,0.00013564954937359526
+openai__gpt-4.1,No bias,MCQ accuracy is position-invariant,0.15074637281693692,0.03430633736518878,0.00013564954937359526
 phi3.5__3.8b,Mixed evidence,Inconsistent evidence across tests,0.007594891576434974,0.04930973819445889,4.1117461210807484e-08
 phi3__14b,Mixed evidence,Inconsistent evidence across tests,0.021923847778642272,0.044745547143992585,3.7664494919272615e-05
 phi4-mini__3.8b,Moderate bias,Position should be considered in interpretation,1.0227325745473533e-14,0.11191240890346714,3.0568910608917654e-32
