@@ -745,10 +745,57 @@ lm_eval --model local-chat-completions \
 
 The process iterates through all models, checks server health, executes lm-evaluation-harness, and logs success/failure with automatic retry on server errors.
 
-%%% EXPLAIN THE OUTPUT in JSONL. Samples vs results JSON files.
+Each completed evaluation run produces two complementary output artifacts, organized under a directory hierarchy of \texttt{output/<task>/<model>/}:
 
+\begin{enumerate}
+    \item \textbf{Results file} (\texttt{results\_<timestamp>.json}): A single JSON document containing the aggregate run-level summary. This includes the computed metric values (e.g., exact-match accuracy and its bootstrap standard error), the full task configuration (prompt template, metric definitions, generation parameters, response-filter pipeline), model-level settings (model identifier, backend URL, batch size, random seeds), sample counts, wall-clock evaluation time, and a snapshot of the software and hardware environment (library versions, GPU model, OS).
 
+    \item \textbf{Samples file} (\texttt{samples\_<task>\_<timestamp>.jsonl}): A JSONL file containing one JSON record per evaluation item. Each record captures the complete provenance of a single model response: the source document with its question text, answer choices, and metadata; the gold-standard target label; the exact prompt sent to the model; the raw model response; the post-filtered response (e.g., after regex extraction of the answer letter); the per-item metric score (1.0 or 0.0 for exact match); and SHA-256 hashes of the document, prompt, and target for reproducibility verification.
+\end{enumerate}
 
+This two-tier output design separates aggregate reporting from item-level traceability. The results file supports rapid cross-model comparison and dashboard visualization, while the samples file enables post-hoc error analysis---identifying which specific questions a model answered incorrectly, inspecting raw response text for failure modes (e.g., multi-token outputs, hedging, or refusal), and verifying that the response-filter pipeline correctly extracted the intended answer. Figure~\ref{fig:lm-eval-output} illustrates this structure with abbreviated examples from actual evaluation runs.
+
+\begin{figure}[htbp]
+\centering
+\begin{scriptsize}
+\begin{lstlisting}[
+    basicstyle=\ttfamily\scriptsize,
+    breaklines=true,
+    frame=single,
+    framerule=0.4pt,
+    framesep=4pt
+]
+output/<task_name>/<model_name>/
+  |-- results_<timestamp>.json          # Aggregate run summary
+  |-- samples_<task>_<timestamp>.jsonl   # Per-item detail
+
+=== results_*.json (one per run) ===
+{ "results": { "sysengbench-a": {
+      "exact_match,strict-match": 0.902,
+      "exact_match_stderr,strict-match": 0.0088 }},
+  "configs": { ... prompt template, metrics, filters ... },
+  "config":  { "model": "local-chat-completions",
+      "model_args": "model=gemma3:27b,...",
+      "batch_size": "auto", "gen_kwargs": {"temperature": 0.0}},
+  "n-samples": {"sysengbench-a": {"original": 1144, "effective": 1144}},
+  "total_evaluation_time_seconds": "292.57",
+  "model_name": "gemma3:27b", "lm_eval_version": "0.4.9.1" }
+
+=== samples_*.jsonl (one JSON object per question) ===
+{ "doc_id": 0,
+  "doc": { "question": "What best describes...",
+           "choiceA": "...", ..., "answer": "A" },
+  "target": "A",
+  "arguments": { "gen_args_0": { "arg_0": [formatted prompt] }},
+  "resps":          [["A\n"]],
+  "filtered_resps": ["A"],
+  "exact_match":    1.0,
+  "doc_hash": "8c89...", "prompt_hash": "2b1d..." }
+\end{lstlisting}
+\end{scriptsize}
+\caption{lm-evaluation-harness output structure. The results file stores aggregate metrics and run configuration; the samples file preserves per-item prompts, responses, and correctness scores.}
+\label{fig:lm-eval-output}
+\end{figure}
 
 
 
