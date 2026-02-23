@@ -1313,10 +1313,113 @@ This construction does not assert that lower token usage implies higher qualific
 
 
 % ---------------------------------------------------------
+\section{Objective 7: Category-Level Task--Modality Qualification Mapping}
+\label{sec:ch3_obj7}
+
+Objectives~5 and~6 establish whether evaluation instruments are robust and characterize cost trade-offs, but they do not address whether modality suitability varies across the \ac{se} domain. This objective decomposes model performance by INCOSE Handbook category and constructs a structured mapping from domain area to recommended evaluation modality. The result is an empirically grounded qualification guidance framework that supplements the aggregate cross-modality findings of Objective~5 with category-resolved evidence.
+
+
+\subsection{Category Decomposition and Alignment}
+\label{subsec:ch3_obj7_categories}
+
+Each SysEngBench question is annotated with one or more INCOSE Handbook categories encoded as hierarchical paths (e.g., \texttt{INCOSEHandbook / Technical Processes / Architecture Definition Process}). Questions with multiple category assignments are handled by row explosion: each (model, question, category) combination is treated as an independent observation so that every assigned category receives proportional representation.
+
+Two levels of granularity are analyzed:
+
+\begin{enumerate}[nosep]
+    \item \textbf{Leaf-level categories} ($\approx$20): the most specific INCOSE process or topic area (e.g., \textit{Risk and Opportunity Management Process}, \textit{Modeling Language SysML v1.x}).
+    \item \textbf{Top-level groups} ($\approx$6): the second level of the hierarchy (e.g., \textit{Technical Processes}, \textit{Specialty Engineering Activities}, \textit{Cross-Cutting Systems Engineering Methods}).
+\end{enumerate}
+
+Analyzing at both levels tests whether modality differences are driven by specific leaf categories or are systematic properties of entire process families.
+
+
+\subsection{Category-Level MCQ and OSQ Performance}
+\label{subsec:ch3_obj7_performance}
+
+For each (model, category) pair, two performance metrics are computed:
+
+\begin{itemize}[nosep]
+    \item \textbf{MCQ accuracy}: the proportion of correct responses across all position variants for questions in that category ($\overline{\text{Acc}}_{\text{MCQ}}$, range 0--1).
+    \item \textbf{OSQ mean score}: the average rubric-based percentage score across all judge evaluations for questions in that category ($\overline{S}_{\text{OSQ}} / 100$, normalized to 0--1).
+\end{itemize}
+
+Results are presented as model $\times$ category heatmaps for each modality, with models sorted by overall MCQ accuracy (descending) and categories sorted alphabetically. This consistent ordering across MCQ and OSQ heatmaps supports direct visual comparison.
+
+A category-level scatter plot analogous to the model-level MCQ vs.\ OSQ scatter (Objective~5, Section~\ref{subsec:ch3_obj5_modality_comparison}) is constructed for each granularity level: one point per category, with coordinates $(\overline{\text{Acc}}_{\text{MCQ}},\; \overline{S}_{\text{OSQ}})$ averaged across all models. A perfect-agreement line ($y = x$) and linear regression are overlaid to visualize systematic modality divergence by domain area.
+
+
+\subsection{Modality Advantage Quantification}
+\label{subsec:ch3_obj7_delta}
+
+The MCQ--OSQ delta quantifies the direction and magnitude of modality advantage for each (model, category) pair:
+
+\[
+\Delta_{m,c} \;=\; \overline{\text{Acc}}_{\text{MCQ},m,c} \;-\; \frac{\overline{S}_{\text{OSQ},m,c}}{100}
+\]
+
+where $m$ indexes models and $c$ indexes categories. Positive values indicate MCQ advantage (recognition exceeds generation); negative values indicate OSQ advantage.
+
+Results are reported in two complementary forms:
+
+\begin{enumerate}[nosep]
+    \item \textbf{Delta heatmap tables}: a model $\times$ category matrix of $\Delta_{m,c}$ values with marginal summary statistics. The final column reports per-model mean and median $\Delta$ (across categories); the final row reports per-category mean and median $\Delta$ (across models). This structure, analogous to a joint probability table, enables simultaneous reading of model-level and category-level modality tendencies.
+    \item \textbf{Diverging bar charts}: per-category mean $\Delta$ (averaged across models) displayed as horizontal bars, with positive bars colored to indicate MCQ advantage and negative bars colored to indicate OSQ advantage.
+\end{enumerate}
+
+
+\subsection{Predefined Qualification Modality Classification Criteria}
+\label{subsec:ch3_obj7_classification}
+
+To translate delta magnitudes into actionable guidance, each category is classified into one of four modality recommendations based on the cross-model mean delta ($\overline{\Delta}_c$) and the mean MCQ accuracy for that category ($\overline{\text{Acc}}_{\text{MCQ},c}$):
+
+\begin{table}[htbp]
+\centering
+\caption{Predefined category-level qualification modality classification criteria.}
+\label{tab:obj7_classification}
+\resizebox{\linewidth}{!}{%
+\begin{tabular}{p{3.5cm} p{3.5cm} p{3.5cm} p{6.5cm}}
+\toprule
+\textbf{Classification} & \textbf{Mean $\overline{\Delta}_c$} & \textbf{Mean MCQ Acc.} & \textbf{Interpretation and Guidance} \\
+\midrule
+
+MCQ-sufficient &
+$\overline{\Delta}_c \geq 0.15$ &
+$\overline{\text{Acc}}_{\text{MCQ},c} \geq 0.85$ &
+Large modality gap with high MCQ performance. MCQ captures competence reliably; OSQ adds cost without proportional signal gain. Suitable for low-risk screening. \\
+
+\addlinespace
+Dual-modality recommended &
+$0.05 \leq \overline{\Delta}_c < 0.15$ &
+Any &
+Moderate modality gap. MCQ provides useful signal but does not fully capture generative competence. Pair MCQ screening with targeted OSQ evaluation for moderate-risk tasks. \\
+
+\addlinespace
+OSQ-preferred &
+$\overline{\Delta}_c < 0.05$ &
+Any &
+Small or negligible modality gap. OSQ captures competence that MCQ may miss or both modalities converge. OSQ should be the primary qualifier for tasks requiring explanation and reasoning. \\
+
+\addlinespace
+Insufficient coverage &
+Any &
+$< 30$ samples in category &
+Too few observations for reliable classification. Report descriptive statistics only; do not assign modality recommendation. \\
+
+\bottomrule
+\end{tabular}
+}
+\end{table}
+
+These thresholds are applied independently at both granularity levels (leaf categories and top-level groups). The classification is intended as a structured starting point for deployment decisions, not as a rigid prescription; organizations should adjust thresholds based on their risk tolerance and domain-specific requirements.
+
+
+
+% ---------------------------------------------------------
 \section{Chapter Summary}
 \label{sec:ch3_summary}
 
-This chapter defined an objective-centered methodology for producing modality-aware, robustness-aware, and cost-aware evaluation evidence. It described the shared execution environment and reproducibility controls, then specified the procedures used to (i) curate and derive benchmark artifacts, (ii) generate OSQ grading scaffolds, (iii) execute standardized inference across MCQ and OSQ, (iv) score OSQ outputs via rubric-based judging, (v) quantify robustness and cross-modality evidence patterns under uncertainty, and (vi) evaluate token-efficiency tradeoffs into qualification guidance.
+This chapter defined an objective-centered methodology for producing modality-aware, robustness-aware, and cost-aware evaluation evidence. It described the shared execution environment and reproducibility controls, then specified the procedures used to (i) curate and derive benchmark artifacts, (ii) generate OSQ grading scaffolds, (iii) execute standardized inference across MCQ and OSQ, (iv) score OSQ outputs via rubric-based judging, (v) quantify robustness and cross-modality evidence patterns under uncertainty, (vi) evaluate token-efficiency tradeoffs, and (vii) map category-level performance to task--modality qualification guidance.
 
 The following chapters present results (Chapter~\ref{ch:results}), discuss implications (Chapter~\ref{ch:discussion}), and conclude with recommendations for practice and future research (Chapter~\ref{ch:conclusion}).
 
