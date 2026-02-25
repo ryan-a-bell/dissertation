@@ -1371,7 +1371,7 @@ Results are reported in two complementary forms:
 \subsection{Predefined Qualification Modality Classification Criteria}
 \label{subsec:ch3_obj7_classification}
 
-To translate delta magnitudes into actionable guidance, each category is classified into one of four modality recommendations based on the cross-model mean delta ($\overline{\Delta}_c$) and the mean MCQ accuracy for that category ($\overline{\text{Acc}}_{\text{MCQ},c}$):
+To translate delta magnitudes into actionable guidance, each category is classified into one of four modality recommendations based on the absolute cross-model mean delta ($|\overline{\Delta}_c|$) and the mean MCQ accuracy for that category ($\overline{\text{Acc}}_{\text{MCQ},c}$). The classification regions are visualized as shaded areas on the MCQ vs.\ OSQ scatter plot (see Section~\ref{subsec:ch3_obj7_classification}):
 
 \begin{table}[htbp]
 \centering
@@ -1380,25 +1380,25 @@ To translate delta magnitudes into actionable guidance, each category is classif
 \resizebox{\linewidth}{!}{%
 \begin{tabular}{p{3.5cm} p{3.5cm} p{3.5cm} p{6.5cm}}
 \toprule
-\textbf{Classification} & \textbf{Mean $\overline{\Delta}_c$} & \textbf{Mean MCQ Acc.} & \textbf{Interpretation and Guidance} \\
+\textbf{Classification} & \textbf{$|\overline{\Delta}_c|$} & \textbf{Mean MCQ Acc.} & \textbf{Interpretation and Guidance} \\
 \midrule
 
 MCQ-sufficient &
-$\overline{\Delta}_c \geq 0.15$ &
-$\overline{\text{Acc}}_{\text{MCQ},c} \geq 0.85$ &
-Large modality gap with high MCQ performance. MCQ captures competence reliably; OSQ adds cost without proportional signal gain. Suitable for low-risk screening. \\
+$|\overline{\Delta}_c| < 5\%$ &
+$\overline{\text{Acc}}_{\text{MCQ},c} \geq 85\%$ &
+Small modality gap with high MCQ performance. Both modalities converge and MCQ captures competence reliably. Suitable for low-risk screening without OSQ. \\
 
 \addlinespace
 Dual-modality recommended &
-$0.05 \leq \overline{\Delta}_c < 0.15$ &
+$5\% \leq |\overline{\Delta}_c| < 15\%$ &
 Any &
 Moderate modality gap. MCQ provides useful signal but does not fully capture generative competence. Pair MCQ screening with targeted OSQ evaluation for moderate-risk tasks. \\
 
 \addlinespace
-OSQ-preferred &
-$\overline{\Delta}_c < 0.05$ &
+Dual-modality required &
+$|\overline{\Delta}_c| \geq 15\%$ &
 Any &
-Small or negligible modality gap. OSQ captures competence that MCQ may miss or both modalities converge. OSQ should be the primary qualifier for tasks requiring explanation and reasoning. \\
+Large modality gap. MCQ and OSQ measure meaningfully different competences. Both modalities must be administered for reliable qualification in this category. \\
 
 \addlinespace
 Insufficient coverage &

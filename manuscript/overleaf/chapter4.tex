@@ -669,11 +669,20 @@ Tables~\ref{tab:delta_full_marginals} and~\ref{tab:delta_toplevel_marginals} pre
 
 \subsection{Category-Level Qualification Classification}
 
-Table~\ref{tab:category_qualification} applies the predefined classification criteria from Section~\ref{subsec:ch3_obj7_classification} to each leaf-level category, mapping mean delta and mean MCQ accuracy to a modality recommendation.
+Figure~\ref{fig:scatter_regions} overlays the predefined classification regions from Section~\ref{subsec:ch3_obj7_classification} on the category-level scatter plot. The green region marks MCQ-sufficient categories ($|\Delta| < 5\%$ and MCQ accuracy $\geq 85\%$), the amber band marks dual-modality recommended categories ($5\% \leq |\Delta| < 15\%$), and the red region marks dual-modality required categories ($|\Delta| \geq 15\%$). All 20~leaf-level categories fall within either the dual-modality recommended or dual-modality required regions; no category achieves the MCQ-sufficient threshold.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=1\linewidth]{figs/ch4/4.6/fig_mcq_vs_osq_scatter_regions.png}
+    \caption{MCQ vs.\ OSQ accuracy by INCOSE category with qualification classification regions. Green: MCQ-sufficient ($|\Delta| < 5\%$, Acc~$\geq 85\%$). Amber: dual-modality recommended ($5\% \leq |\Delta| < 15\%$). Red: dual-modality required ($|\Delta| \geq 15\%$).}
+    \label{fig:scatter_regions}
+\end{figure}
+
+Table~\ref{tab:category_qualification} applies these classification criteria to each leaf-level category, mapping mean delta and mean MCQ accuracy to a modality recommendation. Of the 20~categories, 8~are classified as dual-modality required and 12~as dual-modality recommended.
 
 \begin{table}[htbp]
 \centering
-\caption{Category-level qualification modality classification results.}
+\caption{Category-level qualification modality classification results. Categories are sorted by descending mean delta.}
 \label{tab:category_qualification}
 \resizebox{\linewidth}{!}{\input{figs/ch4/4.6/table_qualification_classification.tex}}
 \end{table}
