@@ -563,5 +563,130 @@ The figure includes an annotation indicating that the lower-right region corresp
 \end{figure}
 
 
+% ---------------------------------------------------------
+\section{Performance by INCOSE Category and Modality Qualification Mapping}
+\label{sec:category_modality_mapping}
+
+This section decomposes model performance by INCOSE Handbook category and applies the qualification modality classification criteria defined in Section~\ref{subsec:ch3_obj7_classification}. Results are presented at two levels of granularity: all 20 leaf-level categories and 6 top-level INCOSE groups.
+
+\subsection{MCQ Accuracy by INCOSE Category}
+
+Figure~\ref{fig:mcq_heatmap_full} presents a heatmap of MCQ accuracy for each model across all 20 INCOSE leaf-level categories. Models are sorted by overall MCQ accuracy (highest at top) and categories are sorted alphabetically. Cell values indicate the proportion of correct responses.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=1\linewidth]{figs/ch4/4.6/fig_mcq_accuracy_by_incose_category.png}
+    \caption{MCQ Accuracy by Model and INCOSE Category (Leaf Level)}
+    \label{fig:mcq_heatmap_full}
+\end{figure}
+
+Figure~\ref{fig:mcq_heatmap_toplevel} aggregates the same data to the top-level INCOSE grouping, reducing the 20 categories to 6 process families.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=1\linewidth]{figs/ch4/4.6/fig_mcq_accuracy_by_incose_toplevel.png}
+    \caption{MCQ Accuracy by Model and INCOSE Top-Level Group}
+    \label{fig:mcq_heatmap_toplevel}
+\end{figure}
+
+
+\subsection{OSQ Mean Score by INCOSE Category}
+
+Figure~\ref{fig:osq_heatmap_full} presents the corresponding OSQ mean scores (normalized to 0--1) using the same model and category ordering as the MCQ heatmap for direct comparison.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=1\linewidth]{figs/ch4/4.6/fig_osq_accuracy_by_incose_category.png}
+    \caption{OSQ Mean Score by Model and INCOSE Category (Leaf Level)}
+    \label{fig:osq_heatmap_full}
+\end{figure}
+
+Figure~\ref{fig:osq_heatmap_toplevel} shows the top-level aggregation.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=1\linewidth]{figs/ch4/4.6/fig_osq_accuracy_by_incose_toplevel.png}
+    \caption{OSQ Mean Score by Model and INCOSE Top-Level Group}
+    \label{fig:osq_heatmap_toplevel}
+\end{figure}
+
+
+\subsection{MCQ vs.\ OSQ Accuracy by Category}
+
+Figures~\ref{fig:mcq_osq_scatter_category} and~\ref{fig:mcq_osq_scatter_toplevel} present category-level scatter plots of MCQ accuracy versus OSQ mean score. Each point represents one category, with coordinates averaged across all models. A perfect-agreement diagonal and linear regression are overlaid. Categories above the diagonal exhibit higher OSQ than MCQ performance; categories below exhibit the reverse.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=1\linewidth]{figs/ch4/4.6/fig_mcq_vs_osq_scatter_by_category.png}
+    \caption{MCQ Accuracy vs.\ OSQ Mean Score by INCOSE Category (Leaf Level). Each point represents one category averaged across all models.}
+    \label{fig:mcq_osq_scatter_category}
+\end{figure}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=1\linewidth]{figs/ch4/4.6/fig_mcq_vs_osq_scatter_by_toplevel.png}
+    \caption{MCQ Accuracy vs.\ OSQ Mean Score by INCOSE Top-Level Group. Each point represents one top-level group averaged across all models.}
+    \label{fig:mcq_osq_scatter_toplevel}
+\end{figure}
+
+
+\subsection{MCQ--OSQ Delta Analysis}
+
+\paragraph{Diverging Bar Charts}
+Figures~\ref{fig:delta_bar_full} and~\ref{fig:delta_bar_toplevel} show the mean MCQ--OSQ delta per category, averaged across all models. Positive values indicate MCQ advantage; negative values indicate OSQ advantage.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=1\linewidth]{figs/ch4/4.6/fig_mcq_osq_delta_by_incose_category.png}
+    \caption{MCQ--OSQ Accuracy Delta by INCOSE Category (Leaf Level)}
+    \label{fig:delta_bar_full}
+\end{figure}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.85\linewidth]{figs/ch4/4.6/fig_mcq_osq_delta_by_incose_toplevel.png}
+    \caption{MCQ--OSQ Accuracy Delta by INCOSE Top-Level Group}
+    \label{fig:delta_bar_toplevel}
+\end{figure}
+
+\paragraph{Delta Tables with Marginal Statistics}
+Tables~\ref{tab:delta_full_marginals} and~\ref{tab:delta_toplevel_marginals} present the complete model $\times$ category delta matrices. Each cell contains $\Delta_{m,c} = \overline{\text{Acc}}_{\text{MCQ}} - \overline{S}_{\text{OSQ}}/100$. The rightmost columns report per-model summary statistics (mean and median delta across categories); the bottom rows report per-category summary statistics (mean and median delta across models). These marginals enable simultaneous reading of which models exhibit the largest modality gaps and which categories are most sensitive to modality choice.
+
+\begin{table}[htbp]
+\centering
+\caption{MCQ--OSQ Delta by INCOSE Category (Leaf Level) with Marginal Statistics. Positive values indicate MCQ advantage.}
+\label{tab:delta_full_marginals}
+\resizebox{\linewidth}{!}{\input{figs/ch4/4.6/table_delta_marginals_category.tex}}
+\end{table}
+
+\begin{table}[htbp]
+\centering
+\caption{MCQ--OSQ Delta by INCOSE Top-Level Group with Marginal Statistics. Positive values indicate MCQ advantage.}
+\label{tab:delta_toplevel_marginals}
+\resizebox{\linewidth}{!}{\input{figs/ch4/4.6/table_delta_marginals_toplevel.tex}}
+\end{table}
+
+
+\subsection{Category-Level Qualification Classification}
+
+Figure~\ref{fig:scatter_regions} overlays the predefined classification regions from Section~\ref{subsec:ch3_obj7_classification} on the category-level scatter plot. The green region marks MCQ-sufficient categories ($|\Delta| < 5\%$ and MCQ accuracy $\geq 85\%$), the amber band marks dual-modality recommended categories ($5\% \leq |\Delta| < 15\%$), and the red region marks dual-modality required categories ($|\Delta| \geq 15\%$). All 20~leaf-level categories fall within either the dual-modality recommended or dual-modality required regions; no category achieves the MCQ-sufficient threshold.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=1\linewidth]{figs/ch4/4.6/fig_mcq_vs_osq_scatter_regions.png}
+    \caption{MCQ vs.\ OSQ accuracy by INCOSE category with qualification classification regions. Green: MCQ-sufficient ($|\Delta| < 5\%$, Acc~$\geq 85\%$). Amber: dual-modality recommended ($5\% \leq |\Delta| < 15\%$). Red: dual-modality required ($|\Delta| \geq 15\%$).}
+    \label{fig:scatter_regions}
+\end{figure}
+
+Table~\ref{tab:category_qualification} applies these classification criteria to each leaf-level category, mapping mean delta and mean MCQ accuracy to a modality recommendation. Of the 20~categories, 8~are classified as dual-modality required and 12~as dual-modality recommended.
+
+\begin{table}[htbp]
+\centering
+\caption{Category-level qualification modality classification results. Categories are sorted by descending mean delta.}
+\label{tab:category_qualification}
+\resizebox{\linewidth}{!}{\input{figs/ch4/4.6/table_qualification_classification.tex}}
+\end{table}
+
+
 
 
