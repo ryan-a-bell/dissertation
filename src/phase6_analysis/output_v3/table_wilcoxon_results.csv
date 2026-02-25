@@ -1,0 +1,4 @@
+judge,stat,p_value,median_diff,mean_diff,n
+gpt-oss_120b,0.0,4e-06,0.143763,0.160212,19
+openai_gpt-5-mini,0.0,4e-06,0.076,0.091734,19
+Average,0.0,4e-06,0.112503,0.12597,19
