@@ -567,7 +567,7 @@ The figure includes an annotation indicating that the lower-right region corresp
 \section{Performance by INCOSE Category and Modality Qualification Mapping}
 \label{sec:category_modality_mapping}
 
-This section decomposes model performance by INCOSE Handbook category and applies the qualification modality classification criteria defined in Section~\ref{subsec:ch3_obj7_classification}. Results are presented at two levels of granularity: all 20 leaf-level categories and 6 top-level INCOSE groups.
+This section decomposes model performance by INCOSE Handbook category and applies the qualification modality classification criteria defined in Section~\ref{subsec:ch3_obj7_classification}. Results are presented at two levels of granularity: all 20 leaf-level categories and 6 top-level INCOSE groups. All analyses in this section are computed from the aligned MCQ--OSQ dataset, in which each question appears in both modalities, ensuring one-to-one correspondence between MCQ accuracy and OSQ scores at the category level.
 
 \subsection{MCQ Accuracy by INCOSE Category}
 
@@ -613,7 +613,7 @@ Figure~\ref{fig:osq_heatmap_toplevel} shows the top-level aggregation.
 
 \subsection{MCQ vs.\ OSQ Accuracy by Category}
 
-Figures~\ref{fig:mcq_osq_scatter_category} and~\ref{fig:mcq_osq_scatter_toplevel} present category-level scatter plots of MCQ accuracy versus OSQ mean score. Each point represents one category, with coordinates averaged across all models. A perfect-agreement diagonal and linear regression are overlaid. Categories above the diagonal exhibit higher OSQ than MCQ performance; categories below exhibit the reverse.
+Figures~\ref{fig:mcq_osq_scatter_category} and~\ref{fig:mcq_osq_scatter_toplevel} present category-level scatter plots of MCQ accuracy versus OSQ mean score, computed from the aligned dataset so that both axes reflect the same set of matched questions. Each point represents one category, with coordinates averaged across all models. A perfect-agreement diagonal and linear regression are overlaid. Categories above the diagonal exhibit higher OSQ than MCQ performance; categories below exhibit the reverse.
 
 \begin{figure}[htbp]
     \centering
