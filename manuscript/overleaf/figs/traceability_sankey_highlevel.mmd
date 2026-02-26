@@ -5,38 +5,50 @@ sankey-beta
 
 %% ============================================================
 %% HIGH-LEVEL TRACEABILITY SANKEY
-%% Research Problem → Research Questions → Objectives → Contributions
+%% Matches Table 1.1 in chapter1.tex (tab:rq_obj_contrib_mapping)
+%% Primary objectives shown with weight 2; supporting with weight 1
 %% ============================================================
 
 %% ── Research Problem → Research Questions ──────────────────
-Research Problem,RQ1 – MCQ Robustness,3
-Research Problem,RQ2 – Cross-Modality Evidence,5
-Research Problem,RQ3 – Cost & Token Efficiency,2
+Research Problem,RQ1 – MCQ Robustness,5
+Research Problem,RQ2 – Cross-Modality Evidence,8
+Research Problem,RQ3 – Cost & Token Efficiency,4
 
-%% ── RQ1 → Objectives ──────────────────────────────────────
+%% ── RQ1 → Objectives (Primary: Obj 5; Supporting: Obj 1 3 7) ──
+RQ1 – MCQ Robustness,Obj 5 – Robustness & Cross-Modality,2
 RQ1 – MCQ Robustness,Obj 1 – Benchmark Curation,1
 RQ1 – MCQ Robustness,Obj 3 – Standardized Inference,1
-RQ1 – MCQ Robustness,Obj 5 – Robustness & Cross-Modality,1
+RQ1 – MCQ Robustness,Obj 7 – Qualification Guidance,1
 
-%% ── RQ2 → Objectives ──────────────────────────────────────
+%% ── RQ2 → Objectives (Primary: Obj 5 7; Supporting: Obj 1 2 3 4) ──
+RQ2 – Cross-Modality Evidence,Obj 5 – Robustness & Cross-Modality,2
+RQ2 – Cross-Modality Evidence,Obj 7 – Qualification Guidance,2
 RQ2 – Cross-Modality Evidence,Obj 1 – Benchmark Curation,1
 RQ2 – Cross-Modality Evidence,Obj 2 – OSQ Grading Scaffolds,1
+RQ2 – Cross-Modality Evidence,Obj 3 – Standardized Inference,1
 RQ2 – Cross-Modality Evidence,Obj 4 – Rubric-Based Judging,1
-RQ2 – Cross-Modality Evidence,Obj 5 – Robustness & Cross-Modality,1
-RQ2 – Cross-Modality Evidence,Obj 7 – Qualification Guidance,1
 
-%% ── RQ3 → Objectives ──────────────────────────────────────
+%% ── RQ3 → Objectives (Primary: Obj 6; Supporting: Obj 3 4) ──
+RQ3 – Cost & Token Efficiency,Obj 6 – Token-Efficiency,2
 RQ3 – Cost & Token Efficiency,Obj 3 – Standardized Inference,1
-RQ3 – Cost & Token Efficiency,Obj 6 – Token-Efficiency,1
+RQ3 – Cost & Token Efficiency,Obj 4 – Rubric-Based Judging,1
 
-%% ── Objectives → Contributions ────────────────────────────
+%% ── Objectives → Contributions (per Table 1.1) ─────────────
+%% RQ1 → C2
+Obj 5 – Robustness & Cross-Modality,C2 – MCQ Robustness Analysis,2
+Obj 1 – Benchmark Curation,C2 – MCQ Robustness Analysis,1
+Obj 3 – Standardized Inference,C2 – MCQ Robustness Analysis,1
+Obj 7 – Qualification Guidance,C2 – MCQ Robustness Analysis,1
+
+%% RQ2 → C1 and C3
 Obj 1 – Benchmark Curation,C1 – SysEngBench Extension,1
 Obj 2 – OSQ Grading Scaffolds,C1 – SysEngBench Extension,1
-Obj 3 – Standardized Inference,C2 – MCQ Robustness Analysis,1
-Obj 5 – Robustness & Cross-Modality,C2 – MCQ Robustness Analysis,1
+Obj 5 – Robustness & Cross-Modality,C3 – Modality Fusion for Qualification,2
+Obj 7 – Qualification Guidance,C3 – Modality Fusion for Qualification,2
 Obj 3 – Standardized Inference,C3 – Modality Fusion for Qualification,1
 Obj 4 – Rubric-Based Judging,C3 – Modality Fusion for Qualification,1
-Obj 5 – Robustness & Cross-Modality,C3 – Modality Fusion for Qualification,1
-Obj 7 – Qualification Guidance,C3 – Modality Fusion for Qualification,1
+
+%% RQ3 → C4
+Obj 6 – Token-Efficiency,C4 – Token-Efficient Qualification,2
 Obj 3 – Standardized Inference,C4 – Token-Efficient Qualification,1
-Obj 6 – Token-Efficiency,C4 – Token-Efficient Qualification,1
+Obj 4 – Rubric-Based Judging,C4 – Token-Efficient Qualification,1
