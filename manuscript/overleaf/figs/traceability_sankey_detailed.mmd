@@ -1,0 +1,80 @@
+---
+title: "Hyper-Detailed Research Traceability by Section"
+---
+sankey-beta
+
+%% ============================================================
+%% DETAILED TRACEABILITY SANKEY
+%% Research Problem → RQs → Objectives → Ch3 Sections → Ch4 Sections → Contributions
+%% ============================================================
+
+%% ── Research Problem → Research Questions ──────────────────
+Research Problem,RQ1 – MCQ Robustness,3
+Research Problem,RQ2 – Cross-Modality Evidence,6
+Research Problem,RQ3 – Cost & Token Efficiency,2
+
+%% ── RQ1 → Objectives ──────────────────────────────────────
+RQ1 – MCQ Robustness,Obj 1 – Benchmark Curation,1
+RQ1 – MCQ Robustness,Obj 3 – Standardized Inference,1
+RQ1 – MCQ Robustness,Obj 5 – Robustness & Cross-Modality,1
+
+%% ── RQ2 → Objectives ──────────────────────────────────────
+RQ2 – Cross-Modality Evidence,Obj 1 – Benchmark Curation,1
+RQ2 – Cross-Modality Evidence,Obj 2 – OSQ Grading Scaffolds,1
+RQ2 – Cross-Modality Evidence,Obj 4 – Rubric-Based Judging,1
+RQ2 – Cross-Modality Evidence,Obj 5 – Robustness & Cross-Modality,1
+RQ2 – Cross-Modality Evidence,Obj 7 – Qualification Guidance,1
+
+%% ── RQ3 → Objectives ──────────────────────────────────────
+RQ3 – Cost & Token Efficiency,Obj 3 – Standardized Inference,1
+RQ3 – Cost & Token Efficiency,Obj 6 – Token-Efficiency,1
+
+%% ── Objectives → Chapter 3 Method Sections ────────────────
+Obj 1 – Benchmark Curation,§3.3 Benchmark Curation & Derivatives,2
+Obj 2 – OSQ Grading Scaffolds,§3.4 OSQ Scoring Design,2
+Obj 3 – Standardized Inference,§3.5 Standardized Inference Execution,2
+Obj 4 – Rubric-Based Judging,§3.6 Rubric-Based OSQ Judging,2
+Obj 5 – Robustness & Cross-Modality,§3.7.1 MCQ Robustness via Rotations,1
+Obj 5 – Robustness & Cross-Modality,§3.7.2 Cross-Modality Comparison,1
+Obj 6 – Token-Efficiency,§3.8 Token-Efficiency & Cost Trade-Space,2
+Obj 7 – Qualification Guidance,§3.9 Category-Level Task-Modality Mapping,2
+
+%% ── Chapter 3 → Chapter 4 Results Sections ────────────────
+%% §3.3 Benchmark Curation feeds all results (foundational)
+§3.3 Benchmark Curation & Derivatives,§4.1 Conversion Success MCQ→OSQ,1
+§3.3 Benchmark Curation & Derivatives,§4.2 MCQ Performance,1
+
+%% §3.4 OSQ Scoring → OSQ and cross-modality results
+§3.4 OSQ Scoring Design,§4.3 OSQ Performance,1
+§3.4 OSQ Scoring Design,§4.4 MCQ vs OSQ Comparison,1
+
+%% §3.5 Standardized Inference → all result sections
+§3.5 Standardized Inference Execution,§4.2 MCQ Performance,1
+§3.5 Standardized Inference Execution,§4.3 OSQ Performance,1
+
+%% §3.6 Rubric-Based Judging → OSQ and cross-modality
+§3.6 Rubric-Based OSQ Judging,§4.3 OSQ Performance,1
+§3.6 Rubric-Based OSQ Judging,§4.4 MCQ vs OSQ Comparison,1
+
+%% §3.7.1 MCQ Robustness → MCQ performance and cross-modality
+§3.7.1 MCQ Robustness via Rotations,§4.2 MCQ Performance,1
+§3.7.1 MCQ Robustness via Rotations,§4.4 MCQ vs OSQ Comparison,1
+
+%% §3.7.2 Cross-Modality Comparison → cross-modality results
+§3.7.2 Cross-Modality Comparison,§4.4 MCQ vs OSQ Comparison,2
+
+%% §3.8 Token-Efficiency → tokenomics results
+§3.8 Token-Efficiency & Cost Trade-Space,§4.5 Tokenomics & Cost,2
+
+%% §3.9 Category-Level Mapping → category results
+§3.9 Category-Level Task-Modality Mapping,§4.6 Category-Level Modality Mapping,2
+
+%% ── Chapter 4 Results → Contributions ──────────────────────
+§4.1 Conversion Success MCQ→OSQ,C1 – SysEngBench Extension,1
+§4.2 MCQ Performance,C2 – MCQ Robustness Analysis,2
+§4.3 OSQ Performance,C1 – SysEngBench Extension,1
+§4.3 OSQ Performance,C3 – Modality Fusion for Qualification,1
+§4.4 MCQ vs OSQ Comparison,C2 – MCQ Robustness Analysis,1
+§4.4 MCQ vs OSQ Comparison,C3 – Modality Fusion for Qualification,2
+§4.5 Tokenomics & Cost,C4 – Token-Efficient Qualification,2
+§4.6 Category-Level Modality Mapping,C3 – Modality Fusion for Qualification,2

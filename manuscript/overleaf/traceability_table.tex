@@ -1,0 +1,105 @@
+% =============================================================
+% HYPER-DETAILED TRACEABILITY TABLE
+% Research Problem → RQs → Objectives → Ch3 Sections → Ch4 Sections → Contributions
+% =============================================================
+% This table can be included in chapter1.tex or chapter4.tex via \input{traceability_table.tex}
+
+\begin{landscape}
+\begin{table}[htbp]
+\centering
+\caption{Full Research Traceability: Problem $\rightarrow$ Questions $\rightarrow$ Objectives $\rightarrow$ Methods $\rightarrow$ Results $\rightarrow$ Contributions}
+\label{tab:full_traceability}
+\small
+\renewcommand{\arraystretch}{1.3}
+\resizebox{\linewidth}{!}{%
+\begin{tabular}{p{1.4cm} p{3.8cm} p{2.8cm} p{4.5cm} p{3.8cm} p{4.0cm}}
+\toprule
+\textbf{Research Question} &
+\textbf{Objective} &
+\textbf{Ch.\ 3 Method Section} &
+\textbf{Ch.\ 4 Results Section} &
+\textbf{Contribution} &
+\textbf{Key Evidence} \\
+\midrule
+
+%% ── RQ1 Block ──────────────────────────────────────────────
+\multirow{6}{*}{\parbox{1.4cm}{\textbf{RQ1}\\ MCQ Robustness}}
+& Obj~1: Benchmark Curation
+& \S3.3 Benchmark Curation \& Derivative Construction
+& \S4.1 Conversion Success of MCQ to OSQ
+& \multirow{3}{*}{\parbox{4.0cm}{C1: Extension of SysEngBench with Multi-Format Evaluation Questions}}
+& Paired MCQ/OSQ benchmark artifacts; suitability scoring \\
+\cmidrule(l){2-4}\cmidrule(l){6-6}
+
+& Obj~3: Standardized Inference
+& \S3.5 Standardized \& Reproducible Inference
+& \S4.2 Performance on MCQ
+& & Position-rotated MCQ runs across all models \\
+\cmidrule(l){2-6}
+
+& Obj~5: Robustness \& Cross-Modality
+& \S3.7.1 MCQ Robustness via Answer-Position Rotations
+& \S4.2 Performance on MCQ; \S4.4 MCQ vs.\ OSQ Comparison
+& C2: Robustness Analysis of MCQ Evaluation Using Distractor Variation
+& Positional bias heatmaps; $\chi^2$ tests; per-position accuracy variance \\
+
+\midrule
+
+%% ── RQ2 Block ──────────────────────────────────────────────
+\multirow{10}{*}{\parbox{1.4cm}{\textbf{RQ2}\\ Cross-Modality Evidence}}
+& Obj~1: Benchmark Curation
+& \S3.3 Benchmark Curation \& Derivative Construction
+& \S4.1 Conversion Success; \S4.3 OSQ Performance
+& C1: Extension of SysEngBench
+& MCQ$\rightarrow$OSQ conversion pipeline; suitability threshold \\
+\cmidrule(l){2-6}
+
+& Obj~2: OSQ Grading Scaffolds
+& \S3.4 OSQ Scoring Design
+& \S4.3 OSQ Performance
+& C1: Extension of SysEngBench
+& Rubric design; canonical answers; ambiguity resolution \\
+\cmidrule(l){2-6}
+
+& Obj~4: Rubric-Based Judging
+& \S3.6 Rubric-Based OSQ Scoring (LLM-as-a-Judge)
+& \S4.3 OSQ Performance; \S4.4 MCQ vs.\ OSQ Comparison
+& \multirow{3}{*}{\parbox{4.0cm}{C3: Evaluation Modality Fusion as Basis for Model Qualification}}
+& Inter-judge agreement; scoring protocol validation \\
+\cmidrule(l){2-4}\cmidrule(l){6-6}
+
+& Obj~5: Robustness \& Cross-Modality
+& \S3.7.2 Cross-Modality Comparison Framework
+& \S4.4 MCQ vs.\ OSQ Comparison
+& & MCQ--OSQ scatter; correlation; $\Delta$ analysis \\
+\cmidrule(l){2-4}\cmidrule(l){6-6}
+
+& Obj~7: Qualification Guidance
+& \S3.9 Task Category Level Task-Modality Mapping
+& \S4.6 Performance by INCOSE Category \& Modality Mapping
+& & Category-level $\Delta$ heatmaps; classification criteria \\
+
+\midrule
+
+%% ── RQ3 Block ──────────────────────────────────────────────
+\multirow{4}{*}{\parbox{1.4cm}{\textbf{RQ3}\\ Cost \& Token Efficiency}}
+& Obj~3: Standardized Inference
+& \S3.5 Standardized \& Reproducible Inference
+& \S4.5 Tokenomics \& Cost
+& \multirow{2}{*}{\parbox{4.0cm}{C4: Token-Efficient Qualification: Cost-Aware Response Length Trade-offs}}
+& Token accounting; response-length policies \\
+\cmidrule(l){2-4}\cmidrule(l){6-6}
+
+& Obj~6: Token-Efficiency \& Cost
+& \S3.8 Token-Efficiency \& Cost Trade-Space Analysis
+& \S4.5 Tokenomics \& Cost
+& & Quality--token Pareto frontier; cost modeling \\
+
+\bottomrule
+\end{tabular}
+}
+
+\vspace{4pt}
+\noindent\textit{Note.} Foundational infrastructure sections (\S3.1 Methodological Framing, \S3.2 Execution Environment) support all objectives and are omitted for clarity. Obj~3 (Standardized Inference) similarly underlies all results sections as the shared execution layer.
+\end{table}
+\end{landscape}
