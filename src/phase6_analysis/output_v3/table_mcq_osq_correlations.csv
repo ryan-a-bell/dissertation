@@ -1,4 +1,4 @@
 judge,pearson_r,pearson_p,spearman_r,spearman_p,n
-gpt-oss_120b,0.797552,4.3e-05,0.8,3.9e-05,19
 openai_gpt-5-mini,0.810574,2.6e-05,0.814035,2.2e-05,19
+gpt-oss_120b,0.797552,4.3e-05,0.8,3.9e-05,19
 Average,0.804475,3.3e-05,0.807018,3e-05,19
