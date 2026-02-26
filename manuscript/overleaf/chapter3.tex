@@ -36,7 +36,7 @@ All code, notebooks, task configurations, and analysis scripts were version-cont
 Model evaluation and orchestration were implemented using the Language Model Evaluation Harness (\texttt{lm-eval})~\cite{gao_LanguageModelEvaluation_2024, eleutherai_EleutherAILmevaluationharness_2024, biderman_LessonsTrenchesReproducible_2024}, an open-source framework that standardizes task definitions, prompt formatting, inference invocation, and result aggregation across model backends. The harness provides:
 \begin{itemize}
     \item Consistent prompt formatting and task execution across models,
-    \item Automatic metric computation for MCQ tasks (e.g., accuracy ),
+    \item Automatic metric computation for MCQ tasks (e.g., accuracy),
     \item Structured outputs (JSON aggregate results and JSONL per-item sample logs), and
     \item Support for custom tasks and configurations via YAML.
 \end{itemize}
@@ -98,7 +98,7 @@ Each RunPod instance was configured with:
 
 For local open-weight inference, Ollama served as the inferencing service, providing an OpenAI-compatible API endpoint at \texttt{http://localhost:11434/v1/chat/completions}. Ollama handled model loading, memory management, and efficient inference. Models were pulled systematically from the Ollama registry using \texttt{ollama pull <model\_name>} and verified with \texttt{ollama list}.
 
-Primary development occurred on a local workstation running Windows 11 with Python 3.12.4. Jupyter notebooks were used for exploratory analysis and prototyping, while production evaluation scripts were executed on RunPod GPU instances.
+Primary development occurred on a local workstation running Windows 11 with Python 3.11+. Jupyter notebooks were used for exploratory analysis and prototyping, while production evaluation scripts were executed on RunPod GPU instances.
 
 To reduce sources of uncontrolled variance, inference was performed with deterministic decoding settings where supported (see Section~\ref{subsec:ch3_run_controls}). In addition, model and infrastructure heterogeneity (local inference vs.\ hosted APIs) was treated as an explicit experimental reality; the workflow retains sufficient run metadata to reconstruct which provider, model identifier, and configuration produced each output.
 
@@ -251,7 +251,7 @@ The conversion process from \ac{mcq} to \ac{osq} consists of two sequential stag
         \includegraphics[width=0.48\textwidth]{figs/ch3/3.3/filter-mcqs.png}
     }\hfill
     \subfloat[Conversion of MCQ to OSQ]{%
-        \includegraphics[width=0.48\textwidth]{figs/ch3/3.3/convert-mcq-to-osq.png}
+        \includegraphics[width=0.4\textwidth]{figs/ch3/3.3/convert-mcq-to-osq.png}
     }
 
     \caption{Multiple Choice Question to Open Style Question Workflow}
@@ -276,34 +276,30 @@ Each of the \acp{mcq} was evaluated by ChatGPT-5 via OpenRouter with a temperatu
     \item \textbf{Intent Preservation}: Can the original knowledge construct be maintained without MCQ options?
 \end{enumerate}
 
-The \ac{llm} returned a structured JSON response containing:
-\begin{lstlisting}[language=json,
-    basicstyle=\ttfamily\footnotesize,
-    caption={Structure of the LLM evaluation output},
-    label={lst:llm-json}
-]
+The complete classifier prompt is provided in Appendix~\ref{appendix-a}.
 
-{
-  "suitability_score": <1-10>,
-  "justification": "<reasoning>",
-  "dimension_scores": {
-    "assessability": <1-10>,
-    "canonical_answer": <1-10>,
-    "ambiguity": <1-10>,
-    "scope": <1-10>,
-    "intent_preservation": <1-10>
-  }
-}
-\end{lstlisting}
 
-The complete classification prompt is provided in Appendix~\ref{appendix-a}.
+% The \ac{llm} returned a structured JSON response containing:
 
-\paragraph{Stage 2: Conversion with Rubric Generation}
+% \begin{figure}[H]
+% \caption{Structure of the LLM evaluation output}
+% \label{lst:llm-json}
+% \begin{lstlisting}[language=json,
+%     basicstyle=\ttfamily\footnotesize
+% ]
+% {
+%   "suitability_score": <integer 1-10>,
+%   "justification": "<2–3 sentences referencing the rubric anchors and the most decisive dimensions>"
+% }
+% \end{lstlisting}
+% \end{figure}
+
+\paragraph{Stage 2: Conversion}
 
 For each suitable \ac{mcq}, ChatGPT-5 was used to perform the conversion. The conversion process:
 
 \begin{itemize}
-    \item Removed MCQ-specific artifacts (e.g., ``which of the following'', explicit A/B/C/D options)
+    \item Removed MCQ-specific artifacts (e.g., which of the following, explicit A/B/C/D options)
     \item Maintained the original intent (e.g., definition recall remains recall, not application)
     \item Preserved any numerical calculations or technical specifications
     \item Generated a canonical expected answer based on the original correct choice
@@ -313,32 +309,101 @@ For each suitable \ac{mcq}, ChatGPT-5 was used to perform the conversion. The co
         \item \textbf{Partial credit}: Criteria for partially correct answer
         \item \textbf{No credit}: Conditions warranting no credit
     \end{itemize}
-    \item Assigned Bloom's taxonomy level (Remember, Understand, Apply, Analyze, Evaluate, Create)
+    \item Assigned Bloom's taxonomy level (Remember, Understand, Apply, Analyze, Evaluate, Create) with justification
 \end{itemize}
 
-The conversion prompt explicitly instructed the LLM to ``keep the construct and difficulty comparable'' for \acp{osq}, maintaining parity with the original \ac{mcq} construct.
+The grading rubric and  Bloom's taxonomy metadata was not used within this research, but were collected as metadata for
+future use.
 
-The response for the conversion prompt is a structured JSON:
+The conversion prompt explicitly instructed the \ac{llm} to keep the construct and difficulty comparable for \acp{osq}, maintaining parity with the original \ac{mcq} construct. The complete conversion prompt is provided in Appendix~\ref{appendix-a}.
 
-\begin{lstlisting}[language=json,
-    basicstyle=\ttfamily\footnotesize,
-    caption={Structure of the OSQ generation prompt},
-    label={lst:osq-json}
-]
-{
-  "osq_prompt": "<open-ended question>",
-  "expected_answer": "<canonical answer>",
-  "rubric": {
-    "full_credit": "<criteria>",
-    "partial_credit": "<criteria>",
-    "no_credit": "<criteria>"
-  },
-  "blooms_level": "<taxonomy level>",
-  "blooms_justification": "<reasoning>"
-}
-\end{lstlisting}
+
+% The response for the conversion prompt is a structured JSON:
+
+% \begin{figure}[H]
+% \caption{Structure of the OSQ generation prompt}
+% \label{lst:osq-json}
+% \begin{lstlisting}[language=json,basicstyle=\ttfamily\footnotesize]
+% {
+%   "osq_prompt": "<open-ended question>",
+%   "expected_answer": "<canonical answer>",
+%   "rubric": {
+%     "full_credit": "<criteria>",
+%     "partial_credit": "<criteria>",
+%     "no_credit": "<criteria>"
+%   },
+%   "blooms_level": "<taxonomy level>",
+%   "blooms_justification": "<reasoning>"
+% }
+% \end{lstlisting}
+% \end{figure}
 
 A sample question from a successful conversion process MCQ to OSQ example is provided in Table~\ref{tab:conversion_example}.
+
+% \begin{table}[h!]
+%     \centering
+%     \caption{{Example MCQ to OSQ Conversion Showing Original Question, OSQ Converted Question, and Grading Rubric}}
+%     \label{tab:conversion_example}
+%     \rowcolors{0}{}{} % Turn off row colors
+%     \resizebox{\columnwidth}{!}{%
+%     \begin{tabular}{ccp{0.7\textwidth}}
+%     \hline
+%     \textbf{Field} & \textbf{Content} & \\
+%     \hline
+
+%     \textbf{Original MCQ} &
+%     \multicolumn{2}{p{0.7\textwidth}}{%
+%         \begin{minipage}[t]{\linewidth}
+%         What is the primary purpose of stakeholder analysis in systems engineering?
+%         \begin{itemize}[noitemsep,topsep=0pt]
+%             \item[A.] To identify project funding sources
+%             \item[B.] To understand stakeholder needs and concerns
+%             \item[C.] To assign project responsibilities
+%             \item[D.] To develop marketing strategies
+%         \end{itemize}
+%         \textbf{Answer}: B
+%         \end{minipage}
+%     } \\
+%     \addlinespace[0.7em]
+
+%     \textbf{OSQ Prompt} &
+%     \multicolumn{2}{p{0.7\textwidth}}{%
+%         What is the primary purpose of stakeholder analysis in systems engineering?
+%     } \\
+%     \addlinespace[0.7em]
+
+%     \textbf{Expected Answer} &
+%     \multicolumn{2}{p{0.7\textwidth}}{%
+%         To understand stakeholder needs and concerns.
+%     } \\
+%     \addlinespace[0.7em]
+
+%     % \textbf{Full Credit} &
+%     % \multicolumn{2}{p{0.7\textwidth}}{%
+%     %     Response identifies understanding stakeholder needs, concerns, expectations, or requirements as the primary purpose.
+%     % } \\
+%     % \addlinespace[0.7em]
+
+%     % \textbf{Partial Credit} &
+%     % \multicolumn{2}{p{0.7\textwidth}}{%
+%     %     Response mentions stakeholders but focuses on secondary purposes (e.g., communication planning).
+%     % } \\
+%     % \addlinespace[0.7em]
+
+%     % \textbf{No Credit} &
+%     % \multicolumn{2}{p{0.7\textwidth}}{%
+%     %     Response focuses on unrelated activities (funding, marketing) or misidentifies the purpose.
+%     % } \\
+%     % \addlinespace[0.7em]
+
+%     \textbf{Bloom's Level} &
+%     \multicolumn{2}{p{0.7\textwidth}}{%
+%         Remember (definitional recall).
+%     } \\
+%     \hline
+%     \end{tabular}%
+%     }
+% \end{table}
 
 \begin{table}[h!]
     \centering
@@ -378,29 +443,18 @@ A sample question from a successful conversion process MCQ to OSQ example is pro
     } \\
     \addlinespace[0.7em]
 
-    \textbf{Full Credit} &
-    \multicolumn{2}{p{0.7\textwidth}}{%
-        Response identifies understanding stakeholder needs, concerns, expectations, or requirements as the primary purpose.
-    } \\
-    \addlinespace[0.7em]
-
-    \textbf{Partial Credit} &
-    \multicolumn{2}{p{0.7\textwidth}}{%
-        Response mentions stakeholders but focuses on secondary purposes (e.g., communication planning).
-    } \\
-    \addlinespace[0.7em]
-
-    \textbf{No Credit} &
-    \multicolumn{2}{p{0.7\textwidth}}{%
-        Response focuses on unrelated activities (funding, marketing) or misidentifies the purpose.
-    } \\
-    \addlinespace[0.7em]
-
     \textbf{Bloom's Level} &
     \multicolumn{2}{p{0.7\textwidth}}{%
         Remember (definitional recall).
     } \\
+    \addlinespace[0.7em]
+
     \hline
+    
+    % --- Footnote row (stays at bottom of table) ---
+    \multicolumn{3}{p{0.92\textwidth}}{\footnotesize\emph{Note:} This example focuses on metadata that was used from the MCQ $\rightarrow$ OSQ conversion. Full/partial/no-credit rubric criteria and Bloom's justification were collected as metadata for future use, but are omitted here for brevity.} \\
+    \hline
+
     \end{tabular}%
     }
 \end{table}
@@ -415,6 +469,9 @@ Several quality control mechanisms ensured conversion fidelity:
     \item \textbf{Comprehensive Logging}: All prompts and responses were logged with timestamps to separate artifact directories
     \item \textbf{Manual Spot-Checks}: A random sample of 50 conversions was manually reviewed to verify semantic preservation and rubric quality
 \end{itemize}
+
+Table~\ref{tab:conversion_example} provides representative paired items showing how the MCQ formulation of question text, distractors, and keyed answer was converted into an OSQ prompt that targets the same concept but requires a free-form response. The OSQ versions constrain length and specificity (e.g., ``1 sentence'' or ``1--2 sentences'') to reduce variability while preserving the original semantic intent, supporting reliable matched-item comparisons across modalities. These examples are after applying the quality-control steps and provide a post-hoc illustration of conversion fidelity and traceability at the item level.
+
 
 % In body
 \begin{table}[t]
@@ -473,7 +530,7 @@ Several quality control mechanisms ensured conversion fidelity:
 \end{table}
 
 
-The final dataset as an output of this process is found on HuggingFace as  \texttt{rabell/sysengbench-osq} \footnote{\url{https://huggingface.co/datasets/rabell/SysEngBench-OSQ}}
+The final dataset as an output of this process is found on HuggingFace as  \texttt{rabell/sysengbench-osq}~\footnote{\url{https://huggingface.co/datasets/rabell/SysEngBench-OSQ}}
 
 % Force figures to be present when most relevant...
 \clearpage
@@ -483,13 +540,22 @@ The final dataset as an output of this process is found on HuggingFace as  \text
 
 
 % ---------------------------------------------------------
-\section{Objective 2: OSQ Grading Scaffold Generation}
+\section{Objective 2: OSQ Scoring Design}
 \label{sec:ch3_obj2}
 
 \subsection{Prompt, Rubric Design and Scoring Schema}
 \label{subsec:ch3_obj2_rubric}
 
-Three academic approaches are considere for performing LLM-as-a-Judge grading, including 1) multi-dimensional reference-based \cite{lin_LLMEvalUnifiedMultiDimensionalAutomatic_2023}, 2) chain-of-thought reference-guided \cite{zheng_JudgingLLMasaJudgeMTBench_2023, liu_GEvalNLGEvaluationUsing_2023}, and 3) pairwise comparative evaluations \cite{zheng_JudgingLLMasaJudgeMTBench_2023, dubois_Length_Controlled_Alpaca_Eval_Simple_2025}. The first was chosen for its comprehensive assessment of single responses approach and rubric grading, and tailored to the \ac{se} domain in Figure \ref{lst:osq-grading-prompt}. The full prompt may be found Appendix \ref{app:llm-as-a-judge-prompt}
+Three established approaches to \ac{llm}-as-a-judge grading: (1) multi-dimensional, reference-based scoring \cite{lin_LLMEvalUnifiedMultiDimensionalAutomatic_2023}; (2) chain-of-thought, reference-guided evaluation \cite{zheng_JudgingLLMasaJudgeMTBench_2023, liu_GEvalNLGEvaluationUsing_2023}; and (3) pairwise comparative evaluation \cite{zheng_JudgingLLMasaJudgeMTBench_2023, dubois_Length_Controlled_Alpaca_Eval_Simple_2025} were considered. The multi-dimensional reference-based approach was adopted as it supports criterion-referenced, item-level scoring against canonical answers, scales linearly with dataset size, and yields calibrated per-dimension scores that are directly aggregable for reliability and cross-modality analyses. Figure~\ref{lst:osq-grading-prompt} shows the scoring prompt used in this study; the complete prompt is provided in Appendix~\ref{app:llm-as-a-judge-prompt}.
+
+The judge assigns a 0--20 score on each dimension (total 0--100):
+\begin{enumerate}
+    \item \textbf{Technical Accuracy}: Correctness of facts, principles, terminology
+    \item \textbf{Conceptual Understanding}: Depth of systems thinking demonstrated
+    \item \textbf{Completeness}: Coverage of required answer elements
+    \item \textbf{Clarity}: Communication quality and organization
+    \item \textbf{Professional Relevance}: Real-world applicability
+\end{enumerate}
 
 
 \begin{figure}[htbp]
@@ -523,7 +589,8 @@ EVALUATION SCHEMA (each 0-20, total 100):
 \end{figure}
 
 
-Judged samples are stored in *.JSONL format, with each record containing the model under evaluation's response in addition to the judge's evaluation response. The formatting for file outputs is shown in Figure \ref{lst:osq-eval-json}.
+Judged samples are stored in *.jsonl format, with each record containing the model under evaluation's response in addition to the judge's evaluation response. The formatting for file outputs is shown in Figure \ref{lst:osq-eval-json}. The phase4\_row field is a provenance label from the \texttt{rabell/dissertation} GitHub repository: “Phase 4” refers to the pipeline’s Phase 4 folder/stage, and phase4\_row stores the row-level artifact produced at that stage to preserve traceability across phases.
+
 
 \begin{figure}[htbp]
 \centering
@@ -649,7 +716,7 @@ Models were selected to represent diverse architectural families, parameter scal
 \subsection{MCQ Task Configuration}
 \label{subsec:ch3_obj3_mcq_config}
 
-All MCQ evaluations used consistent prompting and decoding settings to isolate differences due to model capability and dataset variant structure. Prompts included the question stem and all answer options labeled A, B, C, or D, with instructions to output the selected letter. For positional-variant experiments, the prompt structure was held constant across variants. Each task is configured with a YAML specification can be referenced in Appendix \ref{appendix-b}.
+All MCQ evaluations used consistent prompting and decoding settings to isolate differences due to model capability and dataset variant structure. Prompts included the question stem and all answer options labeled A, B, C, or D, with instructions to output the selected letter. For positional-variant experiments, the prompt structure was held constant across variants. Each task is configured with a YAML specification can be referenced in Appendix~\ref{appendix-b}.
 
 Key configuration choices:
 \begin{itemize}
@@ -668,21 +735,19 @@ OSQ evaluation used the \texttt{sysengbench-osq} task with configuration shown i
 
 Key differences from \ac{mcq} configuration:
 \begin{itemize}
-    \item \textbf{Higher max\_tokens}: 2000-10000, allowing for detailed explanations
+    \item \textbf{Higher max\_tokens}: 500 allowing for detailed explanations
     \item \textbf{No REGEX filtering}: Full response text retained
     \item \textbf{No automatic metrics}: Accuracy cannot be computed via string matching; responses are passed to  LLM-as-a-judge evaluation
 \end{itemize}
 
 %%% consider moving this to limitations and things that changed in ch5
-An original output amount of 10,000 tokens was used. Upon inspection of the JSONL sample outputs, the max tokens was reduced to 2000 as the distribution of token outputs encompassed nearly all responses, except for those that reached a "thinking loop" or otherwise.
+An original output amount of 10,000 tokens was used. Upon inspection of the JSONL sample outputs, the max tokens was reduced to 500 as the distribution of token outputs encompassed nearly all responses, except for those that reached a "thinking loop" or otherwise. Figure~\ref{lst:osq_response_example} shows an example OSQ response. The free-text output is the primary artifact passed to rubric-based scoring.
 
-
-Listing~\ref{lst:osq_response_example} shows an example OSQ response. The free-text output is the primary artifact passed to rubric-based scoring.
-
+\begin{figure}[htbp]
+\centering
+\begin{scriptsize}
 \begin{lstlisting}[
     basicstyle=\ttfamily\footnotesize,
-    caption={OSQ model response for Question~ID~1 (Claude Sonnet 4.5). This free-text response is passed directly to judge for evaluation.},
-    label={lst:osq_response_example},
     breaklines=true,
     frame=single,
     framerule=0.4pt,
@@ -701,14 +766,17 @@ Response: "Uncertainty in systems engineering refers to the lack
            theoretically be reduced through additional information
            or analysis)."
 \end{lstlisting}
+\end{scriptsize}
+\caption{OSQ model response for Question~ID~1 (Claude Sonnet 4.5). This free-text response is passed directly to judge for evaluation}
+\label{lst:osq_response_example}
+\end{figure}
 
-% perhaps we just show an example of the output and say that's what we pass on to the grader. The output is simply a long string. Snag an example from a jsonl file for an example if desired.
 
 
 \subsection{Run Management, Batch Processes, and Output Capture}
 \label{subsec:ch3_obj3_output_capture}
 
-Batch inference was executed by iterating over dataset items and model configurations within the evaluation harness. For each run condition, the workflow produced:
+Batch inference was executed by iterating over task configurations and models using the evaluation harness. Each run condition produced the following artifacts for downstream analysis:
 
 \begin{itemize}
     \item raw model outputs per question ID
@@ -719,13 +787,17 @@ Batch inference was executed by iterating over dataset items and model configura
 
 Batch runs were structured to support post-hoc analysis across multiple dimensions (model, modality, dataset variant, response-length regime) without recomputing inference.
 
+Figure~\ref{fig:inference} summarizes the batch runner logic used to execute evaluations. Each batch job initializes a run log, verifies that the local inference service is available (Ollama health check with auto-start and retries), and then iterates over the model list. For each model, the runner executes the \texttt{lm-eval} command (Figure~\ref{fig:lm-eval-tasks}) against the specified task, captures success or failure status, and automatically retries on transient server errors. After all models are evaluated, the runner writes a final summary log and persists the run artifacts to the structured output directory.
 
-For running tasks, the infrastructure was mentioned in Section~\ref{subsec:computational_infra}. The lm-evaluation-harness instructions sent to each of the runners 
-
-\begin{lstlisting}[language=json,
+\begin{figure}[htbp]
+\centering
+\begin{scriptsize}
+\begin{lstlisting}[
     basicstyle=\ttfamily\footnotesize,
-    caption={Task configuration for MCQ},
-    label={lst:lm-eval-tasks}
+    breaklines=true,
+    frame=single,
+    framerule=0.4pt,
+    framesep=4pt
 ]
 lm_eval --model local-chat-completions \
         --model_args base_url=http://localhost:11434/v1,model=<model_name> \
@@ -734,23 +806,71 @@ lm_eval --model local-chat-completions \
         --log_samples \
         --batch_size auto
 \end{lstlisting}
-
+\end{scriptsize}
+\caption{Task configuration for MCQ.}
+\label{fig:lm-eval-tasks}
+\end{figure}
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=0.6\textwidth]{figs/ch3/3.3/model-inference-pipeline.png}
+    \includegraphics[width=0.4\textwidth]{figs/ch3/3.3/model-inference-pipeline.png}
     \caption{Batch Inference Workflow}
     \label{fig:inference}
 \end{figure}
 
-The process iterates through all models, checks server health, executes lm-evaluation-harness, and logs success/failure with automatic retry on server errors.
+Each evaluation run produces two complementary artifacts under a directory hierarchy of \texttt{output/<task>/<model>/}:
 
-%%% EXPLAIN THE OUTPUT in JSONL. Samples vs results JSON files.
+\begin{enumerate}
+    \item \textbf{Results file} (\texttt{results\_<timestamp>.json}): A single JSON document containing the aggregate run summary, including but not limited to: computed metrics (e.g., exact-match accuracy); task configuration such as the prompt template, metric definitions, generation parameters, and response-filter pipeline; model settings such as the model identifier, backend URL, batch size, and random seeds; sample counts; total wall-clock evaluation time; and an environment snapshot such as library versions, GPU model, and operating system.
 
+    \item \textbf{Samples file} (\texttt{samples\_<task>\_<timestamp>.jsonl}): A JSONL file with one JSON record per evaluation item, including but not limited to: the source document with question text, answer choices, and metadata; the gold-standard target label; the exact prompt sent to the model; the raw model response; the post-filtered response; the per-item metric score; and SHA-256 hashes of the document, prompt, and target for reproducibility verification.
+\end{enumerate}
 
+This two-tier output design separates aggregate reporting from item-level traceability. The results file supports rapid cross-model comparison and dashboard visualization, while the samples file supports post-hoc error analysis by identifying missed items, inspecting raw outputs for failure modes, and validating that the response-filter pipeline extracted the intended answer.
 
+\begin{figure}[htbp]
+\centering
+\begin{scriptsize}
+\begin{lstlisting}[
+    basicstyle=\ttfamily\scriptsize,
+    breaklines=true,
+    frame=single,
+    framerule=0.4pt,
+    framesep=4pt
+]
+output/<task_name>/<model_name>/
+  |-- results_<timestamp>.json          # Aggregate run summary
+  |-- samples_<task>_<timestamp>.jsonl   # Per-item detail
 
+=== results_*.json (one per run) ===
+{ "results": { "sysengbench-a": {
+      "exact_match,strict-match": 0.902,
+      "exact_match_stderr,strict-match": 0.0088 }},
+  "configs": { ... prompt template, metrics, filters ... },
+  "config":  { "model": "local-chat-completions",
+      "model_args": "model=gemma3:27b,...",
+      "batch_size": "auto", "gen_kwargs": {"temperature": 0.0}},
+  "n-samples": {"sysengbench-a": {"original": 1144, "effective": 1144}},
+  "total_evaluation_time_seconds": "292.57",
+  "model_name": "gemma3:27b", "lm_eval_version": "0.4.9.1" }
 
+=== samples_*.jsonl (one JSON object per question) ===
+{ "doc_id": 0,
+  "doc": { "question": "What best describes...",
+           "choiceA": "...", ..., "answer": "A" },
+  "target": "A",
+  "arguments": { "gen_args_0": { "arg_0": [formatted prompt] }},
+  "resps":          [["A\n"]],
+  "filtered_resps": ["A"],
+  "exact_match":    1.0,
+  "doc_hash": "8c89...", "prompt_hash": "2b1d..." }
+\end{lstlisting}
+\end{scriptsize}
+\caption{lm-evaluation-harness Output Structure}
+\label{fig:lm-eval-output}
+\end{figure}
+
+\clearpage
 
 % ---------------------------------------------------------
 \section{Objective 4: Rubric-Based OSQ Scoring Using LLM-as-a-Judge}
@@ -759,23 +879,11 @@ The process iterates through all models, checks server health, executes lm-evalu
 Objective 4 defines and validates the scoring instrument used for \ac{osq} evaluation. Because \ac{osq} responses cannot be assessed via simple string matching, a rubric-based LLM-as-a-Judge framework is employed to assign structured, multi-dimensional scores. This objective formalizes judge selection, scoring protocol, and judge reliability validation to ensure that OSQ scores function as a defensible measurement instrument.
 
 
-%%% where does this fit best?
-% \subsubsection*{Evidence Requirements}
-
-% We require:
-% \begin{enumerate}[nosep]
-%     \item A clear description of OSQ score distributions (central tendency and variability).
-%     \item Evidence that different judges assign similar scores to the same models or responses.
-%     \item Robust estimates of mean performance that do not rely on normality assumptions.
-
-
 \subsection{Judge Model Selection and Scoring Protocol}
 \label{subsec:ch3_obj4_judge_model}
 
-%%% ADD CITATIONS FOR LLM-AS--A-JUDGE- STUDIES. UPDATE GPT3.5, 4 AS CITATIONS DICTATE.
-% Recommended citation (add to BibTeX):
-% - Zheng et al. 2023, "Judging LLM-as-a-Judge with MT-Bench and Chatbot Arena" (NeurIPS Datasets & Benchmarks / arXiv:2306.05685)
-Open-ended responses were evaluated using an LLM-as-a-Judge methodology in which a language model scores responses against predefined rubrics and expected answers \cite{zheng_JudgingLLMasaJudgeMTBench_2023}. Most published alignment studies focus on GPT-3.5 and GPT-4 as judges~\cite{zheng_JudgingLLMasaJudgeMTBench_2023}. We therefore treat GPT-4-class results as a lower bound on the judge capability of the more recent models used in this work.
+Open-ended responses were evaluated using an LLM-as-a-Judge methodology in which a language model scores responses against predefined rubrics and expected answers \cite{zheng_JudgingLLMasaJudgeMTBench_2023}. Most published alignment studies focus on GPT-3.5 and GPT-4 as judges~\cite{zheng_JudgingLLMasaJudgeMTBench_2023, gu_survey_on_llm_as_a_judge_2025,
+thakurJudgingJudgesEvaluating2025}. We therefore treat GPT-4-class results as a lower bound on the judge capability of the more recent frontier models used in this work.
 
 Two judge models were employed to enable inter-judge reliability analysis:
 
@@ -785,30 +893,12 @@ Two judge models were employed to enable inter-judge reliability analysis:
 \end{enumerate}
 % If i end up using GPT-5 as well % \textbf{GPT-5} (\texttt{openai/gpt-5}) --- frontier commercial model 
 
-All judge models were accessed via OpenRouter with temperature set to 0.0 for deterministic scoring. Each evaluated response was independently scored by multiple judges to support agreement analysis.
+All judge models were accessed via OpenRouter with temperature set to 0.0 for deterministic scoring. Each evaluated response was independently scored by multiple judges to enable inter-judge agreement analysis.
 
-Judge prompts, rubric definitions, and structured JSON output schemas were retained as artifacts to ensure traceability and reproducibility (Appendix~\ref{app:judge_prompts}). The judge is therefore treated as a second measurement instrument layered atop the evaluated model outputs.
+Judge prompts, rubric definitions, and the structured JSON output schema were retained as run artifacts to support traceability and reproducibility (Appendix~\ref{app:llm-as-a-judge-prompt}). In this sense, the judge functions as a second measurement instrument applied to the evaluated model outputs.
 
+Following the schema in Figure~\ref{lst:osq-eval-json}, dimension scores are summed to yield a total score on a 0--100 scale. Figure~\ref{fig:llm-as-judge-workflow} summarizes the end-to-end judging workflow.
 
-%%% to assist in anchoring...
-To assess judge consistency and reduce single-model bias, multiple judge models were employed and use the grading rubric (Section~\ref{sec:ch3_obj2}). The LLM-as-a-judge assigns:
-\begin{itemize}
-    \item \textbf{Full credit} (1.0): Response meets full credit criteria
-    \item \textbf{Partial credit} (0.5): Response meets partial credit criteria
-    \item \textbf{No credit} (0.0): Response meets no credit criteria
-\end{itemize}
-
-
-%% integrate with above.
-\noindent\textit{Scope constraints.}
-LLM-as-a-Judge introduces a secondary model into the evaluation pipeline. While deterministic decoding reduces stochastic variation, judge outputs remain model-dependent. Reliability and stability analyses are therefore required to validate the scoring instrument.
-
-
-
-
-Figure~\ref{fig:llm-as-judge-process} illustrates the judging workflow.
-
-The dimension scores are summed to produce a total score out of 100. Figure~\ref{fig:llm-as-judge-workflow} illustrates the judging workflow.
 
 \begin{figure}[htbp]
     \centering
@@ -819,55 +909,25 @@ The dimension scores are summed to produce a total score out of 100. Figure~\ref
 
 
 
-
-
-% ---------------------------------------------------------
-\subsection{Rubric Structure and Multi-Dimensional Scoring}
-\label{subsec:ch3_obj4_rubric}
-
-OSQ responses were evaluated using a rubric-based grading framework derived from the rubric generation process Objective 2 in \ref{sec:ch3_obj2}. Each response was scored across five dimensions adapted from multi-dimensional evaluation frameworks~\cite{lin2023multidim}:
-
-\begin{enumerate}
-    \item \textbf{Technical Accuracy}: Correctness of facts, principles, terminology
-    \item \textbf{Conceptual Understanding}: Depth of systems thinking demonstrated
-    \item \textbf{Completeness}: Coverage of required answer elements
-    \item \textbf{Clarity}: Communication quality and organization
-    \item \textbf{Professional Relevance}: Real-world applicability
-\end{enumerate}
-
-Each dimension was scored on a 0 to 20 scale. Dimension scores were summed to produce a total score in the range 0 to 100.
-
-Structured JSON output was required from judges to ensure machine-parseable scoring. Responses that failed schema validation were handled according to predefined parsing rules described in Section~\ref{sec:environment}.
-%%%%%
-% I think we should move all of this up to the environment section, since it's indempotent and did this for every section.
-%%%%%
-
-%%%% add these two apragraphs with above
-\noindent\textit{Scope constraints.}
-Multi-dimensional scoring assumes that rubric dimensions are conceptually separable and additive. While summation provides a convenient scalar score, dimension-level analysis is retained to prevent masking of asymmetric strengths or weaknesses.
-
-
-%%% example table for scoring. SHOULD WE GO AHEAD AND REMOVE CHATGPT-5?
-
-Table~\ref{tab:judge_scoring_example} shows the scores returned by all three judges for the same response (Claude Sonnet 4.5, Question~ID~1), illustrating inter-judge variation.
+Table~\ref{tab:judge_scoring_example} shows the scores returned by both judges for the same response (Mistral Large, Question~ID~1), illustrating inter-judge variation.
 
 \begin{table}[htbp]
     \centering
-    \caption{Judge scores for Question~ID~1 (Claude Sonnet 4.5 response). Each dimension is scored 0--20; overall score is the sum (0--100).}
+    \caption{Judge Scores for Question~ID~1, Mistral Large Response}
     \label{tab:judge_scoring_example}
     \rowcolors{0}{}{} % Turn off row colors
     \footnotesize
-    \begin{tabular}{l c c c}
+    \begin{tabular}{l c c}
     \hline
-    \textbf{Dimension (0--20)} & \textbf{GPT-5} & \textbf{GPT-5-mini} & \textbf{OSS 120B} \\
+    \textbf{Dimension (0--20)} & \textbf{GPT-5-mini} & \textbf{OSS 120B} \\
     \hline
-    Technical Accuracy       & 20 & 20 & 18 \\
-    Conceptual Understanding & 19 & 20 & 19 \\
-    Completeness             & 20 & 20 & 20 \\
-    Clarity \& Organization  & 19 & 20 & 18 \\
-    Professional Relevance   & 20 & 20 & 18 \\
+    Technical Accuracy       & 20 & 19 \\
+    Conceptual Understanding & 19 & 18 \\
+    Completeness             & 19 & 19 \\
+    Clarity \& Organization  & 20 & 18 \\
+    Professional Relevance   & 19 & 16 \\
     \hline
-    \textbf{Overall (0--100)} & \textbf{98} & \textbf{100} & \textbf{93} \\
+    \textbf{Overall (0--100)} & \textbf{97} & \textbf{90} \\
     \hline
     \end{tabular}
 \end{table}
@@ -876,20 +936,17 @@ Table~\ref{tab:judge_scoring_example} shows the scores returned by all three jud
 
 
 
+
 % ---------------------------------------------------------
-\subsection{Inter-Judge Reliability and Stability Analysis}
+\subsection{Inter-Judge Agreement Analysis}
 \label{subsec:ch3_obj4_reliability}
 
-To validate OSQ scoring as a measurement instrument, both inter-judge agreement and score stability were evaluated. For responses scored by multiple judges, agreement was quantified using Spearman's rank correlation between judges' total scores. High correlation indicates that judges produce consistent relative orderings of responses and models. Judge scoring was conducted under identical conditions and is idempotent with a temperature of 0 to assess run-to-run stability. 
+To validate OSQ scoring as a measurement instrument, both inter-judge agreement and score stability were evaluated. For responses scored by multiple judges, agreement was quantified using Spearman's rank correlation between judges' total scores. High correlation indicates that judges produce consistent relative orderings of responses and models. Judge scoring was conducted under identical conditions and is idempotent with a temperature of 0 to assess run-to-run stability, as discussed in Section~\ref{subsec:ch3_run_controls} and Section~\ref{sec:ch3_obj3}.
 
+To preserve separation between results in Chapter \ref{ch:results} and discussion and interpretation in Chapter \ref{ch:discussion}, agreement levels are classified using predefined thresholds that are to be applied systematically to observed results. Judge agreement is evaluated using the following procedure:
 
-\paragraph{Predefined Reliability Classification Criteria}
-To preserve separation between results in Chapter \ref{ch:results} and discussion and interpretation in Chapter \ref{ch:discussion}, reliability levels are classified using predefined thresholds applied systematically to observed results.
-
-Reliability is evaluated using the following procedure:
-
-\begin{enumerate}[nosep]
-    \item Score Distribution Diagnostics: For each model--judge combination, score distributions are examined to assess whether the scoring instrument produces structured and differentiable outputs. The following properties are recorded:
+\paragraph{Score Distribution Diagnostics}
+For each model-judge combination, score distributions are examined to assess whether the scoring instrument produces structured and differentiable outputs. The following properties are considered:
     \begin{itemize}[nosep]
         \item \textit{Modality:} uni-modal versus multi-modal distributions
         \item \textit{Spread:} dispersion measured via standard deviation and interquartile range
@@ -899,33 +956,29 @@ Reliability is evaluated using the following procedure:
     
 Highly compressed or extreme clustering distributions indicate limited discriminative resolution, while multi-modal or irregular shapes may suggest heterogeneous rubric application across response types. These properties characterize the measurement behavior of the scoring instrument but do not in themselves determine adequacy.
 
-    \item Inter-judge agreement: Correlation quantifies consistency in relative ordering rather than absolute calibration. These thresholds are used to categorize scoring stability across judges under identical rubric conditions.
+\paragraph{Inter-judge Correlation Agreement Classification Criteria}
+Correlation quantifies consistency in relative ordering rather than absolute calibration. These thresholds are used to categorize scoring stability across judges under identical rubric conditions.
 
-    Let $\rho$ denote Spearman's rank correlation:
-    \begin{itemize}[nosep]
-        \item $\rho \geq 0.80$ — High agreement
-        \item $0.50 \leq \rho < 0.80$ — Moderate agreement
-        \item $\rho < 0.50$ — Low agreement
-    \end{itemize}
-    
+Let $\rho$ denote Spearman's rank correlation:
+\begin{itemize}[nosep]
+    \item $\rho \geq 0.80$ — High agreement
+    \item $0.50 \leq \rho < 0.80$ — Moderate agreement
+    \item $\rho < 0.50$ — Low agreement
+\end{itemize}
 
-\end{enumerate}
-
-These criteria determine whether the rubric-based judge framework satisfies minimum reliability requirements as a measurement instrument. Substantive implications for model capability and modality trade-offs are reserved for Chapter~5.
-
-
+These criteria determine whether the rubric-based LLM-as-a-Judge framework satisfies statistical agreement requirements as a measurement instrument. Substantive implications for model capability and modality trade-offs are reserved for Chapter~5.
 
 % ---------------------------------------------------------
 \section{Objective 5: Robustness and Cross-Modality Evidence Uncertainty Quantification}
 \label{sec:ch3_obj5}
 
-Objective 5 strengthens the interpretability of benchmark outcomes by (i) testing the robustness of MCQ results to answer-position artifacts using position-rotated variants and (ii) establishing a cross-modality comparison framework between MCQ and OSQ formats on one-to-one matched questions. Together, these analyses support defensible model comparisons  by clarifying when different evaluation modalities provide convergent versus complementary evidence.
+Objective 5 strengthens the interpretability of benchmark outcomes by (i) testing the robustness of MCQ results to answer-position artifacts using position-rotated variants and (ii) establishing a cross-modality comparison framework between MCQ and OSQ formats on one-to-one matched questions. Together, these analyses support defensible model comparisons  by clarifying when different evaluation modalities provide interchangeable, correlated but not interchangeable, partially correlated, or divergent evidence.
 
 % ---------------------------------------------------------
 \subsection{MCQ Robustness via Answer-Position Rotations}
 \label{subsec:ch3_obj5_mcq_robustness}
 
-With construction of the datasets was discussed in Section \ref{subsec:ch3_obj1_mcq_variants}, this section focuses on the quantification of the results for MCQ robustness.
+The construction of position-rotated MCQ variants was described in Section~\ref{subsec:ch3_obj1_mcq_variants}; this section defines the statistical framework used to quantify position-bias robustness.
 
 
 \paragraph{Position bias as a robustness failure mode.}
@@ -942,18 +995,20 @@ where $N$ is the number of MCQ items evaluated per variant. Under the null hypot
 
 Robustness is supported when (i) accuracy does not differ meaningfully across positions with global invariance, (ii) within-item correctness is stable across rotations with item-level invariance, and (iii) any detected differences are negligible in magnitude as quantified by standardized effect sizes.
 
+
 \paragraph{Statistical tests and effect sizes.}
 Two complementary nonparametric tests are applied for each model to distinguish between global position dependence and within-item sensitivity:
 
 \begin{itemize}[leftmargin=*, itemsep=0.5em]
-\item \textbf{Chi-square test of independence} ($\chi^2$) with \textbf{Cram\'{e}r's $V$}:
+\item Chi-square test of independence ($\chi^2$) with Cram\'{e}r's $V$:
   \begin{itemize}[leftmargin=*, itemsep=0.25em]
     \item \emph{Design:} correctness ($\in\{\text{correct},\text{incorrect}\}$) cross-tabulated by answer position ($\in\{A,B,C,D\}$).
     \item \emph{Test:} whether aggregate correctness is independent of answer position (global dependence).
     \item \emph{Effect size:} Cram\'{e}r's $V$ quantifies the magnitude of association, reducing reliance on p-values alone.
+    \item \emph{Independence note:} Each position variant is evaluated via an independent API call at temperature~0, yielding $4N$ statistically independent observations per model. The chi-square test is therefore valid for assessing aggregate position dependence. However, because the same underlying items appear across all four variants, per-item difficulty introduces correlation in expected outcomes across positions. The Friedman test, which explicitly models this within-item repeated-measures structure, serves as the complementary diagnostic. When both tests agree, the inference is robust to this distinction; when they disagree, the Friedman result is preferred as it accounts for item-level heterogeneity.
   \end{itemize}
 
-\item \textbf{Friedman test} (repeated measures) with \textbf{Kendall's $W$}:
+\item Friedman test (repeated measures) with Kendall's $W$:
   \begin{itemize}[leftmargin=*, itemsep=0.25em]
     \item \emph{Design:} repeated measures across the same underlying items evaluated under position-rotated variants.
     \item \emph{Test:} whether per-item correctness differs systematically across positions (within-item sensitivity).
@@ -962,56 +1017,19 @@ Two complementary nonparametric tests are applied for each model to distinguish 
 \end{itemize}
 
 
-\subsubsection*{Predefined Robustness Classification Criteria}
-\label{subsubsec:ch3_obj5_mcq_robustness_criteria}
+\paragraph{Predefined Robustness Classification Criteria}
+\label{par:ch3_obj5_mcq_robustness_criteria}
 
-To preserve separation between results in Chapter \ref{ch:results} and discussion and interpretation in Chapter \ref{ch:discussion}, this section defines the criteria by which answer-position robustness will be classified. These criteria are applied systematically to the observed results.
+To preserve separation between results in Chapter~\ref{ch:results} and interpretation in Chapter~\ref{ch:discussion}, this section predefines the criteria by which answer-position robustness will be classified. These criteria are applied systematically to the observed results. For each model, the chi-square/Friedman tests and their associated effect sizes (Cram\'{e}r’s $V$, Kendall’s $W$; Section~\ref{subsec:ch3_obj5_mcq_robustness}) are treated as diagnostic inputs.
 
+Models are classified using the decision tree in Figure~\ref{fig:mcq-robustness-decision-tree}, with the full rule set summarized in Table~\ref{tab:position_bias_rubric}. The decision procedure jointly considers (i) global position dependence and (ii) within-item position sensitivity, prioritizing effect-size magnitude ($V$, $W$) as the primary indicator of practical relevance and using p-values to determine whether observed effects are distinguishable from noise at the available sample size. The resulting labels (\emph{No bias, Mild, Moderate, Strong,} or \emph{Mixed evidence}) provide a standardized interpretation layer applied consistently across models.
 
-% We employed non-parametric inferential statistical tests to evaluate both statistical significance and effect magnitude. Specifically, the Chi-Square test of independence ($\chi^2$) was used to assess categorical associations, with Cram\'{e}r's~$V$ reported as the corresponding effect size. 
-% For repeated-measures analyses, the Friedman test ($Q$) was applied, and Kendall's~$W$ was reported to quantify effect magnitude.
+The chi-square and Friedman tests are applied independently to each model as model-specific robustness diagnostics rather than as a family of comparative hypothesis tests. Because the inferential target is the position-bias status of each individual model, not a joint claim across models, no family-wise correction is applied. This framing is analogous to running separate diagnostic checks on distinct systems rather than testing a shared null hypothesis. To mitigate the risk of over-interpreting isolated significant $p$-values, the classification rubric prioritizes effect-size magnitude (Cram\'{e}r's $V$, Kendall's $W$) as the primary indicator of practical relevance; a significant $p$-value paired with a negligible effect size is classified as ``Mild bias (negligible)'' rather than as evidence of meaningful position dependence. 
 
+%% not currently implemented.
+% Both uncorrected and Holm--Bonferroni-corrected $p$-values are reported in Chapter~\ref{ch:results} for transparency.
 
-For each model, robustness to answer-position artifacts is evaluated using joint evidence from two complementary statistical perspectives and their combination: 
-(i) global (aggregate-level) position dependence,  
-(ii) within-item (repeated-measures) position sensitivity, and 
-(iii) classification of the evidence
-
-\begin{enumerate}[nosep]
-
-    \item \textbf{Global position dependence (aggregate-level robustness).}
-
-    We first assess whether overall correctness rates differ depending on the answer position in which the correct option appears. 
-    For each model, responses are summarized in a $2 \times 4$ contingency table that cross-tabulates:
-
-    \begin{itemize}[nosep]
-        \item \textbf{Correctness} $\in \{\text{correct}, \text{incorrect}\}$, and
-        \item \textbf{Answer position} $\in \{A, B, C, D\}$.
-    \end{itemize}
-
-    Concretely, the table contains counts of correct and incorrect responses when the correct answer is placed in each position (A, B, C, or D). 
-    If robustness holds at the aggregate level, the proportion of correct responses should be approximately equal across all four positions.
-    We apply a chi-square test of independence to evaluate whether correctness is statistically independent of answer position. 
-    Because large sample sizes can render trivial differences statistically significant, we report Cram\'{e}r's $V$ as a standardized effect size to quantify the practical magnitude of any detected association. 
-    This test captures \emph{aggregate} distortions in measured accuracy due to answer placement.
-
-    \item \textbf{Within-item position sensitivity (repeated-measures robustness).}
-
-    Aggregate stability does not guarantee item-level stability. 
-    Even if overall accuracy appears similar across positions, individual questions may flip between correct and incorrect when the correct option is rotated.
-    Because each of the four rotated variants contains the same underlying items and only the option order differs, correctness across positions forms a repeated-measures design at the item level. 
-    Each question is effectively evaluated four times per model, once with the correct answer in each position.
-    To assess whether correctness for the same items changes systematically across rotated positions, we apply the Friedman test, a nonparametric test for repeated measures. 
-    We report Kendall's $W$ as the corresponding repeated-measures effect size, which quantifies the strength and consistency of within-item position effects.
-
-
-    \item \textbf{Classification.}
-    Models are classified with the decision tree found in Figure \ref{fig:mcq-robustness-decision-tree} and all permutations summarized in Table~\ref{tab:position_bias_rubric}. Effect sizes ($V$, $W$) are treated as primary indicators of practical relevance, while p-values are used to determine whether observed effects are distinguishable from noise under the available sample size.
-
-\end{enumerate}
-
-The procedural outputs of this robustness analysis (test statistics, p-values, and effect sizes) are reported in Chapter~\ref{ch:results}. Substantive implications for benchmark validity, model comparison, and qualification evidence are discussed in Chapter~\ref{ch:discussion}.
-
+Procedural outputs such as test statistics, p-values, and effect sizes are reported in Chapter~\ref{ch:results}; substantive implications for benchmark validity and cross-model comparison are discussed in Chapter~\ref{ch:discussion}.
 
 \begin{figure}[htbp]
     \centering
@@ -1021,15 +1039,33 @@ The procedural outputs of this robustness analysis (test statistics, p-values, a
 \end{figure}
 
 
+Mixed Evidence remains the dominant classification because most threshold permutations induce at least one diagnostic disagreement; this is intentional. The rubric is deliberately conservative and only assigns a definitive label when both tests and both effect-size criteria converge, thereby reducing the risk of overstating position-bias effects.
+
+Rows are checked sequentially, and the first applicable criterion assigns the classification.
+Cram\'{e}r's $V$ measures the overall association between correctness and answer position, whereas Kendall's $W$ captures the consistency of position effects across repeated within-item evaluations.
+Effect-size cutoffs are defined as negligible ($< 0.10$), moderate ($0.10 \le \cdot < 0.30$), and strong ($\ge 0.30$).
+To be labeled as moderate or strong bias, both diagnostics must be at least non-negligible ($\min(V,W)\ge 0.10$); classification strength is then set by the larger effect size, with moderate if $\max(V,W)<0.30$ and strong if $\max(V,W)\ge 0.30$.
+The rubric is exhaustive, covering all $2 \times 2 \times 3 \times 3 = 36$ possible diagnostic combinations with no unclassified cases.
+Procedural results are presented in Chapter~\ref{ch:results}, while interpretation and broader implications are deferred to Chapter~\ref{ch:discussion}.
 
 
+% ============================================================
+% UPDATED TABLE — MCQ Position Bias Classification Rubric
+% Replaces original \tab:position_bias_rubric
+%
+% KEY CHANGES FROM ORIGINAL:
+% 1. Moderate/Strong bias now use max(V,W) instead of requiring 
+%    both V and W in the same band — closes 8 gap permutations
+% 2. Three separate Mixed Evidence rows, each independently labeled
+% 3. All 36 input permutations (2x2x3x3) are now classified
+% ============================================================
 
 \begin{table}[htbp]
 \centering
-\caption{Decision rubric for MCQ position bias classification using global and within-item evidence.}
+\caption{Decision Rubric for MCQ Position Bias Classification}
 \label{tab:position_bias_rubric}
 \resizebox{\linewidth}{!}{%
-\begin{tabular}{p{3.1cm} p{2.2cm} p{2.2cm} p{3.6cm} p{4.9cm}}
+\begin{tabular}{p{3.0cm} p{2.2cm} p{2.2cm} p{3.6cm} p{7.0cm}}
 \toprule
 \textbf{Classification} & \textbf{$p_{\chi^2}$} & \textbf{$p_{\text{Friedman}}$} & \textbf{Effect sizes} & \textbf{Interpretation / Action} \\
 \midrule
@@ -1040,59 +1076,59 @@ $\ge 0.05$ &
 \makecell[l]{$V < 0.10$ \\ $W < 0.10$} &
 No evidence that correctness depends on answer position. Report MCQ accuracy as position-invariant. \\
 
-
 \addlinespace
-Mixed evidence &
-\multicolumn{2}{p{4.4cm}}{\makecell[l]{Tests disagree:\\
-$p_{\chi^2}<0.05,\ p_{\text{Friedman}}\ge 0.05$\\
-\textbf{or}\\
-$p_{\text{Friedman}}<0.05,\ p_{\chi^2}\ge 0.05$}} &
-\makecell[c]{(any)} &
-Tests disagree (exactly one significant). Evidence is inconsistent; report diagnostics and avoid strong claims. \\
-
-\addlinespace
-Mixed evidence &
-\multicolumn{2}{p{4.4cm}}{\centering (any)} &
-\makecell[l]{Mismatch:\\
-$V<0.10$ $\land$ $W\ge 0.10$\\
-\textbf{or}\\
-$V\ge 0.10$ $\land$ $W<0.10$} &
-Effect sizes disagree. Evidence is inconsistent; report diagnostics and avoid strong claims. \\
-
-\addlinespace
-\makecell[l]{Mild bias \\ (negligible)} &
-\multicolumn{2}{p{4.4cm}}{\makecell[l]{At least one test significant:\\
-$p_{\chi^2}<0.05$\\
-\textbf{or}\\
-$p_{\text{Friedman}}<0.05$}} &
+Mild bias (negligible) &
+\multicolumn{2}{p{4.4cm}}{At least one $p < 0.05$} &
 \makecell[l]{$V < 0.10$ \\ $W < 0.10$} &
-At least one test detects a position effect, but magnitude is negligible. Report as a minor validity concern (likely sample-size sensitive); interpret primarily via effect sizes. \\
+At least one test detects a position effect, but magnitude is negligible on both dimensions. Significance reflects large-$N$ sensitivity, not practical relevance. Report as a minor validity note; interpret primarily via effect sizes. \\
+
+\addlinespace
+Mixed evidence (test disagreement) &
+\multicolumn{2}{p{4.4cm}}{\makecell[l]{Tests disagree:\\$p_{\chi^2}<0.05,\ p_{\text{Friedman}}\ge 0.05$\\\textbf{or}\\$p_{\text{Friedman}}<0.05,\ p_{\chi^2}\ge 0.05$}} &
+$\max(V,W) \ge 0.10$ &
+Exactly one test is significant and at least one effect size exceeds the negligible threshold. Aggregate and within-item diagnostics are inconsistent. Report all diagnostics; avoid strong claims. \\
+
+\addlinespace
+Mixed evidence (effect-size mismatch) &
+$< 0.05$ &
+$< 0.05$ &
+\makecell[l]{$\min(V,W) < 0.10$ \\ $\max(V,W) \ge 0.10$} &
+Both tests are significant but effect sizes disagree. One channel shows negligible magnitude while the other is non-negligible. Aggregate and within-item evidence point in different directions. Report diagnostics; classification is unreliable. \\
+
+\addlinespace
+Mixed evidence (underpowered) &
+$\ge 0.05$ &
+$\ge 0.05$ &
+$\max(V,W) \ge 0.10$ &
+Neither test is significant but at least one effect size exceeds the negligible threshold. Possible underpowered scenario; effects may be real but unconfirmed. Report as inconclusive with power caveat. \\
 
 \addlinespace
 Moderate bias &
 $< 0.05$ &
-$< 0.05$ (preferred) &
-\makecell[l]{$0.10 \le V < 0.30$ \\ and/or \\ $0.10 \le W < 0.30$} &
-Meaningful position dependence; accuracy comparisons may be distorted. Report and interpret MCQ results with caution. \\
+$< 0.05$ &
+\makecell[l]{$\min(V,W) \ge 0.10$ \\ $\max(V,W) < 0.30$} &
+Both tests confirm position dependence; both effect sizes are in the moderate range. Accuracy comparisons may be distorted. Report MCQ results with caution; consider position-averaged accuracy. \\
 
 \addlinespace
 Strong bias &
 $< 0.05$ &
 $< 0.05$ &
-\makecell[l]{$V \ge 0.30$ \\ and/or \\ $W \ge 0.30$} &
-Position strongly confounds measured accuracy. Treat MCQ accuracy as contaminated by positional heuristics. \\
+\makecell[l]{$\min(V,W) \ge 0.10$ \\ $\max(V,W) \ge 0.30$} &
+Both tests confirm position dependence and the larger effect size is strong. Position substantially confounds measured accuracy. Treat MCQ accuracy as contaminated by positional heuristics; use position-averaged accuracy or OSQ-only evaluation. \\
 
 \bottomrule
 \end{tabular}
 }
 \vspace{0.5em}
 \footnotesize
-\textit{Notes.} $V$ denotes Cram\'{e}r's $V$, which measures the strength of association between answer position and correctness at the aggregate (global) level.  $W$ denotes Kendall's $W$, which measures the degree of within-item agreement in correctness across answer positions (item-level position sensitivity). 
-Both effect sizes quantify practical magnitude independent of sample size.
-
+\textit{Legend.}
+$p_{\chi^2}$ = chi-square test $p$-value; $p_{\text{Friedman}}$ = Friedman test $p$-value.
+$V$ = position--correctness magnitude.
+$W$ = across-item position-effect magnitude.
+$\min(V,W)$ and $\max(V,W)$ = smaller and larger effect size.
 \end{table}
 
-
+\clearpage
 
 % ---------------------------------------------------------
 
@@ -1101,13 +1137,9 @@ Both effect sizes quantify practical magnitude independent of sample size.
 
 This subsection evaluates whether MCQ and OSQ formats yield convergent assessments of model capability on matched questions, or whether they capture systematically different aspects of performance. If MCQ and OSQ diverge, scores from the two formats should not be treated as interchangeable evidence.
 
-To preserve separation between results in Chapter \ref{ch:results} and discussion and interpretation in Chapter \ref{ch:discussion}, this subsection defines criteria used to classify whether MCQ and OSQ provide convergent evidence on the matched question subset. The criteria below are applied systematically to the observed results.
+\paragraph{Visual, qualitative diagnostic.}    A scatter plot is to be constructed with MCQ accuracy on the $x$-axis and normalized mean OSQ score on the $y$-axis, one point per model. The diagonal reference line $y=x$ is used as a qualitative guide for agreement. Systematic displacement above/below the diagonal is recorded as a diagnostic of directional separation between formats.
 
-\begin{enumerate}[nosep]
-    \item \textbf{Visual consistency diagnostic.}
-    A scatter plot is constructed with MCQ accuracy on the $x$-axis and normalized mean OSQ score on the $y$-axis, one point per model. The diagonal reference line $y=x$ is used as a qualitative guide for agreement. Systematic displacement above/below the diagonal is recorded as a diagnostic of directional separation between formats.
-
-    \item \textbf{Association and ranking agreement.}
+\paragraph{Cross-Modality Association and rank-order agreement statistics.}
     Pearson's correlation ($r$) is computed to quantify linear association and Spearman's rank correlation ($\rho_s$) to quantify agreement in model ordering.
 
     Association levels are classified as:
@@ -1131,70 +1163,45 @@ d = \frac{\bar{\Delta}}{s_{\Delta}},
 where $\bar{\Delta}$ is the mean of the per-model differences and $s_{\Delta}$ is their standard deviation.
 
 
-    Effect magnitude levels are classified as:
-    \begin{itemize}[nosep]
-        \item \textbf{Negligible:} $|d| < 0.20$
-        \begin{itemize}
-            \item Neglibile format difference
-        \end{itemize}
-        \item \textbf{Small:} $0.20 \le |d| < 0.50$
-        \begin{itemize}
-            \item Format matters somewhat
-        \end{itemize}
-        \item \textbf{Medium:} $0.50 \le |d| < 0.80$
-        \begin{itemize}
-            \item Format choice has clear practical impact
-        \end{itemize}
-        \item \textbf{Large:} $|d| \ge 0.80$
-        \begin{itemize}
-            \item MCQ and OSQ should be treated as distinct evaluations
-        \end{itemize}
-    \end{itemize}
+\paragraph{Predefined Cross-Modality Comparison Classification Criteria.}
 
-    %%% does this go here?
-    \item 
-        \item If the Wilcoxon test is \emph{not significant} ($p \geq 0.05$):\\
-        There is no evidence that one format systematically yields higher scores across models.
-        \item If the Wilcoxon test is \emph{significant} ($p < 0.05$):\\
-        One format consistently gives higher scores (direction indicated by the sign of $\bar{\Delta}$).
+To preserve separation between results in Chapter \ref{ch:results} and discussion and interpretation in Chapter \ref{ch:discussion}, this subsection defines criteria used to classify whether MCQ and OSQ provide convergent evidence on the matched question subset. The criteria below are applied systematically to the observed results.
 
+Models are classified using the decision tree in Figure~\ref{fig:mcq-vs-osq-decision-tree}, with the full rule set summarized in Table~\ref{tab:cross_modality_rubric}. The decision procedure jointly considers (i) cross-model association between MCQ accuracy and normalized OSQ scores as captured by Pearson’s $r$ and Spearman’s $\rho_s$, and (ii) systematic score separation between formats as captured by the paired effect size $|d|$ and the Wilcoxon signed-rank test. Association and effect-size magnitude are treated as primary indicators of practical relevance, while the Wilcoxon $p$-value is used to determine whether observed differences are distinguishable from noise at the available sample size. The resulting labels (\emph{Interchangeable, Correlated but non-interchangeable, Partially correlated,} or \emph{Divergent}) provide a standardized interpretation layer applied consistently across models.
 
-    \item \textbf{Cross-modality consistency classification.}
-    Based on the association and separation signals above, the MCQ--OSQ relationship is classified into one of the following evidence categories:
-    \begin{itemize}[nosep]
-        \item \textbf{Convergent evidence:} High association and negligible-to-small separation ($|d|<0.50$), with Wilcoxon not significant or directionally weak.
-        \item \textbf{Partially convergent evidence:} Moderate association and/or small-to-medium separation ($0.20 \le |d| < 0.80$), indicating partial agreement with measurable format sensitivity.
-        \item \textbf{Divergent evidence:} Low association and/or medium-to-large separation ($|d|\ge 0.50$), indicating that the two formats yield systematically different measurement signals on the matched subset.
-    \end{itemize}
-\end{enumerate}
+Procedural outputs such as correlation coefficients, paired-difference statistics, p-values, and effect sizes are reported in Chapter~\ref{ch:results}; substantive implications for evidence fusion and modality selection are discussed in Chapter~\ref{ch:discussion}.
 
-These predefined criteria establish how cross-modality agreement will be assessed in Chapter~\ref{ch:results}. Broader implications for evidence fusion, qualification strength, or modality selection are discussed in Chapter~\ref{ch:discussion}.
+%% CONSIDER DOING A PERTURBATION/SENSITIVITY ANALYSIS (on the thresholds used for classification)
+% To assess the stability of the classification labels with respect to the predefined thresholds, a one-at-a-time perturbation analysis is conducted. Each threshold ($r$/$\rho_s$ boundaries at 0.50 and 0.80; $|d|$ boundaries at 0.50 and 0.80) is individually perturbed by $\pm 0.05$ (for correlations) or $\pm 0.10$ (for $|d|$), and the classification decision tree is re-evaluated for all models. Models whose classification changes under any perturbation are flagged as ``boundary-sensitive'' in the results. This analysis is reported in Chapter~\ref{ch:results} alongside the nominal classifications.
 
-
-
-\begin{figure}
+\begin{figure}[htbp]
     \centering
-    \includegraphics[width=0.75\linewidth]{figs/ch3/3.3/mcq_vs_osq_tests.png}
-    \caption{Predefined Analysis Workflow for MCQ vs OSQ Classification.}
+    \includegraphics[width=0.95\linewidth]{figs/ch3/mcq-osq-statistical-classification-v2.png}
+    \caption{Predefined Criterion Decision Tree for MCQ vs OSQ Classification.}
     \label{fig:mcq-vs-osq-decision-tree}
 \end{figure}
 
 
-
 % Column helpers (preamble)
-\newcolumntype{L}[1]{>{\RaggedRight\arraybackslash}p{#1}}
-\newcolumntype{Y}{>{\RaggedRight\arraybackslash}X}
+% \newcolumntype{L}[1]{>{\RaggedRight\arraybackslash}p{#1}}
+% \newcolumntype{Y}{>{\RaggedRight\arraybackslash}X}
+
+% ============================================================
+% TABLE — MCQ vs OSQ Cross-Modality Classification Rubric
+% Manual-width layout + resizebox to maximize readability
+% ============================================================
 
 \begin{table}[htbp]
 \centering
-\caption{Decision rubric for MCQ vs OSQ cross-modality Significance classification}
+\caption{Decision Rubric for MCQ vs.\ OSQ Cross-Modality Classification}
 \label{tab:cross_modality_rubric}
 
 \small
-\setlength{\tabcolsep}{4pt}        % tighter horizontal padding
-\renewcommand{\arraystretch}{1.15} % more vertical breathing room
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.15}
 
-\begin{tabularx}{\linewidth}{L{3.1cm} L{3.0cm} L{2.8cm} L{1.9cm} Y}
+\resizebox{\linewidth}{!}{%
+\begin{tabular}{p{3.1cm} p{2.8cm} p{2.4cm} p{2.0cm} p{8.7cm}}
 \toprule
 \textbf{Classification} &
 \textbf{Association} &
@@ -1203,50 +1210,81 @@ These predefined criteria establish how cross-modality agreement will be assesse
 \textbf{Interpretation / Action} \\
 \midrule
 
-Convergent evidence &
+Interchangeable &
 \makecell[l]{High:\\ $r \ge 0.80$\\ $\rho_s \ge 0.80$} &
-\makecell[l]{Negligible--Small:\\ $|d| < 0.50$} &
+\makecell[l]{Small:\\ $|d| < 0.50$} &
 $\ge 0.05$ &
-MCQ and OSQ produce consistent measurement signals on matched items. Cross-modality agreement supports combining results; report as mutually reinforcing evidence. \\
+MCQ and OSQ produce consistent measurement signals on matched items. Formats can be treated as equivalent evidence; results may be combined. \\
 \addlinespace
 
-Mixed evidence &
-\multicolumn{3}{L{7.7cm}}{\makecell[l]{Signals disagree; exactly one of:\\[2pt]
-(a) High association but $|d| \ge 0.50$ \\[2pt]
-(b) $|d| < 0.50$ but moderate/low association \\[2pt]
-(c) High association and $|d| < 0.50$ but $p_{\text{Wilcoxon}} < 0.05$}} &
-Evidence is internally inconsistent---one diagnostic suggests convergence while another suggests divergence. Report all diagnostics; avoid strong convergence or divergence claims. \\
+Correlated but non-interchangeable &
+\makecell[l]{High:\\ $r \ge 0.80$\\ $\rho_s \ge 0.80$} &
+\makecell[l]{Medium--Large:\\ $|d| \ge 0.50$} &
+$< 0.05$ &
+Formats rank models similarly but one systematically yields higher scores. They measure related constructs but cannot substitute for one another. Report both modalities separately. \\
 \addlinespace
 
-Partially convergent evidence &
-\makecell[l]{Moderate:\\ $0.50 \le r < 0.80$\\ or\\ $0.50 \le \rho_s < 0.80$} &
-\makecell[l]{Small--Medium:\\ $0.20 \le |d| < 0.80$} &
+Mixed evidence (small $d$ but significant Wilcoxon) &
+\makecell[l]{High:\\ $r \ge 0.80$\\ $\rho_s \ge 0.80$} &
+\makecell[l]{Small:\\ $|d| < 0.50$} &
+$< 0.05$ &
+Formats correlate highly and the effect size is small, yet Wilcoxon detects a significant shift. Likely a real but practically negligible difference detected at $K = 19$. Leans toward interchangeable; interpret primarily via effect size. \\
+\addlinespace
+
+Mixed evidence (large $d$ but non-significant Wilcoxon) &
+\makecell[l]{High:\\ $r \ge 0.80$\\ $\rho_s \ge 0.80$} &
+\makecell[l]{Medium--Large:\\ $|d| \ge 0.50$} &
+$\ge 0.05$ &
+Formats correlate highly but the effect size suggests a meaningful offset that the Wilcoxon test cannot confirm. May reflect insufficient power or outlier-driven $d$. Association says convergence; effect size says divergence. Avoid strong claims. \\
+\addlinespace
+
+Partially correlated &
+\makecell[l]{Moderate:\\ both $\ge 0.50$,\\ at least one $< 0.80$} &
+\makecell[l]{Small--Medium:\\ $|d| < 0.80$} &
 (any) &
 Formats partially agree but measurable format sensitivity exists. Report modality-specific results separately; interpret cross-modality comparisons with stated caveats. \\
 \addlinespace
 
-Divergent evidence &
+Divergent &
+\makecell[l]{Moderate:\\ both $\ge 0.50$,\\ at least one $< 0.80$} &
+\makecell[l]{Large:\\ $|d| \ge 0.80$} &
+(any) &
+Moderate ranking agreement but extreme score offset. Formats are effectively measuring different constructs or one is severely miscalibrated. Do not combine scores. \\
+\addlinespace
+
+Divergent &
 \makecell[l]{Low:\\ $r < 0.50$\\ or $\rho_s < 0.50$} &
 \makecell[l]{Medium--Large:\\ $|d| \ge 0.50$} &
 $< 0.05$ &
-Formats yield systematically different measurement signals. Treat MCQ and OSQ results as measuring distinct constructs or exhibiting strong format confounds. Do not combine scores. \\
+Formats fundamentally disagree on model ordering and exhibit a confirmed systematic offset. MCQ and OSQ measure distinct constructs. Do not combine or compare scores across formats. \\
+\addlinespace
+
+Mixed evidence (low association $+$ small $d$) &
+\makecell[l]{Low:\\ $r < 0.50$\\ or $\rho_s < 0.50$} &
+\makecell[l]{Small:\\ $|d| < 0.50$} &
+(any) &
+Model rankings differ substantially but there is no large systematic score offset. Formats may capture genuinely different capabilities without one being systematically harder, or measurement noise may dominate. Evidence conflicts; report as ambiguous. \\
+\addlinespace
+
+Mixed evidence (low association $+$ large $d$, non-significant) &
+\makecell[l]{Low:\\ $r < 0.50$\\ or $\rho_s < 0.50$} &
+\makecell[l]{Medium--Large:\\ $|d| \ge 0.50$} &
+$\ge 0.05$ &
+Low association and large effect size both suggest divergence, but the Wilcoxon test does not confirm the offset. Paired differences may be highly variable across models. Leans toward divergence but is not fully confirmed. \\
 \bottomrule
-\end{tabularx}
+\end{tabular}%
+} % resizebox
 
 \vspace{0.5em}
 \footnotesize
-\textit{Notes.}
-$r$ denotes Pearson's correlation, measuring linear association between MCQ accuracy and normalized OSQ score across models.
-$\rho_s$ denotes Spearman's rank correlation, measuring agreement in model ordering across formats.
-$d = \bar{\Delta}/s_{\Delta}$ is the paired standardized effect size, where $\Delta_i = \text{Acc}_{\text{MCQ},i} - \bar{S}'_{\text{OSQ},i}$.
-The Wilcoxon signed-rank test evaluates whether the median paired difference is zero at $\alpha = 0.05$.
-Effect-size thresholds follow Cohen's conventions: negligible ($|d|<0.20$), small ($0.20 \le |d| < 0.50$), medium ($0.50 \le |d| < 0.80$), large ($|d| \ge 0.80$).
-The \textit{mixed evidence} row is evaluated first as a catch-all for internally inconsistent diagnostic patterns; remaining cases are classified by the primary association--separation pattern.
-Substantive implications for evidence fusion and modality selection are reserved for Chapter~5.
+\textit{Legend.}
+$r$ = Pearson correlation; $\rho_s$ = Spearman rank correlation.
+$d=\bar{\Delta}/s_{\Delta}$ = paired standardized effect size; $|d|$ denotes magnitude.
+$p_{\text{Wilcoxon}}$ = two-sided paired Wilcoxon signed-rank test $p$-value.
 \end{table}
 
 
-
+\clearpage
 
 % ---------------------------------------------------------
 \section{Objective 6: Token-Efficiency and Cost Trade-Space Analysis}
@@ -1258,7 +1296,7 @@ Objective 6 quantifies the computational resources required to produce open-styl
 \subsection{Token Measurement and Response Policies}
 \label{subsec:ch3_obj6_measurement}
 
-Token usage was measured for each evaluation condition as the sum of prompt tokens and completion tokens:
+For each inference query, token usage was measured for each evaluation condition and defined as the sum of prompt tokens and completion tokens:
 
 \[
 T_{\text{total}} = T_{\text{input}} + T_{\text{output}}
@@ -1266,16 +1304,18 @@ T_{\text{total}} = T_{\text{input}} + T_{\text{output}}
 
 where $T_{\text{input}}$ denotes prompt tokens and $T_{\text{output}}$ denotes generated completion tokens.
 
-Token counts are computed using \texttt{tiktoken} with the appropriate model-specific tokenizer \cite{openai_Tiktoken_2026}. Per-item token statistics are logged via \texttt{lm-eval} JSONL outputs, enabling aggregation by model, modality, and configuration.
+Per-response token counts are computed using \texttt{tiktoken} with the appropriate model-specific tokenizer \cite{openai_Tiktoken_2026}. Per-item token statistics are logged via \texttt{lm-eval} *.jsonl outputs, enabling aggregation by model, modality, and configuration.
 
-For OSQ evaluation, token accounting includes only model generation (prompt + completion). Judge-scoring passes are excluded from primary token metrics in order to isolate generative resource requirements from evaluation overhead. This separation ensures that reported values reflect model production cost rather than downstream scoring infrastructure.
+Objective~6 focuses on \emph{generative} effort. Accordingly, primary token metrics include only model responses for OSQ items  and exclude downstream judge scoring calls. Judge-token overhead is treated as a distinct evaluation-layer cost and can be reported separately when needed for end-to-end budgeting, but is not included in the core quality--token trade space to avoid conflating model generation with scoring infrastructure.
 
-To standardize response length and enable controlled trade-space analysis, OSQ answers were constrained using a maximum token amount of 500 tokens, which is approximately four paragraphs. No early stopping criteria were imposed. This policy ensures that token consumption reflects full response generation under a fixed upper bound. Together, these instrumentation policies define a consistent and reproducible token measurement framework. Together, these instrumentation policies define a consistent and reproducible token measurement framework. As tokenization is model-specific, token counts should be interpreted as a consistent within-model resource measure under the given tokenizer rather than a strictly universal text-length measure across all providers \cite{openai_Tiktoken_2026, huggingface_SummaryTokenizers_2026,sennrich_NeuralMachineTranslation_2016, mielke_WordsCharactersBrief_2021, kudo_SentencePieceSimpleLanguage_2018, kudo_SubwordRegularizationImproving_2018}. 
+To standardize response length and enable controlled trade-space analysis, OSQ generation was constrained to a limit of 500 tokens, which is approximately four paragraphs. No early stopping rule was imposed beyond the model’s standard end-of-sequence behavior. This policy ensures that token consumption reflects full response generation under a fixed upper bound. This establishes a uniform upper bound for per-item generation while allowing models to allocate tokens as needed within the cap.
+
+Together, these instrumentation policies define a consistent and reproducible token measurement framework. As tokenization is model-specific, token counts should be interpreted as a consistent within-model resource measure under the given tokenizer rather than a strictly universal text-length measure across all providers \cite{openai_Tiktoken_2026, huggingface_SummaryTokenizers_2026,sennrich_NeuralMachineTranslation_2016, mielke_WordsCharactersBrief_2021, kudo_SentencePieceSimpleLanguage_2018, kudo_SubwordRegularizationImproving_2018}. 
 
 \subsection{Token-Efficiency Metrics and Trade-Space Construction}
 \label{subsec:ch3_obj6_trade_space}
 
-Using the recorded token statistics, a quality--token trade space can be constructed to evaluate generative efficiency.
+Using the recorded token statistics, a quality-token trade space can be constructed to evaluate generative efficiency.
 
 For each model, the following quantities are computed:
 
@@ -1310,28 +1350,88 @@ Models strictly below and to the right of the frontier are dominated and represe
 This construction does not assert that lower token usage implies higher qualification. Rather, it clarifies the computational envelope within which robustness checks, replications, and OSQ scoring can be conducted. Token counts are used here as a stable proxy for generative effort; they do not directly measure wall-clock latency, memory consumption, or hardware utilization. In addition, reasoning-oriented models may consume more completion tokens under identical caps, shifting their position in the trade space without implying inferior capability. These scope constraints ensure that quality--token comparisons are interpreted strictly within the boundaries of generation-based resource accounting.
 
 
+% ---------------------------------------------------------
+\section{Objective 7: Task Category Level Task-Modality Qualification Mapping}
+\label{sec:ch3_obj7_category_taskmodality}
+
+Objective 7 converts validated measurement instruments (Objective~5) and resource accounting (Objective~6) into guidance given comparable MCQ and OSQ measurements, which evaluation modality is most defensible for each systems engineering task category. Whereas Objective~5 answers "can we trust these measurements?" and Objective~6 answers "what do they cost?", Objective~7 answers "what modality should be used, by category, under the observed evidence patterns?"
+
+This objective produces an auditable mapping from INCOSE 15288 aligned task categories to modality recommendations (e.g., MCQ-sufficient, OSQ-preferred, dual-modality required). The mapping is generated by (i) decomposing multi-label category assignments to compute per-category performance under each modality, (ii) quantifying per-category modality advantage via an MCQ--OSQ delta analysis, and (iii) applying a predefined decision tree that converts delta magnitude, absolute performance, and cross-model variability into a qualification recommendation.
 
 
 % ---------------------------------------------------------
-\section{Objective 7: Category-Level Task--Modality Qualification Mapping}
-\label{sec:ch3_obj7}
-
-Objectives~5 and~6 establish whether evaluation instruments are robust and characterize cost trade-offs, but they do not address whether modality suitability varies across the \ac{se} domain. This objective decomposes model performance by INCOSE Handbook category and constructs a structured mapping from domain area to recommended evaluation modality. The result is an empirically grounded qualification guidance framework that supplements the aggregate cross-modality findings of Objective~5 with category-resolved evidence.
-
-
 \subsection{Category Decomposition and Alignment}
-\label{subsec:ch3_obj7_categories}
+\label{subsec:ch3_obj7_category_decomposition}
 
-Each SysEngBench question is annotated with one or more INCOSE Handbook categories encoded as hierarchical paths (e.g., \texttt{INCOSEHandbook / Technical Processes / Architecture Definition Process}). Questions with multiple category assignments are handled by row explosion: each (model, question, category) combination is treated as an independent observation so that every assigned category receives proportional representation.
+Each SysEngBench item includes one or more INCOSE-aligned category labels. Objective~7 uses these labels to compute performance \emph{per category}.
+
+Some questions are tagged with multiple categories. To avoid forcing a single label, the data is "exploded": a question with $k$ labels contributes once to each of its $k$ categories. The question ID is retained so any category-level statistic can be traced back to the underlying items.
 
 Two levels of granularity are analyzed:
 
 \begin{enumerate}[nosep]
-    \item \textbf{Leaf-level categories} ($\approx$20): the most specific INCOSE process or topic area (e.g., \textit{Risk and Opportunity Management Process}, \textit{Modeling Language SysML v1.x}).
-    \item \textbf{Top-level groups} ($\approx$6): the second level of the hierarchy (e.g., \textit{Technical Processes}, \textit{Specialty Engineering Activities}, \textit{Cross-Cutting Systems Engineering Methods}).
+    \item Leaf-level categories ($\approx$20): the most specific INCOSE process or topic area (e.g., \textit{Risk and Opportunity Management Process}, \textit{Modeling Language SysML v1.x}).
+    \item \Top-level groups ($\approx$6): the second level of the hierarchy (e.g., \textit{Technical Processes}, \textit{Specialty Engineering Activities}, \textit{Cross-Cutting Systems Engineering Methods}).
 \end{enumerate}
 
 Analyzing at both levels tests whether modality differences are driven by specific leaf categories or are systematic properties of entire process families.
+
+\begin{table}[htbp]
+\centering
+\caption{SysEngBench INCOSE Category Roll-Up Mapping}
+\label{tab:sysengbench_category_rollup}
+\small
+\renewcommand{\arraystretch}{1.15}
+\begin{tabular}{p{4.2cm} p{10.2cm}}
+\toprule
+\textbf{Top-level category} & \textbf{Leaf-level categories within top-level} \\
+\midrule
+Cross-Cutting Systems Engineering Methods &
+$\bullet$ Model-Based Systems Engineering / Modeling Frameworks and Methods \newline
+$\bullet$ Model-Based Systems Engineering / Modeling Language SysML v1.x \newline
+$\bullet$ Modeling and Simulation \\
+\midrule
+Lifecycle Stages &
+$\bullet$ Defense Acquisition Life Cycle / Lifecycle Phases \newline
+$\bullet$ Defense Acquisition Life Cycle / Milestones and Reviews \newline
+$\bullet$ Generic Life Cycle Stages \\
+\midrule
+Specialty Engineering Activities &
+$\bullet$ Cost Modeling \newline
+$\bullet$ Electromagnetic Compatibility \newline
+$\bullet$ Reliability, Availability, and Maintainability \newline
+$\bullet$ Supportability, Producibility and Disposability \newline
+$\bullet$ System Safety Engineering \newline
+$\bullet$ Usability and Human Systems Integration \\
+\midrule
+Systems Engineering Overview &
+$\bullet$ Application and Value of Systems Engineering \newline
+$\bullet$ System Concepts and Structures \newline
+$\bullet$ Systems Science and Thinking \\
+\midrule
+Technical Management Processes &
+$\bullet$ Configuration and Information Management \newline
+$\bullet$ Decision Management, Analysis of Alternatives, and Tradespace Analysis \newline
+$\bullet$ Risk and Opportunity Management Process \\
+\midrule
+Technical Processes &
+$\bullet$ Architecture Definition Process \newline
+$\bullet$ Identifying Stakeholder Needs and Generating Requirements \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Category-level estimates are only used for modality recommendations when the category has at least $n_{\min}$ contributing questions (after exploding multi-label items). Categories below this threshold are still shown descriptively (e.g., counts/heatmaps) but are excluded from prescriptive guidance.
+
+Let $\mathcal{I}(c)$ be the set of questions assigned to category $c$ (after exploding multi-label items). Accuracy for modality $q$ is:
+\[
+\text{Acc}_{q,c}=\frac{1}{|\mathcal{I}(c)|}\sum_{i\in \mathcal{I}(c)} \mathbb{I}[\text{correct}(i,q)].
+\]
+
+\paragraph{Modality advantage.}
+\[
+\Delta_c = \text{Acc}_{\text{OSQ},c} - \text{Acc}_{\text{MCQ},c}.
+\]
 
 
 \subsection{Category-Level MCQ and OSQ Performance}
@@ -1348,7 +1448,6 @@ Results are presented as model $\times$ category heatmaps for each modality, wit
 
 A category-level scatter plot analogous to the model-level MCQ vs.\ OSQ scatter (Objective~5, Section~\ref{subsec:ch3_obj5_modality_comparison}) is constructed for each granularity level: one point per category, with coordinates $(\overline{\text{Acc}}_{\text{MCQ}},\; \overline{S}_{\text{OSQ}})$ averaged across all models. A perfect-agreement line ($y = x$) and linear regression are overlaid to visualize systematic modality divergence by domain area.
 
-
 \subsection{Modality Advantage Quantification}
 \label{subsec:ch3_obj7_delta}
 
@@ -1360,58 +1459,59 @@ The MCQ--OSQ delta quantifies the direction and magnitude of modality advantage 
 
 where $m$ indexes models and $c$ indexes categories. Positive values indicate MCQ advantage (recognition exceeds generation); negative values indicate OSQ advantage.
 
-Results are reported in two complementary forms:
+Results are reported as delta heatmap tables: a model $\times$ category matrix of $\Delta_{m,c}$ values with marginal summary statistics. The final column reports per-model mean and median $\Delta$ (across categories); the final row reports per-category mean and median $\Delta$ (across models). This structure, analogous to a joint probability table, enables simultaneous reading of model-level and category-level modality tendencies.
 
-\begin{enumerate}[nosep]
-    \item \textbf{Delta heatmap tables}: a model $\times$ category matrix of $\Delta_{m,c}$ values with marginal summary statistics. The final column reports per-model mean and median $\Delta$ (across categories); the final row reports per-category mean and median $\Delta$ (across models). This structure, analogous to a joint probability table, enables simultaneous reading of model-level and category-level modality tendencies.
-    \item \textbf{Diverging bar charts}: per-category mean $\Delta$ (averaged across models) displayed as horizontal bars, with positive bars colored to indicate MCQ advantage and negative bars colored to indicate OSQ advantage.
-\end{enumerate}
+To translate delta magnitudes into actionable guidance, each category is classified into one of four modality recommendations based on the cross-model mean delta ($\overline{\Delta}_c$) and the mean MCQ accuracy for that category ($\overline{\text{Acc}}_{\text{MCQ},c}$):
 
-
-\subsection{Predefined Qualification Modality Classification Criteria}
-\label{subsec:ch3_obj7_classification}
-
-To translate delta magnitudes into actionable guidance, each category is classified into one of four modality recommendations based on the absolute cross-model mean delta ($|\overline{\Delta}_c|$) and the mean MCQ accuracy for that category ($\overline{\text{Acc}}_{\text{MCQ},c}$). The classification regions are visualized as shaded areas on the MCQ vs.\ OSQ scatter plot (see Section~\ref{subsec:ch3_obj7_classification}):
 
 \begin{table}[htbp]
 \centering
 \caption{Predefined category-level qualification modality classification criteria.}
 \label{tab:obj7_classification}
 \resizebox{\linewidth}{!}{%
-\begin{tabular}{p{3.5cm} p{3.5cm} p{3.5cm} p{6.5cm}}
+\begin{tabular}{p{3.6cm} p{4.2cm} p{3.2cm} p{6.2cm}}
 \toprule
-\textbf{Classification} & \textbf{$|\overline{\Delta}_c|$} & \textbf{Mean MCQ Acc.} & \textbf{Interpretation and Guidance} \\
+\textbf{Classification} & \textbf{Mean delta $|\overline{\Delta}_c|$} & \textbf{Mean MCQ Acc.} & \textbf{Interpretation and Guidance} \\
 \midrule
-
 MCQ-sufficient &
-$|\overline{\Delta}_c| < 5\%$ &
-$\overline{\text{Acc}}_{\text{MCQ},c} \geq 85\%$ &
-Small modality gap with high MCQ performance. Both modalities converge and MCQ captures competence reliably. Suitable for low-risk screening without OSQ. \\
-
+$|\overline{\Delta}_c| < 0.05$ &
+$\overline{\text{Acc}}_{\text{MCQ},c} \geq 0.85$ &
+Modalities are effectively equivalent and MCQ accuracy is already high. MCQ captures competence adequately; OSQ is optional and can be reserved for higher-risk follow-up. \\
 \addlinespace
 Dual-modality recommended &
-$5\% \leq |\overline{\Delta}_c| < 15\%$ &
+$0.05 \leq |\overline{\Delta}_c| < 0.15$ &
 Any &
-Moderate modality gap. MCQ provides useful signal but does not fully capture generative competence. Pair MCQ screening with targeted OSQ evaluation for moderate-risk tasks. \\
-
+Meaningful modality gap exists regardless of direction. Use MCQ for breadth and OSQ for confirmation on moderate/high-risk uses; investigate whether MCQ guess-ability or OSQ scoring strictness contributes to the gap. \\
 \addlinespace
 Dual-modality required &
-$|\overline{\Delta}_c| \geq 15\%$ &
+$|\overline{\Delta}_c| \geq 0.15$ &
 Any &
-Large modality gap. MCQ and OSQ measure meaningfully different competences. Both modalities must be administered for reliable qualification in this category. \\
-
+Large modality divergence in either direction. Results are modality-sensitive; require both modalities for qualification evidence and investigate the source of the discrepancy (e.g., MCQ inflation via guessing or OSQ construct differences). \\
 \addlinespace
 Insufficient coverage &
 Any &
 $< 30$ samples in category &
 Too few observations for reliable classification. Report descriptive statistics only; do not assign modality recommendation. \\
-
 \bottomrule
 \end{tabular}
 }
+\noindent\textit{Note.} Read each row as an AND rule: a category must meet both the delta condition and the MCQ accuracy condition unless the column says \emph{Any}. The \emph{Insufficient coverage} rule is checked first and overrides the others. All delta thresholds use absolute values, making the classification symmetric with respect to modality direction.
 \end{table}
 
-These thresholds are applied independently at both granularity levels (leaf categories and top-level groups). The classification is intended as a structured starting point for deployment decisions, not as a rigid prescription; organizations should adjust thresholds based on their risk tolerance and domain-specific requirements.
+
+Figure~\ref{fig:cross-mod-class-regions} provides a geometric interpretation of the classification criteria defined in Table~\ref{tab:obj7_classification}. Each point in the plot represents a hypothetical category with a given mean MCQ accuracy ($x$-axis) and mean OSQ accuracy ($y$-axis). The diagonal line $y = x$ marks perfect modality agreement ($\Delta = 0$). The green region in the upper-right corner identifies categories classified as \emph{MCQ-sufficient}, requiring both high MCQ accuracy ($\geq 85\%$) and near-diagonal placement ($|\Delta| < 5$ percentage points). The amber bands flanking the diagonal correspond to \emph{dual-modality recommended} categories ($5 \leq |\Delta| < 15$), while the red regions beyond the outer boundaries denote \emph{dual-modality required} categories ($|\Delta| \geq 15$). Because all thresholds are defined on the absolute delta, the regions are symmetric about the diagonal where a large MCQ advantage and a large OSQ advantage of equal magnitude receive the same classification.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.8\textwidth]{figs/ch3/obj7_classification_regions.png}
+    \caption{Cross-Modality Classification Regions}
+    \label{fig:cross-mod-class-regions}
+\end{figure}
+
+
+The thresholds are applied independently at both granularity levels, including leaf categories and top-level groups. The classification is intended as a structured starting point for deployment decisions; organizations should adjust thresholds based on their risk tolerance and domain-specific requirements.
+
+As a design prior, MCQ (selected-response) performance is treated as a lower-effort evidence type than OSQ (constructed-response) because MCQs provide answer cues and permit partial-knowledge strategies (e.g., recognition and elimination), whereas OSQs require generating and justifying an answer without options. This distinction is widely discussed in assessment and measurement guidance and is a primary motivation for using constructed-response formats when explanation, reasoning, or argumentation quality is part of the intended inference \cite{livingston_ConstructedResponseTestQuestionsWhy_2009, AmEdAssoc_StandardsForEducationalTesting_2014}. Therefore, it is pre-specified that some task families may show materially different apparent competence under MCQ versus OSQ, and treat large modality gaps in either direction as a form of modality sensitivity, effectively triggering dual-modality evidence rather than a single-modality prescription. This expectation is tested and quantified empirically in Chapter~4 using the category-level MCQ/OSQ accuracy and delta analyses.
 
 
 

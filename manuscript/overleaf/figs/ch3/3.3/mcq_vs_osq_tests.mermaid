@@ -1,0 +1,18 @@
+flowchart TD
+    A{"Association level?<br>(r and ρ<sub>s</sub>)"}
+
+    A -->|"High<br>(r ≥ 0.80 ∧ ρ<sub>s</sub> ≥ 0.80)"| B{"Effect size<br>|d| < 0.50?"}
+    A -->|"Moderate<br>(0.50 ≤ r < 0.80<br>or 0.50 ≤ ρ<sub>s</sub> < 0.80)"| C{"Effect size<br>|d| < 0.80?"}
+    A -->|"Low<br>(r < 0.50 or ρ<sub>s</sub> < 0.50)"| D{"Effect size<br>|d| ≥ 0.50?"}
+
+    B -->|"YES"| B2{"Wilcoxon<br>p ≥ 0.05?"}
+    B -->|"NO<br>(|d| ≥ 0.50)"| M[MIXED<br>EVIDENCE]
+
+    B2 -->|YES| CONV[CONVERGENT<br>EVIDENCE]
+    B2 -->|"NO<br>(p < 0.05)"| M
+
+    C -->|"YES<br>(|d| < 0.80)"| PART[PARTIALLY<br>CONVERGENT]
+    C -->|"NO<br>(|d| ≥ 0.80)"| DIV[DIVERGENT<br>EVIDENCE]
+
+    D -->|"YES<br>(|d| ≥ 0.50)"| DIV
+    D -->|"NO<br>(|d| < 0.50)"| M

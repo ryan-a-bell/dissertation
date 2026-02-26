@@ -1,0 +1,34 @@
+% -------------------------------------------------------------------------
+% Narrative spine (LaTeX) — “Research trajectory and dissertation positioning”
+% Drop-in section you can place either:
+%   (A) right before \section{Statement of the Problem}, or
+%   (B) near the start of \section{Research Contributions} as contextual framing.
+% Keep your Contributions section dissertation-scoped by leaving this as "context"
+% and ending with the scope-lock paragraph below.
+% -------------------------------------------------------------------------
+
+
+Tailor, modify, and consider integration if advisors want to see an explicit outline of my research.
+
+\subsection{Research trajectory and dissertation positioning}
+\label{subsec:research_trajectory}
+
+This dissertation is situated within a multi-year research program on the trustworthy use of large language models (LLMs) in systems engineering workflows. Across this program, the guiding premise has been consistent: while LLMs can accelerate the production and revision of engineering artifacts, they also introduce new failure modes and governance burdens that are consequential in high-stakes environments. As a result, adoption decisions require defensible evidence that matches the artifacts, risks, and accountability structures of systems engineering practice, rather than anecdotal demonstrations or single-score comparisons.
+
+\paragraph{Phase 1: Adoption pressure framed as an engineering economics problem.}
+The initial work treated LLM assistance as a disruption to established effort estimation and planning assumptions. If AI assistance changes how work is performed across lifecycle activities, then parametric cost models must incorporate AI usage explicitly rather than leaving it as an unmodeled productivity assumption. Early contributions proposed an \emph{AI assistance usage} factor and associated calibration pathways (including expert elicitation methods) to capture how assistance intensity, task type, and context can shift labor effort, schedule, and rework. This framing also surfaced an immediate qualification tension: productivity claims are not meaningful without measurement instruments that can distinguish genuine capability gains from verification overhead, coordination costs, and error-induced rework.
+
+\paragraph{Phase 2: The measurement-instrument gap and the need for an SE benchmark.}
+To move from intuition to evidence, the program introduced a domain-specific benchmark for systems engineering, SysEngBench, intended to evaluate LLM performance on representative systems engineering concepts and applications. Establishing a benchmark serves two purposes: (i) it enables comparative evaluation across models and configurations, and (ii) it provides an empirical substrate on which cost and governance claims can be grounded. Follow-on benchmarking work focused on systems engineering cost modeling as a tractable subdomain, emphasizing repeatable procedures and baseline measurements as prerequisites for any qualification-oriented adoption posture.
+
+\paragraph{Phase 3: From text assistance to artifact-centric workflows.}
+Systems engineering work products extend beyond free-form narrative. Requirements sets, interfaces, architecture descriptions, risk registers, and model-based artifacts must remain consistent under configuration control and traceability constraints. Accordingly, the program expanded from text-oriented assistance to artifact-centric interactions, including investigation of whether LLMs can create, modify, and query structured system model representations (e.g., SysML v2 textual artifacts) and how such interactions can be integrated into digital-thread workflows. In parallel, retrieval-augmented generation (RAG) prototypes were developed to ground responses in authoritative references, reducing reliance on implicit training data and improving traceability and reproducibility in assisted engineering tasks.
+
+\paragraph{Phase 4: Reliability, governance, and scale-up.}
+As the scope broadened, two operational realities became central. First, specialized model configurations (e.g., fine-tuned and/or retrieval-augmented variants) can exhibit non-obvious trade-offs relative to general models, motivating rigorous evaluation before assuming that ``more tailored'' implies ``more reliable.'' Second, high-consequence decision contexts demand governance patterns that preserve human authority while leveraging AI as structured support, including private AI deployments and consensus-oriented processes for risk assessment. These themes ultimately motivate organization-scale adoption considerations: maturity models and cost modeling frameworks that connect AI usage, readiness investments (training, infrastructure, and data governance), and expected lifecycle impacts.
+
+\paragraph{How this trajectory motivates the dissertation.}
+Collectively, this prior work converges on a central conclusion: qualification-oriented evaluation of LLMs for systems engineering cannot rely on a single measurement modality or a single headline score. Instead, evaluation must be treated as an engineering design problem constrained by (i) the \emph{modality of evidence} (e.g., multiple-choice versus open-style responses), (ii) the \emph{robustness} of the measurement instrument (including sensitivity to presentation and format), and (iii) the \emph{cost} of producing qualification evidence at scale. These constraints motivate the dissertation's research questions and contributions, which formalize how to design evaluation evidence suitable for trustworthy and deployable use of LLMs in systems engineering workflows.
+
+\paragraph{Scope lock (dissertation focus).}
+While the broader research program spans benchmark development, artifact-centric workflow studies, and organization-scale adoption factors such as cost and maturity, this dissertation is scoped to the evaluation and qualification problem: designing and analyzing qualification-oriented evidence under constraints of response modality, robustness properties, and evaluation cost. The remainder of Chapter~1 uses this positioning to motivate the statement of the problem, research questions, and dissertation contributions.

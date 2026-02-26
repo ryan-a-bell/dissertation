@@ -1,3 +1,186 @@
 \label{appendix-a}
 
-Consider adding in all of the language model prompts I used here. 
+This appendix provides all of the language model prompts and rubrics used in the research pipeline. Including these files ensures complete reproducibility of the methodology described in Chapter~\ref{ch:materials_methods}. 
+
+\section{MCQ to OSQ Conversion Prompts}
+\label{app:mcq_to_osq_prompts}
+
+
+% \newpage
+% \clearpage
+\subsection{Classifier Prompt}
+
+This prompt contains instructions for a filtering step that determines whether a given \ac{mcq} can be converted into an \ac{osq}. The model is instructed to provide a single suitability score on a 1–10 scale based on criteria that capture whether the question remains assessable without answer options, whether a canonical answer exists, and whether removing the options would introduce ambiguity or alter the intended measurement target. The rubric anchors (Excellent through Unsuitable) provide consistent decision boundaries for mapping qualitative judgment to a numeric score.
+
+To ensure downstream automation and reproducibility, the prompt requires the model to return strict JSON containing only the suitability score and a brief justification. This design supports deterministic parsing and enables the conversion pipeline to gate OSQ generation based on a configurable threshold, while the justification offers an audit trail describing why a question was deemed more or less convertible.
+
+\begin{figure}[htbp]
+\centering
+\begin{scriptsize}
+\begin{lstlisting}[
+    language=Python,
+    basicstyle=\ttfamily\fontsize{7}{8}\selectfont,
+    frame=single,
+    numbers=left,
+    breaklines=true,
+    breakatwhitespace=false,
+    columns=fullflexible,
+    keepspaces=true,
+    showstringspaces=false
+]
+You are an educational-assessment expert. Score how suitable a multiple-choice question (MCQ) is for conversion into an open-ended short-answer question (OSQ) **without losing validity**.
+
+SCORE FROM 1-10 (single number). Use these five dimensions to determine the score, but DO NOT output pass/fail or the dimensions themselves:
+1) Assessable without showing options.
+2) Canonical core answer exists (definition, short derivation, numeric and units, or specific rationale).
+3) Removing options won't add major ambiguity or change the construct being measured.
+4) Scope is constrainable in <= 2 sentences; expected answer fits in 1-6 sentences or a numeric expression.
+5) Intent and semantics are preserved after conversion.
+
+Rubric anchors (map your final score to the **highest level fully satisfied**):
+- 9-10 EXCELLENT: Clear canonical answer; minimal ambiguity; tight scope; construct preserved.
+- 7-8 GOOD: Conceptual/application/compare-contrast with crisp boundaries; minor rewording OK.
+- 5-6 MARGINAL: Convertible with notable rewording/context; some dependence on options.
+- 3-4 POOR: Heavy option dependence or ambiguity; conversion risks construct drift.
+- 1-2 UNSUITABLE: No standalone assessment possible; relies on elimination/comparison of options.
+
+Return output ONLY as valid JSON (no extra text):
+{
+  "suitability_score": <integer 1-10>,
+  "justification": "<2-3 sentences referencing the rubric anchors and the most decisive dimensions>"
+}
+
+DO NOT add any text outside the JSON object-no explanations, no markdown code fences.
+
+\end{lstlisting}
+\end{scriptsize}
+\caption{Classifier Prompt Template}
+\label{app:classifier_prompt_template}
+\end{figure}
+
+
+% \newpage
+\clearpage
+\subsection{Converter Prompt}
+
+This prompt performs the MCQ-to-OSQ transformation after a question has passed the suitability filter. It instructs the model to remove all multiple-choice artifacts while preserving the original construct, scope, and approximate difficulty of the MCQ. The conversion rules explicitly constrain the output to remain aligned with the intended cognitive demand (e.g., recall vs. application), and include additional constraints for computational questions (e.g., specifying givens, units, and rounding) to avoid ambiguity and to maintain grading consistency.
+
+The prompt returns strict JSON containing the finalized OSQ prompt, a canonical expected answer, and a structured rubric defining full-, partial-, and no-credit criteria. An explicit rubric (including acceptable variants and common errors) is required for reproducibility and consistent evaluation across graders or automated judging. The prompt also records the Bloom’s taxonomy level and a brief justification to document the intended cognitive operation of the converted OSQ and to support subsequent analysis of question difficulty and construct coverage.
+
+\begin{figure}[htbp]
+\centering
+\begin{scriptsize}
+\begin{lstlisting}[
+    language=Python,
+    basicstyle=\ttfamily\fontsize{7}{8}\selectfont,
+    frame=single,
+    numbers=left,
+    breaklines=true,
+    breakatwhitespace=false,
+    columns=fullflexible,
+    keepspaces=true,
+    showstringspaces=false
+]
+You convert exactly one multiple-choice question (MCQ) into a precise open-ended short-answer question (OSQ), keeping the construct and difficulty comparable. Assume a prior filter has confirmed this MCQ is suitable for conversion.
+
+Conversion rules (apply all):
+1) Remove all multiple-choice artifacts ("which of the following...", letters A-D, option references). Do not mention options.
+2) Preserve the original intent/construct. If the MCQ targeted recall, keep it recall; if numeric or procedural, keep it numeric/procedural. Do not broaden or narrow scope.
+3) Keep difficulty approximately the same: if the original expects a fact, definition, derivation, numeric value (with units), or short rationale, require that explicitly.
+4) For computations: state givens/assumptions the respondent must use; require units; specify the numeric format (e.g., significant figures or decimal places) and any constants.
+5) Produce a canonical expected answer that a knowledgeable grader can match unambiguously. If multiple phrasings or equivalent forms are acceptable, list them in the rubric.
+6) Create a detailed rubric that a second grader could apply consistently: point values, criteria for full/partial/no credit, and common acceptable variants and common errors.
+7) Identify the Bloom's taxonomy level that best matches the intended cognitive action of the converted OSQ and justify briefly.
+
+Formatting constraints:
+- Be concise, precise, and neutral in tone.
+- Do NOT reveal solutions inside the OSQ prompt.
+- If numeric: specify required units and rounding (e.g., "Report to 2 decimal places with SI units").
+- If definitional/short rationale: set a length expectation (e.g., "Answer in 1-3 sentences").
+- No extraneous fields or text beyond the JSON. Escape quotes as needed.
+
+Return STRICT JSON with fields:
+{
+  "osq_prompt": "<final open-ended question users will see>",
+  "expected_answer": "<concise canonical answer; if numeric, include units and rounding target>",
+  "rubric": {
+    "full_credit": "<criteria and points; list acceptable synonyms/representations if any>",
+    "partial_credit": "<criteria and points for partially correct work; note common correct elements and typical mistakes>",
+    "no_credit": "<criteria for no credit; note disqualifying errors or missing elements>"
+  },
+  "blooms_level": "<one of: Remember, Understand, Apply, Analyze, Evaluate, Create>",
+  "blooms_justification": "<1-2 sentences: identify the cognitive operation elicited by the OSQ prompt and why>"
+}
+
+DO NOT add any text outside the JSON object-no explanations, no markdown code fences.
+
+\end{lstlisting}
+\end{scriptsize}
+\caption{Conversion Prompt Template}
+\label{app:converter_prompt_template}
+\end{figure}
+
+
+% \newpage
+\clearpage
+
+\section{Language Model as a Judge Prompt}
+\label{app:llm-as-a-judge-prompt}
+
+This prompt implements the "language model as a judge" evaluation stage used to score student-style responses to open-ended questions. The model is cast as an expert systems engineering educator and is provided with the OSQ prompt, the canonical expected answer, the intended Bloom’s level, and the relevant \ac{se} domain context. The scoring rubric decomposes performance into five dimensions - technical accuracy, conceptual understanding, completeness, clarity/organization, and professional relevance - each scored on a 0-20 scale to produce a total score out of 100.
+
+To enable automated scoring at scale and minimize post-processing ambiguity, the prompt requires strict JSON output with one numeric score per dimension and an overall score. This structured output supports direct ingestion into the analysis pipeline, facilitates dimension-level error and bias analysis (e.g., whether models systematically penalize organization vs. technical content), and provides a consistent and auditable scoring interface across all evaluated responses.
+
+\begin{figure}[htbp]
+\centering
+\begin{scriptsize}
+\begin{lstlisting}[
+    language=Python,
+    basicstyle=\ttfamily\fontsize{7}{8}\selectfont,
+    frame=single,
+    numbers=left,
+    breaklines=true,
+    breakatwhitespace=false,
+    columns=fullflexible,
+    keepspaces=true,
+    showstringspaces=false
+]
+You are an expert systems engineering (SE) educator evaluating student responses to open-ended questions.
+
+EVALUATION SCHEMA (each 0-20, total 100):
+1. TECHNICAL ACCURACY - correctness of SE concepts, terminology, and facts
+2. CONCEPTUAL UNDERSTANDING - depth of comprehension of underlying SE principles
+3. COMPLETENESS - coverage of key elements expected in the answer
+4. CLARITY & ORGANIZATION - logical structure and clear communication
+5. PROFESSIONAL RELEVANCE - connection to real-world SE practice and standards
+
+QUESTION CONTEXT:
+Original Question: {osq_question}
+Expected Answer: {expected_answer}
+Bloom's Level: {blooms_level}
+SE Domain: {se_domain}
+
+STUDENT RESPONSE TO EVALUATE:
+{student_response}
+
+INSTRUCTIONS:
+Compare the response to the expected answer and criteria.
+Return strict JSON in this format:
+{{
+  "technical_accuracy": {{"score": <0-20>}},
+  "conceptual_understanding": {{"score": <0-20>}},
+  "completeness": {{"score": <0-20>}},
+  "clarity_organization": {{"score": <0-20>}},
+  "professional_relevance": {{"score": <0-20>}},
+  "overall_score": <0-100>
+}}
+
+\end{lstlisting}
+\end{scriptsize}
+\caption{Grading Prompt}
+\label{lst:judge_grading_prompt}
+\end{figure}
+
+
+
+

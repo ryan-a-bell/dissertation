@@ -1,0 +1,92 @@
+
+
+\section{From DoDI 5000.97 BELOW:}
+
+G.2. DEFINITIONS.
+Unless otherwise noted, these terms and their definitions are for the purpose of this issuance.
+TERM DEFINITION
+analytical framework A structured and logical approach that serves as a foundation and
+starting point for conducting data analysis.
+authoritative source
+of truth
+The reference point for models and data across the system life cycle.
+The authoritative source of truth provides traceability as the system
+evolves, capturing historical knowledge and connecting
+configuration controlled versions of models and data.
+configuration
+management
+Defined in the Defense Acquisition University Glossary.
+data attributes The quantitative or qualitative characteristics of a data element.
+DoDI 5000.97, December 21, 2023
+GLOSSARY 19
+TERM DEFINITION
+digital artifact A product or output, in computer (i.e., digital) format, created within
+or generated from the digital engineering ecosystem. Digital artifacts
+provide data for alternative views to visualize, communicate, and
+deliver data, information, and knowledge to stakeholders.
+digital engineering Defined in the Defense Acquisition University Glossary.
+digital engineering
+capability
+The ability to develop, validate, use, curate, and maintain technically
+accurate digital systems and models of systems, subsystems, and
+their components, at the appropriate level of fidelity to ensure test
+activities adequately simulate the environment in which a system
+will be deployed.
+digital engineering
+ecosystem
+Defined in the Defense Acquisition University Glossary.
+digital model A digital (i.e., in an electronic form, able to be read and manipulated
+by computer) representation of an object, phenomenon, process, or
+system. The representation can include form, attributes, and
+functions and may be depicted visually or described via
+mathematical or logical expressions.
+digital thread An extensible and configurable analytical framework that seamlessly
+expedites the controlled interplay of technical data, software,
+information, and knowledge in the digital engineering ecosystem,
+based on the established requirements, architectures, formats, and
+rules for building digital models. It is used to inform decision
+makers throughout a system’s life cycle by providing the capability
+to access, integrate, and transform data into actionable information.
+digital twin A computerized representation (integrated set of models) that serves
+as the real-time digital counterpart of a physical object or process.
+extensible Capable of being extended, particularly to add new capabilities and
+functionality.
+logical expressions A statement that evaluates to true or false.
+MBSE The formalized application of modeling to support system
+requirements, design, analysis, verification, and validation activities
+beginning in the conceptual design phase and continuing throughout
+development and later system life-cycle phases.
+DoDI 5000.97, December 21, 2023
+GLOSSARY 20
+TERM DEFINITION
+model Defined in the Defense Acquisition University Glossary.
+modeling language A set of rule-based graphical or text expressions used to
+communicate the form, attributes, and functions of an object,
+process, phenomenon, or system.
+modular open
+systems approach
+An acquisition and design strategy consisting of a technical
+architecture that uses system interfaces compliant with widely
+supported and consensus-based standards (if available and suitable).
+The strategy supports a modular, loosely coupled and highly
+cohesive system structure that allows severable system components
+at the appropriate level to be incrementally added, removed, or
+replaced throughout the life cycle of a system platform to afford
+opportunities for enhanced competition and innovation.
+penetration testing A test methodology in which assessors, typically working under
+specific constraints, attempt to circumvent or defeat the security
+features of a system, in accordance with National Institute of
+Standards and Technology Special Publication 800-53, Revision 5.
+personally
+identifiable
+information
+Defined in Office of Management and Budget Circular No. A-130.
+red team An ad-hoc organizational element that provides an independent
+capability to fully explore alternatives in plans and operations in the
+context of the operational environment and from the perspective of
+adversaries and others.
+simulation Defined in the Defense Acquisition University Glossary.
+user The human(s) who operates, maintains, trains, and supports the
+equipment, system, or facility. Includes the definition of “end user”
+in DoDI 5000.87.
+ZT Defined in the Defense Acquisition University Glossary

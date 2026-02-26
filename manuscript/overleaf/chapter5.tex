@@ -6,7 +6,7 @@ First, it interprets the empirical findings across evaluation modalities and tok
 
 
 \section{Interpretation of Findings}\label{sec:interpretation_findings}
-
+%% make sure every figure in results is discussed here.
 \subsection{Interpreting MCQ to OSQ Conversion Suitability and Filtering Outcomes}
 
 A central enabling step of this research is the transformation of \acp{mcq} into \acp{osq} while preserving semantic intent and domain relevance. The suitability score distribution reported in Chapter \ref{ch:results} indicates that conversion feasibility is not uniform across the source dataset. The observed split---with a substantial majority of questions meeting the inclusion threshold for OSQ conversion (845 questions, 73.9\%) and a non-trivial minority rejected (299 questions, 26.1\%), shown in Figure \ref{fig:mcq-to-osq}.
@@ -15,6 +15,7 @@ The acceptance rate suggests that domain-specific SE MCQs can be re-expressed in
 
 
 \subsection{Interpreting MCQ Positional Effects and Robustness Metrics}
+%%% add more refs to ch4 once added.
 
 Position effects arise from an interaction between the model and the MCQ presentation, and can therefore be interpreted as (a) a measurement artifact, (b) a behavioral bias of the model, or (c) a combination of both.
 
@@ -34,6 +35,7 @@ Finally, \acp{mcq} trade expressiveness for efficiency. They can reward recognit
 
 The OSQ results introduce a different measurement regime: models must generate content, and scoring reflects rubric-based quality rather than discrete option selection. This shift inherently changes what "success" represents. A correct OSQ response can encode partial correctness, incomplete reasoning, or correct conclusions with weak justification, depending on rubric design and judging fidelity.
 
+%%% below tbd.
 One important interpretive point is that OSQ scoring captures dimensions of response quality that MCQs cannot: explanatory coherence, appropriate use of SE terminology, structured reasoning, and completeness. This aligns with the motivation in Chapter \ref{ch:introduction} that textual response formats can better capture nuanced conceptual understanding for SE tasks. The discussion value of OSQs is therefore not only in ranking models, but in revealing \emph{how} they fail: omissions, shallow explanations, misapplied concepts, or fluent but incorrect reasoning.
 
 At the same time, OSQs introduce measurement complexity. The use of kernel density estimates and the observed behavior of the density tails (an artifact of Gaussian kernels extending beyond the bounded scoring range) highlights a practical interpretive caution: OSQ score visualizations are summaries of bounded rubric outcomes, and the evaluation pipeline must ensure that interpretive claims remain grounded in the rubric domain. In other words, OSQ scoring is more expressive, but also more sensitive to judge calibration, rubric specificity, and the distributional properties of the scoring procedure.
@@ -56,8 +58,9 @@ However, the fact that the relationship is not near-deterministic is equally imp
     %     \item If $\rho < 0.50$: judge agreement is low; treat OSQ-based conclusions with caution and highlight this as a limitation.
 
 
-Therefore, the key interpretation is that MCQs and OSQs should be viewed as complementary instruments rather than interchangeable metrics. This directly motivates the multi-format benchmark direction laid out in Chapter \ref{ch:introduction}: a robust SE benchmark should intentionally combine modalities to measure distinct aspects of SE-relevant competence.
+The cross-modality classification rubric defined in Chapter~\ref{ch:materials_methods} and applied in Chapter~\ref{ch:results} classifies the MCQ-OSQ relationship as correlated but non-interchangeable. This designation encodes two complementary findings. First, the formats produce highly correlated model rankings ($r \approx 0.80$, $\rho \approx 0.81$): a model that performs well on MCQ tends to perform well on OSQ, and vice versa. Second, MCQ systematically yields higher absolute scores than OSQ for every model evaluated (Wilcoxon $W = 0.0$, $p < 0.001$, $d = 1.82$), with a mean MCQ advantage of 12.6 percentage points. The effect is universal with all 19 models scored higher on MCQ, ranging from 5.3 percentage points (mistral-large) to 38.1 percentage points (llama3.2\_\_3b).
 
+The practical implication is direct: MCQ and OSQ provide complementary but non-interchangeable evidence. MCQ captures the same relative model ordering but at a systematically inflated absolute level. OSQ reveals capability gaps that MCQ conceals. An evaluation regime that relies solely on MCQ will overestimate model readiness for tasks requiring generative reasoning, while one that relies solely on OSQ will miss the efficient screening value that MCQ provides. This directly motivates the multi-format benchmark direction laid out in Chapter~\ref{ch:introduction}: a robust SE benchmark should intentionally combine modalities to measure distinct aspects of SE-relevant competence.
 
 \subsection{Interpreting Tokenomics Factors of Quality and Verbosity}
 
@@ -105,6 +108,8 @@ Cost-effectiveness and token usage are  interpreted using the following decision
 \end{enumerate}
     
 
+
+\subsection{Interpreting INCOSE Task Categories}
 
 
 
@@ -306,7 +311,7 @@ Several limitations arose from practical considerations during model execution r
 
 \subsubsection{Token Budget Constraints}
 
-The initial evaluation configuration enforced a maximum response length of 2000 tokens. Under this constraint, several thinking-oriented models frequently exhausted the token budget before producing a final response suitable for scoring. To distinguish truncation artifacts from genuinely non-terminating behavior, the maximum response budget was increased to 10,000 tokens for a targeted subset of models exhibiting repeated truncations or incomplete outputs.
+The initial evaluation configuration enforced a maximum response length of 10,000 tokens. Under this constraint, several thinking-oriented models frequently exhausted the token budget before producing a final response suitable for scoring. To distinguish truncation artifacts from genuinely non-terminating behavior, the maximum response budget was decreased to 500 tokens for a targeted subset of models exhibiting repeated truncations or incomplete outputs.
 
 Despite this adjustment, some models continued to produce operationally unusable outputs, such as indefinite generation or prolonged internal reasoning without a terminal answer. Models that consistently provided these outputs were omitted from quantitative analyses to preserve comparability and to avoid scoring artifacts driven by incomplete responses rather than task competence.
 

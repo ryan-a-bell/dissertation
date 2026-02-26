@@ -68,6 +68,21 @@
 %\usepackage[breaklinks]{hyperref}
 \usepackage{graphicx} % for including resizing figures and tables
 \usepackage{adjustbox} % Add this in the preamble
+\usepackage{makecell} % for multiple new lines in a cell in a table
+
+\usepackage{array}
+\usepackage{ragged2e}
+
+%%% for the ch2 risk assessment matrix
+\usepackage[table]{xcolor}
+% \usepackage{tabularx}
+\usepackage{array}
+\usepackage{diagbox}
+%%% for the ch2 risk assessment matrix
+
+
+% A wrapped, ragged-right X column
+\newcolumntype{Y}{>{\RaggedRight\arraybackslash}X}
 
 % \usepackage{subcaption} % clashes with subfig (the older, incompatible package). Because of this conflict, LaTeX breaks your float into multiple placements, captions drift, and spacing collapses — exactly what your screenshot shows.
 
@@ -134,7 +149,7 @@
 
 \usepackage{booktabs}
 
-
+\usepackage{float}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
@@ -180,7 +195,7 @@
 % 3) Multiple appendices. Use this line:
 \NPSappendices
 %    ...followed by this set of two lines for each appendix:
-\chapter{Language Model Prompts}
+\chapter{Language Model Prompts and Rubrics}
 \input{appendix1}
 \chapter{Task Definitions for lm-evaluation-harness}
 \input{appendix2}

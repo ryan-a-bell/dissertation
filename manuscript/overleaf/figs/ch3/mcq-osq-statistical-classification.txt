@@ -1,0 +1,33 @@
+---
+title: "Predefined Analysis Workflow for MCQ vs OSQ Cross-Modality Classification"
+---
+flowchart TD
+    A{"<b>Association level?</b><br/>(r and ρₛ)"}
+
+    A -->|"<b>High</b><br/>r ≥ 0.80 ∧ ρₛ ≥ 0.80"| B{"<b>Effect size</b><br/>|d| < 0.50?"}
+    A -->|"<b>Moderate</b><br/>0.50 ≤ r < 0.80<br/>or 0.50 ≤ ρₛ < 0.80"| C{"<b>Effect size</b><br/>|d| < 0.80?"}
+    A -->|"<b>Low</b><br/>r < 0.50 or ρₛ < 0.50"| D{"<b>Effect size</b><br/>|d| ≥ 0.50?"}
+
+    B -->|"YES"| B2{"<b>Wilcoxon</b><br/>p ≥ 0.05?"}
+    B -->|"NO (|d| ≥ 0.50)"| B3{"<b>Wilcoxon</b><br/>p < 0.05?"}
+
+    B2 -->|"YES"| INTER["<b>INTERCHANGEABLE</b><br/>Formats produce consistent<br/>measurement signals"]
+    B2 -->|"NO (p < 0.05)"| MIXED["<b>MIXED EVIDENCE</b><br/>Diagnostics disagree;<br/>avoid strong claims"]
+
+    B3 -->|"YES"| CORR["<b>CORRELATED BUT<br/>NON-INTERCHANGEABLE</b><br/>Similar rankings,<br/>systematic score offset"]
+    B3 -->|"NO (p ≥ 0.05)"| MIXED
+
+    C -->|"YES (|d| < 0.80)"| PART["<b>PARTIALLY<br/>CORRELATED</b><br/>Moderate agreement,<br/>format sensitivity exists"]
+    C -->|"NO (|d| ≥ 0.80)"| DIV["<b>DIVERGENT</b><br/>Formats measure<br/>distinct constructs"]
+
+    D -->|"YES (|d| ≥ 0.50)"| D2{"<b>Wilcoxon</b><br/>p < 0.05?"}
+    D -->|"NO (|d| < 0.50)"| MIXED
+
+    D2 -->|"YES"| DIV
+    D2 -->|"NO"| MIXED
+
+    style INTER fill:#2d6a4f,color:#ffffff,stroke:#1b4332,stroke-width:2px
+    style CORR fill:#e9c46a,color:#000000,stroke:#dda15e,stroke-width:2px
+    style PART fill:#f4a261,color:#000000,stroke:#e76f51,stroke-width:2px
+    style DIV fill:#e76f51,color:#ffffff,stroke:#d62828,stroke-width:2px
+    style MIXED fill:#adb5bd,color:#000000,stroke:#6c757d,stroke-width:2px

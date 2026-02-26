@@ -1,0 +1,14 @@
+flowchart TD
+    A["Do significance tests agree?"]
+    
+    A -->|"Both non-sig<br>(p<sub>χ²</sub> ≥ 0.05 ∧ p<sub>F</sub> ≥ 0.05)"| B{"Effect sizes<br>V < 0.10 ∧ W < 0.10?"}
+    A -->|"Tests disagree<br>(exactly one sig)"| M[MIXED<br>EVIDENCE]
+    A -->|"Both significant<br>(p<sub>χ²</sub> < 0.05 ∧ p<sub>F</sub> < 0.05)"| C{"Effect sizes<br>agree?"}
+    
+    B -->|YES| D[NO BIAS]
+    B -->|"NO<br>(mismatch)"| M
+    
+    C -->|"Mismatch<br>(V < 0.10 ⊕ W < 0.10)"| M
+    C -->|"Both < 0.10"| E[MILD BIAS<br>negligible]
+    C -->|"At least one<br>0.10–0.30"| F[MODERATE<br>BIAS]
+    C -->|"At least one<br>≥ 0.30"| G[STRONG BIAS]

@@ -1,0 +1,86 @@
+3D – three dimensional
+AI – artificial intelligence
+AI/ML – artificial intelligence/machine learning
+AIML – artificial intelligence and machine learning
+ASME – American Society of Mechanical Engineers
+AV – autonomous vehicle
+BIM – building information management
+BMS – battery management system
+CAD – computer-aided design
+CBM – condition-based maintenance
+CDF – cumulative distribution function
+CIRP – International Academy for Production Engineering
+COA – course of action
+CONOPS – concept of operations
+DE – digital engineering
+DEVCOM – Development Command
+DEW – directed energy weapon
+DoD – Department of Defense
+DSL – domain-specific language
+DT – digital twin
+ED – electric drive
+EOIR – electro-optic infrared
+ESM – energy storage module
+ETA – event tree analysis
+ET – event tree
+FMEA – failure modes and effects analysis
+FMECA – failure modes and effects and criticality analysis
+FTA – fault tree analysis
+FT – fault tree
+GenAI – generative AI
+GPU – graphics processing unit
+GTC – GPU Technology Conference
+HDT – human digital twin
+HM&E – hull, mechanical, and electrical
+HSI – human systems integration
+INCOSE – International Council on Systems Engineering
+JSON – JavaScript Object Notation
+LiDAR – laser imaging, detection, and ranging
+LLM – large language model
+LVC – live, virtual, and constructive
+M&S – modeling and simulation
+MBSE – model-based systems engineering
+ML – machine learning
+MTBF – mean time between failures
+MTTF – mean time to failure
+NASA – National Aeronautics and Space Administration
+NPS – Naval Postgraduate School
+NWC – Naval War College
+OBC – onboard computer
+OEM – original equipment manufacturer
+OMG – Object Modeling Group
+OPNAV – Office of the Chief of Naval Operations
+OPSEC – operations security
+PA – physical asset
+PDF – probability distribution function
+PHM – prognostics and health management
+PLM – product lifecycle management
+PRA – probabilistic risk analysis
+PT – physical twin
+RAG – retrieval-augmented generation
+RBD – reliability block diagram
+RCM – reliability-centered maintenance
+RLQP – Reinforcement Learning Qualification Process
+ROI – return on investment
+RTM – requirements traceability matrix
+RUL – remaining useful life
+SATCOM – satellite communications
+SE – systems engineering
+SED – Systems Engineering Directorate
+SEPTAR – Systems Engineering Processes to Test AI Right
+SERC – Systems Engineering Research Center
+SHM – structural health monitoring
+SME – subject matter expert
+SoS – system of systems
+STPA – systems theoretic process analysis
+SysML – systems modeling language
+T&E – testing and evaluation
+TBM – time-based maintenance
+TRL – technology readiness level
+UARC – University Affiliated Research Center
+UAS – unmanned autonomous system
+UAV – unmanned autonomous vehicle
+USV – unmanned surface vessel
+V&V – verification and validation
+VLM – visual language model
+VT – virtual twin
