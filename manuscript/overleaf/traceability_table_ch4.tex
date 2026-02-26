@@ -1,28 +1,29 @@
 % =============================================================
-% TRACEABILITY TABLE v2
-% Same structure as Table 1.1 (tab:rq_obj_contrib_mapping) with
-% an added "Key Evidence" column
+% TRACEABILITY TABLE — Ch4 Roadmap Version
+% Same core as Table 1.1 (tab:rq_obj_contrib_mapping) with a
+% "Results Section" column instead of evidence.
+% The companion table in Ch5 (traceability_table_v2.tex) adds
+% the "Key Evidence" column after results have been presented.
 % =============================================================
-% Include via \input{traceability_table_v2.tex}
-% Requires: booktabs, tabularx, lscape (or pdflscape)
+% Include via \input{traceability_table_ch4.tex}
 
 \begin{landscape}
 \begin{table}[htbp]
 \centering
-\caption{Mapping of Research Questions to Objectives, Contributions, and Key Evidence}
-\label{tab:rq_obj_contrib_evidence}
+\caption{Research Roadmap: Mapping of Research Questions, Objectives, and Contributions to Results Sections}
+\label{tab:rq_obj_results_roadmap}
 
 \small
 \setlength{\tabcolsep}{4pt}
 \renewcommand{\arraystretch}{1.25}
 
-\begin{tabularx}{\linewidth}{p{3.0cm} X X p{2.8cm} X}
+\begin{tabularx}{\linewidth}{p{2.8cm} X X p{2.6cm} p{3.6cm}}
 \toprule
 \textbf{Research Question (RQ)} &
 \textbf{Primary objective(s) that directly answer it} &
 \textbf{Supporting objective(s) (enablers / infrastructure)} &
 \textbf{Contribution(s) most directly produced} &
-\textbf{Key evidence} \\
+\textbf{Results section(s)} \\
 \midrule
 
 \textbf{RQ1:} How robust is MCQ-based evaluation to variations in distractor/option structure in systems engineering, and what risks does this pose when MCQ accuracy is used as primary qualification evidence? &
@@ -31,7 +32,8 @@
 (3) Execute standardized inference across variants\newline
 (7) Synthesize guidance framing robustness implications &
 C2 (Robustness analysis of MCQ evaluation using distractor/option variation) &
-Positional bias heatmaps; per-position accuracy variance; $\chi^2$ tests of answer-position dependence; position-rotated MCQ runs across all models \\
+\S\ref{sec:performance_mcq} MCQ Performance\newline
+\S\ref{sec:comparison_evaluation_modalities} MCQ vs.\ OSQ Comparison \\
 \midrule
 
 \textbf{RQ2:} How do MCQ and OSQ modalities differ in the type and strength of evidence they provide for qualifying LLMs in systems engineering, and how can evidence from multiple modalities be combined to support task-aligned, risk-aware qualification decisions? &
@@ -43,7 +45,10 @@ Positional bias heatmaps; per-position accuracy variance; $\chi^2$ tests of answ
 (4) Score OSQ via rubric-based judging and judge stability checks &
 C1 (Multi-format SysEngBench extension)\newline
 C3 (Evaluation modality fusion as qualification basis) &
-MCQ$\rightarrow$OSQ conversion pipeline with suitability scoring; rubric design and canonical answers; inter-judge agreement analysis; MCQ--OSQ scatter and correlation; per-category $\Delta$ heatmaps; modality classification criteria and geometric regions \\
+\S\ref{sec:conversion_success} Conversion Success\newline
+\S\ref{sec:performance_osq} OSQ Performance\newline
+\S\ref{sec:comparison_evaluation_modalities} MCQ vs.\ OSQ Comparison\newline
+\S\ref{sec:modality_mapping} INCOSE Category \& Modality Mapping \\
 \midrule
 
 \textbf{RQ3:} How do evaluation modality and response length influence the computational cost of qualification, and what trade-offs arise between judged quality and token efficiency? &
@@ -51,11 +56,11 @@ MCQ$\rightarrow$OSQ conversion pipeline with suitability scoring; rubric design 
 (3) Standardized inference with token/length logging\newline
 (4) Rubric-based judging to produce quality signals &
 C4 (Token-efficient qualification: cost-aware response length trade-offs) &
-Token accounting across MCQ and OSQ modalities; response-length distributions; quality--token Pareto frontier; cost modeling under token-constrained regimes \\
+\S\ref{sec:tok} Tokenomics \& Cost \\
 \bottomrule
 \end{tabularx}
 
 \vspace{4pt}
-\noindent\textit{Note.} This table extends the research roadmap presented in Table~\ref{tab:rq_obj_results_roadmap} (Chapter~\ref{ch:results}) by replacing the results-section mapping with the key evidence produced. The first four columns are unchanged.
+\noindent\textit{Note.} Chapter~\ref{ch:results} is organized by evaluation modality and analysis type rather than by objective. This table maps the objective-driven structure of Chapter~\ref{ch:method} to the results that follow. A companion table in Chapter~\ref{ch:discussion} (Table~\ref{tab:rq_obj_contrib_evidence}) revisits this mapping with the key evidence produced.
 \end{table}
 \end{landscape}
