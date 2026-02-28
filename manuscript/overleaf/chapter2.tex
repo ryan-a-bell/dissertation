@@ -37,7 +37,7 @@ This literature review therefore establishes the conceptual requirements for a b
 
 This section motivates why \ac{se} constitutes a domain-specific environment for evaluating \acp{llm}. Systems engineering outputs are artifact-based and lifecycle-coupled: work products must remain configuration-managed, traceable, and auditable across a digital thread. The goal is not to claim that transfer from general-purpose benchmarks is impossible, but to argue that general benchmark performance alone is insufficient qualification evidence for \ac{se} intended use \cite{walden_systems_engineering_handbook_2015, standard_ieee_15288_2023, deputyassistantsecretaryofdefense_DepartmentDefenseDigitalStrategy_2018}
 
-To connect benchmarking to intended-use qualification in \ac{se}, we develop the narrative in three steps. First, we describe the artifacts that constitute the systems engineering process and the implications of cross-artifact consistency for any automated assistance. Next, we situate this baseline within the digital thread and \ac{mbse} transition, where models are  more query-able, and more tightly coupled under configuration control. Finally, we show how scale and system-of-systems complexity increase the consequence of error propagation, motivating stronger assurance expectations than those implied by general-purpose and benchmark scores.
+To connect benchmarking to intended-use qualification in \ac{se}, the narrative is developed in three steps. First, describing the artifacts that constitute the systems engineering process and the implications of cross-artifact consistency for any automated assistance. Next, situating the discussion within the digital thread and \ac{mbse} transition, where models are more query-able, and more tightly coupled under configuration control. Finally, show how scale and system-of-systems complexity increase the consequence of error propagation, motivating stronger assurance expectations than those implied by general-purpose and benchmark scores.
 
 
 
@@ -180,7 +180,7 @@ The model does not retrieve a stored “correct answer” for its response; inst
 
 \begin{figure}
     \centering
-    \includegraphics[width=0.75\linewidth]{figs/ch3/llm-probability-tree.png}
+    \includegraphics[width=0.85\linewidth]{figs/ch3/llm-probability-tree.png}
     \caption[Language Model Probability Tree]{Language Model Probability Tree, Reproduced from \cite{DemystifyingTemperatureParameterVisual_2024}}
     \label{fig:llm_prob_tree}
 \end{figure}
@@ -238,8 +238,7 @@ Building on the prior discussion of digital-thread tooling, this subsection focu
 
 Recent literature and practitioner-oriented demonstrations describe a wide range of candidate use cases spanning the \ac{se} lifecycle. Active communities include the \ac{incose} International Symposium and the annual AI4SE \& SE4AI Workshop hosted by the \ac{serc}. \cite{incose_ProceedingsINCOSEInternational_2024, incose_ProceedingsINCOSEInternational_2025, serc_AI4SESE4AIWorkshop_2023, serc_AI4SESE4AIWorkshop_2024, serc_AI4SESE4AIWorkshop_2025}. Practitioner demonstrations include but are not limited to: extracting structured elements from technical text, drafting artifacts such as requirements or interface descriptions, and summarizing and synthesizing across documents.
 
-At the same time, multiple studies emphasize that these capabilities are not yet ``off-the-shelf'' substitutes for disciplined engineering practice. For example, \cite{garciaalarcia_BringingSystemsEngineering_2024} argues that while \acp{llm} exhibit strong zero- and few-shot performance on many tasks, direct application to engineering design remains immature without additional structure. They motivate integrating \ac{mbse}-relevant assets, including ontologies, models, and procedures to improve performance and reduce shortcomings such as hallucinations and untraceable behavior \cite{garciaalarcia_BringingSystemsEngineering_2024}. 
-
+At the same time, multiple studies emphasize that these capabilities are not yet off-the-shelf substitutes for disciplined engineering practice. For example, \cite{garciaalarcia_BringingSystemsEngineering_2024} argues that while \acp{llm} exhibit strong zero- and few-shot performance on many tasks, direct application to engineering design remains immature without additional structure, motivating the integration of \ac{mbse}-relevant assets, including ontologies, models, and procedures for better context to improve performance and reduce shortcomings such as hallucinations and untraceable behavior \cite{garciaalarcia_BringingSystemsEngineering_2024}. 
 
 Systems engineering-focused AI surveys and case studies accordingly identify opportunities across requirements elicitation and generation, architecture creation and validation, trade-space exploration, automated testing support, fault detection, and operations and maintenance decision support \cite{gadewadikar_SystemsEngineeringLanguageModeling_2024}. More targeted work evaluates \ac{llm} assistance for specific artifact classes. For example, \ac{llm}-assisted requirements generation has been evaluated using criteria grounded directly in \ac{incose} requirements-writing guidance, demonstrating that \ac{llm}-based tools can generate and cluster requirements with quality comparable to human engineers under \ac{incose}-aligned evaluation, while still emphasizing the need for human review \cite{Stein_Leveraging_LLMs_Requirements_Generation_SE_Guidelines_2025}. Such results support the view that \acp{llm} can contribute meaningfully when performance is framed in terms of domain-specific artifact quality.
 
@@ -249,7 +248,9 @@ A key trend in the digital-thread context is the emergence of agentic toolchains
 
 In mission engineering contexts, \acp{llm} are also being explored as AI-enabled mission engineering workbenches that use retrieval and graph-based techniques to support natural-language interrogation of SysML and simulation models, reducing the cost and time required to obtain actionable insights from complex architectures and analyses \cite{Pennock_AI_Enabled_Mission_Engineering_2025}. In engineering documentation settings, multimodal retrieval is being used to improve the generation and evaluation of system design documents when guided by systems-engineering-specific criteria \cite{Guntupalli_Integrating_Generative_AI_Automation_System_Design_Processes_2024}. In test and evaluation, technical debt management frameworks use \ac{llm}-based document analysis to surface hidden verification, test, and documentation debt early in the V-model lifecycle, framing technical debt as an explicit, engineer-able risk in aerospace contexts \cite{Ouzzif_Leveraging_AI_Manage_Technical_Debt_Test_Evaluation_2025}. Complementing these creation-focused pipelines, other work highlights the operational-use value of \acp{llm} for accessing information embedded in existing \ac{mbse} models through an \ac{llm}-based multi-agent system using a GraphRAG strategy to answer questions over an underlying system model, reducing retrieval effort and improving accessibility for stakeholders who lack deep \ac{mbse} expertise \cite{quast_EnablingHumansAI_2026}.
 
-Agentic AI systems report dramatic productivity gains by orchestrating \acp{llm} with engineering tools across the SE lifecycle. The DaVinci platform reduces system model creation from 100 hours to 20 minutes and generates requirements, architecture, interfaces, behaviors, schedules, and risk matrices in minutes by integrating \acp{llm} with CAD, simulation, and documentation tools \cite{Helmerich_Transforming_Systems_Engineering_Agentic_AI_2025}. Similarly, cognitive-agentic architectures that augment GenAI with verification, simulation, and optimization tools address standalone GenAI's limitations in reliability, explainability, and uncertainty awareness \cite{Lee_CastilloEffen_2024_Rapid_Intelligent_Systems_Engineering}. As these systems shift attention from standalone text generation to tool-using, orchestrated workflows, they also motivate benchmarking approaches that explicitly evaluate agentic \ac{llm} behavior in realistic toolchain settings \cite{mohammadi_EvaluationBenchmarkingLLM_2025}.
+Agentic AI systems report dramatic productivity gains by orchestrating \acp{llm} with engineering tools across the SE lifecycle. The DaVinci platform reduces system model creation from 100 hours to 20 minutes and generates requirements, architecture, interfaces, behaviors, schedules, and risk matrices in minutes by integrating \acp{llm} with CAD, simulation, and documentation tools \cite{Helmerich_Transforming_Systems_Engineering_Agentic_AI_2025}. Similarly, cognitive-agentic architectures that augment GenAI with verification, simulation, and optimization tools address standalone GenAI's limitations in reliability, explainability, and uncertainty awareness \cite{Lee_CastilloEffen_2024_Rapid_Intelligent_Systems_Engineering, Ahmad_2026_Digital_Twin_Driven_AI_Automation_Optimization}. As these systems shift attention from standalone text generation to tool-using, orchestrated workflows, they also motivate benchmarking approaches that explicitly evaluate agentic \ac{llm} behavior in realistic toolchain settings \cite{mohammadi_EvaluationBenchmarkingLLM_2025}.
+
+However, live red-teaming of persistent, tool-using agents suggests that high-consequence failures often arise in the agentic layer through autonomy with tools, memory, and multi-party communication where minor misunderstandings can cascade into harmful digital-thread actions such as: editing or deleting requirements, mis-applying interface changes across linked models, pushing erroneous commits to configuration baselines, triggering destructive tool runs (e.g., simulations/optimizations with unsafe parameters), leaking controlled artifacts, or propagating spoofed instructions across collaborating agents, highlighting weak “social coherence” as a core gap \cite{shapira_AgentsChaos_2026}. 
 
 Across these studies and demonstrations, the central shift is that \acp{llm} are moving from isolated drafting aids toward integrated digital-thread components that retrieve, transform, and perform functions across the digital thread. Once \ac{llm} outputs inform decisions, modify structured models, or propagate through model-centric workflows, the central issue becomes the degree of delegated authority, the artifact classes affected, and the resulting lifecycle consequences. This motivates a risk framing that links \ac{llm} autonomy to artifact impact, providing a structured lens for interpreting both benefits and failure modes of \ac{llm} adoption in \ac{se}.
 
@@ -298,10 +299,10 @@ The characteristic risks at this level are correspondingly subtler than in highe
 % ---------------------------------------------------------
 \paragraph{Medium Risk: Decision-Influencing Applications }
 
-Medium-risk usage arises when \textbackslash{}acp\{llm\}-enabled pipelines begin to influence engineering decisions and produce artifacts that can ripple through a digital thread, despite the presence of human review. The literature in this region increasingly moves beyond isolated assistance toward \emph{integrated} digital engineering workflows: text-to-model and multimodal-to-model transformations, model querying and mutation mediated by tool chains, and agentic orchestration across requirements, architecture, simulation, documentation, and project governance \cite{Bradshaw_Accelerating_Systems_Engineering_Generative_AI_2025, Helmerich_Transforming_Systems_Engineering_Agentic_AI_2025, Wach_LLMs_Accelerate_Complex_Systems_2024, vangundy_DevelopingConceptsOperationsUsing_2024, naveau_LLMCopilotsDomainSpecific_2024}. In these settings, the central risk is that an error becomes structural: mis-specified interfaces, incomplete functional allocations, incorrect diagram semantics, or untraceable policy interpretations that then influence subsequent modeling, analysis, and verification activities. 
+Medium-risk usage arises when \textbackslash{}acp\{llm\}-enabled pipelines begin to influence engineering decisions and produce artifacts that can ripple through a digital thread, despite the presence of human review. The literature in this region increasingly moves beyond isolated assistance toward integrated digital engineering workflows: text-to-model and multimodal-to-model transformations, model querying and mutation mediated by tool chains, and agentic orchestration across requirements, architecture, simulation, documentation, and project governance \cite{Bradshaw_Accelerating_Systems_Engineering_Generative_AI_2025, Helmerich_Transforming_Systems_Engineering_Agentic_AI_2025, Wach_LLMs_Accelerate_Complex_Systems_2024, vangundy_DevelopingConceptsOperationsUsing_2024, naveau_LLMCopilotsDomainSpecific_2024}. In these settings, the central risk is that an error becomes structural: mis-specified interfaces, incomplete functional allocations, incorrect diagram semantics, or untraceable policy interpretations that then influence subsequent modeling, analysis, and verification activities. 
 
 
-Many medium-risk contributions focus on engineering trustworthy translation rather than unconstrained generation, by introducing structured representations and validation gates that reduce the degrees of freedom available to the model. LLM-augmented modeling pipelines increasingly combine extraction into knowledge graphs, semantic alignment, and SME validation as explicit assurance mechanisms, enabling retrieval and reasoning over a curated and corrected representation of system knowledge \cite{Lipizzi_LLM_Augmented_Pipelines_Validated_System_Model_Creation_2025, garciaalarcia_BringingSystemsEngineering_2024}. However, the evaluation rigor remains mixed: some systems report qualitative scoring and \ac{llm}-as-judge assessments without sufficient disclosure of prompts, grader configuration, or reproducibility controls, limiting their utility as qualification evidence for adoption \cite{Collard_Automated_Knowledge_Base_Generation_Open_Source_LLMs_RAG_2025}. Practitioner-oriented syntheses reinforce this point by emphasizing that as AI begins to influence decisions and artifacts, the limiting factor becomes assurance through governance, configuration control, validation metrics, and accountability \cite{Lee_CastilloEffen_2024_Rapid_Intelligent_Systems_Engineering, sheard_AIOverviewCaveats_2025}. Collectively, these studies suggest that the medium-risk region is where \acp{llm} transition from decision-support to decision-steering components of the digital thread. The key research and practice gap is the development of repeatable evaluation protocols, artifact-level validity metrics, and assurance arguments that justify when and how AI-generated artifacts may be admitted into a controlled engineering baseline.
+Many medium-risk contributions focus on engineering trustworthy translation rather than unconstrained generation, by introducing structured representations and validation gates that reduce the degrees of freedom available to the model. LLM-augmented modeling pipelines increasingly combine extraction into knowledge graphs, semantic alignment, and \ac{sme} validation as explicit assurance mechanisms, enabling retrieval and reasoning over a curated and corrected representation of system knowledge \cite{Lipizzi_LLM_Augmented_Pipelines_Validated_System_Model_Creation_2025, garciaalarcia_BringingSystemsEngineering_2024}. However, the evaluation rigor remains mixed: some systems report qualitative scoring and \ac{llm}-as-judge assessments without sufficient disclosure of prompts, grader configuration, or reproducibility controls, limiting their utility as qualification evidence for adoption \cite{Collard_Automated_Knowledge_Base_Generation_Open_Source_LLMs_RAG_2025}. Practitioner-oriented syntheses reinforce this point by emphasizing that as AI begins to influence decisions and artifacts, the limiting factor becomes assurance through governance, configuration control, validation metrics, and accountability \cite{Lee_CastilloEffen_2024_Rapid_Intelligent_Systems_Engineering, sheard_AIOverviewCaveats_2025}. Collectively, these studies suggest that the medium-risk region is where \acp{llm} transition from decision-support to decision-steering components of the digital thread. The key research and practice gap is the development of repeatable evaluation protocols, artifact-level validity metrics, and assurance arguments that justify when and how AI-generated artifacts may be admitted into a controlled engineering baseline.
 
 
 % ---------------------------------------------------------
@@ -325,20 +326,51 @@ The autonomy–impact matrix in Table \ref{tab:llm_autonomy_impact_matrix_se} sy
 \definecolor{ZoneRed}{HTML}{FF0000}
 \definecolor{HeaderGray}{HTML}{F2F2F2}
 
+% --- Define a vertically-centered version of the X column ---
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+% Redefine tabularx's internal column to use m (vertical center) instead of p (top)
+\renewcommand\tabularxcolumn[1]{m{#1}}
+\arrayrulecolor{black}
+
+% \begin{table}[htbp]
+% \centering
+% \small
+% \caption[LLM Autonomy Level vs.\ Impact for SE Activities]{LLM Autonomy Level vs.\ Impact for SE Activities, Adapted from \cite{otten_GenerativeAISystemsRiskAssessment_2026}.}
+% \label{tab:llm_autonomy_impact_matrix_se}
+
+% \begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}p{2.2cm}|*{4}{>{\raggedright\arraybackslash}X|}}
+% \hline
+% \rowcolor{HeaderGray}
+% \diagbox[width=2.2cm,height=1.25cm]{\textbf{Impact}}{\textbf{LLM Autonomy Level}} &
+% \makecell[l]{\textbf{0 -- Assisted}\\(LLM supports)} &
+% \makecell[l]{\textbf{1 -- Guided}\\(LLM suggests,\\human executes)} &
+% \makecell[l]{\textbf{2 -- Supervised}\\(LLM executes,\\human oversees)} &
+% \makecell[l]{\textbf{3 -- Fully Automated}\\(LLM operates\\independently)} \\
+% \hline
+
 \begin{table}[htbp]
 \centering
 \small
 \caption[LLM Autonomy Level vs.\ Impact for SE Activities]{LLM Autonomy Level vs.\ Impact for SE Activities, Adapted from \cite{otten_GenerativeAISystemsRiskAssessment_2026}.}
 \label{tab:llm_autonomy_impact_matrix_se}
 
-\begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}p{2.2cm}|*{4}{>{\raggedright\arraybackslash}X|}}
+% --- Force borders to draw ---
+\arrayrulecolor{black}
+\setlength{\arrayrulewidth}{0.6pt}
+
+% --- Force borders to draw ---
+\arrayrulecolor{black}
+\setlength{\arrayrulewidth}{0.6pt}
+
+\begin{tabularx}{\textwidth}{|>{\centering\arraybackslash}m{2.2cm}|*{4}{>{\raggedright\arraybackslash}X|}}
 \hline
 \rowcolor{HeaderGray}
-\diagbox[width=2.2cm,height=1.25cm]{\textbf{Impact}}{\textbf{LLM Autonomy Level}} &
+% Use diagbox for the split header cell
+\diagbox[width=2.2cm+2\tabcolsep, height=3.5em, linewidth=0.4pt, innerleftsep=6pt, innerrightsep=2pt]{\raisebox{-2pt}{\textbf{Impact}}}{\raisebox{4pt}{\textbf{Autonomy}}} &
 \makecell[l]{\textbf{0 -- Assisted}\\(LLM supports)} &
 \makecell[l]{\textbf{1 -- Guided}\\(LLM suggests,\\human executes)} &
 \makecell[l]{\textbf{2 -- Supervised}\\(LLM executes,\\human oversees)} &
-\makecell[l]{\textbf{3 -- Fully Automated}\\(LLM operates\\independently)} \\
+\makecell[l]{\textbf{3 -- Fully}\\\textbf{Automated}\\(LLM operates\\independently)} \\
 \hline
 
 %%%%%%%%%%%% LOW
@@ -476,7 +508,7 @@ Taken together, Figure~\ref{fig:timeline_of_benchmarks} motivates an evidence-or
 \subsection{Benchmarking as Qualification Evidence in Systems Engineering}
 \label{subsec:benchmarking_as_qualification_evidence_se}
 
-In systems engineering, qualification evidence refers to evidence sufficient to support bounded claims that a capability is suitable for a specified intended use under defined constraints and consequence expectations. This notion is familiar in SE assurance practice: confidence is built by aligning evidence to what must remain true of lifecycle work products and by demonstrating that the system or capability behaves acceptably under relevant conditions and uncertainties \cite{standard_ieee_15288_2023, walden_systems_engineering_handbook_2015}.
+This dissertation treats qualification as having sufficient support to make bounded claims that a capability is fit for a specified intended use, under defined constraints and consequence expectations. While SE does not define qualification as a formal construct for model assessment, the framing mirrors the logic of \ac{vandv}: confidence is built by connecting claims to lifecycle work products, verifying required properties, and validating acceptable behavior under representative conditions and uncertainties \cite{standard_ieee_15288_2023, walden_systems_engineering_handbook_2015}.
 
 Benchmarking becomes qualification-relevant in SE because \ac{llm} outputs are rarely consumed in isolation. Instead, they are introduced into lifecycle workflows and technical baselines that include requirements, interfaces, design descriptions, trade studies, verification artifacts, rationale, and risk management products. In digital engineering and \ac{mbse} environments, these work products are increasingly linked through a digital thread, and their internal consistency and traceability are part of what makes the baseline auditable and governable \cite{deputyassistantsecretaryofdefense_DepartmentDefenseDigitalStrategy_2018, estefanSurveyModelBasedSystems2008}. Errors introduced upstream can therefore propagate downstream: an unclear or incorrect requirement can bias architecture decisions and verification planning; an omitted constraint can remain latent until integration; a mischaracterized risk can distort mitigation priorities. The consequence profile is not occasional wrong text but lifecycle drift that can become embedded in authoritative artifacts.
 
@@ -683,14 +715,14 @@ These scaling trends increasingly require industrial-scale training environments
 
 \begin{figure}
     \centering
-    \includegraphics[width=0.75\linewidth]{figs/ch2/cost/training-cost-by-date.png}
+    \includegraphics[width=0.85\linewidth]{figs/ch2/cost/training-cost-by-date.png}
     \caption[Estimated training compute costs for notable AI systems over time]{Estimated training compute costs for notable AI systems over time, Reproduced from the \emph{AI Index Report} \cite{stanforduniversity_ArtificialIntelligenceIndex_2025}.}
     \label{fig:ch2_training_cost_by_date}
 \end{figure}
 
 \begin{figure}
     \centering
-    \includegraphics[width=0.75\linewidth]{figs/ch2/cost/training-cost-by-compute.png}
+    \includegraphics[width=0.85\linewidth]{figs/ch2/cost/training-cost-by-compute.png}
     \caption[Training cost as a function of total training compute]{Training cost as a function of total training compute, Reproduced from the \emph{AI Index Report} \cite{stanforduniversity_ArtificialIntelligenceIndex_2025}.}
     \label{fig:ch2_training_cost_by_compute}
 \end{figure}
@@ -702,7 +734,7 @@ Because inference dominates evaluation budgets, there is increasing interest in 
 
 \begin{figure}
     \centering
-    \includegraphics[width=0.75\linewidth]{figs/ch2/cost/inference-cost-by-date.png}
+    \includegraphics[width=0.85\linewidth]{figs/ch2/cost/inference-cost-by-date.png}
     \caption[Estimated inference costs over time]{Estimated inference costs over time, Reproduced from the \emph{AI Index Report} \cite{stanforduniversity_ArtificialIntelligenceIndex_2025}.}
     \label{fig:ch2_inference_cost_by_date}
 \end{figure}

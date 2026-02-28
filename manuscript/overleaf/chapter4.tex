@@ -1,28 +1,14 @@
 \chapter{Results}\label{ch:results}
 
-%%% CONSIDER A TABLE THAT MAPS OBJECTIVES IN CH3 TO RESULTS HERE IN CH4 SINCE:
-% - CH3 GOES BY OBJECTIVE
-% - CH4 GOES BY MCQ -> OSQ -> MCQ VS OSQ -> COST
+This chapter reports the empirical results produced by the experimental workflow defined in Chapter~\ref{ch:materials_methods}. To preserve separation of concerns, this chapter focuses on \emph{what was observed} (measured performance, agreement statistics, deltas, and resource usage), while interpretation and implications are deferred to Chapter~\ref{ch:discussion}. All results are generated from the same run-management and scoring infrastructure described previously, with consistent logging of model configuration, outputs, and (where available) token usage metadata.
 
-This chapter is organized MCQ -> OSQ -> MCQ VS OSQ -> COST. a map from the previous 
+Although Chapter~\ref{ch:materials_methods} is organized by objectives, the results are presented here in the order they were obtained and in a sequence that is more natural for a reader to follow: (i) establish the feasibility and quality of the MCQ to OSQ conversion process, (ii) report baseline performance under multiple-choice evaluation, (iii) report open-style performance under rubric-based judging, (iv) quantify cross-modality agreement and systematic separation between MCQ and OSQ on matched questions, and (v) report tokenomics and cost as a resource-accounting complement to quality metrics. This progression builds from dataset construction and measurement feasibility to task performance, then to modality comparison, and finally to operational considerations.
 
-Why? This order is a bit more intuitive to follow the results and was the order in which the results were achieved.
-
-a sankey diagram could work well here
-
-3.1 -> all
-3.2 -> all
-3.3 OBJ 1 -> ALL
-3.4 OBJ 2 -> OSQ + MCQ VS OSQ
-3.5 OBJ 3 -> ALL. 
-3.6 OBJ 4 -> OSQ + MCQ VS OSQ
-3.7 OBJ 5, 3.7.1 -> MCQ, MCQ VS OSQ
-3.7 OBJ 5, 3.7.2 -> MCQ VS OSQ
-3.8 OBJ 6 -> TOKENOMICS + COST
-3.9 OBJ 7 -> MCQ VS OSQ
+The remainder of the chapter is structured as follows. Section~\ref{sec:conversion_success} summarizes the MCQ-to-OSQ conversion outcomes and suitability filtering used to define the matched evaluation subset. Section~\ref{sec:results_mcq} reports performance on the multiple-choice benchmark variants. Section~\ref{sec:results_osq} reports performance on the open-style benchmark, including rubric-dimension outcomes from the judge protocol. Section~\ref{sec:results_cross_modality} presents the cross-modality comparisons on matched items, including association and paired-difference statistics that support the modality classifications defined in Chapter~\ref{ch:materials_methods}. Section~\ref{sec:results_cost} reports token usage and cost-related results. Finally, Section~\ref{sec:results_incose_mapping} aggregates outcomes by INCOSE-aligned category and reports the category-level modality mapping derived from the predefined decision procedure.
 
 
 \section{Conversion Success of MCQ to OSQ}
+\label{sec:conversion_success}
 
 Figure \ref{fig:distribution-of-suitability} presents the distribution of suitability scores assigned during the MCQ-to-OSQ conversion process. Scores range from 1 to 10, and the figure distinguishes questions scoring below the suitability threshold ($<7$) from those meeting or exceeding the threshold ($\ge7$). A dashed vertical line marks the threshold between the rejected and accepted regions.
 
@@ -62,7 +48,7 @@ A wide range of smaller categories is also present, many containing fewer than 1
 \clearpage
 
 % ---------------------------------------------------------
-\section{Performance on Multiple Choice Questions}\label{sec:performance_mcq}
+\section{Performance on Multiple Choice Questions}\label{sec:results_mcq}
 
 \paragraph{Per-Position Accuracy}
 
@@ -74,7 +60,7 @@ Across the models, accuracy values range from approximately 0.56 to 0.97. Severa
 
 \begin{figure}
     \centering
-    \includegraphics[width=0.75\linewidth]{figs/ch4/4.2/mcq_position_heatmap.png}
+    \includegraphics[width=0.85\linewidth]{figs/ch4/4.2/mcq_position_heatmap.png}
     \caption{MCQ Per-Position Heatmap}
     \label{fig:mcq_position_heatmap}
 \end{figure}
@@ -95,10 +81,17 @@ Across the 19 models, four are classified as \emph{Moderate bias}, nine as \emph
 
 
 
-%% ADD TO BELOW
-% \centering
-% \caption{Positional Bias Statistical Results}
-% \label{tab:position_robustness_results}
+\begin{table}[htbp]
+\centering
+\caption{Positional Bias Statistical Results}
+\label{tab:position_robustness_results}
+
+\small
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.15}
+
+\resizebox{\linewidth}{!}{%
+
 \begin{tabular}{l r r r r r r l}
 \toprule
 \textbf{Model} & \textbf{$\chi^2$} & \textbf{$p_{\chi^2}$} & \textbf{Cram\'er's $V$} & \textbf{Friedman} & \textbf{$p_{\text{Friedman}}$} & \textbf{Kendall's $W$} & \textbf{Classification} \\
@@ -123,7 +116,10 @@ mixtral\_\_8x22b & 7.11 & 0.1300 & 0.0353 & 17.24 & 0.0006 & 0.0050 & No bias \\
 openai\_\_gpt-4.1 & 6.73 & 0.1507 & 0.0343 & 20.47 & 0.0001 & 0.0060 & No bias \\
 google\_\_gemini-2.5-flash & 1.13 & 0.8901 & 0.0140 & 3.48 & 0.3238 & 0.0010 & No bias \\
 \bottomrule
-\end{tabular}
+\end{tabular}%
+} % resizebox
+
+\end{table}
 
 
 
@@ -145,24 +141,24 @@ google\_\_gemini-2.5-flash & 1.13 & 0.8901 & 0.0140 & 3.48 & 0.3238 & 0.0010 & N
 
 % \newpage
 \clearpage
-\section{Performance on Open Style Questions}\label{sec:performance_osq}
+\section{Performance on Open Style Questions}\label{sec:results_osq}
 
 
 \paragraph{OSQ Score Distributions by Judge}
-Figures~\ref{fig:osq_violin_gptoss120b} and~\ref{fig:osq_violin_gpt5mini} show violin plots of OSQ total scores (0--100) by evaluated model for two judge models: \texttt{gpt-oss\_120b} and \texttt{openai\_gpt-5-mini}, respectively. In both figures, the y-axis is labeled \textit{OSQ Total Score (0--100)}, the x-axis lists the evaluated models, and a red dashed horizontal reference line marks the passing threshold at 70. Each violin displays the distribution of OSQ total scores for one evaluated model under the corresponding judge.
+Figures~\ref{fig:osq_score_dist_gptoss} and~\ref{fig:osq_score_dist_gpt5mini} show violin plots of OSQ total scores (0--100) by evaluated model for two judge models: \texttt{gpt-oss\_120b} and \texttt{openai\_gpt-5-mini}, respectively. In both figures, the y-axis is labeled \textit{OSQ Total Score (0--100)}, the x-axis lists the evaluated models, and a red dashed horizontal reference line marks the passing threshold at 70. Each violin displays the distribution of OSQ total scores for one evaluated model under the corresponding judge.
 
 Across both figures, the evaluated models are shown in descending order from left to right based on their displayed score distributions, beginning with \texttt{anthropic\_\_claude-sonnet-4.5} and ending with \texttt{llama3.2\_\_3b}. In both judge panels, many violins show substantial density in the upper score range (approximately 80--100), with varying lower-score tails extending downward for several models. The top-ranked models in each panel have distributions concentrated near the upper end of the scale, while models toward the right side of each panel show wider spread and larger portions of density below the passing threshold line. The two panels use the same score scale and threshold reference, enabling direct visual comparison of distribution shapes, spread, and threshold crossing patterns across judges.
 
 \begin{figure}
     \centering
-    \includegraphics[width=0.8\linewidth]{figs/ch4/osq_model_violin_gpt-oss_120b.png}
+    \includegraphics[width=0.95\linewidth]{figs/ch4/osq_model_violin_gpt-oss_120b.png}
     \caption{OSQ Score Distribution by Model: gpt-oss-120B}
     \label{fig:osq_score_dist_gptoss}
 \end{figure}
 
 \begin{figure}
     \centering
-    \includegraphics[width=0.8\linewidth]{figs/ch4/osq_model_violin_openai_gpt-5-mini.png}
+    \includegraphics[width=0.95\linewidth]{figs/ch4/osq_model_violin_openai_gpt-5-mini.png}
     \caption{OSQ Score Distribution by Model: gpt-5-mini}
     \label{fig:osq_score_dist_gpt5mini}
 \end{figure}
@@ -171,20 +167,18 @@ Across both figures, the evaluated models are shown in descending order from lef
 
 \paragraph{Inter-Judge Agreement, Spearman Correlation, Statistics}
 
-Figure~\ref{fig:rubric_breakdown_by_model_judge} presents a grouped stacked-bar chart of mean rubric scores by evaluated model and judge. For each model on the x-axis, two stacked bars are shown: one for \texttt{gpt-oss\_120b} and one for \texttt{openai\_gpt-5-mini}. Each stacked bar is decomposed into five rubric dimensions: Technical Accuracy, Conceptual Understanding, Completeness, Clarity \& Organization, and Professional Relevance. The y-axis reports the summed mean rubric score across dimensions. Numeric totals are printed above each stacked bar.
+Figure~\ref{fig:inter-judge-grading-histogram} presents a grouped stacked-bar chart of mean rubric scores by evaluated model and judge. For each model on the x-axis, two stacked bars are shown: one for \texttt{gpt-oss\_120b} and one for \texttt{openai\_gpt-5-mini}. Each stacked bar is decomposed into five rubric dimensions: Technical Accuracy, Conceptual Understanding, Completeness, Clarity \& Organization, and Professional Relevance. The y-axis reports the summed mean rubric score across dimensions. Numeric totals are printed above each stacked bar.
 
 Across the displayed models, the annotated total mean rubric scores span from 39.5 to 91.9. The lowest totals appear for \texttt{llama3.2\_\_3b} (39.5 for \texttt{gpt-oss\_120b}; 45.1 for \texttt{openai\_gpt-5-mini}) and \texttt{llama3.2\_\_1b} (56.7 and 61.7), while higher totals include \texttt{openai\_\_gpt-4.1} (84.9 and 91.3), \texttt{google\_\_gemini-2.5-flash} (82.4 and 90.2), and \texttt{anthropic\_\_claude-sonnet-4.5} (85.0 and 91.9). For each model, the two judges’ stacked bars are shown adjacent to one another using the same rubric color segmentation, with one bar style rendered solid and the other hatched, and separate legends identify rubric dimensions and judge encoding.
+
 \begin{figure}
     \centering
-    \includegraphics[width=0.90\linewidth]{figs/ch4/4.2/inter-judge-grading-histogram.png}
+    \includegraphics[width=0.95\linewidth]{figs/ch4/4.2/inter-judge-grading-histogram.png}
     \caption{Inter-Judge Grading Histogram}
     \label{fig:inter-judge-grading-histogram}
 \end{figure}
 
-
-
 Table~\ref{tab:interjudge_corr} reports inter-judge agreement using Spearman correlation for a single judge pair. The table lists Judge~1 (gpt-oss\_120b) and Judge~2 (openai\_gpt-5-mini), along with Spearman's rank correlation coefficient ($\rho$), its associated $p$-value, and the sample size $n$. The reported Spearman correlation is $\rho = 0.9012$ with a $p$-value of 0.0000, based on $n = 16051$ observations.
-
 
 \begin{table}[htbp]
 \centering
@@ -199,9 +193,10 @@ gpt-oss\_120b & openai\_gpt-5-mini & 0.9012 & 0.0000 & 16051 \\
 \end{tabular}
 \end{table}
 
-
 \paragraph{Judging Errors}
-Table~\ref{tab:osq_judging_errors_combined} summarizes the filtered OSQ analysis dataset, parse-status outcomes, and the distribution of parse errors by evaluated model and judge model.
+Table~\ref{tab:osq_judging_errors_combined} summarizes OSQ dataset counts and judge parsing outcomes in a single combined table. The table is organized into four sections: Dataset summary, Parse status outcomes, Parse errors by evaluated model, and Parse errors by judge model. Columns report the section label, item, category (when applicable), count, and percent (when applicable).
+
+In the Dataset summary section, the table reports 32{,}110 OSQ records, 19 unique models, 845 unique questions, and 2 unique judges. In the Parse status outcomes section, 32{,}105 records are listed as \texttt{success} (99.98\%), with 3 \texttt{judge\_error} entries (0.01\%) and 2 \texttt{api\_error} entries (0.01\%). The Parse errors by evaluated model section attributes all 5 parse errors to \texttt{anthropic\_\_claude-sonnet-4.5}, split into 3 \texttt{judge\_error} and 2 \texttt{api\_error}. The Parse errors by judge model section reports 4 total parse errors under \texttt{gpt-oss\_120b} (3 \texttt{judge\_error} and 1 \texttt{api\_error}) and 1 total parse error under \texttt{openai\_gpt-5-mini} (1 \texttt{api\_error}), for 5 total parse errors overall.
 
 \begin{table}[htbp]
 \centering
@@ -245,33 +240,31 @@ Judge model & \textbf{Total} & \textbf{all parse errors} & \textbf{5} & --- \\
 \end{tabular}
 \end{table}
 
-\noindent\textit{Judge models used:} \texttt{gpt-oss\_120b}, \texttt{openai\_gpt-5-mini}.
-
 
 
 % \newpage
 \clearpage
 % -------------------------------------------------------------------
-\section{Comparison Across MCQ and OSQ Evaluation Modalities}\label{sec:comparison_evaluation_modalities}
+\section{Comparison Across MCQ and OSQ Evaluation Modalities}\label{sec:results_cross_modality}
 
 % ------------------------------------
 \paragraph{Visual Inspection and Normalized Deltas}
 
-Figures~\ref{fig:mcq_vs_osq_global} and~\ref{fig:mcq_vs_osq_zoomed} show scatter plots of model-level MCQ accuracy (\%) versus OSQ correctness (\%) for the matched-question subset. Each point represents one model and is labeled by model name. The x-axis reports MCQ accuracy and the y-axis reports OSQ correctness. Both panels include a red dotted diagonal labeled \textit{Perfect Agreement} (\(y=x\)) and a gray dashed fitted regression line. The legend in each panel reports the same regression summary statistics (\(R^2 = 0.647\), \(p = 0.0000\)).
+Figures~\ref{fig:mcq-vs-osq-global} and~\ref{fig:mcq-vs-osq-zoomed} show scatter plots of model-level MCQ accuracy (\%) versus OSQ correctness (\%) for the matched-question subset. Each point represents one model and is labeled by model name. The x-axis reports MCQ accuracy and the y-axis reports OSQ correctness. Both panels include a red dotted diagonal labeled \textit{Perfect Agreement} (\(y=x\)) and a gray dashed fitted regression line. The legend in each panel reports the same regression summary statistics (\(R^2 = 0.647\), \(p = 0.0000\)).
 
 The two panels display the same model points using different axis ranges. Figure~\ref{fig:mcq_vs_osq_global} uses a wider range (approximately 70--100\% MCQ and 40--100\% OSQ), while Figure~\ref{fig:mcq_vs_osq_zoomed} presents a zoomed view (approximately 80--100\% MCQ and 70--100\% OSQ). In both panels, most points lie below the red perfect-agreement line, and the vertical separation from that line varies by model. The wider-range panel makes the lower-OSQ points more visible (including \texttt{llama3.2\_\_3b}, \texttt{llama3.2\_\_1b}, and \texttt{gemma3\_\_1b}), while the zoomed panel emphasizes clustering among models in the higher MCQ and OSQ ranges.
 
 
 \begin{figure}
     \centering
-    \includegraphics[width=0.5\linewidth]{figs/ch4/mcq_vs_osq_40-100_70-100.png}
+    \includegraphics[width=0.90\linewidth]{figs/ch4/mcq_vs_osq_40-100_70-100.png}
     \caption{MCQ Accuracy vs OSQ Mean Score: Global View}
     \label{fig:mcq-vs-osq-global}
 \end{figure}
 
 \begin{figure}
     \centering
-    \includegraphics[width=0.5\linewidth]{figs/ch4/mcq_vs_osq_70-100_80-100.png}
+    \includegraphics[width=0.90\linewidth]{figs/ch4/mcq_vs_osq_70-100_80-100.png}
     \caption{MCQ Accuracy vs OSQ Mean Score: Zoomed in to Cluster}
     \label{fig:mcq-vs-osq-zoomed}
 \end{figure}
@@ -319,13 +312,13 @@ mistral-large\_\_123b               & 0.887 & 0.834 & 0.053 \\
 % ------------------------------------
 \paragraph{Cross-Modality Association and Rank Agreement, Pearson and Spearman}
 
-Figure~\ref{fig:mcq_vs_osq_rubric_combined_multijudge} shows a scatter plot of model-level MCQ accuracy (x-axis) against OSQ rubric-dimension scores on a 0--20 scale (y-axis), combining both judges in a single panel. Marker shape encodes judge (\texttt{gpt-oss\_120b} circles; \texttt{openai\_gpt-5-mini} squares), and point color encodes OSQ rubric dimension (Technical Accuracy, Conceptual Understanding, Completeness, Clarity \& Organization, Professional Relevance). Dashed fitted lines are shown for each rubric dimension, and the legend reports the corresponding \(R^2\) values: Technical Accuracy (\(R^2=0.637\)), Conceptual Understanding (\(R^2=0.583\)), Completeness (\(R^2=0.652\)), Clarity \& Organization (\(R^2=0.401\)), and Professional Relevance (\(R^2=0.571\)). A black dashed line labeled \textit{Perfect Agreement} is also plotted.
+Figure~\ref{fig:mcq-vs-osq-dimension-multijudge} shows a scatter plot of model-level MCQ accuracy (x-axis) against OSQ rubric-dimension scores on a 0--20 scale (y-axis), combining both judges in a single panel. Marker shape encodes judge (\texttt{gpt-oss\_120b} circles; \texttt{openai\_gpt-5-mini} squares), and point color encodes OSQ rubric dimension (Technical Accuracy, Conceptual Understanding, Completeness, Clarity \& Organization, Professional Relevance). Dashed fitted lines are shown for each rubric dimension, and the legend reports the corresponding \(R^2\) values: Technical Accuracy (\(R^2=0.637\)), Conceptual Understanding (\(R^2=0.583\)), Completeness (\(R^2=0.652\)), Clarity \& Organization (\(R^2=0.401\)), and Professional Relevance (\(R^2=0.571\)). A black dashed line labeled \textit{Perfect Agreement} is also plotted.
 
 The x-axis spans approximately 0.70 to 1.00 MCQ accuracy, and the y-axis spans approximately 5 to 20 rubric points. Points cluster most densely between roughly 0.88 and 0.96 MCQ accuracy, with multiple rubric-dimension/judge observations shown at each model location. At lower MCQ accuracy values (around 0.71--0.72 and 0.80--0.81), the plotted rubric scores show wider vertical dispersion than in the higher-density region. The fitted rubric-dimension lines are separated vertically across the panel, with distinct intercepts and similar positive slopes, and all are displayed alongside the common black dashed reference line.
 
 \begin{figure}
     \centering
-    \includegraphics[width=0.75\linewidth]{figs/ch4/mcq_vs_osq_rubric_combined_multijudge.png}
+    \includegraphics[width=0.90\linewidth]{figs/ch4/mcq_vs_osq_rubric_combined_multijudge.png}
     \caption{MCQ Accuracy vs OSQ Dimension Mean Score}
     \label{fig:mcq-vs-osq-dimension-multijudge}
 \end{figure}
@@ -425,19 +418,19 @@ The table contains 6 models in the \emph{Divergent} group and 13 models in the \
 \addlinespace
 \multicolumn{6}{l}{\textbf{Classification = Mixed evidence (low association + small d)}} \\
 \midrule
-    phi4\_\_14b & 0.44 & 0.30 & 0.49 & $<0.001$ & Mixed evidence (low association + small d) \\
-    mistral-small3.2\_\_24b & 0.34 & 0.17 & 0.46 & $<0.001$ & Mixed evidence (low association + small d) \\
-    mixtral\_\_8x22b & 0.35 & 0.27 & 0.45 & $<0.001$ & Mixed evidence (low association + small d) \\
-    google\_\_gemini-2.5-flash & 0.33 & 0.14 & 0.45 & $<0.001$ & Mixed evidence (low association + small d) \\
-    llama3.3\_\_70b & 0.33 & 0.17 & 0.41 & $<0.001$ & Mixed evidence (low association + small d) \\
-    gemma3\_\_27b & 0.38 & 0.31 & 0.41 & $<0.001$ & Mixed evidence (low association + small d) \\
-    gemma3\_\_4b & 0.44 & 0.40 & 0.38 & $<0.001$ & Mixed evidence (low association + small d) \\
-    gemma3\_\_12b & 0.41 & 0.32 & 0.38 & $<0.001$ & Mixed evidence (low association + small d) \\
-    openai\_\_gpt-4.1 & 0.28 & 0.13 & 0.37 & $<0.001$ & Mixed evidence (low association + small d) \\
-    llama3.2\_\_1b & 0.41 & 0.41 & 0.36 & $<0.001$ & Mixed evidence (low association + small d) \\
-    anthropic\_\_claude-sonnet-4.5 & 0.33 & 0.12 & 0.35 & $<0.001$ & Mixed evidence (low association + small d) \\
-    gemma3\_\_1b & 0.45 & 0.44 & 0.26 & $<0.001$ & Mixed evidence (low association + small d) \\
-    mistral-large\_\_123b & 0.41 & 0.24 & 0.21 & $<0.001$ & Mixed evidence (low association + small d) \\
+    phi4\_\_14b & 0.44 & 0.30 & 0.49 & $<0.001$ & Mixed evidence \\ %(low association + small d) \\
+    mistral-small3.2\_\_24b & 0.34 & 0.17 & 0.46 & $<0.001$ & Mixed evidence \\ %(low association + small d) \\
+    mixtral\_\_8x22b & 0.35 & 0.27 & 0.45 & $<0.001$ & Mixed evidence \\ %(low association + small d) \\
+    google\_\_gemini-2.5-flash & 0.33 & 0.14 & 0.45 & $<0.001$ & Mixed evidence \\ %(low association + small d) \\
+    llama3.3\_\_70b & 0.33 & 0.17 & 0.41 & $<0.001$ & Mixed evidence \\ %(low association + small d) \\
+    gemma3\_\_27b & 0.38 & 0.31 & 0.41 & $<0.001$ & Mixed evidence \\ %(low association + small d) \\
+    gemma3\_\_4b & 0.44 & 0.40 & 0.38 & $<0.001$ & Mixed evidence \\ %(low association + small d) \\
+    gemma3\_\_12b & 0.41 & 0.32 & 0.38 & $<0.001$ & Mixed evidence \\ %(low association + small d) \\
+    openai\_\_gpt-4.1 & 0.28 & 0.13 & 0.37 & $<0.001$ & Mixed evidence \\ %(low association + small d) \\
+    llama3.2\_\_1b & 0.41 & 0.41 & 0.36 & $<0.001$ & Mixed evidence \\ %(low association + small d) \\
+    anthropic\_\_claude-sonnet-4.5 & 0.33 & 0.12 & 0.35 & $<0.001$ & Mixed evidence \\ %(low association + small d) \\
+    gemma3\_\_1b & 0.45 & 0.44 & 0.26 & $<0.001$ & Mixed evidence \\ %(low association + small d) \\
+    mistral-large\_\_123b & 0.41 & 0.24 & 0.21 & $<0.001$ & Mixed evidence \\ %(low association + small d) \\
 \bottomrule
 \end{tabular}
 \vspace{0.4em}
@@ -450,10 +443,10 @@ The table contains 6 models in the \emph{Divergent} group and 13 models in the \
 
 % \newpage
 \clearpage
-\section{Tokenomics and Cost}\label{sec:tok}
+\section{Tokenomics and Cost}\label{sec:results_cost}
 
 \paragraph{Response Tokens by Model and Quality Category (Average Judge Score)}
-Figure~\ref{fig:response_tokens_by_model_quality_avg_judge} shows boxplots of response-token counts by model, grouped by output quality category, using scores averaged across judges. The x-axis lists models, the y-axis reports response tokens, and each model has four adjacent boxplots corresponding to the quality bins shown in the legend: \textit{Poor} (\(<50\)), \textit{Fair} (50--70), \textit{Good} (70--90), and \textit{Excellent} (90--100). Individual observations are overlaid as gray points, including visible outliers extending above the whiskers for multiple models.
+Figure~\ref{fig:tokenomics_distribution} shows box plots of response-token counts by model, grouped by output quality category, using scores averaged across judges. The x-axis lists models, the y-axis reports response tokens, and each model has four adjacent box plots corresponding to the quality bins shown in the legend: \textit{Poor} (\(<50\)), \textit{Fair} (50--70), \textit{Good} (70--90), and \textit{Excellent} (90--100). Individual observations are overlaid as gray points, including visible outliers extending above the whiskers for multiple models.
 
 Across models, the plotted token distributions span from near-zero values to outliers at approximately 500 tokens. For many models, the central portions of the boxplots for higher quality categories appear at higher token counts than the lower quality categories, while the spread and outlier frequency vary by model and quality bin. Several models show compact interquartile ranges with moderate whiskers, whereas others display broader distributions and numerous high-token outliers. The figure presents all models and quality groups in a single panel, enabling side-by-side comparison of token-count distributions across both dimensions.
 
@@ -467,7 +460,7 @@ Across models, the plotted token distributions span from near-zero values to out
 
 \paragraph{Quality of Response and Response Token Length}
 
-Figure~\ref{fig:tokenomics_length_vs_quality_sorted_worst_to_best} presents a 100\% stacked bar chart showing the percentage distribution of responses across three quality tiers for each model. The x-axis lists models, and the y-axis reports the percentage of responses (0--100\%). Each bar is segmented into \textit{Poor} (\(<70\)), \textit{Good} (70--90), and \textit{Excellent} (90--100), with percentage labels printed inside each segment. The models are arranged from left to right in worst-to-best order based on the plotted tier composition.
+Figure~\ref{fig:tokenomics_length_vs_quality} presents a 100\% stacked bar chart showing the percentage distribution of responses across three quality tiers for each model. The x-axis lists models, and the y-axis reports the percentage of responses (0--100\%). Each bar is segmented into \textit{Poor} (\(<70\)), \textit{Good} (70--90), and \textit{Excellent} (90--100), with percentage labels printed inside each segment. The models are arranged from left to right in worst-to-best order based on the plotted tier composition.
 
 Across the displayed models, the leftmost bars (\texttt{llama3.3\_\_70b} and \texttt{llama4\_\_16x17b}) are composed entirely of the \textit{Poor} tier (100\%). Moving rightward, the bars show varying mixtures of all three tiers, with the \textit{Excellent} segment generally increasing in share and the \textit{Poor} segment generally decreasing. The rightmost bars (\texttt{openai\_\_gpt-4.1} and \texttt{anthropic\_\_claude-sonnet-4.5}) each show 67\% \textit{Excellent}, 22\% \textit{Good}, and 11\% \textit{Poor}. Intermediate models display a range of tier compositions, including examples with near-balanced \textit{Good}/\textit{Excellent} shares and others with larger \textit{Poor} proportions.
 
@@ -496,9 +489,9 @@ The plotted models span approximately 42--89 on mean judge score and approximate
 
 
 \clearpage
-\section{Performance by INCOSE Category and Modality Mapping }\label{sec:modality_mapping}
+\section{Performance by INCOSE Category and Modality Mapping }\label{sec:results_incose_mapping}
 
-This section decomposes model performance by INCOSE Handbook category and applies the qualification modality classification criteria defined in Section~\ref{subsec:ch3_obj7_classification}. Results are presented at two levels of granularity: all 20 leaf-level categories and 6 top-level INCOSE groups. All analyses in this section are computed from the aligned MCQ--OSQ dataset, in which each question appears in both modalities, ensuring one-to-one correspondence between MCQ accuracy and OSQ scores at the category level.
+This section decomposes model performance by INCOSE Handbook category and applies the qualification modality classification criteria defined in Section~\ref{sec:ch3_obj7_category_taskmodality}. Results are presented at two levels of granularity: all 20 leaf-level categories and 6 top-level INCOSE groups. All analyses in this section are computed from the aligned MCQ--OSQ dataset, in which each question appears in both modalities, ensuring one-to-one correspondence between MCQ accuracy and OSQ scores at the category level.
  
 \paragraph{MCQ Accuracy by INCOSE Category}
 Figure~\ref{fig:mcq_accuracy_by_incose_category} presents a heatmap of MCQ accuracy by INCOSE-aligned category (columns) and model (rows). The x-axis lists INCOSE categories sorted by average difficulty, and the y-axis lists models sorted by overall accuracy. Each heatmap cell contains the model’s accuracy for that category expressed as a percentage, and the color scale maps values from approximately 0.50 to 1.00, transitioning from lower (red/orange) to higher (green) accuracy.
@@ -566,9 +559,13 @@ Seven categories are labeled \textit{Dual-modality required}: Modeling and Simul
 \setlength{\tabcolsep}{4pt}
 \renewcommand{\arraystretch}{1.15}
 \resizebox{\linewidth}{!}{%
-
-% \begin{tabular}{lrrrrrll}
-\begin{tabular}{p{6.5cm} rrrr p{3.0cm} l l}
+\begin{tabular}{
+  >{\raggedright\arraybackslash}m{6.5cm}
+  r r r r
+  >{\centering\arraybackslash}m{3.0cm}
+  r
+  >{\raggedright\arraybackslash}m{5.0cm}
+}
 \toprule
 Category & Mean MCQ Acc. & Mean OSQ Score & Mean Delta & Median Delta & \% High divergence ($|\Delta|\ge 0.15$) & N & Classification \\
 \midrule

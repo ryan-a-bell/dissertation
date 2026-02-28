@@ -5,13 +5,13 @@
 
 Chapter~\ref{ch:introduction} defined a set of Research Objectives in Section~\ref{sec:research_objectives} that constitute the intentional, executable actions required to answer the research questions in Section~\ref{sec:research_questions}. This research was executed through an empirical pipeline that is organized explicitly around those Research Objectives to preserve traceability between declared intent and implemented methodology.
 
-The pipeline describes the chronological sequencing of work. However, chronological sequencing alone does not make explicit how each step contributes to the production of qualification-relevant evidence. Because this dissertation frames model evaluation as a qualification problem that requires modality-aware, robustness-aware, and cost-aware evidence, Chapter~\ref{ch:materials_methods} is structured around the objectives themselves. Each objective defines the work performed, the artifacts produced, and the evidence generated. 
+The pipeline provides an execution sequence, but an execution sequence by itself does not explain how each stage supports a qualification claim. Since this dissertation frames evaluation as a qualification problem, the methods must explicitly surface modality-aware, robustness-aware, and cost-aware evidence. Accordingly, Chapter~\ref{ch:materials_methods} is structured around the Research Objectives. Each objective defines the methodological actions, the artifacts retained, and the evidence contributed to the overall qualification argument. 
 
 Objective~7 is not addressed in this chapter, as it concerns synthesis and integration of findings and is therefore fulfilled in Chapter~5. All other objectives are executed through the pipeline described below, with the execution environment and reproducibility controls presented first as are cross-cutting across all objectives. Subsequent sections correspond directly to the Research Objectives listed in Section~\ref{sec:research_objectives}. 
 
 The methodological framework connects the research questions posed in Chapter~\ref{ch:introduction} to inference execution, scoring, and analysis. It transforms the base SysEngBench dataset~\cite{bell_RabellSysEngBenchDatasets_2024} through deterministic dataset derivation procedures, evaluates \acp{llm} across both \ac{mcq} and \ac{osq} formats under standardized inference controls, applies rubric-based LLM-as-a-Judge scoring for open responses, and performs statistical analyses tailored to each objective.
 
-Figure~\ref{fig:modality_eval_pipeline} illustrates the high-level data flow through this pipeline. Each stage produces well-defined artifacts, including datasets, model responses, scoring outputs, and statistical results that serve as inputs to subsequent stages. These artifacts are retained and versioned to preserve traceability from final claims back to originating data and configuration settings. The pipeline functions not merely as an execution sequence, but as a traceable thread aligned directly to the declared Research Objectives.
+Figure~\ref{fig:modality_eval_pipeline} illustrates the high-level data flow through this pipeline. Each stage produces well-defined artifacts, including datasets, model responses, scoring outputs, and statistical results that serve as inputs to subsequent stages. These artifacts are retained and versioned to preserve traceability from final claims back to originating data and configuration settings. The pipeline functions not only as an execution sequence, but as a traceable thread aligned directly to the declared Research Objectives.
 
 \begin{figure}[htbp]
     \centering
@@ -45,12 +45,15 @@ Scripts were used for dataset processing, rubric generation, and post-hoc analys
 
 The complete software stack is summarized in Table~\ref{tab:software_stack}. The full list of Python packages used is included in \texttt{requirements.txt} in the dissertation repository.
 
+
+
+
 \begin{table}[h!]
     \centering
     \caption{{Software Stack Components and Their Roles}}
     \label{tab:software_stack}
     \rowcolors{0}{}{} % Turn off row colors
-    \resizebox{\columnwidth}{!}{%
+    % \resizebox{\columnwidth}{!}{%
     \begin{tabular}{ccc}
     \hline
     \textbf{Component} & \textbf{Version} & \textbf{Purpose} \\
@@ -69,7 +72,7 @@ The complete software stack is summarized in Table~\ref{tab:software_stack}. The
     tqdm & 4.66+ & Progress tracking. \\
     \hline
     \end{tabular}%
-    }
+    % }
 \end{table}
 
 
@@ -225,9 +228,7 @@ The rotation procedure preserves question content and choice semantics while per
     \item \textbf{SysEngBench-D\footnote{\url{https://huggingface.co/datasets/rabell/SysEngBench-D}}}: Correct answer at position D (label=3)
 \end{itemize}
 
-Because each variant contains the same questions under systematic reordering, differences in accuracy across variants can be attributed to positional sensitivity rather than content differences.
-
-Figure~\ref{fig:mcq_rotation} illustrates the rotation process.
+Because each variant contains the same questions under systematic reordering, differences in accuracy across variants can be attributed to positional sensitivity rather than content differences. Figure~\ref{fig:mcq_rotation} illustrates the rotation process.
 
 \begin{figure}[htbp]
     \centering
@@ -312,7 +313,7 @@ For each suitable \ac{mcq}, ChatGPT-5 was used to perform the conversion. The co
     \item Assigned Bloom's taxonomy level (Remember, Understand, Apply, Analyze, Evaluate, Create) with justification
 \end{itemize}
 
-The grading rubric and  Bloom's taxonomy metadata was not used within this research, but were collected as metadata for
+The grading rubric and Bloom's taxonomy metadata was not used within this research, but were collected as metadata for
 future use.
 
 The conversion prompt explicitly instructed the \ac{llm} to keep the construct and difficulty comparable for \acp{osq}, maintaining parity with the original \ac{mcq} construct. The complete conversion prompt is provided in Appendix~\ref{appendix-a}.
@@ -1354,27 +1355,24 @@ This construction does not assert that lower token usage implies higher qualific
 \section{Objective 7: Task Category Level Task-Modality Qualification Mapping}
 \label{sec:ch3_obj7_category_taskmodality}
 
-Objective 7 converts validated measurement instruments (Objective~5) and resource accounting (Objective~6) into guidance given comparable MCQ and OSQ measurements, which evaluation modality is most defensible for each systems engineering task category. Whereas Objective~5 answers "can we trust these measurements?" and Objective~6 answers "what do they cost?", Objective~7 answers "what modality should be used, by category, under the observed evidence patterns?"
+Objective~7 converts the validated cross-modality measurement framework (Objective~5) and token-based resource accounting (Objective~6) into category-level modality guidance: given comparable MCQ and OSQ measurements on the same underlying content, which evaluation modality provides the most defensible qualification evidence for each INCOSE task category from IEEE~15288. Whereas Objective~5 establishes whether the measurements are reliable and comparable, and Objective~6 quantifies their resource burden, Objective~7 answers: \emph{which modality should be used, by category, under the observed evidence patterns and under any cost?}
 
-This objective produces an auditable mapping from INCOSE 15288 aligned task categories to modality recommendations (e.g., MCQ-sufficient, OSQ-preferred, dual-modality required). The mapping is generated by (i) decomposing multi-label category assignments to compute per-category performance under each modality, (ii) quantifying per-category modality advantage via an MCQ--OSQ delta analysis, and (iii) applying a predefined decision tree that converts delta magnitude, absolute performance, and cross-model variability into a qualification recommendation.
-
+This objective produces an auditable mapping from INCOSE-aligned task categories to modality recommendations (e.g., MCQ-sufficient, dual-modality recommended, dual-modality required). The mapping is generated by (i) expanding multi-label category assignments to compute per-category performance under each modality, (ii) quantifying category-level modality separation using an MCQ--OSQ delta defined on a normalized $[0,1]$ scale, and (iii) applying a predefined decision rubric that converts delta magnitude and absolute performance into a qualification recommendation (Table~\ref{tab:obj7_classification}, Figure~\ref{fig:cross-mod-class-regions}).
 
 % ---------------------------------------------------------
 \subsection{Category Decomposition and Alignment}
 \label{subsec:ch3_obj7_category_decomposition}
 
-Each SysEngBench item includes one or more INCOSE-aligned category labels. Objective~7 uses these labels to compute performance \emph{per category}.
-
-Some questions are tagged with multiple categories. To avoid forcing a single label, the data is "exploded": a question with $k$ labels contributes once to each of its $k$ categories. The question ID is retained so any category-level statistic can be traced back to the underlying items.
+Each SysEngBench item includes one or more INCOSE-aligned category labels. Objective~7 uses these labels to compute performance \emph{per category}. Because some questions are tagged with multiple categories, the dataset is expanded such that an item with $k$ labels contributes once to each of its $k$ assigned categories. The original question ID is retained so that all category-level statistics remain traceable to the underlying benchmark items.
 
 Two levels of granularity are analyzed:
 
 \begin{enumerate}[nosep]
-    \item Leaf-level categories ($\approx$20): the most specific INCOSE process or topic area (e.g., \textit{Risk and Opportunity Management Process}, \textit{Modeling Language SysML v1.x}).
-    \item \Top-level groups ($\approx$6): the second level of the hierarchy (e.g., \textit{Technical Processes}, \textit{Specialty Engineering Activities}, \textit{Cross-Cutting Systems Engineering Methods}).
+    \item \textbf{Leaf-level categories ($\approx$20):} the most specific INCOSE process or topic area (e.g., \textit{Risk and Opportunity Management Process}, \textit{Modeling Language SysML v1.x}).
+    \item \textbf{Top-level groups ($\approx$6):} the second level of the hierarchy (e.g., \textit{Technical Processes}, \textit{Specialty Engineering Activities}, \textit{Cross-Cutting Systems Engineering Methods}).
 \end{enumerate}
 
-Analyzing at both levels tests whether modality differences are driven by specific leaf categories or are systematic properties of entire process families.
+Analyzing both levels tests whether modality differences are localized to specific leaf topics or are systematic properties of entire process families.
 
 \begin{table}[htbp]
 \centering
@@ -1421,45 +1419,53 @@ $\bullet$ Identifying Stakeholder Needs and Generating Requirements \\
 \end{tabular}
 \end{table}
 
-Category-level estimates are only used for modality recommendations when the category has at least $n_{\min}$ contributing questions (after exploding multi-label items). Categories below this threshold are still shown descriptively (e.g., counts/heatmaps) but are excluded from prescriptive guidance.
-
-Let $\mathcal{I}(c)$ be the set of questions assigned to category $c$ (after exploding multi-label items). Accuracy for modality $q$ is:
-\[
-\text{Acc}_{q,c}=\frac{1}{|\mathcal{I}(c)|}\sum_{i\in \mathcal{I}(c)} \mathbb{I}[\text{correct}(i,q)].
-\]
-
-\paragraph{Modality advantage.}
-\[
-\Delta_c = \text{Acc}_{\text{OSQ},c} - \text{Acc}_{\text{MCQ},c}.
-\]
+Category-level estimates are only used for prescriptive modality recommendations when the category has at least $n_{\min}$ contributing questions after expansion. Categories below this threshold are still reported descriptively (e.g., counts/heatmaps) but are excluded from classification.
 
 
+% ---------------------------------------------------------
 \subsection{Category-Level MCQ and OSQ Performance}
 \label{subsec:ch3_obj7_performance}
 
-For each (model, category) pair, two performance metrics are computed:
+For each (model, category) pair, Objective~7 computes one performance metric per modality on a normalized $[0,1]$ scale:
 
 \begin{itemize}[nosep]
-    \item \textbf{MCQ accuracy}: the proportion of correct responses across all position variants for questions in that category ($\overline{\text{Acc}}_{\text{MCQ}}$, range 0--1).
-    \item \textbf{OSQ mean score}: the average rubric-based percentage score across all judge evaluations for questions in that category ($\overline{S}_{\text{OSQ}} / 100$, normalized to 0--1).
+    \item \textbf{MCQ accuracy} $A_{\text{MCQ},m,c}$: the proportion of correct MCQ responses for questions in category $c$, aggregated across all position-rotated variants.
+    \item \textbf{OSQ normalized score} $A_{\text{OSQ},m,c}$: the mean rubric-based OSQ score for questions in category $c$, normalized by dividing the $0$--$100$ rubric score by $100$.
 \end{itemize}
+
+Let $\mathcal{I}(c)$ denote the set of benchmark items assigned to category $c$ after category expansion. Then:
+\[
+A_{\text{MCQ},m,c}=\frac{1}{|\mathcal{I}(c)|}\sum_{i\in \mathcal{I}(c)} \mathbb{I}\!\left[\text{correct}(i,m)\right],
+\qquad
+A_{\text{OSQ},m,c}=\frac{1}{|\mathcal{I}(c)|}\sum_{i\in \mathcal{I}(c)} \frac{S(i,m)}{100},
+\]
+where $\mathbb{I}[\cdot]$ is the indicator for MCQ correctness and $S(i,m)\in[0,100]$ is the rubric-based OSQ score assigned to model $m$ on item $i$ (averaged over judges when applicable).
 
 Results are presented as model $\times$ category heatmaps for each modality, with models sorted by overall MCQ accuracy (descending) and categories sorted alphabetically. This consistent ordering across MCQ and OSQ heatmaps supports direct visual comparison.
 
-A category-level scatter plot analogous to the model-level MCQ vs.\ OSQ scatter (Objective~5, Section~\ref{subsec:ch3_obj5_modality_comparison}) is constructed for each granularity level: one point per category, with coordinates $(\overline{\text{Acc}}_{\text{MCQ}},\; \overline{S}_{\text{OSQ}})$ averaged across all models. A perfect-agreement line ($y = x$) and linear regression are overlaid to visualize systematic modality divergence by domain area.
+A category-level scatter plot analogous to the model-level MCQ vs.\ OSQ scatter (Objective~5, Section~\ref{subsec:ch3_obj5_modality_comparison}) is constructed at each granularity level: one point per category with coordinates $(\overline{A}_{\text{MCQ},c},\; \overline{A}_{\text{OSQ},c})$, where the bar indicates averaging across models. A perfect-agreement line ($y=x$) and linear regression are overlaid to visualize systematic modality divergence by domain area.
 
-\subsection{Modality Advantage Quantification}
+
+\subsection{Modality Separation Quantification and Classification}
 \label{subsec:ch3_obj7_delta}
 
-The MCQ--OSQ delta quantifies the direction and magnitude of modality advantage for each (model, category) pair:
-
+Modality separation is summarized using an MCQ--OSQ delta for each (model, category) pair:
 \[
-\Delta_{m,c} \;=\; \overline{\text{Acc}}_{\text{MCQ},m,c} \;-\; \frac{\overline{S}_{\text{OSQ},m,c}}{100}
+\Delta_{m,c} \;=\; A_{\text{MCQ},m,c} \;-\; A_{\text{OSQ},m,c},
 \]
+where positive values indicate higher MCQ performance (selected-response exceeds constructed-response) and negative values indicate higher OSQ performance.
 
-where $m$ indexes models and $c$ indexes categories. Positive values indicate MCQ advantage (recognition exceeds generation); negative values indicate OSQ advantage.
+For category-level guidance, deltas are summarized across models with valid measurements in category $c$:
+\[
+\overline{\Delta}_c=\frac{1}{|\mathcal{M}(c)|}\sum_{m\in\mathcal{M}(c)} \Delta_{m,c},
+\qquad
+\overline{A}_{\text{MCQ},c}=\frac{1}{|\mathcal{M}(c)|}\sum_{m\in\mathcal{M}(c)} A_{\text{MCQ},m,c},
+\qquad
+\overline{A}_{\text{OSQ},c}=\frac{1}{|\mathcal{M}(c)|}\sum_{m\in\mathcal{M}(c)} A_{\text{OSQ},m,c},
+\]
+where $\mathcal{M}(c)$ denotes the set of evaluated models for which both modalities are available for category $c$.
 
-Results are reported as delta heatmap tables: a model $\times$ category matrix of $\Delta_{m,c}$ values with marginal summary statistics. The final column reports per-model mean and median $\Delta$ (across categories); the final row reports per-category mean and median $\Delta$ (across models). This structure, analogous to a joint probability table, enables simultaneous reading of model-level and category-level modality tendencies.
+Deltas are reported as heatmap tables: a model $\times$ category matrix of $\Delta_{m,c}$ values with marginal summary statistics. The final column reports per-model mean and median $\Delta$ (across categories); the final row reports per-category mean and median $\Delta$ (across models), enabling simultaneous inspection of model-level and category-level modality tendencies.
 
 To translate delta magnitudes into actionable guidance, each category is classified into one of four modality recommendations based on the cross-model mean delta ($\overline{\Delta}_c$) and the mean MCQ accuracy for that category ($\overline{\text{Acc}}_{\text{MCQ},c}$):
 
@@ -1512,7 +1518,6 @@ Figure~\ref{fig:cross-mod-class-regions} provides a geometric interpretation of 
 The thresholds are applied independently at both granularity levels, including leaf categories and top-level groups. The classification is intended as a structured starting point for deployment decisions; organizations should adjust thresholds based on their risk tolerance and domain-specific requirements.
 
 As a design prior, MCQ (selected-response) performance is treated as a lower-effort evidence type than OSQ (constructed-response) because MCQs provide answer cues and permit partial-knowledge strategies (e.g., recognition and elimination), whereas OSQs require generating and justifying an answer without options. This distinction is widely discussed in assessment and measurement guidance and is a primary motivation for using constructed-response formats when explanation, reasoning, or argumentation quality is part of the intended inference \cite{livingston_ConstructedResponseTestQuestionsWhy_2009, AmEdAssoc_StandardsForEducationalTesting_2014}. Therefore, it is pre-specified that some task families may show materially different apparent competence under MCQ versus OSQ, and treat large modality gaps in either direction as a form of modality sensitivity, effectively triggering dual-modality evidence rather than a single-modality prescription. This expectation is tested and quantified empirically in Chapter~4 using the category-level MCQ/OSQ accuracy and delta analyses.
-
 
 
 % ---------------------------------------------------------

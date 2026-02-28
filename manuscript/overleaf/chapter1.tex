@@ -4,6 +4,8 @@
 
 The focus of this research is to investigate how \acp{llm} should be evaluated and qualified for use in \ac{se} tasks and contexts where errors can carry significant technical, operational, or safety consequences to complex systems. Rather than treating benchmarking as an end in itself, this work treats evaluation as a qualification problem: it examines how evaluation modality, robustness properties of measurement instruments, and cost constraints contribute to defensible model qualification decisions.
 
+In this dissertation, \emph{qualification} denotes an evidence-based decision about whether a specific \ac{llm} is acceptable for a specified \ac{se} use context, under explicit constraints and risk tolerance. A qualification claim is not a general statement that a model is ``good''; it is a bounded statement of \emph{intended use} (task class and artifact role), \emph{permitted operating conditions} (inputs, prompt scaffolds, and workflow placement), and \emph{required controls} (evaluation modality, robustness checks, and human oversight). Accordingly, evaluation results are treated as \emph{evidence} that supports or fails to support a qualification claim, rather than as an end in themselves.
+
 \section{Motivation}\label{sec:motivation}
 
 \subsection{Systems Engineering as a High Consequence Decision Environment}\label{subsec:motivation_se_high_consequence}
@@ -29,7 +31,7 @@ The discipline is high-impact: empirical research suggests that \ac{se} effort i
 
 As programs expand in scope (e.g., distributed architectures, autonomous platforms, and digital twins), the cognitive load on systems engineers grows nonlinearly. Approaches such as \ac{mbse} can raise the ceiling of what is manageable by increasing structure, traceability, and consistency of system representations \cite{dau_ModelBasedSystemsEngineering_2019, ramos_ModelBasedSystemsEngineering_2012, borky_EffectiveModelBasedSystems_2018, vaneman_mbse_demystified_2025, delligatti_SysMLDistilledBrief_2013}. Even with \ac{mbse}, the cognitive limits of humans and the explosion of coordination paths in large, multi‑stakeholder system‑of‑systems programs often called "mega projects" remain bottlenecks \cite{McDermott_Generative_AI_Visualization_Managing_Megaprojects_2025}. This reality motivates the development of tools and organizational practices that offload routine burdens, preserve engineering rigor, and help teams detect unknown‑knowns despite the inherent complexity.
 
-Because \ac{se} decisions shape downstream cost, schedule, and technical risk, even modest productivity improvements can have outsized program impact. Figure~\ref{fig:side_by_side} provides illustrative relationships between \ac{se} capability and program outcomes reported in the \ac{se} literature \cite{honour_value_systems_engineering_2012, walden_systems_engineering_handbook_2015, elm_business_2012}. This creates strong motivation to explore methods and tools that can reduce coordination overhead and documentation burden without degrading decision quality.
+Because \ac{se} decisions shape downstream cost, schedule, and technical risk, even modest productivity improvements can have outsized program impact. Figure~\ref{fig:side_by_side} provides illustrative relationships between \ac{se} capability and program outcomes reported in the \ac{se} literature \cite{honour_value_systems_engineering_2012, walden_systems_engineering_handbook_2015, elm_BusinessCaseSystemsEngineering_2012}. This creates strong motivation to explore methods and tools that can reduce coordination overhead and documentation burden without degrading decision quality.
 
 \begin{figure}[htbp]
     \centering
@@ -163,8 +165,9 @@ These research questions are investigated through the following objectives, exec
 
 \section{Research Contributions to the Body of Knowledge}\label{sec:research_contributions}
 
-This research advances the evaluation and qualification of \acp{llm} for \ac{se} applications through four primary contributions. Together, these contributions address limitations in existing evaluation practices by emphasizing evaluation modality, robustness, and cost-aware deployment considerations that are central to qualifying models for \ac{se} use. 
+The primary contribution of this dissertation is a decision framework for qualifying \acp{llm} for use in \ac{se} tasks. The framework treats qualification as a structured decision supported by multiple forms of evidence: (i) \emph{measurement defensibility} for whether the evaluation protocol is valid and robust enough to support decisions, (ii) \emph{modality suitability} for whether selected-response and constructed-response evaluations provide convergent evidence for the task class, and (iii) \emph{resource feasibility} for whether quality and acceptable performance is achievable within practical cost constraints.
 
+SysEngBench functions as the instantiation used to demonstrate this qualification framework. The four contributions below should therefore be read as framework components: they define the measurement instruments, stress-test robustness, characterize modality divergence, and map performance to cost to enable efficient task-modality guidance.
 
 \subsection{Contribution 1: Extension of SysEngBench with Multi-Format Evaluation Questions}\label{subsec:Contribution_one}
 
@@ -250,6 +253,6 @@ Chapter 3 details the overall research framework, from dataset construction to e
 
 Chapter 4 reports the experimental findings, presenting model performance on both \acp{mcq} and \acp{osq} while comparing outcomes across modalities. Statistical analysis and a tokenomics analysis of the results is also shared.
 
-Chapter 5 interprets the results, drawing implications for benchmarking methodologies and practical applications in systems engineering and \ac{llm} qualification for practicing systems engineers. It addresses the research limitations and outlines opportunities for future research.
+Chapter 5 interprets the results and discusses implications for SE benchmarking methodology and model qualification. It addresses the research limitations and outlines opportunities for future research.
 
-Chapter 6 summarizes the key contributions of this dissertation manuscript and reflects on the broader impact to the Systems Engineering community. It closes with final thoughts and recommendations for subsequent investigations.
+Chapter 6 provides practical applications of the research, summarizes key contributions, and reflects on the broader impact to the Systems Engineering community with final thoughts.

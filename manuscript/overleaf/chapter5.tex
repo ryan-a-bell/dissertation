@@ -1,23 +1,25 @@
 \chapter{Discussion}\label{ch:discussion}
 
-This chapter interprets the results presented in Chapter \ref{ch:results} through the lens established in Chapter \ref{ch:introduction}: the need for trustworthy and cost-aware use of \acp{llm} in \ac{se}, and the role of benchmarking as a prerequisite for reliable adoption. The discussion is organized into four parts. 
+This chapter interprets the results presented in Chapter \ref{ch:results} through the lens established in Chapter \ref{ch:introduction}: the need for trustworthy and cost-aware use of \acp{llm} in \ac{se}, and the role of benchmarking as a prerequisite for reliable adoption. The discussion is organized into three parts. 
 
-First, it interprets the empirical findings across evaluation modalities and token usage behavior. Second, it translates those findings into implications for benchmarking methodology, including task-modality alignment and evaluation robustness. Third, it derives practical guidance for deploying LLMs in SE workflows. Finally, it identifies key limitations and outlines future directions for extending this work.
+First, it interprets the empirical findings across evaluation modalities and token usage behavior. Second, it translates those findings into implications for benchmarking methodology, including task-modality alignment and evaluation robustness. Finally, it identifies key limitations and outlines future directions for extending this work.
 
 
 \section{Interpretation of Findings}\label{sec:interpretation_findings}
-%% make sure every figure in results is discussed here.
 \subsection{Interpreting MCQ to OSQ Conversion Suitability and Filtering Outcomes}
 
-A central enabling step of this research is the transformation of \acp{mcq} into \acp{osq} while preserving semantic intent and domain relevance. The suitability score distribution reported in Chapter \ref{ch:results} indicates that conversion feasibility is not uniform across the source dataset. The observed split---with a substantial majority of questions meeting the inclusion threshold for OSQ conversion (845 questions, 73.9\%) and a non-trivial minority rejected (299 questions, 26.1\%), shown in Figure \ref{fig:mcq-to-osq}.
+A central enabling step of this research is the transformation of \acp{mcq} into \acp{osq} while preserving semantic intent and domain relevance. The suitability score distribution reported in Chapter \ref{ch:results} indicates that conversion feasibility is not uniform across the source dataset. The observed split has a substantial majority of questions meeting the inclusion threshold for OSQ conversion (845 questions, 73.9\%) and a non-trivial minority rejected (299 questions, 26.1\%), shown in Figure \ref{fig:distribution-of-suitability}.
 
-The acceptance rate suggests that domain-specific SE MCQs can be re-expressed in a textual-response form without fundamentally altering what is being tested. This supports the premise that existing benchmark assets can be expanded to richer modalities rather than rebuilt from scratch. Second, the rejected portion is not merely incidental noise; it represents structural boundaries of conversion. The rejected items include questions whose multiple-choice framing provides essential scaffolding (e.g., ambiguity resolved only by options, or questions whose discriminative power is primarily in the distractors).
+The distribution is concentrated at the high end. The accepted region (scores $\geq 7$) contains roughly three-quarters of the questions, and the mode occurs at score 9, which accounts for a large fraction of the dataset. By contrast, rejected items are distributed across scores 1--6 with comparatively smaller bins, indicating that low scores occur less frequently than high scores.
+
+Conversion outcomes also vary by topic area. As shown in Figure~\ref{fig:osq-conversion-category-distribution}, a small number of categories, most notably Design Standards, DoDAF, Requirements, and Project Management, contribute the largest volumes, while many other categories appear only a few times. This long-tailed category structure means that overall acceptance and rejection counts are dominated by the most common categories, and per-category rates for less frequent topics are based on limited samples.
+
+The overall acceptance rate indicates that many domain-specific SE MCQs can be re-expressed as textual-response items without changing the underlying knowledge or capability being assessed. This provides a practical path for expanding an existing benchmark into richer evaluation modalities without rebuilding the dataset from scratch. The rejected subset marks identifiable boundaries for conversion, including items where the multiple-choice options provide essential scaffolding (e.g., ambiguity resolved only by options) or where discriminative power depends on the distractor structure rather than the stem alone.
 
 
 \subsection{Interpreting MCQ Positional Effects and Robustness Metrics}
-%%% add more refs to ch4 once added.
 
-Position effects arise from an interaction between the model and the MCQ presentation, and can therefore be interpreted as (a) a measurement artifact, (b) a behavioral bias of the model, or (c) a combination of both.
+Position effects arise from an interaction between the model and the MCQ presentation, and can therefore be interpreted as (a) a measurement artifact, (b) a behavioral bias of the model, or (c) a combination of both. These effects are revealed when accuracy is not invariant under controlled perturbations of the MCQ form (e.g., answer key position, option ordering, or distractor configuration).
 
 Accordingly, the MCQ results provide two complementary forms of evidence:
 \begin{enumerate}[label=(\roman*)]
@@ -25,259 +27,141 @@ Accordingly, the MCQ results provide two complementary forms of evidence:
     \item Robustness signals reflected in sensitivity to controlled perturbations of the MCQ form (e.g., answer position and distractor configuration).
 \end{enumerate}
 
-The observed spread in MCQ accuracy across models (approximately 0.56 to 0.97) indicates that the dataset meaningfully separates capability levels under the evaluated prompt constraints. This supports the use of MCQs as an efficient instrument for broad capability stratification and regression testing.
+The observed spread in MCQ accuracy across models (approximately 0.56 to 0.97; Figure~\ref{fig:mcq_position_heatmap}) indicates that the dataset meaningfully separates capability levels under the evaluated prompt constraints. This supports the use of MCQs as an efficient instrument for broad capability stratification and regression testing, particularly when the goal is to detect shifts in overall correctness with low inference and scoring overhead.
 
-However, the positional analysis motivates a more careful interpretation of what MCQ accuracy measures. If performance varies systematically with answer position or option ordering, the evaluation may partially reflect sensitivity to presentation cues rather than only domain understanding. From a benchmarking perspective, this constitutes a threat to comparability unless controlled (e.g., by randomization and variance reporting). From a model-behavior perspective, it provides a diagnostic of brittleness: models that exhibit stronger position sensitivity may be more prone to superficial heuristics that can inflate confidence in settings where the answer is not anchored by deep reasoning. This concern aligns with the trustworthiness framing in Chapter \ref{ch:introduction}, where deployment risk is driven not only by average accuracy but also by failure modes and robustness under small input changes.
+However, the positional analysis motivates a more careful interpretation of what MCQ accuracy measures. If performance varies systematically with answer position or option ordering, the evaluation may partially reflect sensitivity to presentation cues rather than only domain understanding. The per-position accuracy heatmap (Figure~\ref{fig:mcq_position_heatmap}) shows that position dependence is not uniform across models: some models exhibit tightly clustered accuracies across A--D, while others show pronounced per-position differences, including large drops concentrated in specific answer key positions. The statistical summaries in Table~\ref{tab:position_robustness_results} reflect the same heterogeneity by partitioning models into \emph{Moderate bias}, \emph{Mixed evidence}, and \emph{No bias} groups based on the joint behavior of hypothesis tests (chi-square and Friedman) and effect-size measures (Cram\'er's $V$ and Kendall's $W$).
 
-Finally, \acp{mcq} trade expressiveness for efficiency. They can reward recognition and eliminate the need to articulate rationale, which is appropriate for certain SE knowledge checks (definitions, process relationships, categorical mappings). 
+From a benchmarking perspective, systematic performance differences by answer position (Figure~\ref{fig:mcq_position_heatmap}) constitute a threat to comparability unless controlled. If two models differ in their sensitivity to presentation cues, then raw MCQ accuracy can partially reflect format brittleness rather than only domain understanding. This motivates procedural controls (e.g., randomization or rotation of option positions) as well as reporting practices that expose variance across perturbations rather than using a single point estimate. The position-bias evidence summarized in Table~\ref{tab:position_robustness_results} is characterizes a measurement condition that can confound model-to-model comparisons if left unmeasured.
+
+From a model-behavior perspective, position sensitivity provides a diagnostic of brittleness. Models that exhibit stronger position sensitivity may be more prone to superficial heuristics that can inflate confidence in settings where the answer is not anchored by deep reasoning. This concern aligns with the trustworthiness framing in Chapter \ref{ch:introduction}, where deployment risk is driven not only by average accuracy but also by failure modes and robustness under small input changes.
+
+Finally, \acp{mcq} trade expressiveness for efficiency. \acp{mcq} can reward recognition and eliminate the need to articulate rationale, which is appropriate for certain SE knowledge checks (definitions, process relationships, categorical mappings). These robustness findings directly address \textbf{RQ1} and support \textbf{Contribution~2} (robustness analysis of MCQ evaluation using distractor variation) by demonstrating that positional sensitivity is a measurable and non-trivial property of MCQ-based benchmarks in the SE domain.
 
 \subsection{Interpreting OSQ Performance}
 
-The OSQ results introduce a different measurement regime: models must generate content, and scoring reflects rubric-based quality rather than discrete option selection. This shift inherently changes what "success" represents. A correct OSQ response can encode partial correctness, incomplete reasoning, or correct conclusions with weak justification, depending on rubric design and judging fidelity.
+The OSQ results introduce a different measurement regime. Models must generate content, and scoring reflects rubric-based quality rather than discrete option selection. This shift inherently changes what "success" represents. A correct OSQ response can encode partial correctness, incomplete reasoning, or correct conclusions with weak justification, depending on rubric design and judging fidelity.
 
-%%% below tbd.
-One important interpretive point is that OSQ scoring captures dimensions of response quality that MCQs cannot: explanatory coherence, appropriate use of SE terminology, structured reasoning, and completeness. This aligns with the motivation in Chapter \ref{ch:introduction} that textual response formats can better capture nuanced conceptual understanding for SE tasks. The discussion value of OSQs is therefore not only in ranking models, but in revealing \emph{how} they fail: omissions, shallow explanations, misapplied concepts, or fluent but incorrect reasoning.
+OSQ outcomes are summarized using three complementary views: (i) per-model OSQ total-score distributions for two judge models (Figures~\ref{fig:osq_score_dist_gptoss} and~\ref{fig:osq_score_dist_gpt5mini}), (ii) a grouped stacked-bar decomposition of mean rubric totals and their five component dimensions by model and judge (Figure~\ref{fig:inter-judge-grading-histogram}), and (iii) inter-judge agreement diagnostics via a grading-difference histogram and a rank-correlation summary (Figure~\ref{fig:inter-judge-grading-histogram} and Table~\ref{tab:interjudge_corr}). In the distribution plots, OSQ total scores are shown on a common 0--100 scale with a shared passing reference at 70, enabling direct judge-to-judge comparison of distribution shape, spread, and threshold crossing behavior.
 
-At the same time, OSQs introduce measurement complexity. The use of kernel density estimates and the observed behavior of the density tails (an artifact of Gaussian kernels extending beyond the bounded scoring range) highlights a practical interpretive caution: OSQ score visualizations are summaries of bounded rubric outcomes, and the evaluation pipeline must ensure that interpretive claims remain grounded in the rubric domain. In other words, OSQ scoring is more expressive, but also more sensitive to judge calibration, rubric specificity, and the distributional properties of the scoring procedure.
+Inter-judge Spearman correlation is $\rho$ = 0.9012 (n = 16,051), which indicates strong monotonic agreement in ordering across the shared scored responses. If one judge tends to rate a model’s responses higher than another model’s responses, the other judge usually preserves that ordering. That makes the pair credible given the inter-judge rank consistency, for comparative evaluation, especially when downstream analyses depend on ranks, relative comparisons, or “top group vs bottom group” separation.  Judging failures were rare relative to evaluation volume, and the small number of parse errors is summarized separately (Table~\ref{tab:osq_judging_errors_combined}).
 
-
-\subsection{Interpreting the Evaluation Modality Relationship Between MCQ and OSQ }
-
-agreement, divergence, and what it means
-
-The comparative analysis between MCQ accuracy and OSQ mean judge score provides evidence that the two modalities are related but not equivalent. The reported regression relationship (with $R^2 = 0.671$) indicates substantial shared variance, suggesting that models that perform well in MCQ tend to also perform well in OSQ, to a meaningful degree. This supports a practical interpretation: MCQ performance can serve as a coarse indicator of domain competence.
-
-However, the fact that the relationship is not near-deterministic is equally important. Divergence between MCQ and OSQ outcomes is expected given the different cognitive demands of selection versus generation. A model may select correct answers reliably yet provide weak explanations, or conversely generate high-quality reasoning while occasionally failing brittle multiple-choice traps. In SE applications, these differences map to distinct risks. Selection-style correctness is valuable for quick checks, but generation-style competence is critical for tasks like requirements rationale, trade-space explanation, and architectural justification.
+Taken together, these diagnostics support treating OSQ scores as a stable comparative signal under multi-judge scoring, while reserving stronger claims about absolute thresholds for judge-conditioned reporting. Accordingly, OSQ results are used primarily to establish relative model quality and to expose rubric-dimension tradeoffs that are not observable under MCQ evaluation, with the two-judge setup functioning as an explicit robustness check on the grading process.
 
 
-    % \item \textbf{Evaluate inter-judge agreement (correlation).}
-    % Let $\rho$ denote the chosen inter-judge correlation (e.g., Spearman).
-    % \begin{enumerate}[nosep]
-    %     \item If $\rho \geq 0.80$: judges are strongly consistent; OSQ scores and model rankings are robust to judge choice.
-    %     \item If $0.50 \leq \rho < 0.80$: judges show moderate agreement; OSQ results are usable but judge-specific effects should be acknowledged.
-    %     \item If $\rho < 0.50$: judge agreement is low; treat OSQ-based conclusions with caution and highlight this as a limitation.
+\subsection{Interpreting the Cross-Modality Relationship Between MCQ and OSQ Evaluations }
+
+The cross-modality analyses collectively indicate that MCQ and OSQ capture overlapping but non-equivalent evidence about model performance on the matched-question subset. At the aggregate level, the MCQ-OSQ scatter plots (Figures~\ref{fig:mcq-vs-osq-global} and~\ref{fig:mcq-vs-osq-zoomed}) establish that the modalities are positively associated while also exhibiting a persistent deviation from one-to-one agreement. The fitted regression and reported association strength (\(R^2=0.647\)) support the interpretation that models that score higher under MCQ tend to score higher under OSQ as well, implying a shared underlying capability signal across selection and generation regimes. However, the visual dominance of points below the \(y=x\) perfect-agreement line in both the global and zoomed panels indicates a systematic modality gap. For most models, OSQ correctness is lower than MCQ accuracy on the same matched items. The zoomed view reinforces that this pattern is not driven only by weak models or a wide axis range; the downward shift persists within the high-performing cluster, implying that the gap reflects a structural property of the measurement regimes rather than a corner-case artifact.
+
+The per-model delta table (Table~\ref{tab:per_model_deltas}) sharpens this conclusion by showing that the modality gap is not a constant offset but varies substantially by model, with \(\Delta_i\) spanning from small differences to large separations. This variability implies that a single calibration factor cannot reconcile the modalities and that the extent to which MCQ overstates OSQ-relevant performance is model-dependent. In qualification terms, \(\Delta_i\) functions as a modality-risk indicator: large deltas identify cases where MCQ evidence provides limited support for claims about generative quality, while smaller deltas indicate comparatively closer alignment between selection-based correctness and rubric-scored generation. Together with the scatter plots, these deltas support interpreting modality mismatch as an empirically measurable property of model behavior.
+
+Dimension-level evidence further explains why this gap persists. The combined multi-judge rubric-dimension scatter (Figure~\ref{fig:mcq-vs-osq-dimension-multijudge}) shows that the relationship between MCQ accuracy and OSQ outcomes differs by rubric component. The strongest alignment occurs for correctness- and coverage-oriented dimensions (e.g., Technical Accuracy and Completeness), while weaker alignment appears for presentation-oriented dimensions such as Clarity \& Organization. The corresponding dimension-wise regression statistics (Table~\ref{tab:mcq_osq_rubric_corr_mj}) formalize this pattern: dimensions with higher \(R^2\) are those most directly tied to factual correctness and completeness, whereas Clarity \& Organization exhibits the weakest explanatory power. This distinction supports a substantive interpretation of what each modality measures: MCQ performance tracks knowledge recognition and distractor discrimination, which correlates strongly with correctness-like rubric components, but MCQ is structurally incapable of directly measuring aspects of generative quality such as organization, justification quality, and professional communication.
+
+The judge correlation table (Table~\ref{tab:mcq_osq_corr}) indicates that cross-modality association is stable across the two judges, with Pearson and Spearman correlations remaining in a similar range for each judge and for their average. This supports interpreting the observed MCQ-OSQ relationship as a property of the modalities rather than an artifact of a single grader's idiosyncratic calibration. At the same time, the paired Wilcoxon signed-rank results (Table~\ref{tab:wilcoxon}) provide inferential confirmation that the modality gap is systematic. The consistently small \(p\)-values across judges, along with positive median and mean paired differences, reject the null hypothesis of no systematic separation between MCQ and OSQ on the matched subset. Importantly, differences in the estimated median and mean separation between judges imply that judge calibration can affect the \emph{magnitude} of the gap, but not its \emph{existence}; this motivates judge-conditioned reporting when absolute thresholds are used while still supporting robust conclusions about directional modality separation.
+
+Finally, the cross-modality classification results (Table~\ref{tab:mcq_osq_results_summary}) convert these statistical and visual findings into decision-relevant categories. Models assigned to the \emph{Divergent} group exhibit a combination of low association and large paired differences, indicating that MCQ and OSQ provide materially different evidence for those cases; MCQ-only evaluation is therefore least defensible when the evaluation claim depends on generative adequacy, explanation quality, or completeness. The larger \emph{Mixed evidence} group indicates that many models exhibit moderate association paired with non-trivial differences, implying that MCQ can contain predictive signal for OSQ but does not provide interchangeable evidence. In synthesis, these artifacts support a clear qualification stance: MCQ and OSQ share a common capability signal and therefore correlate, but OSQ imposes additional demands that systematically lower measured performance relative to MCQ on matched items, with the size of the gap varying across models and rubric dimensions. Consequently, modality choice should be treated as part of the evaluation claim itself (selection accuracy versus generative quality), and dual-modality evaluation is most justified when conclusions require robustness to modality-dependent failure modes or depend on rubric dimensions that MCQ cannot directly observe. This evidence directly addresses \textbf{RQ2} and provides the empirical foundation for \textbf{Contribution~3} (evaluation modality fusion as a basis for model qualification).
+
+\subsection{Interpreting Tokenomics and the Cost of Quality}
+
+The tokenomics results show that inference cost is inseparable from output quality: models differ not only in how many tokens they emit, but in how reliably those tokens produce rubric-satisfying content. Interpreting token usage as a deployment resource requires looking at response length within each quality tier, how often each tier occurs, and the resulting cost–quality tradeoffs. Across Figures~\ref{fig:tokenomics_distribution}, \ref{fig:tokenomics_length_vs_quality}, and \ref{fig:pareto_quality_vs_token_usage}, the central implication is that cost is better understood as \emph{expected tokens per acceptable response}.
+
+At the response level, Figure~\ref{fig:tokenomics_distribution} indicates that higher quality tiers often shift toward higher token counts, consistent with stronger OSQ answers requiring additional explanation, structure, and completeness. However, substantial dispersion and frequent high-token outliers across multiple tiers show that verbosity is an imperfect proxy for excellence. Long responses also appear in lower-quality bins, implying that some token expenditure reflects redundancy or drift rather than improved rubric compliance. This indicates that response length is not only about typical size; the long tail matters, as occasional very long outputs can disproportionately increase runtime and cost. 
+
+Figure~\ref{fig:tokenomics_length_vs_quality} shifts the emphasis from how long responses are to how often they are usable. Models with large \textit{Poor} shares imply that a substantial fraction of token spend yields low-utility outputs that would require rework, retries, or human intervention, while models with large \textit{Excellent} shares convert token expenditure into deployable artifacts more reliably. Operationally, this quality-yield view is more decision-relevant than raw length because it governs the expected number of attempts needed to obtain an acceptable answer and therefore the effective cost of a successful outcome.
+
+These relationships culminate in Figure~\ref{fig:pareto_quality_vs_token_usage}, which frames model choice as a multi-objective trade space. The Pareto frontier indicates that several models represent efficient operating points. Moving toward higher mean judge scores generally entails higher median token usage, while reducing token usage entails accepting lower quality. Dominated models are those that are worse on both axes and are difficult to justify absent external constraints (e.g., privacy, availability, or deployment requirements). Overall, the tokenomics evidence motivates reporting efficiency frontiers as part of qualification, because they make explicit how much token cost is required to achieve a given level of judged OSQ quality.
 
 
-The cross-modality classification rubric defined in Chapter~\ref{ch:materials_methods} and applied in Chapter~\ref{ch:results} classifies the MCQ-OSQ relationship as correlated but non-interchangeable. This designation encodes two complementary findings. First, the formats produce highly correlated model rankings ($r \approx 0.80$, $\rho \approx 0.81$): a model that performs well on MCQ tends to perform well on OSQ, and vice versa. Second, MCQ systematically yields higher absolute scores than OSQ for every model evaluated (Wilcoxon $W = 0.0$, $p < 0.001$, $d = 1.82$), with a mean MCQ advantage of 12.6 percentage points. The effect is universal with all 19 models scored higher on MCQ, ranging from 5.3 percentage points (mistral-large) to 38.1 percentage points (llama3.2\_\_3b).
+\subsection{Interpreting INCOSE Task Categories Evaluation Modalities}
+\label{subsec:interpret_modality_task_mapping}
 
-The practical implication is direct: MCQ and OSQ provide complementary but non-interchangeable evidence. MCQ captures the same relative model ordering but at a systematically inflated absolute level. OSQ reveals capability gaps that MCQ conceals. An evaluation regime that relies solely on MCQ will overestimate model readiness for tasks requiring generative reasoning, while one that relies solely on OSQ will miss the efficient screening value that MCQ provides. This directly motivates the multi-format benchmark direction laid out in Chapter~\ref{ch:introduction}: a robust SE benchmark should intentionally combine modalities to measure distinct aspects of SE-relevant competence.
+The INCOSE-category decomposition shows that modality choice is category-dependent: the same model can appear highly competent under MCQ while exhibiting materially lower OSQ performance on the matched questions. BBecause the aligned MCQ--OSQ dataset pairs the same questions across modalities, the observed gaps are attributable to modality differences rather than to variation in question composition. Collectively, Figures~\ref{fig:mcq_accuracy_by_incose_category}--\ref{fig:mcq_vs_osq_scatter_regions} and Table~\ref{tab:qual_modality_class_by_incose} indicate that MCQ and OSQ provide overlapping but non-equivalent evidence, and that the strength of that mismatch varies systematically by INCOSE category.
 
-\subsection{Interpreting Tokenomics Factors of Quality and Verbosity}
+The MCQ and OSQ heatmaps establish how measurement resolution changes with modality. The MCQ heatmap (Figure~\ref{fig:mcq_accuracy_by_incose_category}) shows strong stratification by model and category difficulty but also clear ceiling effects in easier categories, where repeated high-90\% to 100\% cells compress differences among high-capability models and indicate local benchmark saturation (i.e., the instrument no longer differentiates performance because many models reach the scoring ceiling). 
 
-The token distribution analysis shows that response lengths vary widely across models, from fewer than 20 tokens to more than 500 tokens for the same posed question. This provides a concrete interpretive anchor for cost-aware deployment: response verbosity is a resource consumption behavior that differs systematically across models.
+The OSQ heatmap (Figure~\ref{fig:osq_accuracy_by_incose_category}) exhibits broader dispersion and lower minima, especially for weaker models and harder categories, suggesting that open-ended scoring exposes failure modes that MCQ can partially mask. Interpreted jointly, these figures support the claim that MCQ is most informative where categories avoid saturation, while OSQ retains discriminative power by requiring generative adequacy rather than recognition alone.
 
-The length-versus-quality analysis suggests that longer responses do not guarantee higher quality, and that quality differences persist even when controlling response length bins. This supports a core deployment interpretation: operators cannot assume that ``more tokens'' is equivalent to ``more correctness'' or ``better reasoning.'' In SE contexts where outputs may feed downstream decisions, verbosity without accuracy can: (i) provide a false sense of confidence, (ii) increase review burden, and (iii) propagate into downstream artifacts all the while preserving - if not increasing - risk.
-
-The Pareto-style frontier visualization frames a the efficiency trade space: some models achieve relatively high judged quality at moderate token usage, while others consume more tokens for comparable or lower quality. This implies that benchmark results should not only rank models by quality, but characterize efficiency regimes that inform model selection under budget constraints.
-
-
-%%% Include some of this verbage for interpreation?
-
-\subsubsection*{Interpretation}
-
-% Models on the Pareto frontier achieve the best available trade-offs between cost and quality: no other model is both cheaper and more accurate. Models inside the frontier are dominated by at least one alternative that is strictly better in cost, quality, or both. The efficiency metric (e.g., cost per score point) provides a simple rank ordering of models by cost-effectiveness and enables practical recommendations such as ``cheaper models that achieve near-top performance'' versus ``premium models whose quality gains justify their cost.'' This analysis grounds benchmark results in realistic resource constraints.
+The delta analysis quantifies the category dependence of the modality gap. The category-level mean deltas (Figure~\ref{fig:mcq_osq_delta_by_incose_category}) are positive for all categories, indicating a universal MCQ advantage on matched items, but the magnitude varies widely from $+7.9\%$ (Architecture Definition Process) to $+19.6\%$ (Modeling and Simulation). The categories with the largest deltas---Modeling and Simulation, Modeling Frameworks and Methods, Decision Management and Tradespace Analysis, and System Safety Engineering---tend to involve synthesis-heavy, judgment-intensive knowledge where constructing a rationale is central to competence. In these areas, the MCQ format is least representative of the underlying task demand, and MCQ-only evaluation would provide the most misleading qualification evidence precisely where the stakes of generative competence are highest.
 
 
-Cost-effectiveness and token usage are  interpreted using the following decision logic:
+These results suggest the MCQ–OSQ discrepancy cannot be modeled as a constant offset; instead, it is category-dependent, with larger gaps concentrated in categories that place greater requirements on generative explanation.  The scatter with decision regions (Figure~\ref{fig:mcq_vs_osq_scatter_regions}) shows that while category-level MCQ and OSQ are strongly associated (\(R^2=0.811\)), correlation does not imply interchangeability: the conservative \emph{MCQ-sufficient} band requires both high MCQ accuracy and small cross-modality separation, while categories outside that band are those where the evaluation claim depends on modality and therefore benefits from dual-modality evidence.
 
-\begin{enumerate}[nosep]
-    \item \textbf{Examine the Pareto frontier plot.}
-    \begin{enumerate}[nosep]
-        \item Identify models on the upper-left boundary (high quality, low cost): these form the Pareto frontier.
-        \item Models that lie strictly below and to the right of the frontier are dominated by at least one alternative and are less attractive.
-    \end{enumerate}
+Table~\ref{tab:qual_modality_class_by_incose} converts these patterns into actionable guidance. Categories labeled \emph{Dual-modality required} coincide with the largest mean deltas and substantial high-divergence rates, indicating that MCQ-only evaluation would frequently misrepresent OSQ-relevant competence in those areas. Seven categories are classified as \textit{dual-modality required} ($|\overline{\Delta}_c| \geq 0.15$): Modeling and Simulation ($+19.6\%$), Modeling Frameworks and Methods ($+18.6\%$), Decision Management, Analysis of Alternatives, and Tradespace Analysis ($+18.2\%$), System Safety Engineering ($+17.6\%$), Configuration and Information Management ($+16.5\%$), Usability and Human Systems Integration ($+15.7\%$), and Risk and Opportunity Management ($+15.4\%$). For these categories, MCQ-only evaluation carries substantial risk of overestimating model readiness for tasks that inherently require constructed justification rather than option selection. 
 
-    \item \textbf{Compare cost per 1{,}000 questions.}
-    \begin{itemize}[nosep]
-        \item If two models have similar quality but one has substantially lower cost, the cheaper model is preferred for large-scale deployment.
-        \item If a more expensive model has noticeably higher quality, the trade-off depends on available budget and required performance.
-    \end{itemize}
+Categories labeled \emph{Dual-modality recommended} still exhibit positive deltas and nontrivial divergence, implying that OSQ adds assurance even where MCQ is more predictive. Notably, no category reaches the \textit{MCQ-sufficient} classification ($|\Delta| < 5\%$ with MCQ accuracy $\geq 85\%$), which means the entire SysEngBench taxonomy exhibits meaningful modality sensitivity.
 
-    \item \textbf{Evaluate the efficiency metric (e.g., cost-per-score).}
-    \begin{enumerate}[nosep]
-        \item Rank models by cost-per-score; lower values indicate better efficiency.
-        \item Check whether highly efficient models also meet minimum quality thresholds (e.g., a target mean OSQ score).
-    \end{enumerate}
-
-    \item \textbf{Final interpretation.}
-    \begin{itemize}[nosep]
-        \item \emph{Operationally optimal models:} models on the Pareto frontier with low cost-per-score and acceptable quality; these are primary candidates for deployment.
-        \item \emph{Premium models:} models with the highest quality but also much higher cost; preferable only when maximal performance is required and budget allows.
-        \item \emph{Dominated models:} models that are simultaneously more expensive and less accurate than at least one alternative; these can be deprioritized.
-    \end{itemize}
-\end{enumerate}
-    
+This result empirically validates the Chapter~\ref{ch:introduction} premise that MCQ-only benchmarking is insufficient across the full scope of SE knowledge areas, and it provides the category-level granularity needed for task-aligned qualification decisions (\textbf{RQ2}, supporting \textbf{C1} and \textbf{C3}).
 
 
-\subsection{Interpreting INCOSE Task Categories}
+\section{Implications for SE Benchmarking Methodology and Model Qualification}\label{sec:implications_benchmarking}
+
+Taken together, the evidence indicates that evaluation modality, robustness controls, and resource accounting are required to determine the scope and defensibility of a performance claim. In particular, the aligned MCQ--OSQ comparisons demonstrate that selection accuracy and rubric-scored generation quality provide overlapping but non-interchangeable evidence, and that the magnitude of cross-modality separation is category dependent. The tokenomics analyses further show that performance must be interpreted jointly with cost, because models occupy different quality-cost regimes and can exhibit long-tail token usage. These findings motivate a qualification-oriented benchmarking stance in which the minimum evidence required to support a claim depends on (i) the construct being claimed (recognition vs.\ generative adequacy), (ii) the task family, and (iii) the operational constraints under which the model will be used. These interpretations motivate the implications presented next, which translate the findings into recommendations for defensible benchmarking practice for systems engineers. 
 
 
 
-\section{Implications for SE Benchmarking Methodologies}\label{sec:implications_benchmarking}
+% ---------------------------------------------------------
+\subsection{Implication 1: Modality is part of the evaluation design}
+\label{subsec:ch5_imp_claim_tiers}
 
-\subsection{Implications for Task–Modality Alignment and Systems Engineering Benchmarks}
-Form chapter 1 framing
+A central implication is that modality choice is part of the claim being made. MCQ outcomes support claims about \emph{recognition competence} under constrained response form, while OSQ outcomes support claims about \emph{generative competence} under rubric-scored explanations. Therefore, benchmarks should explicitly state which claim tier is supported by the reported evidence:
+\begin{itemize}
+    \item \textbf{Tier 1: Recognition competence (MCQ).} Evidence supports the ability to select correct answers under fixed options and distractors.
+    \item \textbf{Tier 2: Generative competence (OSQ).} Evidence supports the ability to generate rubric-satisfying responses.
+    \item \textbf{Tier 3: Hybrid competence.} Evidence integrates MCQ and OSQ outcomes and includes robustness and feasibility checks (e.g., position effects, judge sensitivity, and cost budgets) to support operational constraints. 
+\end{itemize}
 
-A primary methodological implication of this work is that benchmark validity depends on matching task type to response modality. Chapter \ref{ch:introduction} motivates this as a structured alignment problem: different SE tasks demand different evidence of competence. The Chapter \ref{ch:results} results reinforce that modality changes the measurement target. MCQs emphasize discriminative recognition, while OSQs emphasize generative reasoning and explanation quality inferred from the grading categories of technical accuracy, conceptual understanding, completeness, clarity and organization, and professional relevance.
+In this framing, it is methodologically inadvisable to treat MCQ and OSQ as interchangeable measures of capability without explicitly constraining the claim to the tier supported by the evidence.
 
+% ---------------------------------------------------------
+\subsection{Implication 2: Measurement instrument robustness must be recorded}
+\label{subsec:ch5_imp_instrument_robustness}
 
-The implication is that Systems Engineers and benchmark designers should treat modality as a first-class design decision. For concepts where the intended competence is selection among alternatives (e.g., identifying correct process steps, definitions, or categorical mappings), MCQs remain appropriate and efficient. For tasks where competence is demonstrated through justification, decomposition, or trade reasoning, OSQs provide stronger validity. 
+MCQ results should not be treated as fully objective unless robustness to presentation artifacts is measured. Position effects and distractor configuration can induce systematic shifts in observed MCQ accuracy, creating comparability risk when different models respond differently to the same superficial perturbations. Therefore, benchmarks should include and report robustness checks as part of the default MCQ protocol (e.g., rotated variants, effect sizes, and whether positional sensitivity is present). 
 
+Similarly, OSQ scoring should not be treated as a single "judge truth", judge sensitivity needs to be quantified. Multi-judge scoring, agreement statistics, and explicit reporting of judge-dependent differences provide a minimum reliability scaffold for generative evaluation. Robustness reporting should be treated as a qualification requirement since it bounds how much the reported metric depends on the measurement instrument rather than the model's underlying capability.
 
-In 15288 terms, MCQs are best aligned to measuring \textit{process literacy}—recognition of process intent, artifact mappings, and rule-based distinctions—because competence is naturally expressed as selection among alternatives and can be assessed with high reliability controls. OSQs are best aligned to measuring \textit{process execution competence}—requirements formulation, architecture and trade justification, risk rationale, and V\&V planning—because these outcomes require constructing artifacts and defensible reasoning in context. A mixed-modality benchmark therefore improves coverage across the 15288 process space by pairing efficient breadth assessment (MCQ) with high-validity depth assessment (OSQ), reducing the risk that evaluation overfits to a single response format and better represents the heterogeneous nature of SE work.
+% ---------------------------------------------------------
+\subsection{Implication 3: Minimum evidence bundles should be task-family aware}
+\label{subsec:ch5_imp_evidence_bundles}
 
+Cross-modality separation is category-dependent, so the evidence needed to support a defensible claim must also be category-dependent. Where MCQ and OSQ diverge more strongly, MCQ-only results are more likely to overstate deployable competence and OSQ becomes necessary to validate generative adequacy. Where divergence is smaller, MCQ can serve as an efficient screening instrument, provided robustness controls are applied.
 
-\subsection{Implications for MCQ Robustness and Reliability Checks}
-
-( NEED TO ADD REFS/CITATIONS )
-The observed sensitivity patterns in MCQ evaluation motivate robustness practices that are uncommon in many benchmark reports. If performance varies with option ordering or distractor characteristics, then a single-form MCQ score may be an unstable and unreliable estimate of competence.
-
-A methodological implication is that MCQ benchmarks in specialized domains should incorporate reliability checks such as:
-(1) randomized answer position across evaluation runs,
-(2) controlled distractor variants that probe whether models rely on superficial cues,
-and (3) reporting of per-position performance rather than only aggregate accuracy.
-These practices reduce the risk that benchmark results overstate model capability due to format artifacts.
-
-
-\subsection{Implications for OSQ Evaluation and Judge Design  }
-
-OSQ evaluation requires methodological discipline to remain comparable and reproducible. Rubrics should be explicit about what dimensions of quality are being measured (technical correctness, completeness, justification quality, terminology, etc.).
-
-Because OSQ scoring often depends on automated judging, the benchmark methodology should treat the judge as part of the measurement instrument. This implies reporting judge configuration, rubric prompts, and any additional system or user prompts. Even while absolute judge reliability is imperfect, transparency allows the community to interpret scores appropriately and to compare results across studies.
-
-Mention the inter-rater scores for judge model selection.
-
-
-\subsection{Implications for Reporting Standards }
-
-A final methodological implication is that benchmarks intended to support trustworthy adoption should aim to include cross modality performance, robustness and resilience to question variance, and cost efficiency reporting rather than single modality accuracy-only comparisons on leader boards. In practice, this can be achieved by augmenting aggregate rankings with (i) modality-separated outcomes, (ii) a small robustness check where the format can introduce variants, and (iii) efficiency characterization through token distributions and quality--token trade-offs. The purpose of these additions is not to establish a new standard or replace leader boards, but to reduce ambiguity about what a score represents when results are used for procurement, workflow integration, or governance in SE contexts.
-
-
-\section{Practical Applications for Systems Engineering and Insights for LLM Deployment}\label{sec:practical_applications}
-
-\subsection{Model selection Guidance by Task Type and Risk Posture}
-
-From a practical standpoint, the results suggest that model selection should be guided not only by average benchmark performance, but by how well a model's measured strengths align with the target task's evidence requirements and acceptable risk posture.
-
-The table below distinguishes between (i) the \textit{recommended qualification modality}—the minimum evaluation evidence that should be satisfied before deploying a model for a task class—and (ii) \textit{modality fit}, which characterizes how well MCQ- or OSQ-style benchmarking captures the competence required for that task. Modality fit is expressed qualitatively to emphasize that benchmarking is not a binary choice: modalities provide overlapping but non-identical measurement coverage. 
-
-%%% BELOW DISCUSSES THE HIGH/MEDIUM/LOW SCORINGS. NEED TO ANCHOR THIS.
-Guidance is derived by identifying evaluation bundles appropriate to task criticality:
+For this reason, it is recommended to report results as \emph{evaluation profiles} rather than single summary scores. Each profile defines the minimum measurements required to support a tier of claim for a task family:
 
 \begin{itemize}
-    \item \textbf{Low-risk tasks:} MCQ-heavy screening plus targeted OSQ spot checks.
-    \item \textbf{Moderate-risk tasks:} paired MCQ and OSQ evaluation on aligned subsets, with OSQ emphasized for tasks requiring explanation and rationale.
-    \item \textbf{High-risk tasks:} OSQ-focused evaluation with explicit judge stability checks and robustness gating of any MCQ-derived signals.
+    \item \textbf{Profile A (Screening):} MCQ accuracy + MCQ robustness checks (rotation/distractors) with variance reporting.
+    \item \textbf{Profile B (Dual-modality qualification):} Profile A + OSQ rubric scoring + multi-judge reliability + score distributions.
+    \item \textbf{Profile C (Cost-aware qualification):} Profile B + tokenomics (length distributions, quality yield, and an efficiency frontier).
+
 \end{itemize}
-%%%%%%%%%%%%%%%%
+
+These profiles should be selected based on the claim scope and the category's modality sensitivity. Profile~C is not required for every study; however, Tier~3 deployment claims are not defensible without explicit feasibility evidence, and Profile~C provides the minimum cost-aware scaffold needed to evaluate whether a quality claim remains feasible under budget and latency constraints.
 
 
-This aligns with the Chapter 1 emphasis on trustworthy usage: deployment choices should be made with explicit awareness of failure modes and measurement limitations rather than relying on general-purpose claims about capability.
+% ---------------------------------------------------------
+\subsection{Implication 4: Reporting standards should support auditability and reuse}
+\label{subsec:ch5_imp_reporting_standards}
 
+To make benchmark results auditable and reusable, we recommend a standardized reporting package that mirrors the claim tiers and evidence bundles above. At minimum, a benchmark should report:
+\begin{enumerate}
+    \item \textbf{Modality-separated outcomes:} MCQ accuracy and OSQ score distributions, not only aggregated means.
+    \item \textbf{Cross-modality evidence:} deltas and a decision mapping that indicates whether modalities are interchangeable, correlated-but-not-interchangeable, or divergent for the target task family.
+    \item \textbf{Robustness controls:} MCQ artifact sensitivity (e.g., answer position) and OSQ judge sensitivity (e.g., agreement).
+    \item \textbf{Tokenomics:} token usage distributions by quality tier and an efficiency frontier linking quality to cost.
+    \item \textbf{Traceability artifacts:} run configuration, prompts, rubric definitions, and parsing/error rates sufficient to reproduce scoring.
+\end{enumerate}
 
-\begin{table}[htbp]
-\centering
-\caption{Notional task classes and modality guidance for benchmark-informed deployment.}
-\label{tab:task_modality_guidance}
-\resizebox{\linewidth}{!}{%
-\begin{tabular}{p{0.7cm} p{4.0cm} p{2.2cm} p{4.2cm} p{1.5cm} p{1.5cm} p{5.6cm}}
-\toprule
-\textbf{\#} &
-\textbf{Task class (SE use)} &
-\textbf{Risk posture} &
-\textbf{Recommended qualification modality} &
-\textbf{MCQ fit} &
-\textbf{OSQ fit} &
-\textbf{Rationale / Guidance} \\
-\midrule
+This reporting package ensures that downstream users can (i) select an evaluation modality consistent with their intended claim, (ii) compare models without conflating instrument artifacts with capability, and (iii) reason about cost--quality tradeoffs rather than treating cost as an afterthought.
 
-1 &
-\makecell[l]{Ideation \& coverage expansion\\(e.g., brainstorm risks/hazards,\\mitigations, questions to ask)} &
-Low &
-\makecell[l]{MCQ sufficient\\(OSQ optional)} &
-High &
-Medium &
-Primary value is breadth and prompting human review. MCQ captures baseline domain recognition; OSQ can improve clarity and usefulness but is not required to qualify. \\
+% ---------------------------------------------------------
+\subsection{Implication 5: Benchmarks must anticipate saturation and evolve}
+\label{subsec:ch5_imp_saturation}
 
-\addlinespace
-2 &
-\makecell[l]{Compression \& translation\\(summaries, rewrites,\\structured briefings)} &
-Low--Medium &
-\makecell[l]{OSQ preferred\\(MCQ optional)} &
-Low &
-High &
-These tasks are inherently generative and fidelity-sensitive; OSQ better reflects coherence and completeness of the produced artifact. \\
+Finally, the heatmap patterns imply that portions of the benchmark can saturate under MCQ and, in limited cases, under OSQ. Saturation reduces discriminative power and can create misleading impressions of equivalence among strong models. Therefore, benchmark maintenance should include (i) periodic difficulty rebalancing, (ii) targeted item refresh for saturated categories, and (iii) reporting of saturation indicators (e.g., fraction of 100\% cells, ceiling proximity). In a qualification framing, saturation is a governance issue because it limits the benchmark's ability to support defensible comparative claims over time.
 
-\addlinespace
-3 &
-\makecell[l]{Classification \& mapping\\(taxonomy mapping,\\requirement tagging,\\process-to-standard alignment)} &
-Medium &
-MCQ + OSQ &
-High &
-High &
-MCQ validates categorical recognition; OSQ validates rationale and reduces risk of ``lucky selection'' or shallow pattern matching. \\
+\subsection{Summary of implications}
+\label{subsec:ch5_imp_summary}
 
-\addlinespace
-4 &
-\makecell[l]{Technical interpretation \& justification\\(requirements interpretation,\\constraints/edge cases,\\V\&V rationale)} &
-High &
-\makecell[l]{OSQ required\\(MCQ for spot checks)} &
-Medium &
-High &
-High-stakes reasoning requires explicit justification; OSQ surfaces reasoning quality. MCQ can be used as targeted robustness probes but should not be the qualifier alone. \\
-
-\addlinespace
-5 &
-\makecell[l]{Decision support under consequence\\(trade studies, architecture\\implications, safety/mission-\\critical recommendations)} &
-Very High &
-\makecell[l]{OSQ + robustness controls\\+ human review} &
-\makecell[c]{Low--\\Medium} &
-High &
-High-impact tasks require traceability and conservative governance. OSQ is necessary but remains insufficient without workflow controls and escalation rules. \\
-
-\bottomrule
-\end{tabular}
-}
-\vspace{0.5em}
-\footnotesize
-\textit{Notes.} \textbf{Recommended qualification modality} indicates the minimum evaluation evidence that should be satisfied before deploying a model for the task class. \textbf{Modality fit} is a qualitative indicator of how well MCQ- or OSQ-style benchmarking captures the competence required for the task (\textit{High} = direct measure, \textit{Medium} = partial proxy, \textit{Low} = weak proxy). In practice, high-risk uses should additionally employ workflow-level controls (e.g., human review, audit logging, escalation rules), regardless of benchmark performance.
-\end{table}
-
-\clearpage
-
-
-
-\subsection{Benchmark-Informed SE Workflow Integration}
-
-
-
-Benchmark results provide the evidence needed to confidently integrate LLM copilots into agentic workflows safely: models are assigned to tasks they are measured to perform well, outputs are constrained into reviewable changes, and automated validation gates reduce the likelihood that incorrect generation propagates into the model. 
-
-A practical implication of the results is that benchmark evidence can be used to design \emph{how} LLMs are integrated into systems engineering workflows, rather than treating an LLM as a general-purpose assistant with uniform reliability. This is especially relevant in \ac{mbse}. 
-
-Benchmark results do not merely rank models; they inform workflow roles, guardrails, and oversight practices that make copilot use auditable and dependable in an engineering context.
-
-
-Below needs to be about how we may use different models for different tasking or different models with augmentations (vector databases or fine tuning) to provide the necessary capability for the task at hand.
-
-The Chapter~\ref{ch:results} findings indicate that performance varies by evaluation modality and that response behavior (including verbosity and variability) differs across models. This motivates treating copilot selection as a role assignment problem. In practice, a benchmark-informed workflow assigns models to tasks aligned with demonstrated strengths. For example, models that perform consistently on structured selection-style evaluations can be used for fast conformance checks, taxonomy mapping, and structured validation prompts, while models that score strongly on open-response evaluation can be used for drafting rationale, explanations, and structured narrative artifacts. Conversely, models exhibiting unfavorable quality--token trade-offs or high variability may be restricted to low-risk tasks, short-form assistance, or preliminary drafts to reduce review burden and operational cost.
-
-This role assignment perspective supports the Chapter 1 motivation for evidence-based adoption: instead of asking whether a model is ``good'' in general, the workflow asks whether a model is suitable for a specific role under defined constraints and oversight.
-
-
-
-
-
-\subsection{Budgeting and Token Constraints}
-
-The tokenomics results translate directly into deployment policy. Since verbosity varies widely across models, organizations can manage cost and review burden by enforcing response budgets and adopting structured prompting patterns. Examples include:
-(i) requesting bounded-length responses with required sections,
-(ii) using iterative refinement (short first-pass, expanded only when needed),
-and (iii) separating reasoning generation from final answer formatting.
-
-Crucially, the length-versus-quality findings indicate that token limits do not automatically degrade quality if prompts are designed to elicit concise but complete reasoning. This supports the Chapter 1 motivation that cost-aware adoption is feasible when guided by evidence rather than assumption.
-
-
+The implications above establish a qualification-oriented stance for benchmarking: modality defines the scope of the performance claim, robustness controls bound measurement sensitivity, evaluation profiles provide minimum evidence requirements conditional on SE task family, reporting standards enable auditability, and saturation motivates benchmark governance and refresh. Together, these points specify \emph{what} must be measured and reported to make defensible claims about \acp{llm} in \ac{se}, but they do not yet prescribe \emph{how} practicing systems engineers should operationalize these requirements in day-to-day workflows. Accordingly, the final chapter, Chapter~\ref{ch:conclusion}, translates these methodological implications into practitioner-facing guidance, along with a summary of contributions and closing thoughts.
 
 \section{Limitations and Future Work}\label{sec:limits_and_future_work}
 
@@ -307,7 +191,7 @@ Category representation remains uneven across the benchmark. Some systems engine
 
 \subsection{Evaluation and Execution Constraints}
 
-Several limitations arose from practical considerations during model execution rather than from the benchmark design itself.
+Several limitations arose from practical considerations during model execution rather than from the framework itself.
 
 \subsubsection{Token Budget Constraints}
 
