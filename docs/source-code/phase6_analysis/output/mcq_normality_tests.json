@@ -1,0 +1,29 @@
+[
+  {
+    "test":"Shapiro-Wilk",
+    "statistic":0.7825364884,
+    "p_value":0.0006442924,
+    "reject_normality":true,
+    "normal?":"No",
+    "basis":"Overall shape (best for small N)",
+    "interpretation":"Distribution is not normal"
+  },
+  {
+    "test":"Jarque-Bera",
+    "statistic":8.9489118392,
+    "p_value":0.011396421,
+    "reject_normality":true,
+    "normal?":"No",
+    "basis":"Skewness + kurtosis",
+    "interpretation":"Skew\/kurtosis deviate from normal"
+  },
+  {
+    "test":"D'Agostino K\u00b2",
+    "statistic":11.5861897175,
+    "p_value":0.0030485328,
+    "reject_normality":true,
+    "normal?":"No",
+    "basis":"Skewness + kurtosis (transformed)",
+    "interpretation":"Non-normal distribution shape"
+  }
+]

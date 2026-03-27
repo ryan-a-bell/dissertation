@@ -1,0 +1,15 @@
+#!/bin/bash
+# This is a basic Open OnDemand "script.sh.erb" that runs on the allocated compute node.
+# It directly calls the single-pair Slurm script, but you could also inline the eval logic here.
+
+set -euo pipefail
+
+echo "[INFO] Launching LM-Eval job from OOD app..."
+echo "[INFO] Model: <%= form.model %>"
+echo "[INFO] Task:  <%= form.task %>"
+
+cd "$HOME/hpc_lm_eval"
+
+sbatch jobs/eval_lm_single_pair.sbatch       "<%= form.model %>"       "<%= form.task %>"       "<%= form.tasks_dir %>"       "<%= form.output_root %>"
+
+echo "[INFO] sbatch submitted. Check Open OnDemand jobs view or 'squeue' for status."
