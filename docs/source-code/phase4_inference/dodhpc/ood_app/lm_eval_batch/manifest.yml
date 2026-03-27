@@ -1,0 +1,9 @@
+---
+name: LM-Eval Inference
+category: Research
+subcategory: LLM
+role: batch_connect
+description: |
+  Run LLM evaluations on SysEngBench benchmarks using Ollama and lm_eval.
+  Supports setup, model caching, and batch evaluation jobs.
+icon: fa://microchip

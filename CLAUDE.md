@@ -15,3 +15,7 @@ To update the timeline:
    java -jar plantuml.jar -tsvg -o docs/assets/ docs/assets/timeline.puml
    ```
 3. Commit both `timeline.puml` and `timeline.svg`.
+
+## Project Preferences
+
+- Do not use emojis in code, documentation, commit messages, or any file output unless the user explicitly requests it.

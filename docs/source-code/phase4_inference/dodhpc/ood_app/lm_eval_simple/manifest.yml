@@ -1,0 +1,6 @@
+---
+name: "LM Eval Simple"
+category: "Research"
+subcategory: "LLM"
+role: "sys"
+description: "Prototype Open OnDemand app to launch LM-Eval + Ollama jobs using Slurm."

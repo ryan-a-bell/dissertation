@@ -1,0 +1,25 @@
+\begin{tabular}{l r r r r r r l}
+\toprule
+\textbf{Model} & \textbf{$\chi^2$} & \textbf{$p_{\chi^2}$} & \textbf{Cram\'er's $V$} & \textbf{Friedman} & \textbf{$p_{\text{Friedman}}$} & \textbf{Kendall's $W$} & \textbf{Classification} \\
+\midrule
+llama3.2\_\_1b & 262.77 & 1.15e-55 & 0.2143 & 446.62 & 1.76e-96 & 0.1301 & Moderate bias \\
+llama3.2\_\_3b & 224.04 & 2.53e-47 & 0.1979 & 387.90 & 9.25e-84 & 0.1130 & Moderate bias \\
+gemma3\_\_1b & 167.35 & 3.88e-35 & 0.1710 & 285.10 & 1.67e-61 & 0.0831 & Moderate bias \\
+phi4-mini\_\_3.8b & 71.64 & 1.02e-14 & 0.1119 & 149.70 & 3.06e-32 & 0.0436 & Moderate bias \\
+mistral-small3.2\_\_24b & 30.47 & 3.92e-06 & 0.0730 & 58.84 & 1.04e-12 & 0.0171 & Mixed evidence \\
+devstral\_\_24b & 27.50 & 1.58e-05 & 0.0693 & 58.15 & 1.46e-12 & 0.0169 & Mixed evidence \\
+mistral-large\_\_123b & 21.78 & 0.0002 & 0.0617 & 43.74 & 1.71e-09 & 0.0127 & Mixed evidence \\
+anthropic\_\_claude-sonnet-4.5 & 19.69 & 0.0006 & 0.0587 & 46.24 & 5.05e-10 & 0.0135 & Mixed evidence \\
+gemma3\_\_4b & 16.17 & 0.0028 & 0.0532 & 38.89 & 1.83e-08 & 0.0113 & Mixed evidence \\
+phi3.5\_\_3.8b & 13.91 & 0.0076 & 0.0493 & 37.23 & 4.11e-08 & 0.0108 & Mixed evidence \\
+gemma3\_\_12b & 12.09 & 0.0167 & 0.0460 & 30.72 & 9.73e-07 & 0.0090 & Mixed evidence \\
+phi3\_\_14b & 11.45 & 0.0219 & 0.0447 & 23.15 & 3.77e-05 & 0.0067 & Mixed evidence \\
+llama3.3\_\_70b & 10.56 & 0.0320 & 0.0430 & 27.95 & 3.71e-06 & 0.0081 & Mixed evidence \\
+gemma3\_\_27b & 9.24 & 0.0554 & 0.0402 & 22.72 & 4.61e-05 & 0.0066 & No bias \\
+llama4\_\_16x17b & 8.81 & 0.0661 & 0.0392 & 21.64 & 7.77e-05 & 0.0063 & No bias \\
+phi4\_\_14b & 7.43 & 0.1148 & 0.0360 & 15.00 & 0.0018 & 0.0044 & No bias \\
+mixtral\_\_8x22b & 7.11 & 0.1300 & 0.0353 & 17.24 & 0.0006 & 0.0050 & No bias \\
+openai\_\_gpt-4.1 & 6.73 & 0.1507 & 0.0343 & 20.47 & 0.0001 & 0.0060 & No bias \\
+google\_\_gemini-2.5-flash & 1.13 & 0.8901 & 0.0140 & 3.48 & 0.3238 & 0.0010 & No bias \\
+\bottomrule
+\end{tabular}

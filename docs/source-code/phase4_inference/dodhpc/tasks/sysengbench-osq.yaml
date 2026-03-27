@@ -1,0 +1,28 @@
+
+task: sysengbench-osq
+dataset_path: rabell/SysEngBench-OSQ
+dataset_name: null
+output_type: generate_until
+training_split: null
+validation_split: null
+test_split: test
+doc_to_text: "Given the following question, answer it to the best of your ability.
+  Your response should generally be between 2 and 4 sentences, but may be longer if a more detailed solution is appropriate.
+
+  {{osq_prompt}}
+
+Answer:"
+
+doc_to_target: "{{expected_answer}}"
+
+generation_kwargs:
+  until: []  # No early stopping for thinking models
+  max_gen_toks: 500  # ~4 Paragraph limit for OSQ answers. 3 sentences ~150 tokens.
+  temperature: 0.0  # Deterministic for evaluation
+
+# Metric list will be computed with LLM as a judge separately
+
+metadata:
+  version: 1.0
+dataset_kwargs:
+  trust_remote_code: true
