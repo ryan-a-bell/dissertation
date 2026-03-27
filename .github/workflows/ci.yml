@@ -2,8 +2,9 @@ name: ci
 on:
   push:
     branches:
-      - master 
+      - master
       - main
+  workflow_dispatch:
 permissions:
   contents: write
 jobs:
@@ -42,19 +43,14 @@ jobs:
         run: |
           python - <<'PY'
           import pathlib, re
-          # Adjust the path(s) to your CSV(s) used by sysengbench.md
-          paths = [
-            pathlib.Path("docs/source-code/phase1_prep/sysengbench.csv"),
-            # add more if needed
-          ]
-          for p in paths:
-            if p.exists():
-              s = p.read_text(encoding="utf-8")
-              # Double any backslash followed by a letter: \a … \z → \\a … \\z
-              s2 = re.sub(r'\\([A-Za-z])', r'\\\\\\1', s)
-              if s != s2:
-                p.write_text(s2, encoding="utf-8")
-                print(f"Escaped backslashes in {p}")
+          # Sanitize ALL CSVs under docs/ to escape backslashes that break re.sub()
+          for p in pathlib.Path("docs").rglob("*.csv"):
+            s = p.read_text(encoding="utf-8")
+            # Double any backslash followed by a letter: \a … \z → \\a … \\z
+            s2 = re.sub(r'\\([A-Za-z])', r'\\\\\\1', s)
+            if s != s2:
+              p.write_text(s2, encoding="utf-8")
+              print(f"Escaped backslashes in {p}")
           PY
 
       # Deploy to GitHub Pages
