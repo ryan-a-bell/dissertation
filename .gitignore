@@ -8,7 +8,7 @@ scripts/serc2025
 
 
 # do not upload the viz/viz-outputs/ directory
-viz/viz-outputs/
+#viz/viz-outputs/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
