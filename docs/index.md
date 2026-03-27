@@ -55,9 +55,17 @@ Frames model evaluation as a trade-space extending beyond accuracy to include co
 
 <div class="research-grid" markdown>
 <div class="research-card" markdown>
-### Dataset
-**SysEngBench** on HuggingFace
-[Browse Dataset](https://huggingface.co/datasets/rabell/SysEngBench){ .nps-button }
+### Datasets on HuggingFace
+
+| Dataset | Description |
+|---------|-------------|
+| [SysEngBench](https://huggingface.co/datasets/rabell/SysEngBench) | Original MCQ benchmark |
+| [SysEngBench-A](https://huggingface.co/datasets/rabell/SysEngBench-A) | Correct answer at position A |
+| [SysEngBench-B](https://huggingface.co/datasets/rabell/SysEngBench-B) | Correct answer at position B |
+| [SysEngBench-C](https://huggingface.co/datasets/rabell/SysEngBench-C) | Correct answer at position C |
+| [SysEngBench-D](https://huggingface.co/datasets/rabell/SysEngBench-D) | Correct answer at position D |
+| [SysEngBench-OSQ](https://huggingface.co/datasets/rabell/SysEngBench-OSQ) | Open-Style Questions |
+
 </div>
 <div class="research-card" markdown>
 ### Publications
