@@ -1,0 +1,60 @@
+{
+  "results": {
+    "sysengbench-b": {
+      "alias": "sysengbench-b",
+      "exact_match,strict-match": 1.0,
+      "exact_match_stderr,strict-match": 0.0
+    }
+  },
+  "group_subtasks": {
+    "sysengbench-b": []
+  },
+  "configs": {
+    "sysengbench-b": {
+      "task": "sysengbench-b",
+      "output_type": "generate_until",
+      "num_fewshot": 0,
+      "metric_list": [
+        {
+          "metric": "exact_match",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "metadata": {
+        "version": 1.0,
+        "model": "anthropic/claude-opus-4-6"
+      }
+    }
+  },
+  "versions": {
+    "sysengbench-b": 1.0
+  },
+  "n-shot": {
+    "sysengbench-b": 0
+  },
+  "higher_is_better": {
+    "sysengbench-b": {
+      "exact_match": true
+    }
+  },
+  "n-samples": {
+    "sysengbench-b": {
+      "original": 1144,
+      "effective": 4
+    }
+  },
+  "config": {
+    "model": "anthropic-chat-completions",
+    "model_args": "model=anthropic/claude-opus-4-6",
+    "batch_size": 1,
+    "batch_sizes": [],
+    "device": null,
+    "limit": 4.0
+  },
+  "model_name": "anthropic/claude-opus-4-6",
+  "model_name_sanitized": "anthropic__claude-opus-4-6",
+  "lm_eval_version": "0.4.9.1",
+  "date": 1772857638.2845573,
+  "total_evaluation_time_seconds": "0.0"
+}

@@ -1,38 +1,59 @@
+---
+title: Home
+---
+
 # An Empirical Meta-Evaluation of Language Model Evaluation Methods for Systems Engineering Using Distractor Sensitivity and Consensus Judging
 
 **Ryan Bell** | Naval Postgraduate School | PhD Dissertation in Systems Engineering
 
 ---
 
-## Overview
+## Abstract
 
-This research systematically benchmarks Large Language Models (LLMs) using multiple evaluation modalities — Multiple-Choice Questions (MCQ) and Open-Style Questions (OSQ) — across Systems Engineering tasks aligned to INCOSE Handbook categories.
+This research focuses on meta-evaluation -- the systematic evaluation of language model evaluation methods themselves -- within the context of Systems Engineering (SE). The study leverages the existing SysEngBench benchmark as its empirical foundation and extends it through the creation of Open-Style Question (OSQ) variants derived from the original Multiple-Choice Question (MCQ) dataset.
 
-The benchmark dataset, **SysEngBench**, is publicly available on [HuggingFace](https://huggingface.co/datasets/rabell/SysEngBench).
+Specifically, this work investigates:
+- Comparative behavior of **MCQ and OSQ evaluation modalities**,
+- The sensitivity of MCQ-based evaluation to **distractor variation**,
+- The reliability and agreement of **LLM-as-a-Judge** evaluation using **rubric-based scoring**, and
+- **Consensus and correlation** across multiple language model judges.
+
+The OSQ dataset is systematically constructed from SysEngBench to preserve domain coverage and conceptual equivalence while enabling open-ended response evaluation. All evaluations are conducted on domain-specific Systems Engineering content aligned with established INCOSE Handbook categories, with the goal of assessing evaluation robustness, consistency, and interpretability across modalities.
+
+The original **SysEngBench** benchmark dataset is publicly available on [HuggingFace](https://huggingface.co/datasets/rabell/SysEngBench) and is used in this repository without modification. The derived OSQ dataset, along with all evaluation pipelines and analysis code, is provided to support reproducibility and further meta-evaluation research. It is also publicly available on [HuggingFace](https://huggingface.co/datasets/rabell/SysEngBench-OSQ).
+
+## Repository Evolution
+
+This animated visualization shows the evolution of the dissertation repository over time, generated using [Gource](https://gource.io/).
+
+<video controls width="100%" poster="">
+  <source src="assets/repo_lineage.mp4" type="video/mp4">
+  Your browser does not support the video tag.
+</video>
 
 ## Key Contributions
 
 <div class="research-grid" markdown>
 <div class="research-card" markdown>
-### :material-database-plus: Contribution 1
+### Contribution 1
 **Extension of SysEngBench with Multi-Format Evaluation Questions**
 
 Extends the SysEngBench benchmark to support paired multiple-choice and open-style question formats, enabling controlled within-task comparisons across modalities while preserving domain fidelity.
 </div>
 <div class="research-card" markdown>
-### :material-shield-search: Contribution 2
+### Contribution 2
 **Robustness Analysis of MCQ Evaluation Using Distractor Variation**
 
 Investigates how sensitive MCQ performance is to distractor design choices, framing robustness as a measurement property and highlighting risks of overconfidence when MCQ results are interpreted without considering structural dependencies.
 </div>
 <div class="research-card" markdown>
-### :material-scale-balance: Contribution 3
+### Contribution 3
 **Evaluation Modality Fusion for Model Qualification**
 
 Develops a modality-aware basis for model qualification that aligns evaluation evidence with task characteristics, framing qualification as a systems engineering decision problem informed by task criticality and acceptable failure modes.
 </div>
 <div class="research-card" markdown>
-### :material-cash-fast: Contribution 4
+### Contribution 4
 **Token-Efficient Qualification: Cost-Aware Response Length Trade-offs**
 
 Frames model evaluation as a trade-space extending beyond accuracy to include computational cost and response length, establishing cost-aware evaluation as a component of LLM adoption in systems engineering.
@@ -43,34 +64,36 @@ Frames model evaluation as a trade-space extending beyond accuracy to include co
 
 <div class="research-grid" markdown>
 <div class="research-card" markdown>
-### :material-database: Dataset
-**SysEngBench** on HuggingFace
-[Browse Dataset](https://huggingface.co/datasets/rabell/SysEngBench){ .nps-button }
+### Datasets on HuggingFace
+
+| Dataset | Description |
+|---------|-------------|
+| [SysEngBench](https://huggingface.co/datasets/rabell/SysEngBench) | Original MCQ benchmark |
+| [SysEngBench-A](https://huggingface.co/datasets/rabell/SysEngBench-A) | Correct answer at position A |
+| [SysEngBench-B](https://huggingface.co/datasets/rabell/SysEngBench-B) | Correct answer at position B |
+| [SysEngBench-C](https://huggingface.co/datasets/rabell/SysEngBench-C) | Correct answer at position C |
+| [SysEngBench-D](https://huggingface.co/datasets/rabell/SysEngBench-D) | Correct answer at position D |
+| [SysEngBench-OSQ](https://huggingface.co/datasets/rabell/SysEngBench-OSQ) | Open-Style Questions |
+
 </div>
 <div class="research-card" markdown>
-### :material-file-document-multiple: Publications
+### Publications
 Conference papers and journal submissions
-[View Publications](publications/README.md){ .nps-button }
+[View Publications](publications/){ .nps-button }
 </div>
 <div class="research-card" markdown>
-### :material-source-branch: Source Code
+### Source Code
 7-phase research pipeline
 [Explore Code](source-code/){ .nps-button }
 </div>
 </div>
 
-## Scan to Visit This Site
-
-<div style="text-align: center;" markdown>
-![QR Code to Dissertation Docs](assets/qr-code.png){ width="250" }
-
-`https://ryan-a-bell.github.io/dissertation/`
-</div>
-
 ## Dissertation Timeline
 
-!!! info "Placeholder"
-    Updated Gantt chart coming soon.
+![Academic Research Timeline](assets/timeline.svg)
+
+??? note "PlantUML Source"
+    The source for this timeline is located in [`docs/assets/timeline.puml`](assets/timeline.puml).
 
 ---
 
@@ -172,3 +195,11 @@ This work is in support of a PhD in Systems Engineering.
 ## License
 
 This repository is provided under the [MIT License](../LICENSE).
+
+## Scan to Visit This Site
+
+<div style="text-align: center;">
+<img src="assets/qr-code.png" alt="QR Code to Dissertation Docs" width="250">
+
+`https://ryan-a-bell.github.io/dissertation/`
+</div>
