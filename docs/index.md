@@ -1,212 +1,145 @@
-# Dissertation Repository
+# An Empirical Meta-Evaluation of Language Model Evaluation Methods for Systems Engineering Using Distractor Sensitivity and Consensus Judging
+
+**Ryan Bell** | Naval Postgraduate School | PhD Dissertation in Systems Engineering
+
+---
 
 ## Overview
 
-This repository contains code, datasets, and documentation supporting the dissertation titled:
-
-**"Evaluation Modality Alignment to Systems Engineering Task Types: A Methodological Study of Language Models' Domain-Specific and Task-Specific Effectiveness Using Distractor Variation and Consensus-Based Grading."**
-
-The research systematically benchmarks Large Language Models (LLMs) using multiple evaluation modalities (Multiple-Choice Questions \[MCQ] and Open-Style Questions \[OSQ]) across Systems Engineering (SE) tasks aligned to INCOSE Handbook categories.
+This research systematically benchmarks Large Language Models (LLMs) using multiple evaluation modalities — Multiple-Choice Questions (MCQ) and Open-Style Questions (OSQ) — across Systems Engineering tasks aligned to INCOSE Handbook categories.
 
 The benchmark dataset, **SysEngBench**, is publicly available on [HuggingFace](https://huggingface.co/datasets/rabell/SysEngBench).
 
-## Repository Structure
+!!! abstract "Key Contributions"
+    - **SysEngBench**: A domain-specific benchmark for evaluating LLMs on Systems Engineering tasks
+    - **Distractor Sensitivity Analysis**: Systematic variation of MCQ distractors to measure evaluation robustness
+    - **Consensus-Based Judging**: A grading methodology using multiple evaluation modalities for SE task types
 
-```
-dissertation/
-├── assets/                # Storage for Files
-├── docs/                  # Project documentation (built with MkDocs)
-├── src/                   # Source code organized by evaluation phases
-│   ├── phase1_prep/       # Initial dataset tagging and preprocessing
-│   ├── phase2_conversion/ # Conversion of MCQs to OSQs
-│   ├── phase3_variants/   # Generation of distractor variant MCQs
-│   ├── phase4_inference/  # Inference code for evaluating language models
-│   ├── phase5_metrics/    # Calculation of evaluation metrics
-│   └── phase6_tables/     # Aggregation and summary table generation
-|   └── phase7_analysis/   # Analysis of the previous phases
-├── .github/               # GitHub CI workflows
-├── .env.template          # Template for API keys
-├── requirements.txt       # Python dependencies for venv
-├── Makefile               # Automation commands
-├── README.md              # Project overview (this file)
-└── LICENSE                # License information
-```
+## Quick Links
 
-## Getting Started
+<div class="research-grid" markdown>
+<div class="research-card" markdown>
+### :material-database: Dataset
+**SysEngBench** on HuggingFace
+[Browse Dataset](https://huggingface.co/datasets/rabell/SysEngBench){ .nps-button }
+</div>
+<div class="research-card" markdown>
+### :material-file-document-multiple: Publications
+Conference papers and journal submissions
+[View Publications](publications/README.md){ .nps-button }
+</div>
+<div class="research-card" markdown>
+### :material-source-branch: Source Code
+7-phase research pipeline
+[Explore Code](source-code/){ .nps-button }
+</div>
+</div>
 
-### Environment Setup
+## Scan to Visit This Site
 
-This repository leverages Python's built-in **venv** for dependency management.
+<div style="text-align: center;" markdown>
+![QR Code to Dissertation Docs](assets/qr-code.png){ width="250" }
 
-#### Using venv
+`https://ryan-a-bell.github.io/dissertation/`
+</div>
 
-```bash
-python -m venv venv
-source venv/bin/activate
-pip install -r requirements.txt
-```
+## Dissertation Timeline
 
-### API Keys
+!!! info "Placeholder"
+    Updated Gantt chart coming soon.
 
-Copy the `.env.template` file to `.env` and populate it with your required API keys.
+---
 
-## Documentation
+## Developer Reference
 
-Detailed documentation can be found under the `docs/` directory. Built documentation is served using MkDocs. To ensure you are viewing the latest version of the documentation locally, use the following command which generates the documentation before serving it.
+??? note "Repository Structure"
+    ```
+    dissertation/
+    ├── assets/                # Storage for Files
+    ├── docs/                  # Project documentation (built with MkDocs)
+    ├── src/                   # Source code organized by evaluation phases
+    │   ├── phase1_prep/       # Initial dataset tagging and preprocessing
+    │   ├── phase2_conversion/ # Conversion of MCQs to OSQs
+    │   ├── phase3_variants/   # Generation of distractor variant MCQs
+    │   ├── phase4_inference/  # Inference code for evaluating language models
+    │   ├── phase5_metrics/    # Calculation of evaluation metrics
+    │   └── phase6_tables/     # Aggregation and summary table generation
+    |   └── phase7_analysis/   # Analysis of the previous phases
+    ├── .github/               # GitHub CI workflows
+    ├── .env.template          # Template for API keys
+    ├── requirements.txt       # Python dependencies for venv
+    ├── Makefile               # Automation commands
+    ├── README.md              # Project overview (this file)
+    └── LICENSE                # License information
+    ```
 
-**Note**: The `docs/source-code` directory is procedurally generated by the `generate_docs.py` script. Any files manually placed here may be overwritten or removed during documentation updates. Store important documents in other directories such as `src/` or other `docs/` subdirectories to ensure they are preserved.
+??? note "Environment Setup"
+    This repository leverages Python's built-in **venv** for dependency management.
 
-### Viewing the documentation locally
+    ```bash
+    python -m venv venv
+    source venv/bin/activate
+    pip install -r requirements.txt
+    ```
 
-First, install the dependencies. Second, run `python scripts/generate_docs.py` to update the `docs/source-code` folder with the latest content and then you serve it using `mkdocs serve`. After running, open your browser to `http://127.0.0.1:8000` to view the documentation.
+    Copy the `.env.template` file to `.env` and populate it with your required API keys.
 
-1. Install dependencies:
-   ```bash
-   pip install -r requirements.txt
-   ```
-2. Generate documentation:
-   ```bash
-   mkdocs serve
-   ```
-3. Start the server
-   ```bash
-   mkdocs serve
-   ```
+??? note "Viewing Documentation Locally"
+    Install dependencies, then generate and serve:
 
-### Viewing the documentation on the GitHub Page and the CI/CD process
+    ```bash
+    pip install -r requirements.txt
+    python scripts/generate_docs.py
+    mkdocs serve
+    ```
 
-The source for the github page is `https://ryan-a-bell.github.io/dissertation/`.
+    Open your browser to `http://127.0.0.1:8000`.
 
+    **Note**: The `docs/source-code` directory is procedurally generated by `generate_docs.py`. Any files manually placed there may be overwritten.
 
+??? note "GitHub Pages CI/CD"
+    A CI/CD pipeline deploys documentation to GitHub Pages on pushes to `main`. The pipeline runs `generate_docs.py` to update the `docs/` folder, then deploys via `mkdocs gh-deploy --force`.
 
-### Github Pages Website
-A CI/CD pipeline is configured to host all of the documentation for this project on GitHub Pages. This pipeline is triggered on pushes to the `main` branch.
+    The hosted site is at `https://ryan-a-bell.github.io/dissertation/`.
 
-The hosted information is populated from the `docs/` folder. During the CI/CD process, the pipeline runs `python scripts/generate_docs.py` to update the `docs/` folder with the latest content, including Jupyter notebooks from the Phase folders and other relevant documentation. Following this, it deploys the updated documentation to GitHub Pages using `mkdocs gh-deploy --force`.
+??? note "Documentation System Architecture"
+    ```mermaid
+    flowchart TD
+        subgraph "Local Development"
+            dev[Developer]
+            make[Makefile]
+            script[scripts/generate_docs.py]
+            mkdocs[mkdocs.yml]
+            docs[docs/ directory]
+            site[Local Site]
 
-### Documentation System Architecture
+            dev -->|"make docs-serve"| make
+            make -->|"Executes"| script
+            script -->|"Scans project files"| project[Project Files]
+            script -->|"Generates"| mkdocs
+            script -->|"Copies files to"| docs
+            mkdocs -->|"Configures"| site
+            docs -->|"Content for"| site
+        end
 
-The documentation system uses several components that work together:
+        subgraph "Automated Deployment"
+            push[Push to main/master]
+            ci[.github/workflows/ci.yml]
+            gh_script[scripts/generate_docs.py]
+            gh_mkdocs[mkdocs.yml]
+            gh_docs[docs/ directory]
+            gh_pages[GitHub Pages]
 
-```mermaid
-flowchart TD
-    subgraph "Local Development"
-        dev[Developer]
-        make[Makefile]
-        script[scripts/generate_docs.py]
-        mkdocs[mkdocs.yml]
-        docs[docs/ directory]
-        site[Local Site]
-        
-        dev -->|"make docs-serve"| make
-        make -->|"Executes"| script
-        script -->|"Scans project files"| project[Project Files]
-        script -->|"Generates"| mkdocs
-        script -->|"Copies files to"| docs
-        mkdocs -->|"Configures"| site
-        docs -->|"Content for"| site
-    end
-    
-    subgraph "Automated Deployment"
-        push[Push to main/master]
-        ci[.github/workflows/ci.yml]
-        gh_script[scripts/generate_docs.py]
-        gh_mkdocs[mkdocs.yml]
-        gh_docs[docs/ directory]
-        gh_pages[GitHub Pages]
-        
-        push -->|"Triggers"| ci
-        ci -->|"Executes"| gh_script
-        gh_script -->|"Scans project files"| gh_project[Project Files]
-        gh_script -->|"Generates"| gh_mkdocs
-        gh_script -->|"Copies files to"| gh_docs
-        ci -->|"Runs mkdocs gh-deploy"| gh_pages
-        gh_mkdocs -->|"Configures"| gh_pages
-        gh_docs -->|"Content for"| gh_pages
-    end
-```
-
-### Key Relationships:
-
-1. **scripts/generate_docs.py** is the central component that:
-   - Scans the project for documentation files (.md, .ipynb, .pdf, .csv)
-   - Copies relevant files to the docs/ directory
-   - Dynamically generates the mkdocs.yml configuration
-
-2. **mkdocs.yml** is generated automatically and should not be manually edited
-
-3. **Makefile** provides convenient commands for local documentation tasks
-
-4. **.github/workflows/ci.yml** automates the documentation deployment process to GitHub Pages
-
-This architecture ensures documentation stays in sync with your project files and is automatically deployed when changes are pushed to the main branch.
-
-## Dissertation Timeline Gantt Chart
-
-This Gantt chart visualizes the dissertation schedule, showing tasks, their durations, and dependencies. The vertical line represents today's date (July 22, 2025) to track progress against the planned timeline.
-
-```mermaid
-gantt
-    title Dissertation Timeline
-    dateFormat  YYYY-MM-DD
-    axisFormat %b %Y
-    todayMarker on
-    
-    section Planning Phase
-    T.1 Develop Dissertation Outline       :t1, 2025-01-15, 2025-03-15
-    T.2 Complete Dissertation Proposal     :t2, after t1, 2025-05-15
-    T.3 Draft Research Questions (Ch 1)    :t3, 2025-04-01, 2025-05-31
-    
-    section Journal Submissions
-    T.4 Submit Journal 1                   :t4, 2025-02-01, 2025-03-15
-    T.7 Submit Journal 2                   :t7, 2025-02-01, 2025-03-15
-    
-    section Literature & Methods
-    T.5 Complete Literature Review (Ch 2)  :t5, after t2, 2025-07-31
-    T.6 Complete Materials & Methods (Ch 3):t6, after t5, 2025-08-31
-    
-    section Research & Results
-    T.8 Conduct Experiments                :t8, after t6, 2025-09-30
-    T.9 Complete Results & Discussion (Ch 4-5) :t9, after t8, 2025-10-31
-    T.10 Complete Conclusion (Ch 6)        :t10, after t9, 2025-10-31
-    
-    section Finalization
-    T.11 Submit Initial Draft              :t11, after t10, 2025-10-31
-    T.12 Defend Dissertation               :t12, after t11, 2025-11-30
-    T.13 Complete Final Edits              :t13, after t12, 2025-12-15
-    T.14 Route Final Draft                 :t14, after t13, 2025-12-31
-    T.15 Graduate                          :t15, after t14, 2026-03-15
-```
-
-### Timeline Notes
-
-- **Current Date**: September 2, 2025
-- **Completed Tasks**: T.1-T.4, T.7 (Dissertation Outline, Journal Submissions)
-- **In Progress**: T.5 (Literature Review)
-- **Upcoming**: T.6-T.15 (Methods, Experiments, Results, Defense, Graduation)
-
-### Task Details
-
-| Task ID | Description | Start Date | Completion Date |
-|---------|-------------|------------|-----------------|
-| T.1 | Develop Dissertation Outline | Jan 2025 | March 2025 |
-| T.2 | Complete Dissertation Proposal | March 2025 | May 2025 |
-| T.3 | Draft Research Questions and Objectives (Chapter 1) | April 2025 | May 2025 |
-| T.4 | Submit Journal 1 | Feb 2025 | March 2025 |
-| T.5 | Complete Literature Review (Chapter 2) | May 2025 | July 2025 |
-| T.6 | Complete Materials and Methods (Chapter 3) | Aug 2025 | Aug 2025 |
-| T.7 | Submit Journal 2 | Feb 2025 | March 2025 |
-| T.8 | Conduct Experiments to get Results | Aug 2025 | Sept 2025 |
-| T.9 | Complete Results and Discussion (Chapter 4 and 5) | Sept 2025 | Oct 2025 |
-| T.10 | Complete Conclusion (Chapter 6) | Oct 2025 | Oct 2025 |
-| T.11 | Complete Dissertation Formatting and Submit Initial Draft | Oct 2025 | Oct 2025 |
-| T.12 | Defend Dissertation | Nov 2025 | Nov 2025 |
-| T.13 | Complete Final Edits and Submit to TPO and Department Chair | Dec 2025 | Dec 2025 |
-| T.14 | Route Final Draft | Dec 2025 | Dec 2025 |
-| T.15 | Graduate | Jan 2026 | March 2026 |
-
-The Gantt chart provides a visual representation of the dissertation timeline, showing task dependencies and progress. The "today" marker helps track current progress against the planned schedule.
-
+            push -->|"Triggers"| ci
+            ci -->|"Executes"| gh_script
+            gh_script -->|"Scans project files"| gh_project[Project Files]
+            gh_script -->|"Generates"| gh_mkdocs
+            gh_script -->|"Copies files to"| gh_docs
+            ci -->|"Runs mkdocs gh-deploy"| gh_pages
+            gh_mkdocs -->|"Configures"| gh_pages
+            gh_docs -->|"Content for"| gh_pages
+        end
+    ```
 
 ## Contributions
 
