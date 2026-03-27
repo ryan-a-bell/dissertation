@@ -79,7 +79,7 @@ Frames model evaluation as a trade-space extending beyond accuracy to include co
 <div class="research-card" markdown>
 ### Publications
 Conference papers and journal submissions
-[View Publications](publications/README.md){ .nps-button }
+[View Publications](publications/){ .nps-button }
 </div>
 <div class="research-card" markdown>
 ### Source Code
