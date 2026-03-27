@@ -1,0 +1,8 @@
+nav:
+  - index.md
+  - Phase 1 - Benchmark Preparation: phase1_prep
+  - Phase 2 - MCQ to OSQ Conversion: phase2_conversion
+  - Phase 3 - MCQ Golden Answer Variants: phase3_variants
+  - Phase 4 - Model Inference: phase4_inference
+  - Phase 5 - LLM-as-a-Judge: phase5_llm_as_a_judge
+  - Phase 6 - Results Processing and Analysis: phase6_analysis
