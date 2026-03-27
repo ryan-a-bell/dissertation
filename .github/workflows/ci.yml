@@ -2,8 +2,9 @@ name: ci
 on:
   push:
     branches:
-      - master 
+      - master
       - main
+  workflow_dispatch:
 permissions:
   contents: write
 jobs:
