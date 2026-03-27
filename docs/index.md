@@ -10,10 +10,34 @@ This research systematically benchmarks Large Language Models (LLMs) using multi
 
 The benchmark dataset, **SysEngBench**, is publicly available on [HuggingFace](https://huggingface.co/datasets/rabell/SysEngBench).
 
-!!! abstract "Key Contributions"
-    - **SysEngBench**: A domain-specific benchmark for evaluating LLMs on Systems Engineering tasks
-    - **Distractor Sensitivity Analysis**: Systematic variation of MCQ distractors to measure evaluation robustness
-    - **Consensus-Based Judging**: A grading methodology using multiple evaluation modalities for SE task types
+## Key Contributions
+
+<div class="research-grid" markdown>
+<div class="research-card" markdown>
+### :material-database-plus: Contribution 1
+**Extension of SysEngBench with Multi-Format Evaluation Questions**
+
+Extends the SysEngBench benchmark to support paired multiple-choice and open-style question formats, enabling controlled within-task comparisons across modalities while preserving domain fidelity.
+</div>
+<div class="research-card" markdown>
+### :material-shield-search: Contribution 2
+**Robustness Analysis of MCQ Evaluation Using Distractor Variation**
+
+Investigates how sensitive MCQ performance is to distractor design choices, framing robustness as a measurement property and highlighting risks of overconfidence when MCQ results are interpreted without considering structural dependencies.
+</div>
+<div class="research-card" markdown>
+### :material-scale-balance: Contribution 3
+**Evaluation Modality Fusion for Model Qualification**
+
+Develops a modality-aware basis for model qualification that aligns evaluation evidence with task characteristics, framing qualification as a systems engineering decision problem informed by task criticality and acceptable failure modes.
+</div>
+<div class="research-card" markdown>
+### :material-cash-fast: Contribution 4
+**Token-Efficient Qualification: Cost-Aware Response Length Trade-offs**
+
+Frames model evaluation as a trade-space extending beyond accuracy to include computational cost and response length, establishing cost-aware evaluation as a component of LLM adoption in systems engineering.
+</div>
+</div>
 
 ## Quick Links
 

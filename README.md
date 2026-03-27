@@ -80,12 +80,9 @@ First, install the dependencies. Second, run `python scripts/generate_docs.py` t
    ```bash
    pip install -r requirements.txt
    ```
-2. Generate documentation:
+2. Generate documentation and start the server:
    ```bash
-   mkdocs serve
-   ```
-3. Start the server
-   ```bash
+   python scripts/generate_docs.py
    mkdocs serve
    ```
 
