@@ -69,8 +69,10 @@ Conference papers and journal submissions
 
 ## Dissertation Timeline
 
-!!! info "Placeholder"
-    Updated Gantt chart coming soon.
+![Academic Research Timeline](https://www.plantuml.com/plantuml/proxy?cache=no&src=https://raw.githubusercontent.com/ryan-a-bell/dissertation/main/docs/assets/timeline.puml)
+
+??? note "PlantUML Source"
+    The source for this timeline is located in [`docs/assets/timeline.puml`](assets/timeline.puml).
 
 ---
 
