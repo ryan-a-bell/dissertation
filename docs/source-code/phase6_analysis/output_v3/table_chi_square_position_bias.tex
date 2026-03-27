@@ -1,0 +1,29 @@
+\begin{table}
+\caption{Chi-Square Test Results for Position Bias}
+\label{tab:chi_square_position}
+\begin{tabular}{lrrrr}
+\toprule
+ & model & chi2_stat & p_value & cramers_v & significant \\
+\midrule
+0 & anthropic__claude-sonnet-4.5 & 19.6878 & 0.0006 & 0.0587 & Yes \\
+1 & devstral__24b & 27.4997 & 0.0000 & 0.0693 & Yes \\
+2 & gemma3__12b & 12.0941 & 0.0167 & 0.0460 & Yes \\
+3 & gemma3__1b & 167.3455 & 0.0000 & 0.1710 & Yes \\
+4 & gemma3__27b & 9.2407 & 0.0554 & 0.0402 & No \\
+5 & gemma3__4b & 16.1660 & 0.0028 & 0.0532 & Yes \\
+6 & google__gemini-2.5-flash & 1.1259 & 0.8901 & 0.0140 & No \\
+7 & llama3.2__1b & 262.7687 & 0.0000 & 0.2143 & Yes \\
+8 & llama3.2__3b & 224.0432 & 0.0000 & 0.1979 & Yes \\
+9 & llama3.3__70b & 10.5591 & 0.0320 & 0.0430 & Yes \\
+10 & llama4__16x17b & 8.8055 & 0.0661 & 0.0392 & No \\
+11 & mistral-large__123b & 21.7815 & 0.0002 & 0.0617 & Yes \\
+12 & mistral-small3.2__24b & 30.4726 & 0.0000 & 0.0730 & Yes \\
+13 & mixtral__8x22b & 7.1135 & 0.1300 & 0.0353 & No \\
+14 & openai__gpt-4.1 & 6.7320 & 0.1507 & 0.0343 & No \\
+15 & phi3.5__3.8b & 13.9079 & 0.0076 & 0.0493 & Yes \\
+16 & phi3__14b & 11.4524 & 0.0219 & 0.0447 & Yes \\
+17 & phi4-mini__3.8b & 71.6395 & 0.0000 & 0.1119 & Yes \\
+18 & phi4__14b & 7.4316 & 0.1148 & 0.0360 & No \\
+\bottomrule
+\end{tabular}
+\end{table}
