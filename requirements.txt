@@ -9,6 +9,8 @@ mkdocs-table-reader-plugin
 nbconvert
 pandas
 mkdocs-awesome-pages-plugin
+cairosvg
+pillow
 
 # for phase1_prep
 openpyxl
