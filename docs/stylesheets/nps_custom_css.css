@@ -116,6 +116,31 @@
   box-shadow: 0 15px 30px rgba(0, 51, 102, 0.15);
 }
 
+a.research-card {
+  cursor: pointer;
+}
+
+a.research-card h3 {
+  color: var(--nps-navy);
+}
+
+a.research-card:hover h3 {
+  color: var(--nps-light-blue);
+}
+
+[data-md-color-scheme="slate"] a.research-card {
+  background: #2d3748;
+  color: #e2e8f0;
+}
+
+[data-md-color-scheme="slate"] a.research-card h3 {
+  color: #e2e8f0;
+}
+
+[data-md-color-scheme="slate"] a.research-card:hover h3 {
+  color: var(--nps-light-blue);
+}
+
 /* Admonitions styling */
 .md-typeset .admonition.note {
   border-color: var(--nps-light-blue);
