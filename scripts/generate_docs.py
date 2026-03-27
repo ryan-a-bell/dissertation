@@ -77,11 +77,23 @@ def copy_source_tree():
 
 
 def copy_readme_to_index():
-    """Copy README.md to docs/index.md and adjust relative links."""
+    """Copy README.md to docs/index.md and adjust relative links.
+
+    Skipped if docs/index.md already exists and has been customized
+    (i.e., does not start with the README's first line).
+    """
     if not README.exists():
         return
 
     DOCS_DIR.mkdir(parents=True, exist_ok=True)
+
+    # Preserve a manually-curated index.md
+    if INDEX_MD.exists():
+        existing = INDEX_MD.read_text(encoding="utf-8")
+        readme_first_line = README.read_text(encoding="utf-8").split("\n", 1)[0]
+        if not existing.startswith(readme_first_line):
+            return
+
     content = README.read_text(encoding="utf-8")
     content = content.replace("](LICENSE)", "](../LICENSE)")
     write_md(INDEX_MD, content)
