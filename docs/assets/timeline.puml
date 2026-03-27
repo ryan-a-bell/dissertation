@@ -1,0 +1,109 @@
+@startgantt
+'title Academic Research Timeline
+printscale quarterly zoom 1.5
+language en
+Project starts 2021-01-01
+' ============================================================
+' COLOR LEGEND
+' Green      = Done / Presented / Passed
+' Blue       = Accepted
+' Orange     = In Review
+' Yellow     = In Work
+' LightGray  = Planned / Estimated
+' ============================================================
+today is colored in Red
+-- Coursework --
+[OS3180 Prob and Stats for SE]         lasts 90 days and starts 2021-01-01
+[SE3100 Fundamentals of SE]            lasts 90 days and starts 2021-01-01
+[SI3400 Fundamentals of Eng PM]        lasts 90 days and starts 2021-04-01
+[SE3302 System Suitability]            lasts 90 days and starts 2021-07-01
+[SE3250 Capability Engineering]        lasts 90 days and starts 2021-10-01
+[SE4150 Systems Architecting]          lasts 90 days and starts 2022-01-01
+[SE4151 Systems Integration]           lasts 90 days and starts 2022-04-01
+[SE4930 Model-Based SE]                lasts 90 days and starts 2022-07-01
+[SE4950 System of Systems Eng]         lasts 90 days and starts 2022-10-01
+[DA/SE4480 System Sciences]            lasts 90 days and starts 2023-01-01
+[SE4353 Risk Analysis and Mgmt]        lasts 90 days and starts 2023-04-01
+-- Exams --
+[SE Fundamentals Exam]                 happens 2022-07-23
+[SE Fundamentals Exam]                 is colored in Green
+[Prob/Stats Exam]                      happens 2023-01-19
+[Prob/Stats Exam]                      is colored in Green
+[SE4150 Exam]                          happens 2023-01-13
+[SE4150 Exam]                          is colored in Green
+[SE4353 Exam]                          happens 2023-09-12
+[SE4353 Exam]                          is colored in Green
+[SE4930 Exam]                          happens 2024-06-06
+[SE4930 Exam]                          is colored in Green
+[Oral Exam]                            happens 2025-07-14
+[Oral Exam]                            is colored in Green
+-- Dissertation --
+[Proposal]                             happens 2025-07-14
+[Proposal]                             is colored in Green
+[Proposal Presentation]                happens 2025-07-14
+[Proposal Presentation]                is colored in Green
+[Draft 0.1]                            happens 2025-12-05
+[Draft 0.1]                            is colored in Green
+[TPO Initial Submission]               happens 2026-02-23
+[TPO Initial Submission]               is colored in Green
+[Draft 1.0]                            happens 2026-02-27
+[Draft 1.0]                            is colored in Green
+[Defense]                              happens 2026-04-24
+[Defense]                              is colored in LightGray
+[TPO Final Submission]                 happens 2026-05-07
+[TPO Final Submission]                 is colored in LightGray
+[Graduation]                           happens 2026-06-18
+[Graduation]                           is colored in LightGray
+-- Publications: Primary --
+[Baselining AI SE Cost Modeling - Talk - BCSSE]       happens 2024-04-01
+[Baselining AI SE Cost Modeling - Talk - BCSSE]       is colored in Green
+[Intro SysEngBench - Paper and Talk - ARS 2024]             happens 2024-05-01
+[Intro SysEngBench - Paper and Talk - ARS 2024]             is colored in Green
+[AI Tools for SE - Talk - IS 2024]            happens 2024-07-01
+[AI Tools for SE - Talk - IS 2024]            is colored in Green
+[RAG Cost Modeling - Talk - COCOMO 2024]      happens 2024-09-01
+[RAG Cost Modeling - Talk - COCOMO 2024]      is colored in Green
+[SysEngBench Baseline - Paper - Wiley]      happens 2025-02-01
+[SysEngBench Baseline - Paper - Wiley]      is colored in Orange
+[LLM Quantization - Paper - Wiley]          happens 2025-02-01
+[LLM Quantization - Paper - Wiley]          is colored in Orange
+[AI Expert Consensus - Paper - ARS 2025]       happens 2025-05-01
+[AI Expert Consensus - Paper - ARS 2025]       is colored in Green
+[LLM Meta-Evaluation - Talk - IS 2026]        happens 2026-07-01
+[LLM Meta-Evaluation - Talk - IS 2026]        is colored in Blue
+-- Publications: Secondary --
+[GenAI MBSE Query - Paper and Talk - ARS 2024]          happens 2024-05-01
+[GenAI MBSE Query - Paper and Talk - ARS 2024]          is colored in Green
+[PrivateAIDELPHI - Paper and Talk - RAMS 2025]          happens 2025-02-01
+[PrivateAIDELPHI - Paper and Talk - RAMS 2025]          is colored in Green
+[SE Maturity Cost Model - Paper and Talk - CSER 2025]   happens 2025-04-01
+[SE Maturity Cost Model - Paper and Talk - CSER 2025]   is colored in Green
+[VQA Multi-Modal LLMs - Paper - ARS 2025]      happens 2025-05-01
+[VQA Multi-Modal LLMs - Paper - ARS 2025]      is colored in Green
+[Cost of Expertise LLMs - Paper and Talk - IS 2025]     happens 2025-07-01
+[Cost of Expertise LLMs - Paper and Talk - IS 2025]     is colored in Green
+[SE Maturity Cost Model - Paper and Talk - IS 2025]     happens 2025-07-01
+[SE Maturity Cost Model - Paper and Talk - IS 2025]     is colored in Green
+-- Tutorials --
+[Custom LLMs for SE - SD INCOSE 2025]  happens 2025-07-12
+[Custom LLMs for SE - SD INCOSE 2025]  is colored in Green
+[Custom LLMs for SE - IS 2025]         happens 2025-07-01
+[Custom LLMs for SE - IS 2025]         is colored in Green
+[Open Source SE Modeling - IS 2025]    happens 2025-07-01
+[Open Source SE Modeling - IS 2025]    is colored in Green
+[Custom LLMs for SE - SERC 2026]       happens 2026-04-06
+[Custom LLMs for SE - SERC 2026]       is colored in Blue
+[Designing AI Assistants - IS 2026]    happens 2026-07-01
+[Designing AI Assistants - IS 2026]    is colored in Orange
+[Open Source SE Modeling - IS 2026]    happens 2026-07-01
+[Open Source SE Modeling - IS 2026]    is colored in Orange
+legend
+|= Color |= Status |
+| <back:Green>          Green       </back> | Done / Presented / Passed |
+| <back:CornflowerBlue>          Blue         </back> | Accepted |
+| <back:Orange>         Orange      </back> | In Review |
+| <back:Yellow>         Yellow        </back> | In Work |
+| <back:LightGray>      Light Gray     </back> | Planned / Estimated |
+| <back:Red>      Red Line       </back> | Today  |
+endlegend
+@endgantt
