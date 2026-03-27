@@ -44,6 +44,7 @@ extra_javascript:
 plugins:
   - search
   - social
+  - glightbox
   - awesome-pages
   - mkdocstrings:
       handlers:
@@ -73,6 +74,8 @@ markdown_extensions:
   - attr_list
   - md_in_html
   - footnotes
+  - pymdownx.tabbed:
+      alternate_style: true
 
 extra:
   meta:
