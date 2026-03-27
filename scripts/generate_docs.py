@@ -163,6 +163,15 @@ def copy_viz_tree():
     )
 
 
+def copy_viz_assets():
+    """Copy key visualization assets to docs/assets/ for use on the home page."""
+    video_src = VIZ_DIR / "viz-outputs" / "repo_lineage.mp4"
+    if video_src.exists():
+        video_dest = DOCS_DIR / "assets" / "repo_lineage.mp4"
+        video_dest.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(video_src, video_dest)
+
+
 def copy_readme_to_index():
     """Copy README.md to docs/index.md and adjust relative links.
 
@@ -189,6 +198,7 @@ def copy_readme_to_index():
 def main():
     copy_source_tree()
     copy_viz_tree()
+    copy_viz_assets()
     copy_readme_to_index()
     print(f"Mirrored source tree to {DEST}, viz to {VIZ_DEST}, and updated {INDEX_MD}")
 

@@ -22,6 +22,15 @@ The OSQ dataset is systematically constructed from SysEngBench to preserve domai
 
 The original **SysEngBench** benchmark dataset is publicly available on [HuggingFace](https://huggingface.co/datasets/rabell/SysEngBench) and is used in this repository without modification. The derived OSQ dataset, along with all evaluation pipelines and analysis code, is provided to support reproducibility and further meta-evaluation research. It is also publicly available on [HuggingFace](https://huggingface.co/datasets/rabell/SysEngBench-OSQ).
 
+## Repository Evolution
+
+This animated visualization shows the evolution of the dissertation repository over time, generated using [Gource](https://gource.io/).
+
+<video controls width="100%" poster="">
+  <source src="assets/repo_lineage.mp4" type="video/mp4">
+  Your browser does not support the video tag.
+</video>
+
 ## Key Contributions
 
 <div class="research-grid" markdown>
