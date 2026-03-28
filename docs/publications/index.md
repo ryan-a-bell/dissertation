@@ -6,7 +6,16 @@ title: Publications
 
 ## 2025
 
-Bell, R., Longshore, R., Madachy, R., & Hanrahan, A. (2025). "Baselining Large Language Model Performance in Systems Engineering Using SysEngBench." *Wiley INCOSE*. (Submitted)
+<div class="pub-entry" markdown>
+
+**Baselining Large Language Model Performance in Systems Engineering Using SysEngBench**
+{ .pub-title }
+
+Bell, R., Longshore, R., Madachy, R., & Hanrahan, A. (2025)
+{ .pub-authors }
+
+*Wiley INCOSE* | <span class="pub-badge">Journal Article</span> <span class="pub-badge">Submitted</span>
+{ .pub-meta }
 
 ??? cite "BibTeX"
     ```bibtex
@@ -19,9 +28,20 @@ Bell, R., Longshore, R., Madachy, R., & Hanrahan, A. (2025). "Baselining Large L
     }
     ```
 
+</div>
+
 ---
 
-Bell, R., Madachy, R., & Longshore, R. (2025). "Balancing Accuracy and Efficiency: Trade-offs in Large Language Model Quantization for the Systems Engineering Domain." *Wiley INCOSE*. (Submitted)
+<div class="pub-entry" markdown>
+
+**Balancing Accuracy and Efficiency: Trade-offs in Large Language Model Quantization for the Systems Engineering Domain**
+{ .pub-title }
+
+Bell, R., Madachy, R., & Longshore, R. (2025)
+{ .pub-authors }
+
+*Wiley INCOSE* | <span class="pub-badge">Journal Article</span> <span class="pub-badge">Submitted</span>
+{ .pub-meta }
 
 ??? cite "BibTeX"
     ```bibtex
@@ -34,14 +54,38 @@ Bell, R., Madachy, R., & Longshore, R. (2025). "Balancing Accuracy and Efficienc
     }
     ```
 
+</div>
+
 ---
 
-Bell, R. (2025). "Consensus Methods with AI." *22nd NPS Acquisition Research Symposium*.
+<div class="pub-entry" markdown>
+
+**Consensus Methods with AI**
+{ .pub-title }
+
+Bell, R. (2025)
+{ .pub-authors }
+
+*22nd NPS Acquisition Research Symposium* | <span class="pub-badge">Conference Paper</span>
+{ .pub-meta }
+
 [:material-file-pdf-box: Paper](20250507%2022nd%20NPS%20ARS%202025/20250427.1%20NPS%20ARS%20-%20Consensus%20Methods%20with%20AI%20-%20Submission.pdf){ .pub-link }
 
+</div>
+
 ---
 
-Wach, P., Bell, R., Jugan, B., Longshore, R., & Madachy, R. (2025). "The Cost of Expertise: Performance Trade-Offs in LLMs for Systems Engineering." *Proceedings of the INCOSE International Symposium*. (In Press)
+<div class="pub-entry" markdown>
+
+**The Cost of Expertise: Performance Trade-Offs in LLMs for Systems Engineering**
+{ .pub-title }
+
+Wach, P., Bell, R., Jugan, B., Longshore, R., & Madachy, R. (2025)
+{ .pub-authors }
+
+*Proceedings of the INCOSE International Symposium* | <span class="pub-badge">Conference Paper</span> <span class="pub-badge">In Press</span>
+{ .pub-meta }
+
 [:material-file-pdf-box: Paper](20250101%20INCOSE%20IS%202025/genAI_SE_expert_v2.1.pdf){ .pub-link }
 
 ??? cite "BibTeX"
@@ -56,9 +100,21 @@ Wach, P., Bell, R., Jugan, B., Longshore, R., & Madachy, R. (2025). "The Cost of
     }
     ```
 
+</div>
+
 ---
 
-Madachy, R., Bell, R., & Longshore, R. (2025). "A Generative AI-driven Systems Engineering Maturity and Cost Modeling Framework." *Proceedings of the 22nd Annual Conference on Systems Engineering Research (CSER)*. (In Press)
+<div class="pub-entry" markdown>
+
+**A Generative AI-driven Systems Engineering Maturity and Cost Modeling Framework**
+{ .pub-title }
+
+Madachy, R., Bell, R., & Longshore, R. (2025)
+{ .pub-authors }
+
+*Proceedings of the 22nd Annual Conference on Systems Engineering Research (CSER)* | <span class="pub-badge">Conference Paper</span> <span class="pub-badge">In Press</span>
+{ .pub-meta }
+
 [:material-file-pdf-box: Paper](20250318%20CSER%202025/A%20Generative%20AI-Driven%20Systems%20Engineering%20Maturity%20and%20Cost%20Modeling%20Framework.pdf){ .pub-link }
 [:material-presentation: Presentation](20250318%20CSER%202025/CSER%202025%20-%20A%20Generative%20AI-Driven%20Systems%20Engineering%20Maturity%20and%20Cost%20Modeling%20Framework.pdf){ .pub-link }
 
@@ -75,9 +131,21 @@ Madachy, R., Bell, R., & Longshore, R. (2025). "A Generative AI-driven Systems E
     }
     ```
 
+</div>
+
 ---
 
-Papakonstantinou, N., Van Bossuyt, D., Bell, R., Longshore, R., & Heikkila, M. (2025). "PrivateAIDELPHI: Adopting and Adapting Private AI for Risk Assessment of Safety Critical Systems." *RAMS*. DOI: [10.1109/RAMS48127.2025.10935226](https://doi.org/10.1109/RAMS48127.2025.10935226)
+<div class="pub-entry" markdown>
+
+**PrivateAIDELPHI: Adopting and Adapting Private AI for Risk Assessment of Safety Critical Systems**
+{ .pub-title }
+
+Papakonstantinou, N., Van Bossuyt, D., Bell, R., Longshore, R., & Heikkila, M. (2025)
+{ .pub-authors }
+
+*RAMS* | <span class="pub-badge">Conference Paper</span> | DOI: [10.1109/RAMS48127.2025.10935226](https://doi.org/10.1109/RAMS48127.2025.10935226)
+{ .pub-meta }
+
 [:material-file-pdf-box: Paper](20250127%20RAMS%202025/FinalPaper_35_1208042223.pdf){ .pub-link }
 
 ??? cite "BibTeX"
@@ -93,22 +161,58 @@ Papakonstantinou, N., Van Bossuyt, D., Bell, R., Longshore, R., & Heikkila, M. (
     }
     ```
 
+</div>
+
 ---
 
-Bell, R. (2025). "Dissertation Proposal: An Empirical Meta-Evaluation of Language Model Evaluation Methods for Systems Engineering." *Naval Postgraduate School*.
+<div class="pub-entry" markdown>
+
+**Dissertation Proposal: An Empirical Meta-Evaluation of Language Model Evaluation Methods for Systems Engineering**
+{ .pub-title }
+
+Bell, R. (2025)
+{ .pub-authors }
+
+*Naval Postgraduate School* | <span class="pub-badge">Dissertation Proposal</span>
+{ .pub-meta }
+
 [:material-file-pdf-box: Proposal](20250801%20Dissertation%20Proposal/20250604_Bell_Dissertation_Proposal.pdf){ .pub-link }
 [:material-presentation: Presentation](20250801%20Dissertation%20Proposal/20250604%20Bell%20Dissertation%20Proposal%20Presentation.pdf){ .pub-link }
 
+</div>
+
 ---
 
-Bell, R. (2025). "Developing Custom LLMs for Systems Engineering." *INCOSE San Diego Tutorial*.
+<div class="pub-entry" markdown>
+
+**Developing Custom LLMs for Systems Engineering**
+{ .pub-title }
+
+Bell, R. (2025)
+{ .pub-authors }
+
+*INCOSE San Diego Tutorial* | <span class="pub-badge">Tutorial</span>
+{ .pub-meta }
+
 [:material-notebook: Tutorial Notebook](20250712%20INCOSE%20SD%20Tutorial/SD_INCOSE_Tutorial_%E2%80%93_Developing_Custom_LLMs_for_Systems_Engineering.ipynb){ .pub-link }
+
+</div>
 
 ---
 
 ## 2024
 
-Bell, R., Madachy, R., & Longshore, R. (2024). "Introducing SysEngBench: A Novel Benchmark for Assessing Large Language Models in Systems Engineering." *Acquisition Research Program*.
+<div class="pub-entry" markdown>
+
+**Introducing SysEngBench: A Novel Benchmark for Assessing Large Language Models in Systems Engineering**
+{ .pub-title }
+
+Bell, R., Madachy, R., & Longshore, R. (2024)
+{ .pub-authors }
+
+*Acquisition Research Program* | <span class="pub-badge">Conference Paper</span>
+{ .pub-meta }
+
 [:material-file-pdf-box: Paper](20240521%20INCOSE%20IS%202024/20240521%20%23528%20-%20Submission%2020240702.pdf){ .pub-link }
 
 ??? cite "BibTeX"
@@ -122,9 +226,20 @@ Bell, R., Madachy, R., & Longshore, R. (2024). "Introducing SysEngBench: A Novel
     }
     ```
 
+</div>
+
 ---
 
-Longshore, R., Madachy, R., & Bell, R. (2024). "Leveraging Generative AI to Create, Modify, and Query MBSE Models." *21st Annual Acquisition Research Symposium*. Naval Postgraduate School.
+<div class="pub-entry" markdown>
+
+**Leveraging Generative AI to Create, Modify, and Query MBSE Models**
+{ .pub-title }
+
+Longshore, R., Madachy, R., & Bell, R. (2024)
+{ .pub-authors }
+
+*21st Annual Acquisition Research Symposium*, Naval Postgraduate School | <span class="pub-badge">Conference Paper</span>
+{ .pub-meta }
 
 ??? cite "BibTeX"
     ```bibtex
@@ -138,9 +253,20 @@ Longshore, R., Madachy, R., & Bell, R. (2024). "Leveraging Generative AI to Crea
     }
     ```
 
+</div>
+
 ---
 
-Madachy, R., Bell, R., & Longshore, R. (2024). "Systems Acquisition Cost Modeling Initiative for AI Assistance." *21st Annual Acquisition Research Symposium*. Naval Postgraduate School.
+<div class="pub-entry" markdown>
+
+**Systems Acquisition Cost Modeling Initiative for AI Assistance**
+{ .pub-title }
+
+Madachy, R., Bell, R., & Longshore, R. (2024)
+{ .pub-authors }
+
+*21st Annual Acquisition Research Symposium*, Naval Postgraduate School | <span class="pub-badge">Conference Paper</span>
+{ .pub-meta }
 
 ??? cite "BibTeX"
     ```bibtex
@@ -154,9 +280,21 @@ Madachy, R., Bell, R., & Longshore, R. (2024). "Systems Acquisition Cost Modelin
     }
     ```
 
+</div>
+
 ---
 
-Bell, R., Longshore, R., & Madachy, R. (2024). "Baselining AI's Systems Engineering Performance in Cost Modeling." *NPS Acquisition Research Symposium*.
+<div class="pub-entry" markdown>
+
+**Baselining AI's Systems Engineering Performance in Cost Modeling**
+{ .pub-title }
+
+Bell, R., Longshore, R., & Madachy, R. (2024)
+{ .pub-authors }
+
+*NPS Acquisition Research Symposium* | <span class="pub-badge">Conference Paper</span>
+{ .pub-meta }
+
 [:material-file-pdf-box: Paper](20240408%20NPS%20ARS%202024/20240403%20NPS%20ARS%20Paper.pdf){ .pub-link }
 [:material-presentation: Presentation](20240408%20NPS%20ARS%202024/20240508.1%20NPS%20ARS%20-%20BELL.pdf){ .pub-link }
 
@@ -170,9 +308,22 @@ Bell, R., Longshore, R., & Madachy, R. (2024). "Baselining AI's Systems Engineer
     }
     ```
 
+</div>
+
 ---
 
-Bell, R. (2024). "SysEngBench: Datasets at Hugging Face." [:material-open-in-new: HuggingFace](https://huggingface.co/datasets/rabell/SysEngBench){ .pub-link }
+<div class="pub-entry" markdown>
+
+**SysEngBench: Datasets at Hugging Face**
+{ .pub-title }
+
+Bell, R. (2024)
+{ .pub-authors }
+
+<span class="pub-badge">Dataset</span>
+{ .pub-meta }
+
+[:material-open-in-new: HuggingFace](https://huggingface.co/datasets/rabell/SysEngBench){ .pub-link }
 
 ??? cite "BibTeX"
     ```bibtex
@@ -185,9 +336,21 @@ Bell, R. (2024). "SysEngBench: Datasets at Hugging Face." [:material-open-in-new
     }
     ```
 
+</div>
+
 ---
 
-Madachy, R., Longshore, R., & Bell, R. (2024). "Systems and Software Engineering Cost Modeling of AI Assistance." *Boehm CSSE COCOMO Forum*.
+<div class="pub-entry" markdown>
+
+**Systems and Software Engineering Cost Modeling of AI Assistance**
+{ .pub-title }
+
+Madachy, R., Longshore, R., & Bell, R. (2024)
+{ .pub-authors }
+
+*Boehm CSSE COCOMO Forum* | <span class="pub-badge">Conference Paper</span>
+{ .pub-meta }
+
 [:material-file-pdf-box: Paper](20240918%20Boehm%20CSSE%20COCOMO%20Forum%202024/20241112_BoehmRR_TailoredCostModeling.pdf){ .pub-link }
 
 ??? cite "BibTeX"
@@ -200,7 +363,21 @@ Madachy, R., Longshore, R., & Bell, R. (2024). "Systems and Software Engineering
     }
     ```
 
+</div>
+
 ---
 
-Madachy, R., Bell, R., & Longshore, R. (2024). "Tailored Cost Modeling for AI-Assisted Systems Engineering." *Boehm CSSE Annual Research Review*.
+<div class="pub-entry" markdown>
+
+**Tailored Cost Modeling for AI-Assisted Systems Engineering**
+{ .pub-title }
+
+Madachy, R., Bell, R., & Longshore, R. (2024)
+{ .pub-authors }
+
+*Boehm CSSE Annual Research Review* | <span class="pub-badge">Conference Paper</span>
+{ .pub-meta }
+
 [:material-file-pdf-box: Paper](20240321%20Boehm%20CSSE%20ARR/20240412%20BCSSE%20ARR.pdf){ .pub-link }
+
+</div>
