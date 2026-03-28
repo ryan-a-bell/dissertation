@@ -17,7 +17,7 @@ from metaeval.core.types import (
 )
 from metaeval.core.logging import get_logger
 from metaeval.compare.stats.correlation import pearson_correlation, spearman_correlation
-from metaeval.compare.stats.paired import wilcoxon_signed_rank, paired_t_test
+from metaeval.compare.stats.paired import wilcoxon_signed_rank
 from metaeval.compare.stats.effects import cohens_d
 from metaeval.compare.stats.bootstrap import bootstrap_difference, bootstrap_correlation
 
@@ -123,7 +123,6 @@ class FormatComparator:
         # Paired tests
         paired_tests = {
             "wilcoxon": wilcoxon_signed_rank(mcq_scores, osq_scores, alpha=self.alpha),
-            "paired_t": paired_t_test(mcq_scores, osq_scores, alpha=self.alpha),
         }
 
         # Effect sizes

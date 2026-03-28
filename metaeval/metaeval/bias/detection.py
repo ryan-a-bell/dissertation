@@ -12,14 +12,10 @@ from metaeval.core.types import BiasResult, TestResult, EffectSize
 from metaeval.core.logging import get_logger
 from metaeval.bias.stats.tests import (
     chi_square_test,
-    kruskal_wallis_test,
     friedman_test,
-    pairwise_mcnemar,
-    anova_test,
 )
 from metaeval.bias.stats.effects import (
     cramers_v_from_result,
-    epsilon_squared_from_result,
     kendalls_w_from_result,
 )
 
@@ -194,7 +190,7 @@ class PositionBiasAnalyzer:
         test_results: dict[str, TestResult] = {}
         effect_sizes: dict[str, EffectSize] = {}
 
-        # 1. Chi-square test
+        # 1. Chi-square test of independence
         chi_result = chi_square_test(
             model_data,
             position_col=self.position_col,
@@ -203,23 +199,15 @@ class PositionBiasAnalyzer:
         )
         test_results["chi_square"] = chi_result
 
-        # Chi-square effect size (Cramér's V)
+        # Chi-square effect size (Cramer's V)
         n_samples = len(model_data)
         positions = model_data[self.position_col].nunique()
         effect_sizes["cramers_v"] = cramers_v_from_result(
             chi_result, n_samples, positions, 2  # 2 for correct/incorrect
         )
 
-        # 2. Kruskal-Wallis test
-        groups = {
-            pos: model_data[model_data[self.position_col] == pos][self.correct_col].values
-            for pos in sorted(model_data[self.position_col].unique())
-        }
-        kw_result = kruskal_wallis_test(groups, alpha=self.alpha)
-        test_results["kruskal_wallis"] = kw_result
-        effect_sizes["epsilon_squared"] = epsilon_squared_from_result(kw_result)
-
-        # 3. Friedman test (requires pivot table)
+        # 2. Friedman test (within-item repeated measures)
+        pairwise: list[tuple[str, str, Any]] = []
         try:
             pivot = model_data.pivot_table(
                 index=self.question_col,
@@ -235,22 +223,11 @@ class PositionBiasAnalyzer:
         except Exception as e:
             logger.warning(f"Could not perform Friedman test: {e}")
 
-        # 4. Pairwise McNemar tests
-        pairwise = pairwise_mcnemar(
-            model_data,
-            position_col=self.position_col,
-            correct_col=self.correct_col,
-            question_col=self.question_col,
-            alpha=self.alpha,
-        )
-
-        # 5. ANOVA (for comparison, though assumptions may not hold)
-        anova_result = anova_test(groups, alpha=self.alpha)
-        test_results["anova"] = anova_result
-
         # Determine if significant bias exists
+        # Both tests must agree for a definitive finding (conservative approach
+        # matching the dissertation's decision-tree methodology)
         significant_tests = sum(1 for r in test_results.values() if r.significant)
-        has_bias = significant_tests >= 2  # Majority of tests significant
+        has_bias = significant_tests >= 2
 
         # Generate summary
         summary = self._generate_summary(
