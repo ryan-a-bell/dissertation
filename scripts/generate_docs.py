@@ -243,7 +243,17 @@ def find_pdfs_for_entry(entry, pub_folders):
 
 
 def generate_publications_page():
-    """Generate a structured publications page from publications.bib."""
+    """Generate a structured publications page from publications.bib.
+
+    Skipped if publications/index.md already exists and has been customized
+    (i.e., does not start with the auto-generated first line).
+    """
+    # Preserve a manually-curated publications page
+    if PUB_INDEX.exists():
+        existing = PUB_INDEX.read_text(encoding="utf-8")
+        if not existing.startswith("# Publications\nAcademic publications"):
+            return
+
     bib_path = PUB_DIR / "publications.bib"
     if not bib_path.exists():
         return

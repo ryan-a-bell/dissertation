@@ -52,7 +52,8 @@ pre.mermaid {
   margin: 1.5rem 0;
 }
 
-.figure-gallery figure {
+.figure-gallery figure,
+.figure-gallery .gallery-item {
   margin: 0;
   padding: 0.75rem;
   border-radius: 8px;
@@ -61,12 +62,14 @@ pre.mermaid {
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.figure-gallery figure:hover {
+.figure-gallery figure:hover,
+.figure-gallery .gallery-item:hover {
   transform: translateY(-3px);
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.14);
 }
 
-.figure-gallery figure img {
+.figure-gallery figure img,
+.figure-gallery .gallery-item img {
   width: 100%;
   height: auto;
   border-radius: 4px;
@@ -81,17 +84,68 @@ pre.mermaid {
   line-height: 1.4;
 }
 
-[data-md-color-scheme="slate"] .figure-gallery figure {
+[data-md-color-scheme="slate"] .figure-gallery figure,
+[data-md-color-scheme="slate"] .figure-gallery .gallery-item {
   background: #2d2d44;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
 }
 
-[data-md-color-scheme="slate"] .figure-gallery figure:hover {
+[data-md-color-scheme="slate"] .figure-gallery figure:hover,
+[data-md-color-scheme="slate"] .figure-gallery .gallery-item:hover {
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
 }
 
 [data-md-color-scheme="slate"] .figure-gallery figcaption {
   color: #a0aec0;
+}
+
+/* Hero banner */
+.hero-banner {
+  width: 100%;
+  margin: 0 0 1rem 0;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.hero-banner img {
+  width: 100%;
+  height: 280px;
+  object-fit: cover;
+  object-position: center 40%;
+  display: block;
+  border-radius: 8px;
+}
+
+@media (max-width: 768px) {
+  .hero-banner img {
+    height: 180px;
+  }
+}
+
+/* CV-style publications */
+.pub-link {
+  display: inline-block;
+  font-size: 0.8rem;
+  margin-right: 0.5rem;
+  padding: 0.15rem 0.5rem;
+  border-radius: 4px;
+  border: 1px solid var(--md-default-fg-color--lighter, #ccc);
+  text-decoration: none;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.pub-link:hover {
+  background: var(--md-accent-fg-color--transparent, rgba(0, 0, 0, 0.05));
+  border-color: var(--md-accent-fg-color, #4A90E2);
+}
+
+[data-md-color-scheme="slate"] .pub-link {
+  border-color: #444;
+}
+
+[data-md-color-scheme="slate"] .pub-link:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: var(--md-accent-fg-color, #4A90E2);
 }
 
 /* Mobile responsiveness for Mermaid diagrams */
