@@ -52,7 +52,8 @@ pre.mermaid {
   margin: 1.5rem 0;
 }
 
-.figure-gallery figure {
+.figure-gallery figure,
+.figure-gallery .gallery-item {
   margin: 0;
   padding: 0.75rem;
   border-radius: 8px;
@@ -61,12 +62,14 @@ pre.mermaid {
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.figure-gallery figure:hover {
+.figure-gallery figure:hover,
+.figure-gallery .gallery-item:hover {
   transform: translateY(-3px);
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.14);
 }
 
-.figure-gallery figure img {
+.figure-gallery figure img,
+.figure-gallery .gallery-item img {
   width: 100%;
   height: auto;
   border-radius: 4px;
@@ -81,12 +84,14 @@ pre.mermaid {
   line-height: 1.4;
 }
 
-[data-md-color-scheme="slate"] .figure-gallery figure {
+[data-md-color-scheme="slate"] .figure-gallery figure,
+[data-md-color-scheme="slate"] .figure-gallery .gallery-item {
   background: #2d2d44;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
 }
 
-[data-md-color-scheme="slate"] .figure-gallery figure:hover {
+[data-md-color-scheme="slate"] .figure-gallery figure:hover,
+[data-md-color-scheme="slate"] .figure-gallery .gallery-item:hover {
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
 }
 
