@@ -8,7 +8,7 @@ Key figures from the Phase 6 empirical analysis, organized by research contribut
 
 === "Modality Comparison"
 
-    **Contribution 1 -- MCQ vs OSQ Evaluation Modalities**
+    **MCQ vs OSQ Evaluation Modalities**
 
     How do multiple-choice and open-style question formats compare when evaluating the same models on the same domain content?
 
@@ -57,7 +57,7 @@ Key figures from the Phase 6 empirical analysis, organized by research contribut
 
 === "Distractor Sensitivity"
 
-    **Contribution 2 -- Robustness of MCQ Evaluation Under Distractor Variation**
+    **Robustness of MCQ Evaluation Under Distractor Variation**
 
     How sensitive are MCQ scores to the design and positioning of distractor answer choices?
 
@@ -102,7 +102,7 @@ Key figures from the Phase 6 empirical analysis, organized by research contribut
 
 === "Consensus Judging"
 
-    **Contribution 3 -- LLM-as-a-Judge Reliability and Consensus**
+    **LLM-as-a-Judge Reliability and Consensus**
 
     How reliable are LLM judges when scoring open-ended responses, and do multiple judges converge?
 
@@ -151,7 +151,7 @@ Key figures from the Phase 6 empirical analysis, organized by research contribut
 
 === "Token Efficiency"
 
-    **Contribution 4 -- Cost-Aware Response Length Trade-offs**
+    **Cost-Aware Response Length Trade-offs**
 
     What is the relationship between response length, token cost, and evaluation quality?
 
