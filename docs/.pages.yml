@@ -2,7 +2,7 @@ nav:
   - Home: index.md
   - Key Findings: key-findings.md
   - Analysis Gallery: analysis-gallery.md
-  - Glossary: glossary.md
   - metaeval: metaeval.md
   - Publications/: publications
   - Source Code/: source-code
+  - Glossary: glossary.md

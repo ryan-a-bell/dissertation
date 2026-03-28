@@ -72,6 +72,14 @@ The dissertation's central deployment takeaway is that benchmark evidence is mos
 
 Model selection should be guided not only by average benchmark performance, but by how well a model's measured strengths align with the target task's evidence requirements. This is made explicit through a **task-to-modality routing map**: a category-driven rule set that specifies the minimum defensible qualification modality for each task class.
 
+!!! note "Risk Profile Disclaimer"
+    The classification thresholds used below (e.g., dual-modality required at delta >= 15%, MCQ-sufficient at delta < 5% with MCQ accuracy >= 85%) reflect the **risk profile adopted for this research**, informed by engineering judgement regarding acceptable evidence standards for systems engineering tasks. These thresholds are not universal constants. Practitioners applying this same framework may adjust the classification boundaries to match their own organizational risk tolerance for AI/LLM adoption. The figure below illustrates the classification regions and how they partition the evaluation space -- adapting these regions to a different risk profile is a straightforward extension of the methodology.
+
+<figure markdown="span">
+  ![Classification regions for task-to-modality routing](assets/obj7_classification_regions.png){ width="700" }
+  <figcaption>Classification regions used to map INCOSE task categories to minimum qualification modalities. The boundaries can be adjusted to reflect different risk tolerances for LLM adoption.</figcaption>
+</figure>
+
 Seven INCOSE categories are classified as **dual-modality required** (mean MCQ-OSQ delta >= 15%):
 
 | Category | MCQ-OSQ Delta |

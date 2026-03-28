@@ -12,11 +12,11 @@ This glossary defines key terms and acronyms used throughout the dissertation an
 
 ### Systems Engineering (SE)
 
-A disciplined, integrative approach for designing, realizing, and operating complex systems across the full lifecycle. This definition emphasizes both technical integration and governance across time: SE coordinates diverse specialties into a coherent system that satisfies stakeholder needs within technical, cost, schedule, and risk constraints.
+An interdisciplinary approach and means to enable the full life cycle of successful product, service and enterprise systems. It includes problem discovery and formulation, solution definition and realization, and operational use, sustainment, and disposal. It can be applied to single-problem situations or to the management of multiple interventions in commercial or public enterprises (SEBoK v2.13).
 
 ### Model-Based Systems Engineering (MBSE)
 
-A paradigm that uses formalized representations of systems---models---to support the performance of systems engineering tasks throughout the system lifecycle, in contrast to legacy document-centric approaches. The Systems Engineering Body of Knowledge (SEBoK) similarly defines MBSE as "a paradigm that uses formalized representations of systems, known as models, to support and facilitate the performance of systems engineering tasks throughout a system's life cycle."
+A paradigm that uses formalized representations of systems as models to support the performance of systems engineering tasks throughout the system lifecycle, in contrast to legacy document-centric approaches. The Systems Engineering Body of Knowledge (SEBoK) similarly defines MBSE as "a paradigm that uses formalized representations of systems, known as models, to support and facilitate the performance of systems engineering tasks throughout a system's life cycle."
 
 ### Digital Thread
 
