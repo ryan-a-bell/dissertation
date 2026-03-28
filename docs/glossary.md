@@ -16,7 +16,7 @@ An interdisciplinary approach and means to enable the full life cycle of success
 
 ### Model-Based Systems Engineering (MBSE)
 
-A paradigm that uses formalized representations of systems, known as models, to support the performance of systems engineering tasks throughout the system lifecycle, in contrast to legacy document-centric approaches. The Systems Engineering Body of Knowledge (SEBoK) similarly defines MBSE as "a paradigm that uses formalized representations of systems, known as models, to support and facilitate the performance of systems engineering tasks throughout a system's life cycle."
+A paradigm that uses formalized representations of systems as models to support the performance of systems engineering tasks throughout the system lifecycle, in contrast to legacy document-centric approaches. The Systems Engineering Body of Knowledge (SEBoK) similarly defines MBSE as "a paradigm that uses formalized representations of systems, known as models, to support and facilitate the performance of systems engineering tasks throughout a system's life cycle."
 
 ### Digital Thread
 
