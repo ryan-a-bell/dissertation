@@ -4,7 +4,7 @@ title: Home
 
 # An Empirical Meta-Evaluation of Language Model Evaluation Methods for Systems Engineering Using Distractor Sensitivity and Consensus Judging
 
-<img src="assets/bell-bio-image.jpg" alt="Ryan Bell" style="width: 48px; height: 48px; border-radius: 50%; vertical-align: middle; margin-right: 0.5rem; object-fit: cover;"> **Ryan Bell** | Naval Postgraduate School | PhD Dissertation in Systems Engineering
+<img src="assets/bell-bio-image.jpg" alt="Ryan Bell" style="width: 60px; height: 60px; border-radius: 50%; vertical-align: middle; margin-right: 0.5rem; object-fit: cover;"> **Ryan Bell**<br>| Naval Postgraduate School<br>PhD Candidate in Systems Engineering
 
 ---
 
