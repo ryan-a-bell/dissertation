@@ -99,6 +99,29 @@ pre.mermaid {
   color: #a0aec0;
 }
 
+/* Hero banner */
+.hero-banner {
+  width: 100%;
+  margin: 0 0 1rem 0;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.hero-banner img {
+  width: 100%;
+  height: 280px;
+  object-fit: cover;
+  object-position: center 40%;
+  display: block;
+  border-radius: 8px;
+}
+
+@media (max-width: 768px) {
+  .hero-banner img {
+    height: 180px;
+  }
+}
+
 /* CV-style publications */
 .pub-link {
   display: inline-block;
