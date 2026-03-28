@@ -1,33 +1,27 @@
-"""Statistical tests and effect sizes for position bias analysis."""
+"""Statistical tests and effect sizes for position bias analysis.
+
+Note: Only methods used in the dissertation pipeline are exported here.
+Additional methods (kruskal_wallis_test, mcnemar_test, pairwise_mcnemar,
+anova_test, epsilon_squared, etc.) remain available via direct import
+from their respective modules for advanced use or future versions.
+"""
 
 from metaeval.bias.stats.tests import (
     chi_square_test,
-    kruskal_wallis_test,
     friedman_test,
-    mcnemar_test,
-    pairwise_mcnemar,
-    anova_test,
 )
 from metaeval.bias.stats.effects import (
     cramers_v,
     kendalls_w,
-    epsilon_squared,
     interpret_effect_size,
-    compute_all_effect_sizes,
 )
 
 __all__ = [
-    # Tests
+    # Tests (aligned with dissertation methodology)
     "chi_square_test",
-    "kruskal_wallis_test",
     "friedman_test",
-    "mcnemar_test",
-    "pairwise_mcnemar",
-    "anova_test",
     # Effect sizes
     "cramers_v",
     "kendalls_w",
-    "epsilon_squared",
     "interpret_effect_size",
-    "compute_all_effect_sizes",
 ]

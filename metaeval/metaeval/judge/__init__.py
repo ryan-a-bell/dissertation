@@ -27,11 +27,12 @@ from metaeval.judge.consensus import (
 )
 from metaeval.judge.agreement import (
     cohens_kappa,
-    fleiss_kappa,
-    krippendorff_alpha,
-    intraclass_correlation,
     pairwise_agreement,
 )
+
+# Note: fleiss_kappa, krippendorff_alpha, and intraclass_correlation
+# remain available via direct import from metaeval.judge.agreement
+# for advanced use or future versions.
 
 __all__ = [
     # Prompts
@@ -55,10 +56,7 @@ __all__ = [
     "majority_vote",
     "mean_aggregation",
     "median_aggregation",
-    # Agreement
+    # Agreement (aligned with dissertation methodology)
     "cohens_kappa",
-    "fleiss_kappa",
-    "krippendorff_alpha",
-    "intraclass_correlation",
     "pairwise_agreement",
 ]
