@@ -391,11 +391,9 @@ def copy_readme_to_index():
 
 def main():
     copy_source_tree()
-    copy_viz_tree()
-    copy_viz_assets()
     generate_publications_page()
     copy_readme_to_index()
-    print(f"Mirrored source tree to {DEST}, viz to {VIZ_DEST}, and updated {INDEX_MD}")
+    print(f"Mirrored source tree to {DEST} and updated {INDEX_MD}")
 
 
 if __name__ == '__main__':
