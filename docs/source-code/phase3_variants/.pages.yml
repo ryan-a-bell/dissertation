@@ -1,0 +1,7 @@
+nav:
+  - index.md
+  - MCQ Shift Golden: 3.1_MCQ_Shift_Golden.ipynb
+  - Variant A: sysengbench_a.md
+  - Variant B: sysengbench_b.md
+  - Variant C: sysengbench_c.md
+  - Variant D: sysengbench_d.md
