@@ -1,8 +1,20 @@
+---
+title: Source Code
+---
+
+<div class="phase-nav" markdown>
+<a href="index.md" class="active">Overview</a>
+<a href="phase1_prep/index.md">Phase 1</a>
+<a href="phase2_conversion/index.md">Phase 2</a>
+<a href="phase3_variants/index.md">Phase 3</a>
+<a href="phase4_inference/index.md">Phase 4</a>
+<a href="phase5_llm_as_a_judge/index.md">Phase 5</a>
+<a href="phase6_analysis/index.md">Phase 6</a>
+</div>
+
 # Source Code
 
-## Research Pipeline Overview
-
-This dissertation implements a six-phase modality evaluation pipeline that transforms the SysEngBench dataset through deterministic dataset derivation procedures, evaluates LLMs across both MCQ and OSQ formats under standardized inference controls, applies rubric-based LLM-as-a-Judge scoring for open responses, and performs statistical analyses tailored to each research objective. Each phase produces well-defined artifacts -- datasets, model responses, scoring outputs, and statistical results -- that serve as inputs to subsequent stages.
+This dissertation implements a six-phase modality evaluation pipeline that transforms the SysEngBench dataset through deterministic dataset derivation procedures, evaluates LLMs across both MCQ and OSQ formats under standardized inference controls, applies rubric-based LLM-as-a-Judge scoring for open responses, and performs statistical analyses tailored to each research objective.
 
 ![Modality Evaluation Pipeline](modality-evaluation-pipeline.jpg)
 
@@ -10,42 +22,11 @@ This dissertation implements a six-phase modality evaluation pipeline that trans
 
 ## Phases
 
-<div class="research-grid">
-
-<a href="phase1_prep/" class="research-card" style="text-decoration: none; color: inherit; display: block;">
-<h3>Phase 1: Benchmark Preparation</h3>
-<p>Downloads the SysEngBench dataset from HuggingFace, performs initial data exploration, and generates statistical analysis and visualizations of the benchmark composition.</p>
-<p><strong>Key output:</strong> 1,144 MCQs in CSV format with INCOSE category distribution analysis</p>
-</a>
-
-<a href="phase2_conversion/" class="research-card" style="text-decoration: none; color: inherit; display: block;">
-<h3>Phase 2: MCQ to OSQ Conversion</h3>
-<p>Converts Multiple-Choice Questions to Open-ended Short-answer Questions using an LLM-based two-stage pipeline (classification and conversion) with rubric generation.</p>
-<p><strong>Key output:</strong> 845 converted OSQs (73.9% conversion rate) with rubrics and grading criteria</p>
-</a>
-
-<a href="phase3_variants/" class="research-card" style="text-decoration: none; color: inherit; display: block;">
-<h3>Phase 3: MCQ Golden Answer Variants</h3>
-<p>Creates four variants of the SysEngBench MCQ dataset by systematically shifting the correct answer to positions A, B, C, or D to control for position bias in model evaluation.</p>
-<p><strong>Key output:</strong> Four position-controlled CSV datasets (1,144 questions each)</p>
-</a>
-
-<a href="phase4_inference/" class="research-card" style="text-decoration: none; color: inherit; display: block;">
-<h3>Phase 4: Model Inference</h3>
-<p>Runs LLM inference on all benchmark variants using multiple execution environments (cloud GPU, DoD HPC, proprietary APIs) to generate model responses for both MCQ and OSQ formats.</p>
-<p><strong>Key output:</strong> Per-model result files with question IDs, responses, and correctness scores</p>
-</a>
-
-<a href="phase5_llm_as_a_judge/" class="research-card" style="text-decoration: none; color: inherit; display: block;">
-<h3>Phase 5: LLM-as-a-Judge</h3>
-<p>Uses LLM judges to evaluate OSQ responses with academically-validated rubrics through multiple scoring approaches: binary, rubric-based, multi-dimensional, and chain-of-thought (G-Eval).</p>
-<p><strong>Key output:</strong> Judged JSONL files with scores across four evaluation methodologies</p>
-</a>
-
-<a href="phase6_analysis/" class="research-card" style="text-decoration: none; color: inherit; display: block;">
-<h3>Phase 6: Results Processing and Analysis</h3>
-<p>Aggregates results from all previous phases and performs comprehensive statistical analysis including position bias detection, MCQ and OSQ analyses, and cross-modality comparison.</p>
-<p><strong>Key output:</strong> Statistical test results, publication-ready figures, and LaTeX tables</p>
-</a>
-
-</div>
+| Phase | Description | Key Output |
+|-------|-------------|------------|
+| [Phase 1: Benchmark Preparation](phase1_prep/index.md) | Download SysEngBench from HuggingFace, explore data, analyze benchmark composition | 1,144 MCQs with INCOSE category distribution |
+| [Phase 2: MCQ to OSQ Conversion](phase2_conversion/index.md) | LLM-based two-stage pipeline to convert MCQs to open-ended questions with rubrics | 845 converted OSQs (73.9% conversion rate) |
+| [Phase 3: MCQ Golden Answer Variants](phase3_variants/index.md) | Systematically shift correct answer to positions A-D to control for position bias | Four position-controlled datasets |
+| [Phase 4: Model Inference](phase4_inference/index.md) | Run LLM inference across cloud GPU, DoD HPC, and proprietary APIs | Per-model response files for MCQ and OSQ |
+| [Phase 5: LLM-as-a-Judge](phase5_llm_as_a_judge/index.md) | Rubric-based scoring with binary, multi-dimensional, and G-Eval approaches | Judged JSONL files across four methodologies |
+| [Phase 6: Analysis](phase6_analysis/index.md) | Statistical analysis of position bias, format comparison, and judge consensus | Publication-ready figures and LaTeX tables |

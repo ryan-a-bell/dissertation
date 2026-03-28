@@ -6,6 +6,8 @@ title: metaeval
 
 A Python library for meta-evaluating LLM benchmarks. Detect position bias in MCQs, convert questions to open-ended format, run consensus LLM judging, and statistically compare evaluation methods.
 
+The package implements the full research pipeline from this dissertation: downloading and preparing benchmark datasets, generating distractor-rotated MCQ variants, converting MCQs to open-style questions with LLM-generated rubrics, executing inference across local and cloud model providers, scoring responses through multi-judge consensus, and producing publication-ready statistical analyses. Each module can be used independently or composed through the CLI to reproduce the end-to-end workflow.
+
 **Version:** 0.1.0 | **Python:** >=3.10 | **License:** MIT
 
 ---

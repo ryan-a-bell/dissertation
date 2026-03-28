@@ -4,7 +4,85 @@ title: Analysis Gallery
 
 # Analysis Gallery
 
-Key figures from the Phase 6 empirical analysis, organized by research contribution. Click any figure to view full-size.
+Key figures from the empirical analysis, organized by research contribution. Click any figure to view full-size.
+
+=== "Distractor Sensitivity"
+
+    **Robustness of MCQ Evaluation Under Distractor Variation**
+
+    How sensitive are MCQ scores to the design and positioning of distractor answer choices?
+
+    <div class="figure-gallery" markdown>
+    <div class="gallery-item" markdown>
+    ![MCQ Deviation from Uniform](source-code/phase6_analysis/output_v3/fig_mcq_deviation_uniform.png)
+    <figcaption>Deviation from uniform answer distribution</figcaption>
+    </div>
+    <div class="gallery-item" markdown>
+    ![Cramer's V Position Bias](source-code/phase6_analysis/output_v3/fig_cramers_v_position_bias.png)
+    <figcaption>Cramer's V statistic for position bias</figcaption>
+    </div>
+    <div class="gallery-item" markdown>
+    ![MCQ Position Heatmap](source-code/phase6_analysis/output/mcq_position_heatmap.png)
+    <figcaption>Position selection heatmap across models</figcaption>
+    </div>
+    <div class="gallery-item" markdown>
+    ![Position Bias Bar Chart](source-code/phase6_analysis/output/position_bias_bar.png)
+    <figcaption>Position bias bar chart</figcaption>
+    </div>
+    <div class="gallery-item" markdown>
+    ![MCQ Wrong Answer Distribution](source-code/phase6_analysis/output/mcq_wrong_answer_distribution.png)
+    <figcaption>Wrong answer distribution across positions</figcaption>
+    </div>
+    <div class="gallery-item" markdown>
+    ![Confusion Matrix -- All Models](source-code/phase6_analysis/output/mcq_confusion_matrix_all_models.png)
+    <figcaption>Confusion matrix -- all models</figcaption>
+    </div>
+    </div>
+
+=== "Consensus Judging"
+
+    **LLM-as-a-Judge Reliability and Consensus**
+
+    How reliable are LLM judges when scoring open-ended responses, and do multiple judges converge?
+
+    <div class="figure-gallery" markdown>
+    <div class="gallery-item" markdown>
+    ![Multi-Judge Rubric Comparison](source-code/phase6_analysis/output_v3/mcq_vs_osq_rubric_combined_multijudge_raw.png)
+    <figcaption>Rubric scores across multiple LLM judges</figcaption>
+    </div>
+    <div class="gallery-item" markdown>
+    ![OSQ Violin -- GPT-5-mini](source-code/phase6_analysis/output_v3/osq_model_violin_openai_gpt-5-mini.png)
+    <figcaption>OSQ score distribution -- GPT-5-mini</figcaption>
+    </div>
+    <div class="gallery-item" markdown>
+    ![OSQ Violin -- GPT-OSS 120B](source-code/phase6_analysis/output_v3/osq_model_violin_gpt-oss_120b.png)
+    <figcaption>OSQ score distribution -- GPT-OSS 120B</figcaption>
+    </div>
+    <div class="gallery-item" markdown>
+    ![OSQ KDE -- GPT-5-mini](source-code/phase6_analysis/output_v3/osq_score_kde_openai_gpt-5-mini.png)
+    <figcaption>Kernel density estimate -- GPT-5-mini</figcaption>
+    </div>
+    <div class="gallery-item" markdown>
+    ![OSQ KDE -- GPT-OSS 120B](source-code/phase6_analysis/output_v3/osq_score_kde_gpt-oss_120b.png)
+    <figcaption>Kernel density estimate -- GPT-OSS 120B</figcaption>
+    </div>
+    <div class="gallery-item" markdown>
+    ![Rubric Dimensions -- All Judges](source-code/phase6_analysis/output/osq_rubric_dimensions_all_judges.png)
+    <figcaption>Rubric dimension scores across all judges</figcaption>
+    </div>
+    <div class="gallery-item" markdown>
+    ![OSQ Violin Scores](source-code/phase6_analysis/output/osq_violin_scores.png)
+    <figcaption>OSQ score violin plot -- all models</figcaption>
+    </div>
+    <div class="gallery-item" markdown>
+    ![OSQ Score Histogram](source-code/phase6_analysis/output/osq_score_histogram.png)
+    <figcaption>OSQ score histogram</figcaption>
+    </div>
+    <div class="gallery-item" markdown>
+    ![OSQ Accuracy by INCOSE Category](source-code/phase6_analysis/output_v3/fig_osq_accuracy_by_incose_category.png)
+    <figcaption>OSQ accuracy by INCOSE category (judge consensus)</figcaption>
+    </div>
+    </div>
 
 === "Modality Comparison"
 
@@ -55,100 +133,6 @@ Key figures from the Phase 6 empirical analysis, organized by research contribut
     </div>
     </div>
 
-=== "Distractor Sensitivity"
-
-    **Robustness of MCQ Evaluation Under Distractor Variation**
-
-    How sensitive are MCQ scores to the design and positioning of distractor answer choices?
-
-    <div class="figure-gallery" markdown>
-    <div class="gallery-item" markdown>
-    ![MCQ Position Accuracy](source-code/phase6_analysis/output_v3/fig_mcq_position_accuracy.png)
-    <figcaption>MCQ accuracy by answer position</figcaption>
-    </div>
-    <div class="gallery-item" markdown>
-    ![MCQ Deviation from Uniform](source-code/phase6_analysis/output_v3/fig_mcq_deviation_uniform.png)
-    <figcaption>Deviation from uniform answer distribution</figcaption>
-    </div>
-    <div class="gallery-item" markdown>
-    ![Cramer's V Position Bias](source-code/phase6_analysis/output_v3/fig_cramers_v_position_bias.png)
-    <figcaption>Cramer's V statistic for position bias</figcaption>
-    </div>
-    <div class="gallery-item" markdown>
-    ![MCQ Position Heatmap](source-code/phase6_analysis/output/mcq_position_heatmap.png)
-    <figcaption>Position selection heatmap across models</figcaption>
-    </div>
-    <div class="gallery-item" markdown>
-    ![Position Bias Bar Chart](source-code/phase6_analysis/output/position_bias_bar.png)
-    <figcaption>Position bias bar chart</figcaption>
-    </div>
-    <div class="gallery-item" markdown>
-    ![MCQ Wrong Answer Distribution](source-code/phase6_analysis/output/mcq_wrong_answer_distribution.png)
-    <figcaption>Wrong answer distribution across positions</figcaption>
-    </div>
-    <div class="gallery-item" markdown>
-    ![Confusion Matrix -- All Models](source-code/phase6_analysis/output/mcq_confusion_matrix_all_models.png)
-    <figcaption>Confusion matrix -- all models</figcaption>
-    </div>
-    <div class="gallery-item" markdown>
-    ![Confusion Matrix -- Top Models](source-code/phase6_analysis/output/mcq_confusion_matrix_top_models.png)
-    <figcaption>Confusion matrix -- top-performing models</figcaption>
-    </div>
-    <div class="gallery-item" markdown>
-    ![MCQ Bootstrap Confidence Intervals](source-code/phase6_analysis/output/mcq_bootstrap_ci.png)
-    <figcaption>Bootstrap confidence intervals for MCQ accuracy</figcaption>
-    </div>
-    </div>
-
-=== "Consensus Judging"
-
-    **LLM-as-a-Judge Reliability and Consensus**
-
-    How reliable are LLM judges when scoring open-ended responses, and do multiple judges converge?
-
-    <div class="figure-gallery" markdown>
-    <div class="gallery-item" markdown>
-    ![Multi-Judge Rubric Comparison](source-code/phase6_analysis/output_v3/mcq_vs_osq_rubric_combined_multijudge_raw.png)
-    <figcaption>Rubric scores across multiple LLM judges</figcaption>
-    </div>
-    <div class="gallery-item" markdown>
-    ![OSQ Violin -- GPT-5-mini](source-code/phase6_analysis/output_v3/osq_model_violin_openai_gpt-5-mini.png)
-    <figcaption>OSQ score distribution -- GPT-5-mini</figcaption>
-    </div>
-    <div class="gallery-item" markdown>
-    ![OSQ Violin -- GPT-OSS 120B](source-code/phase6_analysis/output_v3/osq_model_violin_gpt-oss_120b.png)
-    <figcaption>OSQ score distribution -- GPT-OSS 120B</figcaption>
-    </div>
-    <div class="gallery-item" markdown>
-    ![OSQ KDE -- GPT-5-mini](source-code/phase6_analysis/output_v3/osq_score_kde_openai_gpt-5-mini.png)
-    <figcaption>Kernel density estimate -- GPT-5-mini</figcaption>
-    </div>
-    <div class="gallery-item" markdown>
-    ![OSQ KDE -- GPT-OSS 120B](source-code/phase6_analysis/output_v3/osq_score_kde_gpt-oss_120b.png)
-    <figcaption>Kernel density estimate -- GPT-OSS 120B</figcaption>
-    </div>
-    <div class="gallery-item" markdown>
-    ![Rubric Dimensions -- All Judges](source-code/phase6_analysis/output/osq_rubric_dimensions_all_judges.png)
-    <figcaption>Rubric dimension scores across all judges</figcaption>
-    </div>
-    <div class="gallery-item" markdown>
-    ![OSQ Violin Scores](source-code/phase6_analysis/output/osq_violin_scores.png)
-    <figcaption>OSQ score violin plot -- all models</figcaption>
-    </div>
-    <div class="gallery-item" markdown>
-    ![OSQ Score Histogram](source-code/phase6_analysis/output/osq_score_histogram.png)
-    <figcaption>OSQ score histogram</figcaption>
-    </div>
-    <div class="gallery-item" markdown>
-    ![Bloom's Taxonomy Comparison](source-code/phase6_analysis/output/osq_blooms_comparison.png)
-    <figcaption>OSQ scores by Bloom's taxonomy level</figcaption>
-    </div>
-    <div class="gallery-item" markdown>
-    ![OSQ Accuracy by INCOSE Category](source-code/phase6_analysis/output_v3/fig_osq_accuracy_by_incose_category.png)
-    <figcaption>OSQ accuracy by INCOSE category (judge consensus)</figcaption>
-    </div>
-    </div>
-
 === "Token Efficiency"
 
     **Cost-Aware Response Length Trade-offs**
@@ -165,31 +149,11 @@ Key figures from the Phase 6 empirical analysis, organized by research contribut
     <figcaption>Response tokens by model, colored by quality</figcaption>
     </div>
     <div class="gallery-item" markdown>
-    ![Token Length vs Quality](source-code/phase6_analysis/output_v3/tokenomics_length_vs_quality.png)
-    <figcaption>Response length vs quality score</figcaption>
-    </div>
-    <div class="gallery-item" markdown>
     ![Token Length vs Quality -- Sorted](source-code/phase6_analysis/output_v3/tokenomics_length_vs_quality_sorted_worst_to_best.png)
     <figcaption>Response length vs quality -- sorted worst to best</figcaption>
     </div>
     <div class="gallery-item" markdown>
-    ![Tokenomics Efficiency Scatter](source-code/phase6_analysis/output/tokenomics_efficiency_scatter.png)
-    <figcaption>Token efficiency scatter plot</figcaption>
-    </div>
-    <div class="gallery-item" markdown>
-    ![Tokenomics Cost vs Quality](source-code/phase6_analysis/output/tokenomics_cost_quality.png)
-    <figcaption>Cost vs quality trade-off</figcaption>
-    </div>
-    <div class="gallery-item" markdown>
-    ![Tokenomics Budget Heatmap](source-code/phase6_analysis/output/tokenomics_budget_heatmap.png)
-    <figcaption>Token budget heatmap across models</figcaption>
-    </div>
-    <div class="gallery-item" markdown>
     ![Tokenomics Distribution](source-code/phase6_analysis/output/tokenomics_distribution.png)
     <figcaption>Token usage distribution</figcaption>
-    </div>
-    <div class="gallery-item" markdown>
-    ![Token Quality Correlation](source-code/phase6_analysis/output/token_quality_correlation.png)
-    <figcaption>Token count vs quality correlation</figcaption>
     </div>
     </div>

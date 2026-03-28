@@ -1,0 +1,5 @@
+nav:
+  - index.md
+  - MCQ to OSQ Conversion: 2.1_Converting_MCQ_to_OSQ.ipynb
+  - Other Prompt Variants: other-prompt-variants.md
+  - Conversion Artifacts: artifacts_mcq2osq

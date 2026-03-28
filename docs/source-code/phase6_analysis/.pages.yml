@@ -1,0 +1,11 @@
+nav:
+  - index.md
+  - Main Analysis: analysis-v2.ipynb
+  - Question Difficulty Analysis: question-difficulty-analysis.ipynb
+  - Result Parsers: parsers.py
+  - Region Scatter Generator: gen_region_scatter.py
+  - Category Analysis: run_category_analysis.py
+  - Consolidated Bias Table: gen_consolidated_bias_table.py
+  - Objective 7 Artifacts: gen_obj7_artifacts.py
+  - Anomalies: anomalies
+  - Archive: archive

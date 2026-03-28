@@ -1,0 +1,8 @@
+nav:
+  - index.md
+  - Proprietary API Inference: proprietary-manual.ipynb
+  - RunPod Automated: runpod-auto-multiple-pods-cli.ipynb
+  - RunPod Manual (VM): runpod-manual-on-vm.ipynb
+  - RunPod Remote Control: runpod-manual-remote-control.ipynb
+  - DoD HPC: dodhpc
+  - Test Evaluations: test-evals-for-model-selection
