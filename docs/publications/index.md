@@ -60,7 +60,7 @@ Bell, R., Madachy, R., & Longshore, R. (2025)
 
 <div class="pub-entry" markdown>
 
-**Consensus Methods with AI**
+**Automating AI Expert Consensus: Feasibility of Language Model-Assisted Consensus Methods for Systems Engineering**
 { .pub-title }
 
 Bell, R. (2025)
@@ -167,7 +167,7 @@ Papakonstantinou, N., Van Bossuyt, D., Bell, R., Longshore, R., & Heikkila, M. (
 
 <div class="pub-entry" markdown>
 
-**Dissertation Proposal: An Empirical Meta-Evaluation of Language Model Evaluation Methods for Systems Engineering**
+**Evaluation Modality Alignment to Systems Engineering Task Types: An Empirical Study of Language Model Domain-Specific Knowledge and Task-Specific Effectiveness Using Distractor Variation and Consensus-Based Grading**
 { .pub-title }
 
 Bell, R. (2025)
@@ -204,6 +204,23 @@ Bell, R. (2025)
 
 <div class="pub-entry" markdown>
 
+**Using AI Tools for SE, from Requirements Generation and Management to Risk Identification, Analysis, and Management**
+{ .pub-title }
+
+Bell, R., Longshore, R., & Madachy, R. (2024)
+{ .pub-authors }
+
+*Proceedings of the INCOSE International Symposium* | <span class="pub-badge">Conference Paper</span>
+{ .pub-meta }
+
+[:material-file-pdf-box: Paper](20240521%20INCOSE%20IS%202024/20240521%20%23528%20-%20Submission%2020240702.pdf){ .pub-link }
+
+---
+
+</div>
+
+<div class="pub-entry" markdown>
+
 **Introducing SysEngBench: A Novel Benchmark for Assessing Large Language Models in Systems Engineering**
 { .pub-title }
 
@@ -213,7 +230,8 @@ Bell, R., Madachy, R., & Longshore, R. (2024)
 *Acquisition Research Program* | <span class="pub-badge">Conference Paper</span>
 { .pub-meta }
 
-[:material-file-pdf-box: Paper](20240521%20INCOSE%20IS%202024/20240521%20%23528%20-%20Submission%2020240702.pdf){ .pub-link }
+[:material-file-pdf-box: Paper](20240408%20NPS%20ARS%202024/20240403%20NPS%20ARS%20Paper.pdf){ .pub-link }
+[:material-presentation: Presentation](20240408%20NPS%20ARS%202024/20240508.1%20NPS%20ARS%20-%20BELL.pdf){ .pub-link }
 
 ??? cite "BibTeX"
     ```bibtex
@@ -292,11 +310,10 @@ Madachy, R., Bell, R., & Longshore, R. (2024)
 Bell, R., Longshore, R., & Madachy, R. (2024)
 { .pub-authors }
 
-*NPS Acquisition Research Symposium* | <span class="pub-badge">Conference Paper</span>
+*Boehm CSSE Annual Research Review* | <span class="pub-badge">Conference Paper</span>
 { .pub-meta }
 
-[:material-file-pdf-box: Paper](20240408%20NPS%20ARS%202024/20240403%20NPS%20ARS%20Paper.pdf){ .pub-link }
-[:material-presentation: Presentation](20240408%20NPS%20ARS%202024/20240508.1%20NPS%20ARS%20-%20BELL.pdf){ .pub-link }
+[:material-file-pdf-box: Paper](20240321%20Boehm%20CSSE%20ARR/20240412%20BCSSE%20ARR.pdf){ .pub-link }
 
 ??? cite "BibTeX"
     ```bibtex
@@ -342,7 +359,7 @@ Bell, R. (2024)
 
 <div class="pub-entry" markdown>
 
-**Systems and Software Engineering Cost Modeling of AI Assistance**
+**Tailored Learning for Cost Modeling: An Open Source RAG-Based Tool**
 { .pub-title }
 
 Madachy, R., Longshore, R., & Bell, R. (2024)
@@ -356,7 +373,7 @@ Madachy, R., Longshore, R., & Bell, R. (2024)
 ??? cite "BibTeX"
     ```bibtex
     @misc{Madachy2024CostModelingAI,
-      title = {Systems and Software Engineering Cost Modeling of AI Assistance},
+      title = {Tailored Learning for Cost Modeling: An Open Source RAG-Based Tool},
       author = {Madachy, Raymond and Longshore, Ryan and Bell, Ryan},
       year = {2024},
       address = {Ireland}
@@ -377,7 +394,5 @@ Madachy, R., Bell, R., & Longshore, R. (2024)
 
 *Boehm CSSE Annual Research Review* | <span class="pub-badge">Conference Paper</span>
 { .pub-meta }
-
-[:material-file-pdf-box: Paper](20240321%20Boehm%20CSSE%20ARR/20240412%20BCSSE%20ARR.pdf){ .pub-link }
 
 </div>
