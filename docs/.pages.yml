@@ -1,5 +1,6 @@
 nav:
   - Home: index.md
   - Analysis Gallery: analysis-gallery.md
+  - metaeval: metaeval.md
   - Publications/: publications
   - Source Code/: source-code
