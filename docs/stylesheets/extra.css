@@ -99,6 +99,32 @@ pre.mermaid {
   color: #a0aec0;
 }
 
+/* CV-style publications */
+.pub-link {
+  display: inline-block;
+  font-size: 0.8rem;
+  margin-right: 0.5rem;
+  padding: 0.15rem 0.5rem;
+  border-radius: 4px;
+  border: 1px solid var(--md-default-fg-color--lighter, #ccc);
+  text-decoration: none;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.pub-link:hover {
+  background: var(--md-accent-fg-color--transparent, rgba(0, 0, 0, 0.05));
+  border-color: var(--md-accent-fg-color, #4A90E2);
+}
+
+[data-md-color-scheme="slate"] .pub-link {
+  border-color: #444;
+}
+
+[data-md-color-scheme="slate"] .pub-link:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: var(--md-accent-fg-color, #4A90E2);
+}
+
 /* Mobile responsiveness for Mermaid diagrams */
 @media (max-width: 768px) {
   .mermaid {
