@@ -64,6 +64,12 @@ Frames model evaluation as a trade-space extending beyond accuracy to include co
 </div>
 </div>
 
+## Key Findings and Practical Guidance
+
+A synthesis of the dissertation's central results: implications for SE benchmarking methodology, task-to-modality routing guidance, and cost-aware model selection rules for practitioners.
+
+[View Key Findings](key-findings.md){ .nps-button }
+
 ## Quick Links
 
 <div class="research-grid" markdown>
