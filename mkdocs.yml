@@ -42,7 +42,8 @@ extra_javascript:
   # - javascripts/mkdocs_theme_switcher.js
 
 plugins:
-  - search
+  - search:
+      separator: '[\s\-\._\/]+'
   - social
   - glightbox
   - awesome-pages
