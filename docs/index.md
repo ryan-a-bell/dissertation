@@ -93,7 +93,7 @@ Conference papers and journal submissions
 </div>
 <div class="research-card" markdown>
 ### Source Code
-7-phase research pipeline
+6-phase research pipeline
 [Explore Code](source-code/){ .nps-button }
 </div>
 </div>
@@ -118,10 +118,9 @@ Conference papers and journal submissions
     │   ├── phase1_prep/       # Initial dataset tagging and preprocessing
     │   ├── phase2_conversion/ # Conversion of MCQs to OSQs
     │   ├── phase3_variants/   # Generation of distractor variant MCQs
-    │   ├── phase4_inference/  # Inference code for evaluating language models
-    │   ├── phase5_metrics/    # Calculation of evaluation metrics
-    │   └── phase6_tables/     # Aggregation and summary table generation
-    |   └── phase7_analysis/   # Analysis of the previous phases
+    │   ├── phase4_inference/        # Inference code for evaluating language models
+    │   ├── phase5_llm_as_a_judge/  # LLM-as-a-Judge rubric-based scoring
+    │   └── phase6_analysis/        # Statistical analysis and visualization
     ├── .github/               # GitHub CI workflows
     ├── .env.template          # Template for API keys
     ├── requirements.txt       # Python dependencies for venv
