@@ -196,10 +196,12 @@ This work is in support of a PhD in Systems Engineering.
 
 This repository is provided under the [MIT License](../LICENSE).
 
-## Scan to Visit This Site
+<div style="text-align: center;" markdown>
 
-<div style="text-align: center;">
+**Scan to Visit This Site**
+
 <img src="assets/qr-code.png" alt="QR Code to Dissertation Docs" width="250">
 
 `https://ryan-a-bell.github.io/dissertation/`
+
 </div>
