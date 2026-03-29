@@ -113,14 +113,33 @@ def copy_source_tree():
         shutil.copy2(src_path, dest_path)
 
 
+def clean_viz_dest():
+    """Clean generated files from VIZ_DEST while preserving manually-maintained files."""
+    if not VIZ_DEST.exists():
+        VIZ_DEST.mkdir(parents=True, exist_ok=True)
+        return
+
+    preserved = {}
+    for path in VIZ_DEST.rglob("*"):
+        if path.is_file() and path.name in PRESERVE_PATTERNS:
+            rel = path.relative_to(VIZ_DEST)
+            preserved[rel] = path.read_bytes()
+
+    shutil.rmtree(VIZ_DEST)
+    VIZ_DEST.mkdir(parents=True, exist_ok=True)
+
+    for rel, data in preserved.items():
+        restored = VIZ_DEST / rel
+        restored.parent.mkdir(parents=True, exist_ok=True)
+        restored.write_bytes(data)
+
+
 def copy_viz_tree():
     """Copy the contents of VIZ_DIR to VIZ_DEST respecting .gitignore."""
     if not VIZ_DIR.exists():
         return
 
-    if VIZ_DEST.exists():
-        shutil.rmtree(VIZ_DEST)
-    VIZ_DEST.mkdir(parents=True, exist_ok=True)
+    clean_viz_dest()
 
     # Load gitignore patterns
     gitignore_path = Path('.gitignore')
