@@ -12,6 +12,9 @@ Key figures from the empirical analysis, organized by research contribution. Cli
 
     How sensitive are MCQ scores to the design and positioning of distractor answer choices?
 
+    ??? note "Position Bias Statistics"
+        {{ read_csv('./source-code/phase6_analysis/output_v3/table_position_bias_consolidated.csv') }}
+
     <div class="figure-gallery" markdown>
     <div class="gallery-item" markdown>
     ![MCQ Deviation from Uniform](source-code/phase6_analysis/output_v3/fig_mcq_deviation_uniform.png)
@@ -40,6 +43,9 @@ Key figures from the empirical analysis, organized by research contribution. Cli
     **LLM-as-a-Judge Reliability and Consensus**
 
     How reliable are LLM judges when scoring open-ended responses, and do multiple judges converge?
+
+    ??? note "Inter-Judge Agreement"
+        {{ read_csv('./source-code/phase6_analysis/output_v3/table_interjudge_correlation.csv') }}
 
     <div class="figure-gallery" markdown>
     <div class="gallery-item" markdown>
@@ -81,6 +87,15 @@ Key figures from the empirical analysis, organized by research contribution. Cli
     **MCQ vs OSQ Evaluation Modalities**
 
     How do multiple-choice and open-style question formats compare when evaluating the same models on the same domain content?
+
+    ??? note "MCQ vs OSQ Results Summary"
+        {{ read_csv('./source-code/phase6_analysis/output_v3/table_mcq_osq_results_summary.csv') }}
+
+    ??? note "Effect Sizes"
+        {{ read_csv('./source-code/phase6_analysis/output_v3/table_effect_sizes.csv') }}
+
+    ??? note "MCQ-OSQ Correlations"
+        {{ read_csv('./source-code/phase6_analysis/output_v3/table_mcq_osq_correlations.csv') }}
 
     <div class="figure-gallery" markdown>
     <div class="gallery-item" markdown>
@@ -134,6 +149,12 @@ Key figures from the empirical analysis, organized by research contribution. Cli
     **Cost-Aware Response Length Trade-offs**
 
     What is the relationship between response length, token cost, and evaluation quality?
+
+    ??? note "OSQ Bootstrap Confidence Intervals"
+        {{ read_csv('./source-code/phase6_analysis/output_v3/table_osq_bootstrap_ci.csv') }}
+
+    ??? note "Per-Model Differences"
+        {{ read_csv('./source-code/phase6_analysis/output_v3/table_per_model_differences.csv') }}
 
     <div class="figure-gallery" markdown>
     <div class="gallery-item" markdown>
