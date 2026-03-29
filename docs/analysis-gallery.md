@@ -26,10 +26,6 @@ Key figures from the empirical analysis, organized by research contribution. Cli
     <figcaption>Position selection heatmap across models</figcaption>
     </div>
     <div class="gallery-item" markdown>
-    ![Position Bias Bar Chart](source-code/phase6_analysis/output/position_bias_bar.png)
-    <figcaption>Position bias bar chart</figcaption>
-    </div>
-    <div class="gallery-item" markdown>
     ![MCQ Wrong Answer Distribution](source-code/phase6_analysis/output/mcq_wrong_answer_distribution.png)
     <figcaption>Wrong answer distribution across positions</figcaption>
     </div>
