@@ -47,10 +47,6 @@ Key figures from the empirical analysis, organized by research contribution. Cli
 
     <div class="figure-gallery" markdown>
     <div class="gallery-item" markdown>
-    ![Multi-Judge Rubric Comparison](source-code/phase6_analysis/output_v3/mcq_vs_osq_rubric_combined_multijudge_raw.png)
-    <figcaption>Rubric scores across multiple LLM judges</figcaption>
-    </div>
-    <div class="gallery-item" markdown>
     ![OSQ Violin -- GPT-5-mini](source-code/phase6_analysis/output_v3/osq_model_violin_openai_gpt-5-mini.png)
     <figcaption>OSQ score distribution -- GPT-5-mini</figcaption>
     </div>
@@ -130,6 +126,10 @@ Key figures from the empirical analysis, organized by research contribution. Cli
     <div class="gallery-item" markdown>
     ![OSQ Accuracy by Top-Level Category](source-code/phase6_analysis/output_v3/fig_osq_accuracy_by_incose_toplevel.png)
     <figcaption>OSQ accuracy by top-level INCOSE category</figcaption>
+    </div>
+    <div class="gallery-item" markdown>
+    ![Multi-Judge Rubric Comparison](source-code/phase6_analysis/output_v3/mcq_vs_osq_rubric_combined_multijudge_raw.png)
+    <figcaption>Rubric scores across multiple LLM judges</figcaption>
     </div>
     </div>
 
