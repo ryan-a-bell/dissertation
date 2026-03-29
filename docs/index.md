@@ -17,6 +17,7 @@ title: Home
 This research focuses on meta-evaluation -- the systematic evaluation of language model evaluation methods themselves -- within the context of Systems Engineering (SE). The study leverages the existing SysEngBench benchmark as its empirical foundation and extends it through the creation of Open-Style Question (OSQ) variants derived from the original Multiple-Choice Question (MCQ) dataset.
 
 Specifically, this work investigates:
+
 - Comparative behavior of **MCQ and OSQ evaluation modalities**,
 - The sensitivity of MCQ-based evaluation to **distractor variation**,
 - The reliability and agreement of **LLM-as-a-Judge** evaluation using **rubric-based scoring**, and
@@ -72,8 +73,6 @@ A synthesis of the dissertation's central results: implications for SE benchmark
 
 ## Quick Links
 
-<div class="research-grid" markdown>
-<div class="research-card" markdown>
 ### Datasets on HuggingFace
 
 | Dataset | Description |
@@ -85,18 +84,13 @@ A synthesis of the dissertation's central results: implications for SE benchmark
 | [SysEngBench-D](https://huggingface.co/datasets/rabell/SysEngBench-D) | Correct answer at position D |
 | [SysEngBench-OSQ](https://huggingface.co/datasets/rabell/SysEngBench-OSQ) | Open-Style Questions |
 
-</div>
-<div class="research-card" markdown>
 ### Publications
 Conference papers and journal submissions
 [View Publications](publications/){ .nps-button }
-</div>
-<div class="research-card" markdown>
+
 ### Source Code
 6-phase research pipeline
 [Explore Code](source-code/){ .nps-button }
-</div>
-</div>
 
 ## Dissertation Timeline
 
