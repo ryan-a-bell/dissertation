@@ -44,7 +44,8 @@ extra_javascript:
 plugins:
   - search:
       separator: '[\s\-\._\/]+'
-  - social
+  - social:
+      cards: !ENV [CARDS, true]
   - glightbox
   - awesome-pages
   - mkdocstrings:
