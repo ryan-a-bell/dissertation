@@ -180,7 +180,7 @@ metaeval report results/analysis.json -o report/ --format latex
 metaeval implements the statistical tests used in the dissertation's analysis pipeline:
 
 **Position Bias:**
-Chi-square test with Cramer's V effect size, Friedman test with Kendall's W, and Shapiro-Wilk normality test.
+Chi-square test with Cramer's V effect size and Friedman test with Kendall's W (used by default in the position-bias pipeline). A Shapiro-Wilk normality test is also implemented in the stats module but is not part of the default position-bias detection flow.
 
 **Format Comparison:**
 Wilcoxon signed-rank test, Pearson and Spearman correlations, and Cohen's d (paired, standardized effect size).
