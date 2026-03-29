@@ -177,16 +177,16 @@ metaeval report results/analysis.json -o report/ --format latex
 
 ## Statistical Methods
 
-metaeval implements the following statistical tests for rigorous evaluation:
+metaeval implements the statistical tests used in the dissertation's analysis pipeline:
 
 **Position Bias:**
-Chi-square test, Kruskal-Wallis H-test, Friedman test, McNemar test, ANOVA, with Cramer's V, Kendall's W, and epsilon-squared effect sizes.
+Chi-square test with Cramer's V effect size and Friedman test with Kendall's W (used by default in the position-bias pipeline). A Shapiro-Wilk normality test is also implemented in the stats module but is not part of the default position-bias detection flow.
 
 **Format Comparison:**
-Wilcoxon signed-rank test, paired t-test, Pearson and Spearman correlations, Cohen's d, Hedges' g, Glass's delta, bootstrap confidence intervals.
+Wilcoxon signed-rank test, Pearson and Spearman correlations, and Cohen's d (paired, standardized effect size).
 
 **Judge Agreement:**
-Fleiss' kappa, Krippendorff's alpha, inter-judge correlation matrices.
+Spearman rank correlation for inter-judge agreement with classification thresholds (high >= 0.80, moderate 0.50-0.80, low < 0.50).
 
 ---
 

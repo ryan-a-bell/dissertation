@@ -31,11 +31,35 @@ def write_md(path, content):
         f.write(content)
 
 
+PRESERVE_PATTERNS = {"index.md", ".pages.yml", "modality-evaluation-pipeline.jpg"}
+
+
 def clean_dest():
-    """Clean the destination directory."""
-    if DEST.exists():
-        shutil.rmtree(DEST)
+    """Clean generated files from DEST while preserving manually-maintained files.
+
+    Files matching PRESERVE_PATTERNS (index.md, .pages.yml, and the pipeline
+    diagram) are kept in place so that the source-code section retains its
+    hand-written overview pages and navigation after regeneration.
+    """
+    if not DEST.exists():
+        DEST.mkdir(parents=True, exist_ok=True)
+        return
+
+    # Collect preserved files into a temp dict keyed by relative path
+    preserved = {}
+    for path in DEST.rglob("*"):
+        if path.is_file() and path.name in PRESERVE_PATTERNS:
+            rel = path.relative_to(DEST)
+            preserved[rel] = path.read_bytes()
+
+    shutil.rmtree(DEST)
     DEST.mkdir(parents=True, exist_ok=True)
+
+    # Restore preserved files
+    for rel, data in preserved.items():
+        restored = DEST / rel
+        restored.parent.mkdir(parents=True, exist_ok=True)
+        restored.write_bytes(data)
 
 
 def copy_source_tree():
@@ -89,14 +113,33 @@ def copy_source_tree():
         shutil.copy2(src_path, dest_path)
 
 
+def clean_viz_dest():
+    """Clean generated files from VIZ_DEST while preserving manually-maintained files."""
+    if not VIZ_DEST.exists():
+        VIZ_DEST.mkdir(parents=True, exist_ok=True)
+        return
+
+    preserved = {}
+    for path in VIZ_DEST.rglob("*"):
+        if path.is_file() and path.name in PRESERVE_PATTERNS:
+            rel = path.relative_to(VIZ_DEST)
+            preserved[rel] = path.read_bytes()
+
+    shutil.rmtree(VIZ_DEST)
+    VIZ_DEST.mkdir(parents=True, exist_ok=True)
+
+    for rel, data in preserved.items():
+        restored = VIZ_DEST / rel
+        restored.parent.mkdir(parents=True, exist_ok=True)
+        restored.write_bytes(data)
+
+
 def copy_viz_tree():
     """Copy the contents of VIZ_DIR to VIZ_DEST respecting .gitignore."""
     if not VIZ_DIR.exists():
         return
 
-    if VIZ_DEST.exists():
-        shutil.rmtree(VIZ_DEST)
-    VIZ_DEST.mkdir(parents=True, exist_ok=True)
+    clean_viz_dest()
 
     # Load gitignore patterns
     gitignore_path = Path('.gitignore')

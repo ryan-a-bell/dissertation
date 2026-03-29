@@ -4,12 +4,12 @@ title: "Phase 4: Model Inference"
 
 <div class="phase-nav" markdown>
 <a href="../index.md">Overview</a>
-<a href="../phase1_prep/index.md">Phase 1</a>
-<a href="../phase2_conversion/index.md">Phase 2</a>
-<a href="../phase3_variants/index.md">Phase 3</a>
-<a href="index.md" class="active">Phase 4</a>
-<a href="../phase5_llm_as_a_judge/index.md">Phase 5</a>
-<a href="../phase6_analysis/index.md">Phase 6</a>
+<a href="../phase1_prep/index.md">Phase 1: Prep</a>
+<a href="../phase2_conversion/index.md">Phase 2: Conversion</a>
+<a href="../phase3_variants/index.md">Phase 3: Variants</a>
+<a href="index.md" class="active">Phase 4: Inference</a>
+<a href="../phase5_llm_as_a_judge/index.md">Phase 5: Judging</a>
+<a href="../phase6_analysis/index.md">Phase 6: Analysis</a>
 </div>
 
 # Phase 4: Model Inference

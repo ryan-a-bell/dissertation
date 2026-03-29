@@ -17,10 +17,12 @@ title: Home
 This research focuses on meta-evaluation -- the systematic evaluation of language model evaluation methods themselves -- within the context of Systems Engineering (SE). The study leverages the existing SysEngBench benchmark as its empirical foundation and extends it through the creation of Open-Style Question (OSQ) variants derived from the original Multiple-Choice Question (MCQ) dataset.
 
 Specifically, this work investigates:
+
 - Comparative behavior of **MCQ and OSQ evaluation modalities**,
 - The sensitivity of MCQ-based evaluation to **distractor variation**,
-- The reliability and agreement of **LLM-as-a-Judge** evaluation using **rubric-based scoring**, and
-- **Consensus and correlation** across multiple language model judges.
+- The reliability and agreement of **LLM-as-a-Judge** evaluation using **rubric-based scoring**,
+- **Consensus and correlation** across multiple language model judges, and
+- **Cost-quality trade-offs** in inference, framing model selection as a multi-objective trade space governed by token efficiency and quality yield.
 
 The OSQ dataset is systematically constructed from SysEngBench to preserve domain coverage and conceptual equivalence while enabling open-ended response evaluation. All evaluations are conducted on domain-specific Systems Engineering content aligned with established INCOSE Handbook categories, with the goal of assessing evaluation robustness, consistency, and interpretability across modalities.
 
@@ -72,8 +74,6 @@ A synthesis of the dissertation's central results: implications for SE benchmark
 
 ## Quick Links
 
-<div class="research-grid" markdown>
-<div class="research-card" markdown>
 ### Datasets on HuggingFace
 
 | Dataset | Description |
@@ -85,18 +85,13 @@ A synthesis of the dissertation's central results: implications for SE benchmark
 | [SysEngBench-D](https://huggingface.co/datasets/rabell/SysEngBench-D) | Correct answer at position D |
 | [SysEngBench-OSQ](https://huggingface.co/datasets/rabell/SysEngBench-OSQ) | Open-Style Questions |
 
-</div>
-<div class="research-card" markdown>
 ### Publications
 Conference papers and journal submissions
 [View Publications](publications/){ .nps-button }
-</div>
-<div class="research-card" markdown>
+
 ### Source Code
 6-phase research pipeline
 [Explore Code](source-code/){ .nps-button }
-</div>
-</div>
 
 ## Dissertation Timeline
 

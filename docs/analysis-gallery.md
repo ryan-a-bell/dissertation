@@ -12,6 +12,9 @@ Key figures from the empirical analysis, organized by research contribution. Cli
 
     How sensitive are MCQ scores to the design and positioning of distractor answer choices?
 
+    ??? note "Position Bias Statistics"
+        {{ read_csv('./source-code/phase6_analysis/output_v3/table_position_bias_consolidated.csv') }}
+
     <div class="figure-gallery" markdown>
     <div class="gallery-item" markdown>
     ![MCQ Deviation from Uniform](source-code/phase6_analysis/output_v3/fig_mcq_deviation_uniform.png)
@@ -24,10 +27,6 @@ Key figures from the empirical analysis, organized by research contribution. Cli
     <div class="gallery-item" markdown>
     ![MCQ Position Heatmap](source-code/phase6_analysis/output/mcq_position_heatmap.png)
     <figcaption>Position selection heatmap across models</figcaption>
-    </div>
-    <div class="gallery-item" markdown>
-    ![Position Bias Bar Chart](source-code/phase6_analysis/output/position_bias_bar.png)
-    <figcaption>Position bias bar chart</figcaption>
     </div>
     <div class="gallery-item" markdown>
     ![MCQ Wrong Answer Distribution](source-code/phase6_analysis/output/mcq_wrong_answer_distribution.png)
@@ -45,11 +44,10 @@ Key figures from the empirical analysis, organized by research contribution. Cli
 
     How reliable are LLM judges when scoring open-ended responses, and do multiple judges converge?
 
+    ??? note "Inter-Judge Agreement"
+        {{ read_csv('./source-code/phase6_analysis/output_v3/table_interjudge_correlation.csv') }}
+
     <div class="figure-gallery" markdown>
-    <div class="gallery-item" markdown>
-    ![Multi-Judge Rubric Comparison](source-code/phase6_analysis/output_v3/mcq_vs_osq_rubric_combined_multijudge_raw.png)
-    <figcaption>Rubric scores across multiple LLM judges</figcaption>
-    </div>
     <div class="gallery-item" markdown>
     ![OSQ Violin -- GPT-5-mini](source-code/phase6_analysis/output_v3/osq_model_violin_openai_gpt-5-mini.png)
     <figcaption>OSQ score distribution -- GPT-5-mini</figcaption>
@@ -89,6 +87,15 @@ Key figures from the empirical analysis, organized by research contribution. Cli
     **MCQ vs OSQ Evaluation Modalities**
 
     How do multiple-choice and open-style question formats compare when evaluating the same models on the same domain content?
+
+    ??? note "MCQ vs OSQ Results Summary"
+        {{ read_csv('./source-code/phase6_analysis/output_v3/table_mcq_osq_results_summary.csv') }}
+
+    ??? note "Effect Sizes"
+        {{ read_csv('./source-code/phase6_analysis/output_v3/table_effect_sizes.csv') }}
+
+    ??? note "MCQ-OSQ Correlations"
+        {{ read_csv('./source-code/phase6_analysis/output_v3/table_mcq_osq_correlations.csv') }}
 
     <div class="figure-gallery" markdown>
     <div class="gallery-item" markdown>
@@ -131,6 +138,10 @@ Key figures from the empirical analysis, organized by research contribution. Cli
     ![OSQ Accuracy by Top-Level Category](source-code/phase6_analysis/output_v3/fig_osq_accuracy_by_incose_toplevel.png)
     <figcaption>OSQ accuracy by top-level INCOSE category</figcaption>
     </div>
+    <div class="gallery-item" markdown>
+    ![Multi-Judge Rubric Comparison](source-code/phase6_analysis/output_v3/mcq_vs_osq_rubric_combined_multijudge_raw.png)
+    <figcaption>Rubric scores across multiple LLM judges</figcaption>
+    </div>
     </div>
 
 === "Token Efficiency"
@@ -138,6 +149,12 @@ Key figures from the empirical analysis, organized by research contribution. Cli
     **Cost-Aware Response Length Trade-offs**
 
     What is the relationship between response length, token cost, and evaluation quality?
+
+    ??? note "OSQ Bootstrap Confidence Intervals"
+        {{ read_csv('./source-code/phase6_analysis/output_v3/table_osq_bootstrap_ci.csv') }}
+
+    ??? note "Per-Model Differences"
+        {{ read_csv('./source-code/phase6_analysis/output_v3/table_per_model_differences.csv') }}
 
     <div class="figure-gallery" markdown>
     <div class="gallery-item" markdown>
