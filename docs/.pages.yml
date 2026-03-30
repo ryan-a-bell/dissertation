@@ -1,5 +1,8 @@
 nav:
   - Home: index.md
+  - Key Findings: key-findings.md
+  - Analysis Gallery: analysis-gallery.md
+  - metaeval: metaeval.md
   - Publications/: publications
   - Source Code/: source-code
-  - Visualizations/: visualizations
+  - Glossary: glossary.md

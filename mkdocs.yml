@@ -1,5 +1,7 @@
 site_name: "Meta-Evaluation of Language Model Evaluation Methods for Systems Engineering"
 site_url: https://ryan-a-bell.github.io/dissertation/
+site_description: "PhD Dissertation: An Empirical Meta-Evaluation of Language Model Evaluation Methods for Systems Engineering Using Distractor Sensitivity and Consensus Judging"
+site_author: "Ryan Bell"
 
 theme:
   name: material
@@ -40,7 +42,11 @@ extra_javascript:
   # - javascripts/mkdocs_theme_switcher.js
 
 plugins:
-  - search
+  - search:
+      separator: '[\s\-\._\/]+'
+  - social:
+      cards: !ENV [CARDS, true]
+  - glightbox
   - awesome-pages
   - mkdocstrings:
       handlers:
@@ -70,8 +76,15 @@ markdown_extensions:
   - attr_list
   - md_in_html
   - footnotes
+  - pymdownx.tabbed:
+      alternate_style: true
 
 extra:
+  meta:
+    - property: og:type
+      content: website
+    - property: og:site_name
+      content: Ryan Bell - PhD Dissertation
   social:
     - icon: fontawesome/brands/github
       link: https://github.com/ryan-a-bell

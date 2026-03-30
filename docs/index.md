@@ -2,9 +2,13 @@
 title: Home
 ---
 
+<div class="hero-banner" markdown>
+<img src="assets/ai-ship-logo.png" alt="AI-enhanced naval vessel">
+</div>
+
 # An Empirical Meta-Evaluation of Language Model Evaluation Methods for Systems Engineering Using Distractor Sensitivity and Consensus Judging
 
-**Ryan Bell** | Naval Postgraduate School | PhD Dissertation in Systems Engineering
+<img src="assets/bell-bio-image.jpg" alt="Ryan Bell" style="width: 60px; height: 60px; border-radius: 50%; vertical-align: middle; margin-right: 0.5rem; object-fit: cover;"> **Ryan Bell**<br>Naval Postgraduate School<br>PhD Candidate in Systems Engineering
 
 ---
 
@@ -13,10 +17,12 @@ title: Home
 This research focuses on meta-evaluation -- the systematic evaluation of language model evaluation methods themselves -- within the context of Systems Engineering (SE). The study leverages the existing SysEngBench benchmark as its empirical foundation and extends it through the creation of Open-Style Question (OSQ) variants derived from the original Multiple-Choice Question (MCQ) dataset.
 
 Specifically, this work investigates:
+
 - Comparative behavior of **MCQ and OSQ evaluation modalities**,
 - The sensitivity of MCQ-based evaluation to **distractor variation**,
-- The reliability and agreement of **LLM-as-a-Judge** evaluation using **rubric-based scoring**, and
-- **Consensus and correlation** across multiple language model judges.
+- The reliability and agreement of **LLM-as-a-Judge** evaluation using **rubric-based scoring**,
+- **Consensus and correlation** across multiple language model judges, and
+- **Cost-quality trade-offs** in inference, framing model selection as a multi-objective trade space governed by token efficiency and quality yield.
 
 The OSQ dataset is systematically constructed from SysEngBench to preserve domain coverage and conceptual equivalence while enabling open-ended response evaluation. All evaluations are conducted on domain-specific Systems Engineering content aligned with established INCOSE Handbook categories, with the goal of assessing evaluation robustness, consistency, and interpretability across modalities.
 
@@ -60,10 +66,14 @@ Frames model evaluation as a trade-space extending beyond accuracy to include co
 </div>
 </div>
 
+## Key Findings and Practical Guidance
+
+A synthesis of the dissertation's central results: implications for SE benchmarking methodology, task-to-modality routing guidance, and cost-aware model selection rules for practitioners.
+
+[View Key Findings](key-findings.md){ .nps-button }
+
 ## Quick Links
 
-<div class="research-grid" markdown>
-<div class="research-card" markdown>
 ### Datasets on HuggingFace
 
 | Dataset | Description |
@@ -75,18 +85,13 @@ Frames model evaluation as a trade-space extending beyond accuracy to include co
 | [SysEngBench-D](https://huggingface.co/datasets/rabell/SysEngBench-D) | Correct answer at position D |
 | [SysEngBench-OSQ](https://huggingface.co/datasets/rabell/SysEngBench-OSQ) | Open-Style Questions |
 
-</div>
-<div class="research-card" markdown>
 ### Publications
 Conference papers and journal submissions
 [View Publications](publications/){ .nps-button }
-</div>
-<div class="research-card" markdown>
+
 ### Source Code
-7-phase research pipeline
+6-phase research pipeline
 [Explore Code](source-code/){ .nps-button }
-</div>
-</div>
 
 ## Dissertation Timeline
 
@@ -108,10 +113,9 @@ Conference papers and journal submissions
     │   ├── phase1_prep/       # Initial dataset tagging and preprocessing
     │   ├── phase2_conversion/ # Conversion of MCQs to OSQs
     │   ├── phase3_variants/   # Generation of distractor variant MCQs
-    │   ├── phase4_inference/  # Inference code for evaluating language models
-    │   ├── phase5_metrics/    # Calculation of evaluation metrics
-    │   └── phase6_tables/     # Aggregation and summary table generation
-    |   └── phase7_analysis/   # Analysis of the previous phases
+    │   ├── phase4_inference/        # Inference code for evaluating language models
+    │   ├── phase5_llm_as_a_judge/  # LLM-as-a-Judge rubric-based scoring
+    │   └── phase6_analysis/        # Statistical analysis and visualization
     ├── .github/               # GitHub CI workflows
     ├── .env.template          # Template for API keys
     ├── requirements.txt       # Python dependencies for venv
@@ -196,10 +200,12 @@ This work is in support of a PhD in Systems Engineering.
 
 This repository is provided under the [MIT License](../LICENSE).
 
-## Scan to Visit This Site
+<div style="text-align: center;" markdown>
 
-<div style="text-align: center;">
+**Scan to Visit This Site**
+
 <img src="assets/qr-code.png" alt="QR Code to Dissertation Docs" width="250">
 
 `https://ryan-a-bell.github.io/dissertation/`
+
 </div>
