@@ -14,7 +14,7 @@ title: Publications
 Bell, R., Longshore, R., Madachy, R., & Hanrahan, A. (2025)
 { .pub-authors }
 
-*Wiley INCOSE* | <span class="pub-badge">Journal Article</span> <span class="pub-badge">Submitted</span>
+*Wiley INCOSE* | <span class="pub-badge">Journal Article</span> <span class="pub-badge">Submitted</span> <span class="pub-badge">Paper Forthcoming</span>
 { .pub-meta }
 
 ??? cite "BibTeX"
@@ -40,7 +40,7 @@ Bell, R., Longshore, R., Madachy, R., & Hanrahan, A. (2025)
 Bell, R., Madachy, R., & Longshore, R. (2025)
 { .pub-authors }
 
-*Wiley INCOSE* | <span class="pub-badge">Journal Article</span> <span class="pub-badge">Submitted</span>
+*Wiley INCOSE* | <span class="pub-badge">Journal Article</span> <span class="pub-badge">Submitted</span> <span class="pub-badge">Paper Forthcoming</span>
 { .pub-meta }
 
 ??? cite "BibTeX"
@@ -71,6 +71,17 @@ Bell, R. (2025)
 
 [:material-file-pdf-box: Proposal](20250801%20Dissertation%20Proposal/20250604_Bell_Dissertation_Proposal.pdf){ .pub-link }
 [:material-presentation: Presentation](20250801%20Dissertation%20Proposal/20250604%20Bell%20Dissertation%20Proposal%20Presentation.pdf){ .pub-link }
+
+??? cite "BibTeX"
+    ```bibtex
+    @misc{bell_DissertationProposal_2025,
+      title = {Evaluation Modality Alignment to Systems Engineering Task Types: An Empirical Study of Language Model Domain-Specific Knowledge and Task-Specific Effectiveness Using Distractor Variation and Consensus-Based Grading},
+      author = {Bell, Ryan},
+      year = {2025},
+      institution = {Naval Postgraduate School},
+      type = {Dissertation Proposal}
+    }
+    ```
 
 </div>
 
@@ -143,7 +154,7 @@ Bell, R., Longshore, R., & Madachy, R. (2025)
 Longshore, R., Bell, R., & Madachy, R. (2025)
 { .pub-authors }
 
-*22nd NPS Acquisition Research Symposium* | <span class="pub-badge">Conference Paper</span>
+*22nd NPS Acquisition Research Symposium* | <span class="pub-badge">Conference Paper</span> <span class="pub-badge">Paper Forthcoming</span>
 { .pub-meta }
 
 ??? cite "BibTeX"
@@ -264,6 +275,17 @@ Bell, R. (2025)
 { .pub-meta }
 
 [:material-notebook: Tutorial Notebook](20250712%20Developing%20Custom%20LLMs%20SE%20SD/SD_INCOSE_Tutorial_%E2%80%93_Developing_Custom_LLMs_for_Systems_Engineering.ipynb){ .pub-link }
+
+??? cite "BibTeX"
+    ```bibtex
+    @misc{bell_DevelopingCustomLLMsSD_2025,
+      title = {Developing Custom LLMs for Systems Engineering},
+      author = {Bell, Ryan},
+      year = {2025},
+      month = jul,
+      address = {San Diego, CA}
+    }
+    ```
 
 </div>
 
