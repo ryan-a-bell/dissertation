@@ -1,0 +1,16 @@
+# Directories and files to exclude from docs/source-code/ generation.
+# Paths are relative to src/. Supports directories (trailing /) and files.
+# Lines starting with # are comments. Blank lines are ignored.
+
+# Phase 4 - Model Inference
+phase4_inference/dodhpc/
+phase4_inference/test-evals-for-model-selection/
+
+# Phase 5 - LLM-as-a-Judge
+phase5_llm_as_a_judge/unused-rubrics/
+
+# Phase 6 - Analysis
+phase6_analysis/archive/
+phase6_analysis/output/
+phase6_analysis/output_v2/
+phase6_analysis/output_v3/

@@ -13,6 +13,7 @@ DEST = Path("docs", "source-code")
 VIZ_DEST = Path("docs", "visualizations")
 PUB_DIR = DOCS_DIR / "publications"
 README = Path("README.md")
+DOCSIGNORE = SRC_DIR / ".docsignore"
 INDEX_MD = DOCS_DIR / "index.md"
 VIZ_INDEX = VIZ_DEST / "index.md"
 PUB_INDEX = PUB_DIR / "index.md"
@@ -32,6 +33,23 @@ def write_md(path, content):
 
 
 PRESERVE_PATTERNS = {"index.md", ".pages.yml", "modality-evaluation-pipeline.jpg"}
+
+
+def load_docsignore():
+    """Load exclusion patterns from src/.docsignore.
+
+    Returns a list of path prefixes (relative to SRC_DIR) that should be
+    skipped during source-tree copying.
+    """
+    if not DOCSIGNORE.exists():
+        return []
+    patterns = []
+    for line in DOCSIGNORE.read_text(encoding="utf-8").splitlines():
+        line = line.strip()
+        if not line or line.startswith("#"):
+            continue
+        patterns.append(line)
+    return patterns
 
 
 def clean_dest():
@@ -63,9 +81,9 @@ def clean_dest():
 
 
 def copy_source_tree():
-    """Copy the contents of SRC_DIR to DEST respecting .gitignore."""
+    """Copy the contents of SRC_DIR to DEST respecting .gitignore and .docsignore."""
     clean_dest()
-    
+
     # Load gitignore patterns
     gitignore_path = Path('.gitignore')
     if gitignore_path.exists():
@@ -74,16 +92,30 @@ def copy_source_tree():
     else:
         spec = PathSpec.from_lines('gitwildmatch', [])
 
+    # Load docsignore patterns
+    docsignore_patterns = load_docsignore()
+
     for src_path in SRC_DIR.rglob('*'):
         # Skip junk directories
         if any(part in ['__pycache__', '.ipynb_checkpoints', '.git'] for part in src_path.parts):
             continue
-            
+
+        # Skip .docsignore itself
+        if src_path.name == '.docsignore':
+            continue
+
         rel_to_root = src_path.relative_to(Path('.'))
         check_path = rel_to_root.as_posix()
         if src_path.is_dir():
             check_path += '/'
         if spec.match_file(check_path):
+            continue
+
+        # Check docsignore patterns (paths relative to SRC_DIR)
+        rel_to_src = src_path.relative_to(SRC_DIR).as_posix()
+        if src_path.is_dir():
+            rel_to_src += '/'
+        if any(rel_to_src.startswith(pat) for pat in docsignore_patterns):
             continue
 
         dest_path = DEST / src_path.relative_to(SRC_DIR)
@@ -434,6 +466,7 @@ def copy_readme_to_index():
 
 def main():
     copy_source_tree()
+    copy_viz_assets()
     generate_publications_page()
     copy_readme_to_index()
     print(f"Mirrored source tree to {DEST} and updated {INDEX_MD}")

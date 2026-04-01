@@ -89,6 +89,36 @@ Bell, R. (2025)
 
 <div class="pub-entry" markdown>
 
+**Exploring Visual Question Answering Capabilities of Multi-Modal Large Language Models with Model Based Systems Engineering Models**
+{ .pub-title }
+
+Longshore, R., Bell, R., & Madachy, R. (2025)
+{ .pub-authors }
+
+*Acquisition Research Program, Naval Postgraduate School* | <span class="pub-badge">Technical Report</span>
+{ .pub-meta }
+
+[:material-file-pdf-box: Paper](20250501%20Exploring%20VQA%20MBSE/SYM-AM-25-425.pdf){ .pub-link }
+
+??? cite "BibTeX"
+    ```bibtex
+    @techreport{longshore_ExploringVisualQuestionAnswering_2025,
+      title = {Exploring Visual Question Answering Capabilities of Multi-Modal Large Language Models with Model Based Systems Engineering Models},
+      author = {Longshore, Ryan and Bell, Ryan and Madachy, Raymond},
+      year = {2025},
+      month = may,
+      series = {Acquisition Management},
+      number = {SYM-AM-25-425},
+      institution = {Acquisition Research Program, Naval Postgraduate School}
+    }
+    ```
+
+</div>
+
+---
+
+<div class="pub-entry" markdown>
+
 **The Cost of Expertise: Performance Trade-Offs in LLMs for Systems Engineering**
 { .pub-title }
 
@@ -268,7 +298,7 @@ Bell, R., Madachy, R., & Longshore, R. (2025)
 **Developing Custom LLMs for Systems Engineering**
 { .pub-title }
 
-Bell, R. (2025)
+Madachy, R., & Bell, R. (2025)
 { .pub-authors }
 
 *INCOSE San Diego Tutorial* | <span class="pub-badge">Tutorial</span>
@@ -312,6 +342,17 @@ Madachy, R. & Bell, R. (2025)
       year = {2025},
       month = jul,
       address = {Ottawa, Canada}
+    }
+    ```
+
+??? cite "BibTeX"
+    ```bibtex
+    @misc{raymondmadachy_DevelopingCustomLLMsSystems_2025_San_Diego,
+      title = {Developing Custom LLMs for Systems Engineering},
+      author = {Raymond Madachy and Ryan Bell},
+      year = {2025},
+      month = jul,
+      address = {San Diego, CA}
     }
     ```
 
@@ -382,7 +423,7 @@ Bell, R., Madachy, R., & Longshore, R. (2024)
 **Leveraging Generative AI to Create, Modify, and Query MBSE Models**
 { .pub-title }
 
-Longshore, R., Madachy, R., & Bell, R. (2024)
+Longshore, R., Bell, R., & Madachy, R. (2024)
 { .pub-authors }
 
 *21st Annual Acquisition Research Symposium*, Naval Postgraduate School | <span class="pub-badge">Conference Paper</span>
@@ -392,9 +433,9 @@ Longshore, R., Madachy, R., & Bell, R. (2024)
 
 ??? cite "BibTeX"
     ```bibtex
-    @inproceedings{longshoreLeveragingGenerativeAI2024,
+    @inproceedings{longshore_LeveragingGenerativeAIQueryMBSE_2024,
       title = {Leveraging Generative AI to Create, Modify, and Query MBSE Models},
-      author = {Longshore, Ryan and Madachy, Raymond and Bell, Ryan},
+      author = {Longshore, Ryan and Bell, Ryan and Madachy, Raymond},
       year = {2024},
       month = may,
       booktitle = {21st Annual Acquisition Research Symposium},
@@ -495,21 +536,22 @@ Bell, R. (2024)
 **Tailored Learning for Cost Modeling: An Open Source RAG-Based Tool**
 { .pub-title }
 
-Madachy, R., Longshore, R., & Bell, R. (2024)
+Bell, R., Longshore, R., & Madachy, R. (2024)
 { .pub-authors }
 
-*Boehm CSSE COCOMO Forum* | <span class="pub-badge">Conference Paper</span>
+*COCOMO Forum 2024* | <span class="pub-badge">Conference Paper</span>
 { .pub-meta }
 
 [:material-file-pdf-box: Paper](20241201%20Tailored%20Learning%20Cost%20RAG/20241112_BoehmRR_TailoredCostModeling.pdf){ .pub-link }
 
 ??? cite "BibTeX"
     ```bibtex
-    @misc{Madachy2024CostModelingAI,
+    @misc{bell_TailoredLearningCostRAG_2024,
       title = {Tailored Learning for Cost Modeling: An Open Source RAG-Based Tool},
-      author = {Madachy, Raymond and Longshore, Ryan and Bell, Ryan},
-      year = {2024},
-      address = {Ireland}
+      author = {Ryan Bell and Ryan Longshore and Raymond Madachy},
+      date = {2024-12-11},
+      url = {https://boehmcsse.org/events-2/bcsse-cocomo-forum-2024/},
+      eventtitle = {COCOMO Forum 2024}
     }
     ```
 
@@ -525,7 +567,7 @@ Madachy, R., Longshore, R., & Bell, R. (2024)
 Madachy, R., Longshore, R., & Bell, R. (2024)
 { .pub-authors }
 
-*Boehm CSSE COCOMO Forum* | <span class="pub-badge">Presentation</span>
+*Proceedings of the INCOSE International Symposium* | <span class="pub-badge">Conference Paper</span>
 { .pub-meta }
 
 ??? cite "BibTeX"

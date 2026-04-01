@@ -7,4 +7,3 @@ nav:
   - Judge Automation Script: llm_judge_automation.py
   - Academic Rubric Background: llm-as-a-judge-from-academia.md
   - Judge Rubric Definitions: sysengbench-osq-llm-judge
-  - Unused Rubrics: unused-rubrics
