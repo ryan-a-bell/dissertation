@@ -117,6 +117,7 @@ The following directories contain finalized research outputs. Treat them as read
 - Navigation is controlled by `docs/.pages.yml` via `mkdocs-awesome-pages-plugin`.
 - Jupyter notebooks are embedded via `mkdocs-jupyter` with execution disabled (rendered as-is).
 - CSV files are previewed inline via `mkdocs-table-reader-plugin`.
+- `src/phase6_analysis/output_v3/` is the authoritative source for all analysis figures and tables. The analysis gallery (`docs/analysis-gallery.md`) references only `output_v3/` artifacts. Do not reference `output/` or `output_v2/` in the gallery.
 
 ## Commit and Branch Conventions
 

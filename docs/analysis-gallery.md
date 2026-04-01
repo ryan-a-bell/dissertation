@@ -21,9 +21,6 @@ Key figures and tables from the empirical analysis, organized by research contri
     ??? note "Chi-Square Position Bias"
         {{ read_csv('./source-code/phase6_analysis/output_v3/table_chi_square_position_bias.csv') }}
 
-    ??? note "Friedman Position Bias"
-        {{ read_csv('./source-code/phase6_analysis/output_v3/table_friedman_position_bias.csv') }}
-
     <div class="figure-gallery" markdown>
     <div class="gallery-item" markdown>
     ![MCQ Deviation from Uniform](source-code/phase6_analysis/output_v3/fig_mcq_deviation_uniform.png)
@@ -50,9 +47,6 @@ Key figures and tables from the empirical analysis, organized by research contri
 
     ??? note "Wilcoxon Results"
         {{ read_csv('./source-code/phase6_analysis/output_v3/table_wilcoxon_results.csv') }}
-
-    ??? note "OSQ Bootstrap Confidence Intervals"
-        {{ read_csv('./source-code/phase6_analysis/output_v3/table_osq_bootstrap_ci.csv') }}
 
     <div class="figure-gallery" markdown>
     <div class="gallery-item" markdown>
@@ -89,9 +83,6 @@ Key figures and tables from the empirical analysis, organized by research contri
 
     ??? note "MCQ vs OSQ Results Summary"
         {{ read_csv('./source-code/phase6_analysis/output_v3/table_mcq_osq_results_summary.csv') }}
-
-    ??? note "Effect Sizes"
-        {{ read_csv('./source-code/phase6_analysis/output_v3/table_effect_sizes.csv') }}
 
     ??? note "MCQ-OSQ Correlations"
         {{ read_csv('./source-code/phase6_analysis/output_v3/table_mcq_osq_correlations.csv') }}
