@@ -188,13 +188,24 @@ Bell, R. (2025)
 **Developing Custom LLMs for Systems Engineering**
 { .pub-title }
 
-Bell, R. (2025)
+Madachy, R., & Bell, R. (2025)
 { .pub-authors }
 
 *INCOSE San Diego Tutorial* | <span class="pub-badge">Tutorial</span>
 { .pub-meta }
 
 [:material-notebook: Tutorial Notebook](20250712%20INCOSE%20SD%20Tutorial/SD_INCOSE_Tutorial_%E2%80%93_Developing_Custom_LLMs_for_Systems_Engineering.ipynb){ .pub-link }
+
+??? cite "BibTeX"
+    ```bibtex
+    @misc{raymondmadachy_DevelopingCustomLLMsSystems_2025_San_Diego,
+      title = {Developing Custom LLMs for Systems Engineering},
+      author = {Raymond Madachy and Ryan Bell},
+      year = {2025},
+      month = jul,
+      address = {San Diego, CA}
+    }
+    ```
 
 </div>
 
@@ -253,7 +264,7 @@ Bell, R., Madachy, R., & Longshore, R. (2024)
 **Leveraging Generative AI to Create, Modify, and Query MBSE Models**
 { .pub-title }
 
-Longshore, R., Madachy, R., & Bell, R. (2024)
+Longshore, R., Bell, R., & Madachy, R. (2024)
 { .pub-authors }
 
 *21st Annual Acquisition Research Symposium*, Naval Postgraduate School | <span class="pub-badge">Conference Paper</span>
@@ -261,9 +272,9 @@ Longshore, R., Madachy, R., & Bell, R. (2024)
 
 ??? cite "BibTeX"
     ```bibtex
-    @inproceedings{longshoreLeveragingGenerativeAI2024,
+    @inproceedings{longshore_LeveragingGenerativeAIQueryMBSE_2024,
       title = {Leveraging Generative AI to Create, Modify, and Query MBSE Models},
-      author = {Longshore, Ryan and Madachy, Raymond and Bell, Ryan},
+      author = {Longshore, Ryan and Bell, Ryan and Madachy, Raymond},
       year = {2024},
       month = may,
       booktitle = {21st Annual Acquisition Research Symposium},
@@ -362,21 +373,22 @@ Bell, R. (2024)
 **Tailored Learning for Cost Modeling: An Open Source RAG-Based Tool**
 { .pub-title }
 
-Madachy, R., Longshore, R., & Bell, R. (2024)
+Bell, R., Longshore, R., & Madachy, R. (2024)
 { .pub-authors }
 
-*Boehm CSSE COCOMO Forum* | <span class="pub-badge">Conference Paper</span>
+*COCOMO Forum 2024* | <span class="pub-badge">Conference Paper</span>
 { .pub-meta }
 
 [:material-file-pdf-box: Paper](20240918%20Boehm%20CSSE%20COCOMO%20Forum%202024/20241112_BoehmRR_TailoredCostModeling.pdf){ .pub-link }
 
 ??? cite "BibTeX"
     ```bibtex
-    @misc{Madachy2024CostModelingAI,
+    @misc{bell_TailoredLearningCostRAG_2024,
       title = {Tailored Learning for Cost Modeling: An Open Source RAG-Based Tool},
-      author = {Madachy, Raymond and Longshore, Ryan and Bell, Ryan},
-      year = {2024},
-      address = {Ireland}
+      author = {Ryan Bell and Ryan Longshore and Raymond Madachy},
+      date = {2024-12-11},
+      url = {https://boehmcsse.org/events-2/bcsse-cocomo-forum-2024/},
+      eventtitle = {COCOMO Forum 2024}
     }
     ```
 
@@ -386,13 +398,23 @@ Madachy, R., Longshore, R., & Bell, R. (2024)
 
 <div class="pub-entry" markdown>
 
-**Tailored Cost Modeling for AI-Assisted Systems Engineering**
+**Systems and Software Engineering Cost Modeling of AI Assistance**
 { .pub-title }
 
-Madachy, R., Bell, R., & Longshore, R. (2024)
+Madachy, R., Longshore, R., & Bell, R. (2024)
 { .pub-authors }
 
-*Boehm CSSE Annual Research Review* | <span class="pub-badge">Conference Paper</span>
+*Proceedings of the INCOSE International Symposium* | <span class="pub-badge">Conference Paper</span>
 { .pub-meta }
+
+??? cite "BibTeX"
+    ```bibtex
+    @misc{Madachy2024CostModelingAI,
+      title = {Systems and Software Engineering Cost Modeling of AI Assistance},
+      author = {Madachy, Raymond and Longshore, Ryan and Bell, Ryan},
+      year = {2024},
+      address = {Ireland}
+    }
+    ```
 
 </div>
