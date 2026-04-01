@@ -126,6 +126,6 @@ The findings establish a qualification-oriented stance for benchmarking and LLM 
 3. **Task-to-modality routing** maps minimum evidence requirements to INCOSE SE tasks and operationalizes evaluation evidence into model selection decisions.
 4. **Reporting standards** enable auditability and reuse.
 5. **Saturation** motivates benchmark governance and refresh.
-6. **Cost-aware qualification** ensures deployment feasibility under real-world constraints.
+6. **Cost-aware qualification** selects models that optimize the cost-quality trade space under token and budget constraints.
 
 Together, these translate *what* must be measured and reported into *how* practicing systems engineers should operationalize these requirements in day-to-day workflows.
