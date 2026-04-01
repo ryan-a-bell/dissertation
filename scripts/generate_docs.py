@@ -119,11 +119,15 @@ def copy_source_tree():
             continue
 
         dest_path = DEST / src_path.relative_to(SRC_DIR)
-        
+
         if src_path.is_dir():
             dest_path.mkdir(parents=True, exist_ok=True)
             continue
-            
+
+        # Skip README.md when a hand-maintained index.md already exists
+        if src_path.name == 'README.md' and (dest_path.parent / 'index.md').exists():
+            continue
+
         # Handle different file types
         if src_path.suffix == '.csv':
             # Create CSV stub with relative link
