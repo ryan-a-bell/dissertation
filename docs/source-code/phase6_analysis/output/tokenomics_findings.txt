@@ -1,8 +1,0 @@
-TOKENOMICS ANALYSIS - KEY FINDINGS
-================================================================================
-
-• **Most Efficient Model**: google__gemini-2.5-flash (highest score per token)
-• **Most Verbose Model**: phi3.5__3.8b (92 avg tokens)
-• **Most Concise Model**: llama3.2__3b (43 avg tokens)
-• **Best Cost-Effectiveness**: google__gemini-2.5-flash ($0.000006 per score point)
-• **Overall Token-Quality Correlation**: 0.172 (positive)

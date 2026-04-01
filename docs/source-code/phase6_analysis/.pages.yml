@@ -8,4 +8,3 @@ nav:
   - Consolidated Bias Table: gen_consolidated_bias_table.py
   - Objective 7 Artifacts: gen_obj7_artifacts.py
   - Anomalies: anomalies
-  - Archive: archive
