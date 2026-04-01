@@ -1,118 +1,196 @@
-@article{Bell2025LLMQuantization,
+@misc{__,
+  title = {Developing {{Custom LLMs}} for {{Systems Engineering}}},
+  author = {{Raymond Madachy} and {Ryan Bell}},
+  year = 2025,
+  month = jul,
+  address = {San Diego, CA},
+  file = {files/2240/SD_INCOSE_Tutorial_–_Developing_Custom_LLMs_for_Systems_Engineering.ipynb}
+}
+
+@inproceedings{bell_AutomatingAIExpert_2025,
+  title = {Automating {{AI Expert Consensus}}: {{Feasibility}} of {{Language Model-Assisted Consensus Methods}} for {{Systems Engineering}}},
+  booktitle = {Twenty-{{Second Annual Acquisition Research Symposium}} and {{Innovation Summit}}},
+  author = {Bell, Ryan and Longshore, Ryan and Madachy, Raymond},
+  year = 2025,
+  month = may,
+  volume = {3},
+  publisher = {Naval Postgraduate School},
+  address = {Monterey, CA},
+  abstract = {Expert consensus is a critical component of decision-making in systems engineering, where stakeholder input and complex trade-offs must be carefully weighed. Traditionally, consensusbuilding techniques such as the Delphi Method, Nominal Group Technique (NGT), and MultiVoting have been used to aggregate expert human opinions systematically. Constant lingering challenges prove to be deterrents such as time-intensive and extensive coordination efforts required to gather Subject Matter Experts (SMEs). With the advent of Large Language Models (LLMs), there exists the potential to capture the expert knowledge and leverage AI to streamline consensus-building. This conceptual paper explores the feasibility of LLM-assisted consensus methods in the context of systems engineering. We evaluate consensus methods based on their structure, expert interaction requirements, and compatibility with LLMs, followed by identifying which methods could be enhanced through AI-driven automation. Through a comparative analysis, we hypothesize the methods best suited for LLM augmentation or full automation and explore their potential applications in systems engineering. Finally, we discuss future research directions for both AI-driven and hybrid human-AI consensus frameworks. Keywords: Large Language Models (LLMs), Artificial Intelligence (AI), Consensus Methods, Systems Engineering, Feasibility Study},
+  file = {files/1423/SYM-AM-25-424.pdf}
+}
+
+@article{bell_BalancingAccuracyEfficiencyQuantization_2025,
   title = {Balancing Accuracy and Efficiency: {{Trade-offs}} in Large Language Model Quantization for the Systems Engineering Domain},
   author = {Bell, Ryan and Madachy, Raymond and Longshore, Ryan},
-  year = {2025},
+  year = 2025,
   journal = {Wiley INCOSE},
   volume = {Submitted},
   abstract = {As Large Language Models (LLMs) are increasingly deployed within the systems engineering domain, optimizing these models to balance computational efficiency, cost, and performance accuracy becomes essential. One process for balancing efficiency and accuracy for LLMs is quantization, a process that involves converting model parameters from higher precision formats to lower precision formats. This paper presents an empirical study investigating the impact of quantization at varying levels --- 4-bit, 8-bit, 16-bit, and 32-bit floating-point --- on LLM performance specifically within systems engineering contexts. The benchmark for systems engineering tasks, SysEngBench, will be used to evaluate LLM performance. SysEngBench is tailored to the systems engineering domain specific concepts such as requirements, architecture, model-based systems engineering, technical management processes, and specialty engineering activities. By examining accuracy loss across quantization levels, we can glean insight into scenarios where lower bit quantization provides efficiency gains with minimal impact on accuracy as well as scenarios where higher bit quantization levels are paramount for maintaining high fidelity responses. Analysis will be presented on quantization levels versus accuracy versus model size. Results will reveal distinct trade-offs that can guide practitioners in selecting appropriate quantization levels for their desired performance, cost, and resource requirements, which is particularly useful for model deployment in computation-constrained environments.},
   keywords = {Large Language Model (LLM),Performance Benchmarking,Quantization,SysEngBench,Systems Engineering,Trade-Off Study}
 }
 
-@article{Bell2025SysEngBench,
-  title = {Baselining Large Language Model Performance in Systems Engineering Using {{SysEngBench}}},
-  author = {Bell, Ryan and Longshore, Ryan and Madachy, Raymond and Hanrahan, Ashlyn},
-  year = {2025},
-  journal = {Wiley INCOSE},
-  volume = {Submitted},
-  abstract = {In the rapidly evolving field of Artificial Intelligence (AI), Large Language Models (LLMs) have demonstrated unprecedented capabilities in understanding and generating natural language. However, their proficiency in specialized domains, particularly in the field of systems engineering, remains less explored. This paper introduces SysEngBench, a novel benchmark specifically designed to evaluate LLMs in the context of systems engineering concepts and applications. SysEngBench encompasses a comprehensive set of tasks derived from core systems engineering processes, including requirements analysis, system architecture design, risk management, and stakeholder communication to provide an assessment of language model abilities. Our evaluation of leading LLMs using SysEngBench reveals insights into current capabilities and limitations in systems engineering contexts. The findings suggest pathways for future research and development aimed at enhancing LLM utility in the systems engineering discipline. SysEngBench contributes to the understanding of AI's potential impact on systems engineering.},
-  keywords = {Benchmarking,Large Language Models,Performance Evaluation,SysEngBench,Systems Engineering}
-}
-
-@misc{bellBaseliningAIsSystems2024,
+@misc{bell_BaseliningAIsSystemsCost_2024,
   title = {Baselining {{AI}}'s {{Systems Engineering Performance}} in {{Cost Modeling}}},
   author = {Bell, Ryan and Longshore, Ryan and Madachy, Raymond},
-  year = {2024},
-  month = apr
+  year = 2024,
+  month = apr,
+  note = {Schedule lists talk on April 17, 2024; slides linked from the event page.},
+  file = {files/2228/Bell et al. - 2024 - Baselining AI’s Systems Engineering Performance in Cost Modeling.pdf}
 }
 
-@inproceedings{bellIntroducingSysEngBenchNovel2024,
+@inproceedings{bell_IntroducingSysEngBenchNovel_2024,
   title = {Introducing {{SysEngBench}}: {{A Novel Benchmark}} for {{Assessing Large Language Models}} in {{Systems Engineering}}},
   shorttitle = {Introducing {{SysEngBench}}},
   author = {Bell, Ryan and Madachy, Raymond and Longshore, Ryan},
-  year = {2024},
+  year = 2024,
   month = may,
   publisher = {Acquisition Research Program},
   urldate = {2024-08-12},
   abstract = {In the rapidly evolving field of artificial intelligence (AI), Large Language Models (LLMs) have demonstrated unprecedented capabilities in understanding and generating natural language. However, their proficiency in specialized domains, particularly in the complex and interdisciplinary field of systems engineering, remains less explored. This paper introduces SysEngBench, a novel benchmark specifically designed to evaluate LLMs in the context of systems engineering concepts and applications. SysEngBench will encompass a comprehensive set of tasks derived from core systems engineering processes, including requirements analysis, system architecture design, risk management, and stakeholder communication. By leveraging a diverse array of real-world and synthetically generated scenarios, SysEngBench aims to provide an assessment of LLMs' ability to interpret complex engineering problems and generate innovative solutions. Our evaluation of leading LLMs using SysEngBench reveals significant insights into their current capabilities and limitations in systems engineering contexts. The findings suggest pathways for future research and development aimed at enhancing LLMs' utility in the systems engineering discipline. SysEngBench contributes to the understanding of AI's potential impact on systems engineering.},
   langid = {american},
   annotation = {Accepted: 2024-06-03T13:53:26Z},
-  file = {C:\Users\rabel\Zotero\storage\WWUND22I\Ryan Bell and Madachy - 2024 - Introducing SysEngBench A Novel Benchmark for Ass.pdf}
+  note = {This paper introduces SysEngBench, a benchmark designed to evaluate LLMs in systems engineering. It provides a structured framework for assessing LLM proficiency in this interdisciplinary field.},
+  file = {files/213/Ryan Bell and Madachy - 2024 - Introducing SysEngBench A Novel Benchmark for Ass.pdf;files/2231/20240508.1 NPS ARS - BELL.pdf}
 }
 
-@misc{bellRabellSysEngBenchDatasets2024,
-  title = {Rabell/{{SysEngBench}} {$\cdot$} {{Datasets}} at {{Hugging Face}}},
-  author = {Bell, Ryan},
-  year = {2024},
-  month = aug,
-  journal = {SysEngBench},
-  urldate = {2024-08-15},
-  abstract = {We're on a journey to advance and democratize artificial intelligence through open source and open science.},
-  howpublished = {https://huggingface.co/datasets/rabell/SysEngBench},
-  file = {C:\Users\rabel\Zotero\storage\Z6WNQE8P\SysEngBench.html}
+@misc{bell_TailoredLearningCostRAG_2024,
+  title = {Tailored {{Learning}} for {{Cost Modeling}}: {{An Open Source RAG-Based Tool}}},
+  author = {{Ryan Bell} and {Ryan Longshore} and {Raymond Madachy}},
+  year = 2024,
+  month = dec,
+  file = {files/2234/Ryan Bell et al. - 2024 - Tailored Learning for Cost Modeling An Open Source RAG-Based Tool.pdf}
+}
+
+@misc{bell_UsingAIToolsForSE_2024,
+  title = {Using {{AI Tools}} for {{SE}}, from {{Requirements Generation}} and {{Management}} to {{Risk}}  {{Identification}}, {{Analysis}}, and {{Management}}},
+  author = {{Ryan Bell} and {Ryan Longshore} and {Raymond Madachy}},
+  year = 2024,
+  month = jul,
+  file = {files/2227/Ryan Bell et al. - 2024 - Using AI Tools for SE, from Requirements Generation and Management to Risk  Identification, Analysis.pdf}
+}
+
+@article{Bell2025SysEngBench,
+  title = {Baselining Large Language Model Performance in Systems Engineering Using {{SysEngBench}}},
+  author = {Bell, Ryan and Longshore, Ryan and Madachy, Raymond and Hanrahan, Ashlyn},
+  year = 2025,
+  journal = {Wiley INCOSE},
+  volume = {Submitted},
+  abstract = {In the rapidly evolving field of Artificial Intelligence (AI), Large Language Models (LLMs) have demonstrated unprecedented capabilities in understanding and generating natural language. However, their proficiency in specialized domains, particularly in the field of systems engineering, remains less explored. This paper introduces SysEngBench, a novel benchmark specifically designed to evaluate LLMs in the context of systems engineering concepts and applications. SysEngBench encompasses a comprehensive set of tasks derived from core systems engineering processes, including requirements analysis, system architecture design, risk management, and stakeholder communication to provide an assessment of language model abilities. Our evaluation of leading LLMs using SysEngBench reveals insights into current capabilities and limitations in systems engineering contexts. The findings suggest pathways for future research and development aimed at enhancing LLM utility in the systems engineering discipline. SysEngBench contributes to the understanding of AI's potential impact on systems engineering.},
+  keywords = {Benchmarking,Large Language Models,Performance Evaluation,SysEngBench,Systems Engineering}
+}
+
+@techreport{longshore_ExploringVisualQuestionAnswering_2025,
+  type = {{{SYM Paper}}},
+  title = {Exploring Visual Question Answering Capabilities of Multi-Modal Large Language Models with Model Based Systems Engineering Models},
+  author = {Longshore, Ryan and Bell, Ryan and Madachy, Raymond},
+  year = 2025,
+  month = may,
+  series = {Acquisition Management},
+  number = {SYM-AM-25-425},
+  institution = {Acquisition Research Program, Naval Postgraduate School}
 }
 
 @inproceedings{longshore_LeveragingGenerativeAIQueryMBSE_2024,
   title = {Leveraging {{Generative AI}} to {{Create}}, {{Modify}}, and {{Query MBSE Models}}},
   booktitle = {21st {{Annual Acquisition Research Symposium}}},
-  author = {Longshore, Ryan and Bell, Ryan and Madachy, Raymond},
-  year = {2024},
+  author = {Longshore, Ryan and Madachy, Raymond and Bell, Ryan},
+  year = 2024,
   month = may,
   publisher = {Naval Postgraduate School},
-  abstract = {Generative AI tools, such as large language models (LLMs), offer a variety of ways to potentially gain efficiencies and improve systems engineering processes from requirements generation and management through design analysis and formal testing. Large acquisition programs may be particularly well poised to take advantage of LLMs to help manage the complexities of system and system of systems acquisitions. However, generative AI tools are prone to a variety of errors.  Our research explores the ability of current LLMs to generate, modify, and query Systems Modeling Language (SysML) v2 models. Techniques such as Retrieval-Augmented Generation (RAG) are utilized to add domain specific knowledge to a LLM and improve model accuracy. A preliminary case study is presented where the number of prompts to generated the models are minimized. We also discuss the limitations of LLMs and future systems engineering research related to LLMs.}
+  abstract = {Generative AI tools, such as large language models (LLMs), offer a variety of ways to potentially gain efficiencies and improve systems engineering processes from requirements generation and management through design analysis and formal testing. Large acquisition programs may be particularly well poised to take advantage of LLMs to help manage the complexities of system and system of systems acquisitions. However, generative AI tools are prone to a variety of errors.  Our research explores the ability of current LLMs to generate, modify, and query Systems Modeling Language (SysML) v2 models. Techniques such as Retrieval-Augmented Generation (RAG) are utilized to add domain specific knowledge to a LLM and improve model accuracy. A preliminary case study is presented where the number of prompts to generated the models are minimized. We also discuss the limitations of LLMs and future systems engineering research related to LLMs.},
+  file = {files/2232/Longshore et al. - 2024 - Leveraging Generative AI to Create, Modify, and Query MBSE Models.pdf}
 }
 
-@inproceedings{Madachy2024CostModelingAI,
-  title = {Systems and Software Engineering Cost Modeling of {{AI}} Assistance},
-  booktitle = {Proceedings of the {{INCOSE}} International Symposium},
+@misc{Madachy_CostModelingAI_2024,
+  title = {Systems and {{Software Engineering Cost Modeling}} of {{AI Assistance}}},
   author = {Madachy, Raymond and Longshore, Ryan and Bell, Ryan},
-  year = {2024},
+  year = 2024,
+  month = jul,
   address = {Ireland},
   abstract = {Artificial Intelligence (AI) based tools that assist in generating system artifacts are transforming systems and software engineering lifecycles. Drastic reductions in effort are possible using tools that use large language models. This research addresses new challenges in systems and software cost modeling with the introduction of cost factors and size measures to incorporate into existing parametric cost models. An online data form has been developed to support the model development.},
-  topics = {Academia (curricula, course life cycle, etc.), Aerospace, Project Planning, Project Assessment, and/or Project Control, Life-Cycle Costing and/or Economic Evaluation, Artificial Intelligence, Machine Learning, Defense},
-  keywords = {Artificial Intelligence (AI),COCOMO,Cost Modeling,COSYSMO,Generative Artificial Intelligence,Large Language Models (LLMs),Parametric Cost Modeling,Software Engineering,Systems Engineering}
+  keywords = {Artificial Intelligence (AI),COCOMO,Cost Modeling,COSYSMO,Generative Artificial Intelligence,Large Language Models (LLMs),Parametric Cost Modeling,Software Engineering,Systems Engineering},
+  note = {Presentation \#404}
 }
 
-@inproceedings{Madachy2025AIMaturityCost,
-  title = {A Generative {{AI-driven}} Systems Engineering Maturity and Cost Modeling Framework},
-  booktitle = {Proceedings of the 22nd Annual Conference on Systems Engineering Research ({{CSER}})},
+@misc{madachy_DevelopingCustomLLMs_2025,
+  title = {Developing {{Custom LLMs}} for {{Systems Engineering}}},
+  author = {{Ryan Bell} and {Raymond Madachy} and {Ryan Longshore}},
+  year = 2025,
+  month = jul,
+  address = {Ottawa, Canada},
+  file = {files/2242/INCOSE_IS_2025_Tutorial_–_Developing_Custom_LLMs_for_Systems_Engineering (2).ipynb}
+}
+
+@misc{madachy_FactoringAIAssistance_2023,
+  title = {Factoring {{AI Assistance}} into {{Software}} and {{Systems Engineering Cost Models}}},
+  author = {{Raymond Madachy} and {Ryan Bell} and {Ryan Longshore}},
+  year = 2023,
+  month = nov,
+  note = {Event schedule lists the presentation and links to slides and video.},
+  file = {files/2230/Raymond Madachy et al. - 2023 - Factoring AI Assistance into Software and Systems Engineering Cost Models.pdf}
+}
+
+@incollection{madachy_GenerativeAIdrivenSystems_2025,
+  title = {A {{Generative AI-driven Systems Engineering Maturity}} and {{Cost Modeling Framework}}},
+  booktitle = {Augmented {{Intelligence}} in {{Systems Engineering}} and {{Engineered Systems}}: {{Proceedings}} of the 2025 {{Conference}} on {{Systems Engineering Research}}},
   author = {Madachy, Raymond and Bell, Ryan and Longshore, Ryan},
   editor = {Madni, Azad M. and Verma, Dinesh and Sievers, Michael and Wheaton, Marilee and Ordoukhanian, Edwin and Purohit, Shatad},
-  year = {2025},
-  month = mar,
+  year = 2025,
   volume = {In Press},
-  publisher = {{University of Southern California and Stevens Institute of Technology}},
+  publisher = {Springer Nature},
   address = {Long Beach, CA, USA},
   abstract = {Generative Artificial Intelligence (AI) is quickly transforming systems engineering processes in numerous ways including automating tasks, generating architecture and design options, tradeoff analysis, implementation, testing, improving decision-making processes, and many more. An integrated framework is introduced with a harmonized maturity and cost model for using generative AI in systems engineering. By understanding the levels of maturity and their associated cost implications, organizations can develop strategies for effectively leveraging generative AI in their engineering workflows, ensuring continuous improvement, cost reductions, and strategic integration with technological advancements. The maturity and cost model enables a cohesive evaluation of the financial impacts of AI adoption.},
-  keywords = {COCOMO,Cost Modeling,COSYSMO,Generative AI,Large Language Models,Maturity Model,Systems Engineering Process}
+  isbn = {978-3-032-12308-4},
+  keywords = {COCOMO,Cost Modeling,COSYSMO,Generative AI,Large Language Models,Maturity Model,Systems Engineering Process},
+  note = {Originally a paper, then it turned into a Springer publication!},
+  file = {files/2237/Madachy et al. - 2025 - A generative AI-driven systems engineering maturity and cost modeling framework.pdf}
 }
 
-@inproceedings{madachySystemsAcquisitionCost2024,
+@misc{madachy_OpenSourceSystemModelPython_2025,
+  title = {Open {{Source System Modeling}} with {{Python}} and {{Generative AI}}},
+  author = {{Raymond Madachy} and {Ryan Bell}},
+  year = 2025,
+  month = jul,
+  address = {Ottawa, Canada},
+  file = {files/2244/INCOSE_IS_2025_Tutorial_–_Open_Source_System_Modeling_with_Python_and_Generative_AI (2).ipynb}
+}
+
+@inproceedings{madachy_SystemsAcquisitionCost_2024,
   title = {Systems {{Acquisition Cost Modeling Initiative}} for {{AI Assistance}}},
   booktitle = {21st {{Annual Acquisition Research Symposium}}},
   author = {Madachy, Raymond and Bell, Ryan and Longshore, Ryan},
-  year = {2024},
+  year = 2024,
   month = may,
   publisher = {Naval Postgraduate School},
-  abstract = {Artificial Intelligence (AI) based tools that assist in generating system artifacts are possible using tools that use large language models (LLMs). This research addresses the new challenges in systems and software cost modeling with the introduction of cost factors and size measures to incorporate into existing parametric cost models.}
+  abstract = {Artificial Intelligence (AI) based tools that assist in generating system artifacts are possible using tools that use large language models (LLMs). This research addresses the new challenges in systems and software cost modeling with the introduction of cost factors and size measures to incorporate into existing parametric cost models.},
+  file = {files/2278/Madachy et al. - 2024 - Systems Acquisition Cost Modeling Initiative for AI Assistance.pdf}
 }
 
-@inproceedings{papakonstantinouPrivateAIDELPHIAdoptingAdapting2025,
+@inproceedings{papakonstantinou_PrivateAIDELPHIAdoptingAdapting_2025,
   title = {{{PrivateAIDELPHI}}: {{Adopting}} and Adapting Private {{AI}} for Risk Assessment of Safety Critical Systems},
   booktitle = {{{RAMS}}},
   author = {Papakonstantinou, Nikolaos and Van Bossuyt, Douglas and Bell, Ryan and Longshore, Ryan and Heikkila, Mika},
-  year = {2025},
+  year = 2025,
   month = jan,
   address = {Miramar Beach, Florida, USA},
-  doi = {10.1109/RAMS48127.2025.10935226}
+  doi = {10.1109/RAMS48127.2025.10935226},
+  file = {files/2236/Papakonstantinou et al. - 2025 - PrivateAIDELPHI Adopting and adapting private AI for risk assessment of safety critical systems.pdf}
 }
 
-@inproceedings{Wach2025LLMTradeOffs,
-  title = {The Cost of Expertise: {{Performance}} Trade-Offs in Llms for Systems Engineering},
-  booktitle = {Proceedings of the {{INCOSE}} International Symposium},
+@article{Wach_LLMTradeOffs_2025,
+  title = {The {{Cost}} of {{Expertise}}: {{Performance Trade-offs}} in {{LLMs}} for {{Systems Engineering}}},
   author = {Wach, Paul and Bell, Ryan and Jugan, Brady and Longshore, Ryan and Madachy, Raymond},
-  year = {2025},
+  year = 2025,
   month = jul,
-  publisher = {In Press},
+  journal = {Proceedings of the INCOSE international symposium},
+  volume = {35},
+  number = {1},
+  pages = {1490--1507},
+  publisher = {Wiley},
+  doi = {10.1002/iis2.70078},
   abstract = {In the systems engineering (SE) community, generative artificial intelligence (GenAI), such as large language models (LLMs), continues to grow in popularity with applications varying from help with writing requirements, to creating traditional text-based documents, and to generating models. Furthermore, the text-based format of the Systems Modeling Language version 2 (SysMLv2) gives rise to wide ranging possibilities when combined with LLMs. It is common to specialize LLMs on specific tasks, such as SE; which may be achieved by a number of means. Fine-tuning and retrieval augmented generation (RAG) are example methods to teaching a model how to act and what the model needs to know, respectively. Typical practice evaluates LLMs relative to one another through the use of benchmarks. Benchmarks are tasks that use a common scoring-based method where the LLM either answers a set of multiple-choice questions or textual queries to verified, correct answers. A domain specific benchmark for SE, SysEngBench, was developed over the last year and will be leveraged for the domain specific needs of SE evaluation. With many in the SE community developing custom language models, the usage of a standard benchmark is essential for relative performance comparison. We have conducted a limited experiment using SysEngBench to compare performance between ChatGPT4o, fine-tuned ChatGPT4o, and fine-tuned ChatGPT4o with RAG; results being what many in the SE community may find intuitively unexpected.},
-  keywords = {AI,chain-of-thought,Finetuning,Large Language Model (LLM),MBSE,Performance Benchmarking,prompt engineering,RAG,SysMLv2,Systems Engineering}
+  keywords = {AI,chain-of-thought,Finetuning,Large Language Model (LLM),MBSE,Performance Benchmarking,prompt engineering,RAG,SysMLv2,Systems Engineering},
+  note = {In press},
+  file = {files/2235/Wach et al. - 2025 - The cost of expertise Performance trade-offs in llms for systems engineering.pdf}
 }
