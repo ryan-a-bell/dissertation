@@ -77,6 +77,36 @@ Bell, R. (2025)
 
 <div class="pub-entry" markdown>
 
+**Exploring Visual Question Answering Capabilities of Multi-Modal Large Language Models with Model Based Systems Engineering Models**
+{ .pub-title }
+
+Longshore, R., Bell, R., & Madachy, R. (2025)
+{ .pub-authors }
+
+*Acquisition Research Program, Naval Postgraduate School* | <span class="pub-badge">Technical Report</span>
+{ .pub-meta }
+
+[:material-file-pdf-box: Paper](20250501%20Exploring%20VQA%20MBSE/SYM-AM-25-425.pdf){ .pub-link }
+
+??? cite "BibTeX"
+    ```bibtex
+    @techreport{longshore_ExploringVisualQuestionAnswering_2025,
+      title = {Exploring Visual Question Answering Capabilities of Multi-Modal Large Language Models with Model Based Systems Engineering Models},
+      author = {Longshore, Ryan and Bell, Ryan and Madachy, Raymond},
+      year = {2025},
+      month = may,
+      series = {Acquisition Management},
+      number = {SYM-AM-25-425},
+      institution = {Acquisition Research Program, Naval Postgraduate School}
+    }
+    ```
+
+</div>
+
+---
+
+<div class="pub-entry" markdown>
+
 **The Cost of Expertise: Performance Trade-Offs in LLMs for Systems Engineering**
 { .pub-title }
 
