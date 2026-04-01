@@ -4,7 +4,7 @@ title: Analysis Gallery
 
 # Analysis Gallery
 
-Key figures from the empirical analysis, organized by research contribution. Click any figure to view full-size.
+Key figures and tables from the empirical analysis, organized by research contribution. Click any figure to view full-size.
 
 === "Distractor Sensitivity"
 
@@ -14,6 +14,12 @@ Key figures from the empirical analysis, organized by research contribution. Cli
 
     ??? note "Position Bias Statistics"
         {{ read_csv('./source-code/phase6_analysis/output_v3/table_position_bias_consolidated.csv') }}
+
+    ??? note "Position Bias Interpretation"
+        {{ read_csv('./source-code/phase6_analysis/output_v3/table_position_bias_interpretation.csv') }}
+
+    ??? note "Chi-Square Position Bias"
+        {{ read_csv('./source-code/phase6_analysis/output_v3/table_chi_square_position_bias.csv') }}
 
     <div class="figure-gallery" markdown>
     <div class="gallery-item" markdown>
@@ -25,16 +31,8 @@ Key figures from the empirical analysis, organized by research contribution. Cli
     <figcaption>Cramer's V statistic for position bias</figcaption>
     </div>
     <div class="gallery-item" markdown>
-    ![MCQ Position Heatmap](source-code/phase6_analysis/output/mcq_position_heatmap.png)
-    <figcaption>Position selection heatmap across models</figcaption>
-    </div>
-    <div class="gallery-item" markdown>
-    ![MCQ Wrong Answer Distribution](source-code/phase6_analysis/output/mcq_wrong_answer_distribution.png)
-    <figcaption>Wrong answer distribution across positions</figcaption>
-    </div>
-    <div class="gallery-item" markdown>
-    ![Confusion Matrix -- All Models](source-code/phase6_analysis/output/mcq_confusion_matrix_all_models.png)
-    <figcaption>Confusion matrix -- all models</figcaption>
+    ![MCQ Position Accuracy](source-code/phase6_analysis/output_v3/fig_mcq_position_accuracy.png)
+    <figcaption>MCQ position accuracy</figcaption>
     </div>
     </div>
 
@@ -46,6 +44,9 @@ Key figures from the empirical analysis, organized by research contribution. Cli
 
     ??? note "Inter-Judge Agreement"
         {{ read_csv('./source-code/phase6_analysis/output_v3/table_interjudge_correlation.csv') }}
+
+    ??? note "Wilcoxon Results"
+        {{ read_csv('./source-code/phase6_analysis/output_v3/table_wilcoxon_results.csv') }}
 
     <div class="figure-gallery" markdown>
     <div class="gallery-item" markdown>
@@ -65,20 +66,12 @@ Key figures from the empirical analysis, organized by research contribution. Cli
     <figcaption>Kernel density estimate -- GPT-OSS 120B</figcaption>
     </div>
     <div class="gallery-item" markdown>
-    ![Rubric Dimensions -- All Judges](source-code/phase6_analysis/output/osq_rubric_dimensions_all_judges.png)
-    <figcaption>Rubric dimension scores across all judges</figcaption>
-    </div>
-    <div class="gallery-item" markdown>
-    ![OSQ Violin Scores](source-code/phase6_analysis/output/osq_violin_scores.png)
-    <figcaption>OSQ score violin plot -- all models</figcaption>
-    </div>
-    <div class="gallery-item" markdown>
-    ![OSQ Score Histogram](source-code/phase6_analysis/output/osq_score_histogram.png)
-    <figcaption>OSQ score histogram</figcaption>
-    </div>
-    <div class="gallery-item" markdown>
     ![OSQ Accuracy by INCOSE Category](source-code/phase6_analysis/output_v3/fig_osq_accuracy_by_incose_category.png)
     <figcaption>OSQ accuracy by INCOSE category (judge consensus)</figcaption>
+    </div>
+    <div class="gallery-item" markdown>
+    ![OSQ Accuracy by Top-Level Category](source-code/phase6_analysis/output_v3/fig_osq_accuracy_by_incose_toplevel.png)
+    <figcaption>OSQ accuracy by top-level INCOSE category</figcaption>
     </div>
     </div>
 
@@ -96,6 +89,21 @@ Key figures from the empirical analysis, organized by research contribution. Cli
 
     ??? note "Per-Model Differences"
         {{ read_csv('./source-code/phase6_analysis/output_v3/table_per_model_differences.csv') }}
+
+    ??? note "Qualification Classification"
+        {{ read_csv('./source-code/phase6_analysis/output_v3/table_qualification_classification.csv') }}
+
+    ??? note "MCQ-OSQ Delta by INCOSE Category"
+        {{ read_csv('./source-code/phase6_analysis/output_v3/table_mcq_osq_delta_by_incose_category.csv') }}
+
+    ??? note "MCQ-OSQ Delta by Top-Level Category"
+        {{ read_csv('./source-code/phase6_analysis/output_v3/table_mcq_osq_delta_by_incose_toplevel.csv') }}
+
+    ??? note "Delta Marginals by Category"
+        {{ read_csv('./source-code/phase6_analysis/output_v3/table_delta_marginals_category.csv') }}
+
+    ??? note "Delta Marginals by Top-Level"
+        {{ read_csv('./source-code/phase6_analysis/output_v3/table_delta_marginals_toplevel.csv') }}
 
     <div class="figure-gallery" markdown>
     <div class="gallery-item" markdown>
@@ -160,11 +168,11 @@ Key figures from the empirical analysis, organized by research contribution. Cli
     <figcaption>Response tokens by model, colored by quality</figcaption>
     </div>
     <div class="gallery-item" markdown>
-    ![Token Length vs Quality -- Sorted](source-code/phase6_analysis/output_v3/tokenomics_length_vs_quality_sorted_worst_to_best.png)
-    <figcaption>Response length vs quality -- sorted worst to best</figcaption>
+    ![Token Length vs Quality](source-code/phase6_analysis/output_v3/tokenomics_length_vs_quality.png)
+    <figcaption>Response length vs quality</figcaption>
     </div>
     <div class="gallery-item" markdown>
-    ![Tokenomics Distribution](source-code/phase6_analysis/output/tokenomics_distribution.png)
-    <figcaption>Token usage distribution</figcaption>
+    ![Token Length vs Quality -- Sorted](source-code/phase6_analysis/output_v3/tokenomics_length_vs_quality_sorted_worst_to_best.png)
+    <figcaption>Response length vs quality -- sorted worst to best</figcaption>
     </div>
     </div>
