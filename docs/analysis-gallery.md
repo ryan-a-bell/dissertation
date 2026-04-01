@@ -91,11 +91,11 @@ Key figures from the empirical analysis, organized by research contribution. Cli
     ??? note "MCQ vs OSQ Results Summary"
         {{ read_csv('./source-code/phase6_analysis/output_v3/table_mcq_osq_results_summary.csv') }}
 
-    ??? note "Effect Sizes"
-        {{ read_csv('./source-code/phase6_analysis/output_v3/table_effect_sizes.csv') }}
-
     ??? note "MCQ-OSQ Correlations"
         {{ read_csv('./source-code/phase6_analysis/output_v3/table_mcq_osq_correlations.csv') }}
+
+    ??? note "Per-Model Differences"
+        {{ read_csv('./source-code/phase6_analysis/output_v3/table_per_model_differences.csv') }}
 
     <div class="figure-gallery" markdown>
     <div class="gallery-item" markdown>
@@ -149,12 +149,6 @@ Key figures from the empirical analysis, organized by research contribution. Cli
     **Cost-Aware Response Length Trade-offs**
 
     What is the relationship between response length, token cost, and evaluation quality?
-
-    ??? note "OSQ Bootstrap Confidence Intervals"
-        {{ read_csv('./source-code/phase6_analysis/output_v3/table_osq_bootstrap_ci.csv') }}
-
-    ??? note "Per-Model Differences"
-        {{ read_csv('./source-code/phase6_analysis/output_v3/table_per_model_differences.csv') }}
 
     <div class="figure-gallery" markdown>
     <div class="gallery-item" markdown>
