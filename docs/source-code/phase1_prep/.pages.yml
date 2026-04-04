@@ -2,4 +2,3 @@ nav:
   - index.md
   - Benchmark Download and Analysis: 1.1_benchmark_download_and_analysis.ipynb
   - SysEngBench Dataset: sysengbench.md
-  - Sample Employees: sample_employees.md
