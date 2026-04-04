@@ -111,13 +111,110 @@ The following directories contain finalized research outputs. Treat them as read
 - `src/phase4_inference/output/` -- model inference results (JSONL by variant and model)
 - `src/phase5_llm_as_a_judge/judged_outputs/` -- LLM judge scoring results
 
-## Documentation Conventions
+## Documentation System
 
-- Theme: MkDocs Material with dark/light toggle.
-- Navigation is controlled by `docs/.pages.yml` via `mkdocs-awesome-pages-plugin`.
-- Jupyter notebooks are embedded via `mkdocs-jupyter` with execution disabled (rendered as-is).
-- CSV files are previewed inline via `mkdocs-table-reader-plugin`.
-- `src/phase6_analysis/output_v3/` is the authoritative source for all analysis figures and tables. The analysis gallery (`docs/analysis-gallery.md`) references only `output_v3/` artifacts. Do not reference `output/` or `output_v2/` in the gallery.
+### Navigation (.pages.yml Hierarchy)
+
+Navigation is controlled by `mkdocs-awesome-pages-plugin`, which discovers `.pages.yml` files at each directory level. There are 9 `.pages.yml` files forming a hierarchy:
+
+| File | Controls |
+|------|----------|
+| `docs/.pages.yml` | Top-level nav (Home, Key Findings, Analysis Gallery, metaeval, Publications, Source Code, Glossary) |
+| `docs/source-code/.pages.yml` | Phase listing (phases 1-6) |
+| `docs/source-code/phase[1-6]_*/.pages.yml` | Page ordering within each phase |
+| `docs/publications/.pages.yml` | Publications section |
+
+When adding a new page, update the relevant `.pages.yml` to control its position. Without an entry, pages sort alphabetically.
+
+### Content Generation Pipeline
+
+`scripts/generate_docs.py` transforms source content into docs pages. The full data flow:
+
+```
+src/                  --> docs/source-code/    (mirrors tree, respects .docsignore)
+viz/                  --> docs/visualizations/  (video embeds, notebook refs)
+publications.bib      --> docs/publications/index.md (parsed into research cards)
+README.md             --> docs/index.md         (with adjusted links)
+```
+
+Run via `make docs` or `make docs-serve`. The script handles special file types:
+- **CSV files**: generates a markdown stub using `{{ read_csv() }}` syntax
+- **PDF files**: generates a markdown stub with a download link
+- **Notebooks**: copied as-is (rendered by mkdocs-jupyter)
+- **Videos (.mp4)**: generates HTML5 embed with download link
+
+### Preserved Files (Safe to Hand-Edit)
+
+The generation script **preserves** certain files under `docs/source-code/` during regeneration. These survive `make docs` and are safe to edit by hand:
+
+- `index.md` (at any level)
+- `.pages.yml` (at any level)
+- `modality-evaluation-pipeline.jpg`
+
+All other files under `docs/source-code/` are overwritten on each run.
+
+### Excluding Content with `.docsignore`
+
+**Location:** `src/.docsignore`
+
+This file controls which paths under `src/` are excluded from the generated `docs/source-code/` tree. It uses a simple line-based format:
+
+- Paths are **relative to `src/`**.
+- Directories use a **trailing `/`** (e.g., `phase6_analysis/archive/`).
+- Files can be listed without a trailing slash.
+- Lines starting with `#` are comments. Blank lines are ignored.
+- Matching uses **prefix matching** (`startswith`), not glob or regex. A path is excluded if it starts with any listed pattern.
+
+Current exclusions:
+
+```
+phase4_inference/dodhpc/
+phase4_inference/test-evals-for-model-selection/
+phase5_llm_as_a_judge/unused-rubrics/
+phase6_analysis/archive/
+phase6_analysis/output/
+phase6_analysis/output_v2/
+```
+
+To exclude a new directory from the docs site, add its `src/`-relative path to this file and re-run `make docs`.
+
+Note: `.docsignore` is separate from `.gitignore`. The generation script also respects `.gitignore` patterns (via the `pathspec` library) and always skips `__pycache__` and `.ipynb_checkpoints`.
+
+### MkDocs Plugins and Syntax
+
+The site uses these plugins (configured in `mkdocs.yml`):
+
+| Plugin | Purpose | Usage |
+|--------|---------|-------|
+| `awesome-pages` | Navigation via `.pages.yml` | Automatic discovery |
+| `mkdocs-jupyter` | Render notebooks as pages | Place `.ipynb` files in docs tree (execution disabled) |
+| `table-reader` | Inline CSV display | `{{ read_csv('./file.csv') }}` in markdown |
+| `glightbox` | Image lightbox gallery | Automatic on all images |
+| `mkdocstrings` | Python API docs | `:::module.path` blocks (source path: `src/`) |
+| `search` | Full-text search | Built-in, custom separator configured |
+| `social` | Social media cards | Conditional via `CARDS` env var |
+
+Mermaid diagrams are supported via fenced code blocks (` ```mermaid `) and rendered client-side. They are theme-aware and re-render on light/dark toggle.
+
+### Custom Theming (CSS/JS)
+
+Three CSS files provide layered styling:
+
+| File | Purpose | Lines |
+|------|---------|-------|
+| `docs/stylesheets/extra.css` | Mermaid diagrams, figure gallery grid, hero banner, phase nav | 261 |
+| `docs/stylesheets/nps_custom_css.css` | NPS brand colors (navy #003366, gold #FFD700), header/sidebar gradients, admonitions, dark mode | 431 |
+| `docs/stylesheets/modern_mkdocs_css.css` | Glassmorphism theme, gradient cards, animated backgrounds (currently unused) | 577 |
+
+JavaScript:
+- `docs/assets/js/extra.js` -- Mermaid initialization with theme detection and a MutationObserver that re-renders diagrams on light/dark toggle.
+- `docs/javascripts/mkdocs_theme_switcher.js` -- Multi-theme switcher widget (currently disabled in `mkdocs.yml`). Supports keyboard shortcut Ctrl+Shift+T.
+
+### Analysis Gallery
+
+- `src/phase6_analysis/output_v3/` is the authoritative source for all analysis figures and tables.
+- The analysis gallery (`docs/analysis-gallery.md`) references only `output_v3/` artifacts.
+- Do not reference `output/` or `output_v2/` in the gallery.
 
 ## Commit and Branch Conventions
 
@@ -134,7 +231,7 @@ The following directories contain finalized research outputs. Treat them as read
 
 ## Things to Avoid
 
-- Do not edit files in `docs/source-code/` -- they are regenerated by `scripts/generate_docs.py` and will be overwritten.
+- Do not edit generated files in `docs/source-code/` -- they are overwritten by `scripts/generate_docs.py`. Only `index.md`, `.pages.yml`, and `modality-evaluation-pipeline.jpg` are preserved (see "Preserved Files" above).
 - Do not commit `.env` files or API keys.
 - Do not modify raw data files in `src/phase4_inference/output/` or `src/phase5_llm_as_a_judge/judged_outputs/`.
 - Do not enable notebook execution in the docs build -- it is disabled by design.
