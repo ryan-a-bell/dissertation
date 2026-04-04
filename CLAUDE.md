@@ -151,7 +151,34 @@ The generation script **preserves** certain files under `docs/source-code/` duri
 - `.pages.yml` (at any level)
 - `modality-evaluation-pipeline.jpg`
 
-All other files under `docs/source-code/` are overwritten on each run. A `.docsignore` file in `src/` can exclude paths from being copied.
+All other files under `docs/source-code/` are overwritten on each run.
+
+### Excluding Content with `.docsignore`
+
+**Location:** `src/.docsignore`
+
+This file controls which paths under `src/` are excluded from the generated `docs/source-code/` tree. It uses a simple line-based format:
+
+- Paths are **relative to `src/`**.
+- Directories use a **trailing `/`** (e.g., `phase6_analysis/archive/`).
+- Files can be listed without a trailing slash.
+- Lines starting with `#` are comments. Blank lines are ignored.
+- Matching uses **prefix matching** (`startswith`), not glob or regex. A path is excluded if it starts with any listed pattern.
+
+Current exclusions:
+
+```
+phase4_inference/dodhpc/
+phase4_inference/test-evals-for-model-selection/
+phase5_llm_as_a_judge/unused-rubrics/
+phase6_analysis/archive/
+phase6_analysis/output/
+phase6_analysis/output_v2/
+```
+
+To exclude a new directory from the docs site, add its `src/`-relative path to this file and re-run `make docs`.
+
+Note: `.docsignore` is separate from `.gitignore`. The generation script also respects `.gitignore` patterns (via the `pathspec` library) and always skips `__pycache__` and `.ipynb_checkpoints`.
 
 ### MkDocs Plugins and Syntax
 
