@@ -6,7 +6,7 @@ This repository contains the code, datasets, and supporting documentation for th
 
 **"An Empirical Meta-Evaluation of Language Model Evaluation Methods for Systems Engineering Using Distractor Sensitivity and Consensus Judging"**
 
-This research focuses on meta-evaluation—the systematic evaluation of language model evaluation methods themselves—within the context of Systems Engineering (SE). The study leverages the existing SysEngBench benchmark as its empirical foundation and extends it through the creation of Open-Style Question (OSQ) variants derived from the original Multiple-Choice Question (MCQ) dataset.
+This research focuses on meta-evaluation, the systematic evaluation of language model evaluation methods themselves, within the context of Systems Engineering (SE). The study leverages the existing SysEngBench benchmark as its empirical foundation and extends it through the creation of Open-Style Question (OSQ) variants derived from the original Multiple-Choice Question (MCQ) dataset.
 
 Specifically, this work investigates:
 - Comparative behavior of **MCQ and OSQ evaluation modalities**,
