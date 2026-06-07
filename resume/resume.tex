@@ -1,0 +1,129 @@
+% Ryan Bell - one-page resume
+% Compile with: pdflatex resume.tex   (no external .cls/.sty required)
+\documentclass[10pt,letterpaper]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[margin=0.55in]{geometry}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{parskip}
+
+\definecolor{npsnavy}{HTML}{003366}
+\hypersetup{colorlinks=true, urlcolor=npsnavy, linkcolor=npsnavy}
+
+% Compact section headers with a rule
+\titleformat{\section}{\large\bfseries\color{npsnavy}}{}{0em}{}[\vspace{-0.6em}\rule{\textwidth}{0.8pt}]
+\titlespacing{\section}{0pt}{6pt}{4pt}
+
+\setlist[itemize]{leftmargin=1.2em, itemsep=1pt, topsep=2pt, parsep=0pt}
+\pagenumbering{gobble}
+\setlength{\parindent}{0pt}
+
+\newcommand{\skillcat}[2]{\textbf{#1:} #2\par}
+
+\begin{document}
+
+% ---------- Header ----------
+\begin{center}
+  {\Huge\bfseries\color{npsnavy} Ryan Bell}\\[3pt]
+  {\normalsize PhD Candidate, Systems Engineering \textbullet\ Naval Postgraduate School, Monterey, CA}\\[3pt]
+  {\small
+    \href{mailto:ryan.a.bell77@gmail.com}{ryan.a.bell77@gmail.com} \quad\textbullet\quad
+    \href{https://github.com/ryan-a-bell}{github.com/ryan-a-bell} \quad\textbullet\quad
+    \href{https://ryan-a-bell.github.io/dissertation/}{ryan-a-bell.github.io/dissertation}
+  }
+\end{center}
+
+% ---------- Summary ----------
+\section{Summary}
+Systems engineering researcher and ML engineer specializing in the empirical evaluation of
+Large Language Models (LLMs). Built an end-to-end, reproducible benchmarking platform that
+orchestrates LLM inference across cloud GPU-as-a-Service, DoD HPC clusters, and commercial
+APIs, then scores results with rigorous statistics. Creator of the SysEngBench benchmark and
+author of 15+ peer-reviewed publications on AI for systems engineering.
+
+% ---------- Skills ----------
+\section{Technical Skills}
+\skillcat{Languages \& Tooling}{Python 3.10+, Bash, LaTeX, YAML, Git, Make}
+\skillcat{ML / LLM Stack}{lm-evaluation-harness, Ollama, vLLM, HuggingFace Transformers \& Datasets, OpenAI / Anthropic / Google / OpenRouter APIs, LLM-as-a-Judge}
+\skillcat{GPU \& HPC Infrastructure}{RunPod GPU-as-a-Service (GPUaaS), NVIDIA H200 / A100 / A40 GPUs, CUDA, SLURM, Apptainer/Singularity, NVIDIA PyTorch containers, DoD HPC (Open OnDemand)}
+\skillcat{Data Science}{pandas, NumPy, SciPy, scikit-learn, matplotlib, seaborn; hypothesis testing, effect sizes, bootstrap CIs, inter-rater reliability}
+\skillcat{Engineering Practice}{Pydantic, pytest, mypy (strict), ruff, black, pre-commit, GitHub Actions CI/CD, MkDocs Material}
+
+% ---------- Doctoral Research ----------
+\section{Doctoral Research --- Meta-Evaluation of LLM Evaluation Methods}
+\textit{\small An Empirical Meta-Evaluation of Language Model Evaluation Methods for Systems
+Engineering Using Distractor Sensitivity and Consensus Judging}
+\begin{itemize}
+  \item Architected a \textbf{6-phase, reproducible evaluation pipeline} (prep, MCQ-to-OSQ
+        conversion, distractor variants, inference, LLM-as-a-Judge, statistical analysis)
+        spanning 1{,}144 multiple-choice and 845 open-style systems engineering questions.
+  \item Designed and published \textbf{6 datasets on HuggingFace} (MCQ benchmark, four
+        position-rotated distractor variants, and an LLM-converted open-style variant).
+  \item Executed \textbf{87{,}000+ model inferences} across \textbf{19 LLMs $\times$ 4 position
+        variants} and \textbf{32{,}000+ LLM-as-a-Judge rubric scorings} with multi-judge
+        consensus (Spearman $\rho = 0.90$ on $\sim$16k aligned pairs).
+  \item Quantified MCQ distractor sensitivity and MCQ-vs-OSQ divergence using chi-square,
+        Kruskal-Wallis, Friedman, McNemar, and ANOVA tests; Pearson/Spearman correlation;
+        Wilcoxon and paired $t$-tests; effect sizes (Cramer's V, Kendall's W, Cohen's $d$,
+        Hedges' $g$); 10{,}000-iteration bootstrap CIs; and agreement metrics (Cohen's/Fleiss'
+        kappa, ICC).
+  \item Produced a task-to-modality routing framework and cost-aware (``tokenomics'') model
+        selection rules as practitioner guidance for LLM adoption in SE workflows.
+\end{itemize}
+
+% ---------- Engineering Accomplishments ----------
+\section{Selected Engineering Accomplishments}
+\textbf{metaeval --- LLM Meta-Evaluation Toolkit (Python package, author)}
+\begin{itemize}
+  \item Built a pip-installable package of \textbf{70+ modules across 11 subpackages} exposing a
+        \textbf{12-command CLI} for the full evaluation lifecycle (download, convert, variants,
+        analyze, judge, report, eval).
+  \item Implemented a multi-provider LLM-as-a-Judge abstraction (Anthropic, OpenAI, OpenRouter,
+        Ollama) behind a unified batch interface, plus a statistics library of 8+ hypothesis
+        tests, effect sizes, and bootstrap CIs.
+  \item Engineered for production: \textbf{221 tests across 27 files}, strict mypy typing, Pydantic
+        schemas, response caching, and publication-ready exporters (300-DPI figures, LaTeX
+        tables, Markdown reports).
+\end{itemize}
+\textbf{GPU-as-a-Service \& DoD HPC Inference Orchestration}
+\begin{itemize}
+  \item Automated dynamic provisioning of \textbf{NVIDIA GPU pods on RunPod (GPUaaS)} via a
+        multi-pod CLI workflow (primary deployment on \textbf{NVIDIA H200}), serving open-weight
+        models through Ollama and lm-eval-harness under deterministic, zero-shot protocols.
+  \item Authored a \textbf{DoD HPC SLURM} workflow: parameterized \texttt{.sbatch} job arrays,
+        \textbf{Apptainer/Singularity} container builds on NVIDIA PyTorch/CUDA base images
+        (CUDA 11.7--12.8), offline HuggingFace caching for network-isolated nodes, and an
+        Open OnDemand job-submission web app.
+\end{itemize}
+\textbf{Documentation \& Automation Platform}
+\begin{itemize}
+  \item Built a procedurally generated MkDocs Material site with a custom Python generator,
+        GitHub Actions CI/CD auto-deploy to GitHub Pages, and Mermaid/PlantUML diagrams.
+\end{itemize}
+
+% ---------- Publications ----------
+\section{Selected Publications}
+\begin{itemize}
+  \item \textbf{Bell, R.}, Madachy, R., Longshore, R. \textit{Introducing SysEngBench: A Novel
+        Benchmark for Assessing LLMs in Systems Engineering.} NPS Acquisition Research
+        Symposium, 2024. (lead author)
+  \item \textbf{Bell, R.}, Longshore, R., Madachy, R. \textit{Automating AI Expert Consensus:
+        Feasibility of Language Model-Assisted Consensus Methods for Systems Engineering.}
+        Acquisition Research Symposium, 2025. (lead author)
+  \item Wach, P., \textbf{Bell, R.}, et al. \textit{The Cost of Expertise: Performance Trade-offs
+        in LLMs for Systems Engineering.} INCOSE Int'l Symposium, vol.~35, 2025.
+  \item Papakonstantinou, N., Van Bossuyt, D., \textbf{Bell, R.}, et al. \textit{PrivateAIDELPHI:
+        Private AI for Risk Assessment of Safety-Critical Systems.} IEEE RAMS, 2025.
+  \item Madachy, R., \textbf{Bell, R.}, Longshore, R. \textit{A Generative AI-driven Systems
+        Engineering Maturity and Cost Modeling Framework.} CSER 2025, Springer (in press).
+\end{itemize}
+
+% ---------- Education ----------
+\section{Education}
+\textbf{PhD, Systems Engineering} --- Naval Postgraduate School, Monterey, CA \textit{(in progress)}
+
+\end{document}
