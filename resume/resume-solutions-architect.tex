@@ -1,0 +1,174 @@
+% Ryan Bell - Solutions Architect (HPC + AI/ML) resume, two pages
+% Compile with: pdflatex resume-solutions-architect.tex   (no external .cls/.sty required)
+\documentclass[10pt,letterpaper]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[margin=0.6in]{geometry}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{parskip}
+
+\definecolor{npsnavy}{HTML}{003366}
+\hypersetup{colorlinks=true, urlcolor=npsnavy, linkcolor=npsnavy}
+
+\titleformat{\section}{\large\bfseries\color{npsnavy}}{}{0em}{}[\vspace{-0.6em}\rule{\textwidth}{0.8pt}]
+\titlespacing{\section}{0pt}{8pt}{4pt}
+\titleformat{\subsection}{\bfseries}{}{0em}{}
+\titlespacing{\subsection}{0pt}{6pt}{2pt}
+
+\setlist[itemize]{leftmargin=1.2em, itemsep=1.5pt, topsep=2pt, parsep=0pt}
+\pagenumbering{gobble}
+\setlength{\parindent}{0pt}
+
+\newcommand{\skillrow}[2]{\textbf{#1} & #2 \\[2pt]}
+
+\begin{document}
+
+% ---------- Header ----------
+\begin{center}
+  {\Huge\bfseries\color{npsnavy} Ryan Bell}\\[3pt]
+  {\large Solutions Architect --- High-Performance Computing \& AI/ML}\\[3pt]
+  {\small Naval Postgraduate School, Monterey, CA}\\[2pt]
+  {\small
+    \href{mailto:ryan.a.bell77@gmail.com}{ryan.a.bell77@gmail.com} \quad\textbullet\quad
+    \href{https://github.com/ryan-a-bell}{github.com/ryan-a-bell} \quad\textbullet\quad
+    \href{https://ryan-a-bell.github.io/dissertation/}{ryan-a-bell.github.io/dissertation}
+  }
+\end{center}
+
+% ---------- Summary ----------
+\section{Professional Summary}
+AI/ML solutions architect and systems engineer who designs and delivers end-to-end
+machine-learning evaluation platforms spanning \textbf{hybrid GPU infrastructure} --- cloud
+GPU-as-a-Service, \textbf{DoD HPC clusters}, and commercial model APIs. Strength in translating
+ambiguous capability questions into reference architectures, then proving them out with
+reproducible, cost-aware engineering: containerized \textbf{NVIDIA} GPU workloads,
+SLURM-scheduled batch pipelines, multi-provider LLM orchestration, and statistically
+defensible benchmarking at scale. Creator of the SysEngBench benchmark and author of 15+
+peer-reviewed publications on AI for engineering. Operates as the technical bridge between
+research stakeholders, infrastructure teams, and decision-makers --- defining trade spaces,
+sizing compute, and turning evidence into adoption guidance.
+
+% ---------- Core Competencies ----------
+\section{Core Competencies}
+\renewcommand{\arraystretch}{1.15}
+\begin{tabularx}{\textwidth}{>{\bfseries\raggedright\arraybackslash}p{0.24\textwidth} X}
+\skillrow{HPC \& GPU Compute}{NVIDIA H200 / A100 / A40, CUDA 11.7--12.8, SLURM batch scheduling, Apptainer/Singularity, NVIDIA PyTorch containers, Open OnDemand, Lustre/GPFS shared storage, air-gapped/offline node patterns}
+\skillrow{Cloud / GPUaaS}{RunPod GPU-as-a-Service, dynamic multi-pod provisioning, ephemeral compute orchestration, hybrid cloud--HPC--API topologies}
+\skillrow{AI/ML Serving \& Eval}{lm-evaluation-harness, Ollama, vLLM, HuggingFace Transformers \& Datasets, OpenAI / Anthropic / Google / OpenRouter APIs, LLM-as-a-Judge, multi-judge consensus}
+\skillrow{Solution Engineering}{Python 3.10+, Pydantic, CLI/SDK design, pytest/mypy(strict)/ruff/black, GitHub Actions CI/CD, Make, reproducible pipelines, caching}
+\skillrow{Data Science \& Trade Studies}{pandas, NumPy, SciPy, scikit-learn, matplotlib/seaborn; hypothesis testing, effect sizes, bootstrap CIs, inter-rater reliability, cost-performance optimization}
+\skillrow{Architecture \& Delivery}{Reference-architecture design, infrastructure portability, capacity/cost sizing, MkDocs documentation, stakeholder reporting (LaTeX/PNG/Markdown)}
+\end{tabularx}
+
+% ---------- Experience ----------
+\section{Architecture \& Engineering Experience}
+
+\subsection{Lead Architect --- LLM Meta-Evaluation Platform (Doctoral Research)}
+\textit{\small Naval Postgraduate School \quad\textbar\quad 2023 -- Present}
+
+Designed and built a production-grade platform for evaluating Large Language Models on
+specialized systems-engineering content, framing model qualification as a multi-objective
+engineering trade space (accuracy $\times$ robustness $\times$ cost).
+
+\textbf{Hybrid HPC / GPU Infrastructure Architecture}
+\begin{itemize}
+  \item Architected a \textbf{portable, three-tier compute topology} that runs the same
+        evaluation workload across (1) \textbf{RunPod GPU-as-a-Service}, (2) \textbf{DoD HPC}
+        SLURM clusters, and (3) commercial model APIs --- placing workloads by cost,
+        data-sensitivity, and availability rather than locking to one environment.
+  \item Engineered automated provisioning of \textbf{NVIDIA GPU pods (primary: NVIDIA H200)}
+        on RunPod via a multi-pod CLI workflow, serving open-weight models through Ollama and
+        the lm-evaluation-harness under deterministic, zero-shot protocols.
+  \item Authored the \textbf{DoD HPC delivery path}: parameterized SLURM \texttt{.sbatch} job
+        arrays (single-pair, multi-model, multi-task), \textbf{Apptainer/Singularity} container
+        builds on \textbf{NVIDIA PyTorch/CUDA} base images across \textbf{CUDA 11.7--12.8} for
+        cross-site portability, offline HuggingFace caching for \textbf{network-isolated nodes},
+        and an \textbf{Open OnDemand} web app for non-CLI job submission.
+  \item Standardized environment configuration (shared-filesystem model caches,
+        scratch/\texttt{SLURM\_TMPDIR} staging, env-var-driven offline mode) for reproducible
+        runs across heterogeneous sites.
+\end{itemize}
+
+\textbf{AI/ML Solution \& Orchestration}
+\begin{itemize}
+  \item Built \textbf{metaeval}, a pip-installable Python package --- \textbf{70+ modules across
+        11 subpackages} with a \textbf{12-command CLI} --- covering dataset download, MCQ-to-OSQ
+        conversion, distractor-variant generation, multi-environment inference, LLM-as-a-Judge
+        scoring, statistical analysis, and publication-ready reporting.
+  \item Designed a \textbf{multi-provider LLM-as-a-Judge abstraction} (Anthropic, OpenAI,
+        OpenRouter, Ollama) behind a unified batch interface via a factory pattern, making judge
+        models swappable without pipeline changes.
+  \item Hardened long-running GPU jobs with SQLite-backed \textbf{response caching},
+        retry/session management, structured logging, and resumable operations to survive
+        preemption and node failures.
+\end{itemize}
+
+\textbf{Scale, Reliability, and Cost Optimization}
+\begin{itemize}
+  \item Executed \textbf{87{,}000+ model inferences} across \textbf{19 LLMs $\times$ 4 position
+        variants} and \textbf{32{,}000+ LLM-as-a-Judge scorings} with multi-judge consensus,
+        demonstrating strong inter-judge reliability (Spearman $\rho = 0.90$ across
+        $\sim$16{,}000 aligned pairs).
+  \item Defined a \textbf{cost-aware model-selection rule (``tokenomics'')}: qualify models to a
+        quality threshold, then select the lowest-token (lowest cost/latency) option on the
+        quality--token efficiency frontier --- directly applicable to right-sizing inference spend.
+  \item Quantified robustness and modality divergence with a full statistics suite --- chi-square,
+        Kruskal-Wallis, Friedman, McNemar, ANOVA; Pearson/Spearman correlation; Wilcoxon and
+        paired $t$-tests; effect sizes (Cramer's V, Kendall's W, Cohen's $d$, Hedges' $g$);
+        \textbf{10{,}000-iteration bootstrap CIs}; and agreement metrics (Cohen's/Fleiss' kappa, ICC).
+\end{itemize}
+
+\textbf{Stakeholder Deliverables \& Adoption Guidance}
+\begin{itemize}
+  \item Produced a \textbf{task-to-modality routing framework} mapping engineering task families
+        to the minimum defensible evaluation evidence --- a decision aid for where AI/LLM
+        automation can be trusted and how it should be bounded.
+  \item Published \textbf{6 datasets on HuggingFace} (MCQ benchmark, four position-rotated
+        distractor variants, open-style variant) for reproducibility and reuse.
+  \item Built a procedurally generated \textbf{MkDocs Material} documentation site with
+        \textbf{GitHub Actions CI/CD} auto-deploy to GitHub Pages and Mermaid/PlantUML
+        architecture diagrams --- keeping architecture, code, and results in one navigable system.
+\end{itemize}
+
+\subsection{Engineering Quality \& Practices}
+\begin{itemize}
+  \item Delivered to production standards: \textbf{221 automated tests across 27 files}, strict
+        \textbf{mypy} typing, \textbf{Pydantic} validation of all domain objects, and
+        ruff/black/pre-commit enforcement.
+  \item Generated publication-ready artifacts programmatically: \textbf{300-DPI figures},
+        \textbf{LaTeX booktabs tables}, and Markdown reports --- removing manual hand-off between
+        analysis and reporting.
+\end{itemize}
+
+% ---------- Publications ----------
+\section{Selected Publications \& Talks}
+\begin{itemize}
+  \item \textbf{Bell, R.}, Madachy, R., Longshore, R. \textit{Introducing SysEngBench: A Novel
+        Benchmark for Assessing LLMs in Systems Engineering.} NPS Acquisition Research Symposium,
+        2024. (lead author)
+  \item \textbf{Bell, R.}, Madachy, R., Longshore, R. \textit{Balancing Accuracy and Efficiency:
+        Trade-offs in LLM Quantization for the Systems Engineering Domain.} Wiley/INCOSE
+        (submitted) --- 4/8/16/32-bit quantization vs.\ accuracy, model size, and deployment cost.
+  \item \textbf{Bell, R.}, Longshore, R., Madachy, R. \textit{Automating AI Expert Consensus:
+        Feasibility of Language Model-Assisted Consensus Methods for Systems Engineering.}
+        Acquisition Research Symposium, 2025. (lead author)
+  \item Wach, P., \textbf{Bell, R.}, et al. \textit{The Cost of Expertise: Performance Trade-offs
+        in LLMs for Systems Engineering.} INCOSE Int'l Symposium, vol.~35, 2025.
+  \item Papakonstantinou, N., Van Bossuyt, D., \textbf{Bell, R.}, et al. \textit{PrivateAIDELPHI:
+        Private AI for Risk Assessment of Safety-Critical Systems.} IEEE RAMS, 2025.
+  \item Madachy, R., \textbf{Bell, R.}, Longshore, R. \textit{A Generative AI-driven Systems
+        Engineering Maturity and Cost Modeling Framework.} CSER 2025, Springer (in press).
+\end{itemize}
+\textit{\small Full publication list (18 entries, 2023--2025) available on request.}
+
+% ---------- Education ----------
+\section{Education}
+\textbf{PhD, Systems Engineering} --- Naval Postgraduate School, Monterey, CA \textit{(in progress)}
+
+\end{document}
