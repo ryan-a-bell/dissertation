@@ -155,6 +155,10 @@ flowchart TD
 
 This architecture ensures documentation stays in sync with your project files and is automatically deployed when changes are pushed to the main branch.
 
+## Contact
+
+Questions or want to connect? Find me on [LinkedIn](https://www.linkedin.com/in/ryan-a-bell-pe/).
+
 ## Contributions
 
 This work is in support of a PhD in Systems Engineering.
