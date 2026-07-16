@@ -192,6 +192,10 @@ Conference papers and journal submissions
         end
     ```
 
+## Contact
+
+Questions or want to connect? Find me on [LinkedIn](https://www.linkedin.com/in/ryan-a-bell-pe/).
+
 ## Contributions
 
 This work is in support of a PhD in Systems Engineering.
