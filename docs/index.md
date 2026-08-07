@@ -86,8 +86,8 @@ A synthesis of the dissertation's central results: implications for SE benchmark
 | [SysEngBench-OSQ](https://huggingface.co/datasets/rabell/SysEngBench-OSQ) | Open-Style Questions |
 
 ### Publications
-Conference papers and journal submissions
-[View Publications](publications/){ .nps-button }
+Conference papers and journal submissions are listed on my resume site
+[View Publications](https://ryan-a-bell.github.io/resume/#publications){ .nps-button }
 
 ### Source Code
 6-phase research pipeline
