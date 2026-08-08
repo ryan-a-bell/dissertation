@@ -26,7 +26,7 @@ make docs-build    # Build only (no generation step)
 make clean-docs    # Remove generated doc files
 ```
 
-The generation step runs `scripts/generate_docs.py`, which copies `src/` into `docs/source-code/`, generates CSV preview stubs, PDF download links, publications index, and copies `README.md` to `docs/index.md`.
+The generation step runs `scripts/generate_docs.py`, which copies `src/` into `docs/source-code/`, generates CSV preview stubs, PDF download links, and copies `README.md` to `docs/index.md`.
 
 ## Refreshing the Dissertation Timeline
 
@@ -115,14 +115,13 @@ The following directories contain finalized research outputs. Treat them as read
 
 ### Navigation (.pages.yml Hierarchy)
 
-Navigation is controlled by `mkdocs-awesome-pages-plugin`, which discovers `.pages.yml` files at each directory level. There are 9 `.pages.yml` files forming a hierarchy:
+Navigation is controlled by `mkdocs-awesome-pages-plugin`, which discovers `.pages.yml` files at each directory level. There are 8 `.pages.yml` files forming a hierarchy:
 
 | File | Controls |
 |------|----------|
-| `docs/.pages.yml` | Top-level nav (Home, Key Findings, Analysis Gallery, metaeval, Publications, Source Code, Glossary) |
+| `docs/.pages.yml` | Top-level nav (Home, Key Findings, Analysis Gallery, metaeval, Source Code, Glossary) |
 | `docs/source-code/.pages.yml` | Phase listing (phases 1-6) |
 | `docs/source-code/phase[1-6]_*/.pages.yml` | Page ordering within each phase |
-| `docs/publications/.pages.yml` | Publications section |
 
 When adding a new page, update the relevant `.pages.yml` to control its position. Without an entry, pages sort alphabetically.
 
@@ -133,7 +132,6 @@ When adding a new page, update the relevant `.pages.yml` to control its position
 ```
 src/                  --> docs/source-code/    (mirrors tree, respects .docsignore)
 viz/                  --> docs/visualizations/  (video embeds, notebook refs)
-publications.bib      --> docs/publications/index.md (parsed into research cards)
 README.md             --> docs/index.md         (with adjusted links)
 ```
 
