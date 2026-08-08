@@ -1,0 +1,261 @@
+.embed-pdf {
+  width: 100%;
+  height: 600px;
+}
+@media (max-width: 600px) {
+  .embed-pdf {
+    height: 300px;
+  }
+}
+
+/* Mermaid diagram styling */
+.mermaid {
+  text-align: center;
+  margin: 1em 0;
+  overflow-x: auto;
+  background: transparent;
+}
+
+/* Ensure Mermaid diagrams are responsive */
+.mermaid svg {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Style for Mermaid in code blocks */
+pre.mermaid {
+  background: transparent;
+  border: none;
+  text-align: center;
+}
+
+/* Gantt chart specific styling */
+.mermaid .section0, .mermaid .section1, .mermaid .section2, .mermaid .section3 {
+  opacity: 1;
+}
+
+/* Mindmap styling improvements */
+.mermaid .mindmap-node {
+  font-family: var(--md-text-font-family);
+}
+
+/* Dark theme adjustments */
+[data-md-color-scheme="slate"] .mermaid {
+  filter: brightness(0.92) contrast(1.1);
+}
+
+/* Figure gallery */
+.figure-gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.25rem;
+  margin: 1.5rem 0;
+}
+
+.figure-gallery figure,
+.figure-gallery .gallery-item {
+  margin: 0;
+  padding: 0.75rem;
+  border-radius: 8px;
+  background: var(--nps-gray, #f5f7fa);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.figure-gallery figure:hover,
+.figure-gallery .gallery-item:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.14);
+}
+
+.figure-gallery figure img,
+.figure-gallery .gallery-item img {
+  width: 100%;
+  height: auto;
+  border-radius: 4px;
+  cursor: zoom-in;
+}
+
+.figure-gallery figcaption {
+  margin-top: 0.5rem;
+  font-size: 0.8rem;
+  color: var(--md-default-fg-color--light, #555);
+  text-align: center;
+  line-height: 1.4;
+}
+
+[data-md-color-scheme="slate"] .figure-gallery figure,
+[data-md-color-scheme="slate"] .figure-gallery .gallery-item {
+  background: #2d2d44;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+}
+
+[data-md-color-scheme="slate"] .figure-gallery figure:hover,
+[data-md-color-scheme="slate"] .figure-gallery .gallery-item:hover {
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+}
+
+[data-md-color-scheme="slate"] .figure-gallery figcaption {
+  color: #a0aec0;
+}
+
+/* Hero banner */
+.hero-banner {
+  width: 100%;
+  margin: 0 0 1rem 0;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.hero-banner img {
+  width: 100%;
+  height: 280px;
+  object-fit: cover;
+  object-position: center 40%;
+  display: block;
+  border-radius: 8px;
+}
+
+@media (max-width: 768px) {
+  .hero-banner img {
+    height: 180px;
+  }
+}
+
+/* CV-style publications */
+.pub-entry {
+  margin-bottom: 1.5rem;
+  padding-left: 1rem;
+  border-left: 3px solid var(--md-primary-fg-color, #4A90E2);
+}
+
+.pub-entry .pub-title {
+  font-weight: 600;
+  font-size: 1.05rem;
+  margin-bottom: 0.2rem;
+}
+
+.pub-entry .pub-authors {
+  font-size: 0.92rem;
+  color: var(--md-default-fg-color--light, #555);
+  margin-bottom: 0.2rem;
+}
+
+.pub-entry .pub-meta {
+  font-size: 0.85rem;
+  color: var(--md-default-fg-color--lighter, #888);
+  margin-bottom: 0.4rem;
+}
+
+.pub-badge {
+  display: inline-block;
+  font-size: 0.75rem;
+  padding: 0.1rem 0.4rem;
+  border-radius: 3px;
+  background: var(--md-primary-fg-color--transparent, rgba(74, 144, 226, 0.1));
+  color: var(--md-primary-fg-color, #4A90E2);
+  margin-right: 0.3rem;
+}
+
+[data-md-color-scheme="slate"] .pub-entry {
+  border-left-color: var(--md-accent-fg-color, #4A90E2);
+}
+
+[data-md-color-scheme="slate"] .pub-entry .pub-authors {
+  color: #aaa;
+}
+
+[data-md-color-scheme="slate"] .pub-entry .pub-meta {
+  color: #888;
+}
+
+.pub-link {
+  display: inline-block;
+  font-size: 0.8rem;
+  margin-right: 0.5rem;
+  padding: 0.15rem 0.5rem;
+  border-radius: 4px;
+  border: 1px solid var(--md-default-fg-color--lighter, #ccc);
+  text-decoration: none;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.pub-link:hover {
+  background: var(--md-accent-fg-color--transparent, rgba(0, 0, 0, 0.05));
+  border-color: var(--md-accent-fg-color, #4A90E2);
+}
+
+[data-md-color-scheme="slate"] .pub-link {
+  border-color: #444;
+}
+
+[data-md-color-scheme="slate"] .pub-link:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: var(--md-accent-fg-color, #4A90E2);
+}
+
+/* Phase sub-navigation bar */
+.phase-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0;
+  margin: 0 0 1.5rem 0;
+  padding: 0;
+  border-bottom: 2px solid var(--md-default-fg-color--lightest, #e0e0e0);
+}
+
+.phase-nav a {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  font-size: 0.82rem;
+  font-weight: 500;
+  text-decoration: none;
+  color: var(--md-default-fg-color--light, #666);
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  transition: color 0.15s ease, border-color 0.15s ease;
+  white-space: nowrap;
+}
+
+.phase-nav a:hover {
+  color: var(--md-accent-fg-color, #4A90E2);
+  border-bottom-color: var(--md-accent-fg-color, #4A90E2);
+}
+
+.phase-nav a.active {
+  color: var(--md-accent-fg-color, #4A90E2);
+  border-bottom-color: var(--md-accent-fg-color, #4A90E2);
+  font-weight: 600;
+}
+
+[data-md-color-scheme="slate"] .phase-nav {
+  border-bottom-color: #3a3a4a;
+}
+
+[data-md-color-scheme="slate"] .phase-nav a {
+  color: #8a8aa0;
+}
+
+[data-md-color-scheme="slate"] .phase-nav a:hover,
+[data-md-color-scheme="slate"] .phase-nav a.active {
+  color: var(--md-accent-fg-color, #4A90E2);
+}
+
+@media (max-width: 600px) {
+  .phase-nav a {
+    padding: 0.4rem 0.6rem;
+    font-size: 0.75rem;
+  }
+}
+
+/* Mobile responsiveness for Mermaid diagrams */
+@media (max-width: 768px) {
+  .mermaid {
+    font-size: 12px;
+  }
+  
+  .mermaid svg {
+    transform: scale(0.8);
+    transform-origin: center top;
+  }
+}

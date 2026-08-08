@@ -1,0 +1,2 @@
+judge_1,judge_2,spearman_rho,p_value,n
+gpt-oss_120b,openai_gpt-5-mini,0.9012087082861852,0.0,16051
